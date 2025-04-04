@@ -177,71 +177,54 @@
     flex-wrap: wrap;
   }
 }
-/* Responsive Styles */
-@media (max-width: 1024px) {
-  .SRForm {
-    grid-template-columns: 1fr;
-  }
-  
-  .SRUploadPhotoDiv {
-    grid-template-columns: 1fr;
-  }
-  
-  .SRSubField1 > div {
-    grid-template-columns: 1fr;
-  }
 
-  .RegistrationBackbtnDiv {
-    justify-content: center;
-  }
-
-  .RegistrationBackbtnDiv .SRBackbtn {
-    width: 100%;
-  }
-}
-
+/* Mobile (Landscape) & Small Tablets - 481px to 768px */
 @media (max-width: 768px) {
-  .SRForm {
-    display: flex;
-    flex-direction: column;
+  .RegistrationParentDiv {
+    width: 95%;
+    margin: auto;
+    padding: 3rem 0;
   }
-
+  .registrationFormParentDiv .RegistrationHeading {
+    font-size: 22px;
+  }
   .SRSubField1 .SR_hTag,
   .SRSubField2 .SR_hTag {
+    align-items: center;
+    text-align: start;
+    padding: 10px;
+    background-color: #30a9cb;
+    color: white;
     font-size: 20px;
-  }
-
-  .SRSubField1 > div > label {
-    font-size: 14px;
+    font-weight: 600;
   }
 }
 
-@media (max-width: 480px) {
-  .RegistrationParentDiv {
-    width: 100%;
-    padding: 0.5rem;
+/* Tablets & Small Desktops - 769px to 1024px */
+@media (max-width: 1024px) {
+  .SRSubField1 > div {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    padding: 1rem;
   }
+}
 
-  .RegistrationHeading {
-    font-size: 20px;
+/* Large Screens - >1024px */
+@media (min-width: 1025px) {
+}
+
+/* Extra Large Screens - >1200px */
+@media (min-width: 1200px) {
+  .SRMainFormDiv {
+    background-size: cover;
+    width: "100%";
+    margin: 0 auto;
   }
-
-  .SRBackbtn {
-    padding: 10px;
-    font-size: 14px;
-  }
-
-  .SRForm input {
-    font-size: 14px;
-    padding: 8px;
-  }
-
-  .SRSubField1 .SR_hTag,
-  .SRSubField2 .SR_hTag {
-    font-size: 18px;
-  }
-
-  .SRImportantField {
-    font-size: 16px;
+  .SRMainSubFormDiv {
+    width: 80%;
+    margin: 0 auto;
+    box-shadow: 0px 2px 4px #ccc;
+    background-color: white;
   }
 }
