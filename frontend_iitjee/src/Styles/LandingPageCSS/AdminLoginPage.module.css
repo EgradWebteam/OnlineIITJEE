@@ -1,6 +1,5 @@
 .AdminLoginPageContainer {
   min-height: fit-content !important;
-  padding: 3rem !important;
   align-items: center;
   display: flex;
   justify-content: center;
@@ -66,10 +65,14 @@
   padding: 0.5rem 0;
 }
 .AdminLableName input {
-  width: 80%;
+  width: 100%;
   padding: 10px;
   border-radius: 5px;
   outline: none;
+  border: 1px solid #d5cdcd;
+}
+.AdminLableName input:focus{
+  border-color: rgb(55, 129, 240);
 }
 .AdminLoginButton button {
   width: 100%;
@@ -90,4 +93,5 @@
   font-size: 20px;
   color: #646cff;
   cursor: pointer;
+  font-weight: 600;
 }
