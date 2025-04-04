@@ -1,0 +1,230 @@
+.RegistrationParentDiv {
+  width: 95%;
+  margin: auto;
+  padding: 1rem 0;
+}
+.RegistrationHeading {
+  text-align: center;
+  text-transform: uppercase;
+}
+.RegistrationBackbtnDiv {
+  display: flex;
+  justify-content: right;
+}
+.RegistrationBackbtnDiv .SRBackbtn {
+  padding: 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: #30a9cb;
+  color: white;
+  font-weight: 600;
+}
+
+.SRForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 1rem;
+  gap: 1rem;
+}
+.SRForm input {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+  padding: 10px;
+}
+
+.SRUploadPhotoDiv {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.SRUploadPhotoDiv > div {
+  grid-gap: 20px;
+  align-items: center;
+
+  display: grid;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  justify-items: center;
+  padding: 1rem;
+}
+.SRFormSubDiv2 {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+.SRSubField1 > div {
+  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 1rem;
+}
+
+.SRSubField1 .SR_hTag,
+.SRSubField2 .SR_hTag {
+  align-items: center;
+  text-align: start;
+  padding-left: 1rem;
+  background-color: #30a9cb;
+  color: white;
+  font-size: 26px;
+  font-weight: 600;
+}
+.SRSubField1 {
+  padding: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.SRSubField1 > div > label {
+  font-weight: 600;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+.SRSubField2 {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  padding: 1rem;
+}
+.termsAndConditions {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.SRImportantField {
+  color: red;
+  font-weight: 600;
+  font-size: 18px;
+}
+.SRradioInputs {
+  display: flex;
+  flex-wrap: wrap;
+}
+.SRradioInputs div {
+  display: flex;
+  align-items: center;
+}
+
+.SRradioInputs div input[type="radio"] {
+  margin: 10px;
+}
+.SRradioInputs2 > div {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.SRQualificationDiv {
+  display: flex;
+}
+.SRQualificationDiv div {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+.SRFormImage {
+  width: 150px;
+  height: 150px;
+}
+.SRFormImage img {
+  width: 100%;
+}
+.SRNotPoint {
+  color: red;
+  font-size: 11px;
+  max-width: 330px;
+}
+.tcLink {
+  color: #2d9ffb;
+  text-decoration: underline;
+  text-transform: capitalize;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Mobile (Portrait) - Small screens ≤ 480px */
+@media (max-width: 480px) {
+  .SRSubField1 > div {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    padding: 1rem;
+  }
+  .SRSubField1 {
+    padding: 0;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+  .SRSubField1 h1,
+  .SRSubField2 h1 {
+    align-items: center;
+    text-align: start;
+    padding-left: 1rem;
+    background-color: #30a9cb;
+    color: white;
+    font-size: 23px;
+  }
+  .SRSubField1 > div > label {
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+  .SRradioInputs2 > div {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+}
+
+/* Mobile (Landscape) & Small Tablets - 481px to 768px */
+@media (max-width: 768px) {
+  .RegistrationParentDiv {
+    width: 95%;
+    margin: auto;
+    padding: 3rem 0;
+  }
+  .registrationFormParentDiv .RegistrationHeading {
+    font-size: 22px;
+  }
+  .SRSubField1 .SR_hTag,
+  .SRSubField2 .SR_hTag {
+    align-items: center;
+    text-align: start;
+    padding: 10px;
+    background-color: #30a9cb;
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+  }
+}
+
+/* Tablets & Small Desktops - 769px to 1024px */
+@media (max-width: 1024px) {
+  .SRSubField1 > div {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    padding: 1rem;
+  }
+}
+
+/* Large Screens - >1024px */
+@media (min-width: 1025px) {
+}
+
+/* Extra Large Screens - >1200px */
+@media (min-width: 1200px) {
+  .SRMainFormDiv {
+    background-size: cover;
+    width: "100%";
+    margin: 0 auto;
+  }
+  .SRMainSubFormDiv {
+    width: 80%;
+    margin: 0 auto;
+    box-shadow: 0px 2px 4px #ccc;
+    background-color: white;
+  }
+}
