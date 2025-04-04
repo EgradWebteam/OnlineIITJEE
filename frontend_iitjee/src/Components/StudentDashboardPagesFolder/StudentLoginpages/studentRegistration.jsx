@@ -1,5 +1,5 @@
 import React from "react";
-import Styles from "../../../Styles/StudentDashboardPagesFolder/StudentRegistration.module.css";
+import Styles from "../../../Styles/StudentDashboardCSS/StudentRegistration.module.css";
 import SRFormImage from "../../../assets/SRFormImage.jpg";
 
 const StudentRegistration = () => {
