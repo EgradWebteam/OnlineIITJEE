@@ -1,0 +1,57 @@
+.Header_MainPage {
+  box-shadow: 0px 0px 3px 3px rgb(196, 193, 193);
+}
+.Header_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+}
+.Header_Logo {
+  width: 250px;
+}
+.Header_Logo img {
+  width: 100%;
+  height: auto;
+}
+.Header_logins_icons {
+  display: flex;
+  gap: 1rem;
+  padding: 0 0.8rem;
+}
+.Header_Login {
+  background-color: rgb(68 68 68);
+  color: white;
+  font-size: 18px;
+  border-radius: 15px;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.Header_icons svg {
+  font-size: 30px;
+  color: rgb(68 68 68);
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .Header_MainPage {
+    background-color: rgb(189, 185, 185);
+  }
+  .Header_container{
+    padding: .5rem;
+  }
+  .Header_Logo {
+    width: 150px;
+    border-radius: 5px;
+  }
+  .Header_icons svg {
+    font-size: 25px;
+  }
+  .Header_Login {
+    padding: 0.4rem 0.7rem;
+  }
+  .Header_logins_icons {
+     padding: 0;
+  }
+}
