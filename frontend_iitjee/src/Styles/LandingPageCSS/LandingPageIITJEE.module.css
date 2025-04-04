@@ -1,0 +1,11 @@
+.navBarLinks{
+ display: flex;
+ gap: 1.5rem;
+}
+.navBarLinks li {
+    list-style: none;
+}
+.navBarBtn{
+    border-radius: 10px;
+    
+}
