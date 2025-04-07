@@ -27,7 +27,7 @@
   
   .coursesDropDownMenu {
     position: absolute;
-    top: 157%;
+    top: 135%;
     left: 0;
     background: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -164,10 +164,17 @@
     margin: 0.8rem 0;
   }
   .examButtonsDiv{
-    margin: 1rem;
+    margin: 1rem 2rem 0;
     display: flex;
     gap: 10px;
 }
+.cardHolderOTSORVLHome{
+  display: flex;
+  flex-wrap: wrap;
+  padding: 2rem;
+  gap: 2rem;
+}
+
 
   @media (max-width:1440px) {
     .homePageSubContainer{
