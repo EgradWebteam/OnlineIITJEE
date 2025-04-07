@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
-import styles from "../../../Styles/StudentDashboardCSS/Student.module.css"; // Using the same classes as StudentLogin
-
+import { Link,useNavigate } from 'react-router-dom';
+import styles from "../../../Styles/StudentDashboardCSS/Student.module.css"; 
+import stdLogo from '../../../assets/logoCapImg.2509a17adb384c89e21a.jpeg'
+import MainHeader from '../../LandingPagesFolder/MainPageHeaderFooterFolder/mainHeader';
+import MainFooter from '../../LandingPagesFolder/MainPageHeaderFooterFolder/mainFooter';
+import { BASE_URL } from '../../../../apiConfig'; 
 export default function StudentLogin() {
-  const [username, setUsername] = useState("");  // Track student username (email)
-  const [password, setPassword] = useState("");  // Track student password
-  const [newPassword, setNewPassword] = useState("");  // Track new password during reset
-  const [confirmPassword, setConfirmPassword] = useState("");  // Track confirm password during reset
-  const [resetCode, setResetCode] = useState("");  // Track reset code during reset
-  const [isForgotPassword, setIsForgotPassword] = useState(false);  // State to track the form view (login or forgot password)
-  const [isResetPassword, setIsResetPassword] = useState(false);  // State to track if reset password code is sent
-
+  const [username, setUsername] = useState(""); 
+  const [password, setPassword] = useState("");  
+  const [newPassword, setNewPassword] = useState("");  
+  const [confirmPassword, setConfirmPassword] = useState("");  
+  const [resetCode, setResetCode] = useState(""); 
+  const [isForgotPassword, setIsForgotPassword] = useState(false); 
+  const [isResetPassword, setIsResetPassword] = useState(false);  
+  const navigate = useNavigate();
   // Handle login form submission
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -36,7 +40,7 @@ export default function StudentLogin() {
 
       if (response.ok) {
         console.log("Login successful", data);
-        window.location.href = "/student-dashboard";  // Redirect to student dashboard on success
+        navigate("/StudentDashboard");  
       } else {
         alert(data.message || "Login failed. Please try again.");
       }
@@ -118,8 +122,13 @@ export default function StudentLogin() {
   };
 
   return (
+    <div className={styles.studentLoginHomePage}>
+       <MainHeader/>
     <div className={styles.studentLoginPage}>
       <div className={styles.studentLoginContainer}>
+        <div className={styles.studentLogo}>
+        <img src={stdLogo} alt=""stdLogo/>
+        </div>
         <h1>{isForgotPassword ? "Forgot Password" : "Student Login"}</h1>
 
         <form onSubmit={isForgotPassword ? (isResetPassword ? handleResetPassword : handleForgotPassword) : handleLogin}>
@@ -201,17 +210,12 @@ export default function StudentLogin() {
         {/* Forgot password link */}
         {!isForgotPassword && !isResetPassword && (
           <div className={styles.studentLoginLinks}>
-            <p>New here? <a href="/student-registration">Register</a></p>
+            <p>New here? <Link to="/StudentRegistrationPage">Register</Link></p>
             <p><a href="#" onClick={() => setIsForgotPassword(true)}>Forgot Password?</a></p>
           </div>
         )}
 
-        {/* Back to login link */}
-        {isForgotPassword && !isResetPassword && (
-          <div className={styles.backToLoginLink}>
-            <a href="#" onClick={() => setIsForgotPassword(false)}>Back to Login</a>
-          </div>
-        )}
+       
 
         {isResetPassword && (
           <div className={styles.backToLoginLink}>
@@ -219,6 +223,8 @@ export default function StudentLogin() {
           </div>
         )}
       </div>
+    </div>
+    <MainFooter />
     </div>
   );
 }

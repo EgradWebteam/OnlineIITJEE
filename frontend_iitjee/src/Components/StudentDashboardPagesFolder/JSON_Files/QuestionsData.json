@@ -1,0 +1,693 @@
+{
+  "TestName": "IIT JEE MAINS FULL TEST - 1",
+  "examId": 3,
+  "courseTypeOfTestId": 5,
+  "TestDuration": 180,
+  "opt_pattern_id": 1,
+  "subjects": [
+    {
+      "subjectId": "1",
+      "SubjectName": "MATHEMATICS",
+      "sections": [
+        {
+          "sectionId": null,
+          "SectionName": null,
+          "questions": [
+            {
+              "question_id": 251,
+              "questionImgName": "948d5cb8-60ed-4c3a-88de-8531b24087d7_question.png",
+              "document_name": "Maths(extra)-10",
+              "options": [
+                {
+                  "option_id": 1001,
+                  "option_index": "a",
+                  "optionImgName": "65018fc3-9820-45d1-8e6b-2aad4a37063f_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1002,
+                  "option_index": "b",
+                  "optionImgName": "e2d024e8-2330-4c96-b23d-0a9e834f3fd0_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1003,
+                  "option_index": "c",
+                  "optionImgName": "93d388fd-42db-4452-9df7-5b70ddf24c0a_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1004,
+                  "option_index": "d",
+                  "optionImgName": "03762716-f2fa-4c35-8b90-d48825f6500b_option.png",
+                  "user_answer": null
+                }
+              ],
+              "qtype": [
+                {
+                  "qtype_text": "MCQ4"
+                }
+              ],
+              "quesion_type": [
+                {
+                  "quesionTypeId": 1,
+                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+                }
+              ],
+              "answer": [
+                {
+                  "answer_text": "b"
+                }
+              ],
+              "useranswer": [
+                {
+                  "question_id": 251,
+                  "questionStatus": null
+                }
+              ],
+              "marks": [
+                {
+                  "marks_text": "3",
+                  "nmarks_text": "1"
+                }
+              ],
+              "sortid": [
+                {
+                  "sortid_text": "1"
+                }
+              ],
+              "solution": [
+                {
+                  "solution_id": 251,
+                  "solutionImgName": "848ded2e-fb7d-4657-8760-8396f30784dd_solution.png"
+                }
+              ],
+              "paragraph": [],
+              "paragraphqno": []
+            },
+            {
+              "question_id": 252,
+              "questionImgName": "7c5d5817-7463-4187-bc01-af3fa9b40656_question.png",
+              "document_name": "Maths(extra)-10",
+              "options": [
+                {
+                  "option_id": 1005,
+                  "option_index": "a",
+                  "optionImgName": "4984109e-ecb8-4f3c-bc56-9dd0d58da65f_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1006,
+                  "option_index": "b",
+                  "optionImgName": "1d3376cf-a213-4830-8e79-e4691fa28bc0_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1007,
+                  "option_index": "c",
+                  "optionImgName": "984f5858-bdcb-4d9d-8ac6-149679236ee7_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1008,
+                  "option_index": "d",
+                  "optionImgName": "22d3288f-b9d3-465f-a383-ac56cb3698c8_option.png",
+                  "user_answer": null
+                }
+              ],
+              "qtype": [
+                {
+                  "qtype_text": "MCQ4"
+                }
+              ],
+              "quesion_type": [
+                {
+                  "quesionTypeId": 1,
+                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+                }
+              ],
+              "answer": [
+                {
+                  "answer_text": "d"
+                }
+              ],
+              "useranswer": [
+                {
+                  "question_id": 252,
+                  "questionStatus": null
+                }
+              ],
+              "marks": [
+                {
+                  "marks_text": "3",
+                  "nmarks_text": "1"
+                }
+              ],
+              "sortid": [
+                {
+                  "sortid_text": "2"
+                }
+              ],
+              "solution": [
+                {
+                  "solution_id": 252,
+                  "solutionImgName": "0a4da9cc-0d5c-493a-9fce-c0b807900a61_solution.png"
+                }
+              ],
+              "paragraph": [],
+              "paragraphqno": []
+            },
+            {
+              "question_id": 253,
+              "questionImgName": "322d9fee-1f46-4710-be70-f9c24e95428c_question.png",
+              "document_name": "Maths(extra)-10",
+              "options": [
+                {
+                  "option_id": 1009,
+                  "option_index": "a",
+                  "optionImgName": "dfe48d70-f05e-48eb-a118-7508d7bbd469_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1010,
+                  "option_index": "b",
+                  "optionImgName": "627208fa-5175-4c5a-b42d-25789cfe9c6f_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1011,
+                  "option_index": "c",
+                  "optionImgName": "6d6497d1-f143-4b27-820b-60bfd086c69f_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1012,
+                  "option_index": "d",
+                  "optionImgName": "f7a2ff73-e502-4e72-9843-dea24776cfe4_option.png",
+                  "user_answer": null
+                }
+              ],
+              "qtype": [
+                {
+                  "qtype_text": "MCQ4"
+                }
+              ],
+              "quesion_type": [
+                {
+                  "quesionTypeId": 1,
+                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+                }
+              ],
+              "answer": [
+                {
+                  "answer_text": "a"
+                }
+              ],
+              "useranswer": [
+                {
+                  "question_id": 253,
+                  "questionStatus": null
+                }
+              ],
+              "marks": [
+                {
+                  "marks_text": "3",
+                  "nmarks_text": "1"
+                }
+              ],
+              "sortid": [
+                {
+                  "sortid_text": "3"
+                }
+              ],
+              "solution": [
+                {
+                  "solution_id": 253,
+                  "solutionImgName": "3b556e38-ef8b-4792-b505-bff37dbe6a5d_solution.png"
+                }
+              ],
+              "paragraph": [],
+              "paragraphqno": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "subjectId": "2",
+      "SubjectName": "PHYSICS",
+      "sections": [
+        {
+          "sectionId": null,
+          "SectionName": null,
+          "questions": [
+            {
+              "question_id": 254,
+              "questionImgName": "94d269b1-b67e-4053-8181-8d8044056ad7_question.png",
+              "document_name": "Physics(extra)-10",
+              "options": [
+                {
+                  "option_id": 1013,
+                  "option_index": "a",
+                  "optionImgName": "a495c065-07b7-4245-829d-4877b1367e58_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1014,
+                  "option_index": "b",
+                  "optionImgName": "ab1a2b1f-70af-4b75-a8ce-c97cd919d66a_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1015,
+                  "option_index": "c",
+                  "optionImgName": "0d2852eb-e720-4a09-b334-408d33729367_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1016,
+                  "option_index": "d",
+                  "optionImgName": "3e438d72-256f-43d9-8914-5abc38eb63af_option.png",
+                  "user_answer": null
+                }
+              ],
+              "qtype": [
+                {
+                  "qtype_text": "MCQ4"
+                }
+              ],
+              "quesion_type": [
+                {
+                  "quesionTypeId": 1,
+                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+                }
+              ],
+              "answer": [
+                {
+                  "answer_text": "d"
+                }
+              ],
+              "useranswer": [
+                {
+                  "question_id": 254,
+                  "questionStatus": null
+                }
+              ],
+              "marks": [
+                {
+                  "marks_text": "3",
+                  "nmarks_text": "1"
+                }
+              ],
+              "sortid": [
+                {
+                  "sortid_text": "1"
+                }
+              ],
+              "solution": [
+                {
+                  "solution_id": 254,
+                  "solutionImgName": "b44ad45d-c9eb-4042-8228-d0ae4b99f9f6_solution.png"
+                }
+              ],
+              "paragraph": [],
+              "paragraphqno": []
+            },
+            {
+              "question_id": 255,
+              "questionImgName": "b29d09cf-9caa-418e-99f5-25ab878708d2_question.png",
+              "document_name": "Physics(extra)-10",
+              "options": [
+                {
+                  "option_id": 1017,
+                  "option_index": "a",
+                  "optionImgName": "0ec9a645-2c89-4bcc-a9b1-750431ae6339_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1018,
+                  "option_index": "b",
+                  "optionImgName": "df368c82-899d-4765-8755-f42ab5152fd0_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1019,
+                  "option_index": "c",
+                  "optionImgName": "76e3d149-7473-4cda-a1b9-0397ea058a6e_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1020,
+                  "option_index": "d",
+                  "optionImgName": "b103bd0d-3acd-4237-a9f8-01961af44676_option.png",
+                  "user_answer": null
+                }
+              ],
+              "qtype": [
+                {
+                  "qtype_text": "MCQ4"
+                }
+              ],
+              "quesion_type": [
+                {
+                  "quesionTypeId": 1,
+                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+                }
+              ],
+              "answer": [
+                {
+                  "answer_text": "a"
+                }
+              ],
+              "useranswer": [
+                {
+                  "question_id": 255,
+                  "questionStatus": null
+                }
+              ],
+              "marks": [
+                {
+                  "marks_text": "3",
+                  "nmarks_text": "1"
+                }
+              ],
+              "sortid": [
+                {
+                  "sortid_text": "2"
+                }
+              ],
+              "solution": [
+                {
+                  "solution_id": 255,
+                  "solutionImgName": "0b8d43b2-93b4-47a6-b4d3-9c994be1f0f4_solution.png"
+                }
+              ],
+              "paragraph": [],
+              "paragraphqno": []
+            },
+            {
+              "question_id": 256,
+              "questionImgName": "71e70526-940e-45e4-a6d0-fef5fe8b16f2_question.png",
+              "document_name": "Physics(extra)-10",
+              "options": [
+                {
+                  "option_id": 1021,
+                  "option_index": "a",
+                  "optionImgName": "570e872e-5eb0-4d2f-bea7-95dfebdb6a04_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1022,
+                  "option_index": "b",
+                  "optionImgName": "08ece09d-8dbc-4f66-b31d-b96f262771d5_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1023,
+                  "option_index": "c",
+                  "optionImgName": "1900f06d-c70c-4bc7-ac4b-1d1f41169b58_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1024,
+                  "option_index": "d",
+                  "optionImgName": "0f5584fa-42b6-4ee9-a28e-ce645aaa4ac4_option.png",
+                  "user_answer": null
+                }
+              ],
+              "qtype": [
+                {
+                  "qtype_text": "MCQ4"
+                }
+              ],
+              "quesion_type": [
+                {
+                  "quesionTypeId": 1,
+                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+                }
+              ],
+              "answer": [
+                {
+                  "answer_text": "b"
+                }
+              ],
+              "useranswer": [
+                {
+                  "question_id": 256,
+                  "questionStatus": null
+                }
+              ],
+              "marks": [
+                {
+                  "marks_text": "3",
+                  "nmarks_text": "1"
+                }
+              ],
+              "sortid": [
+                {
+                  "sortid_text": "3"
+                }
+              ],
+              "solution": [
+                {
+                  "solution_id": 256,
+                  "solutionImgName": "814bcfd8-b537-4f41-aa6a-575b9b321696_solution.png"
+                }
+              ],
+              "paragraph": [],
+              "paragraphqno": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "subjectId": "3",
+      "SubjectName": "CHEMISTRY",
+      "sections": [
+        {
+          "sectionId": null,
+          "SectionName": null,
+          "questions": [
+            {
+              "question_id": 257,
+              "questionImgName": "7e78ed02-8671-4d1e-80cc-a5a581e9c131_question.png",
+              "document_name": "Chemistry(extra)-10",
+              "options": [
+                {
+                  "option_id": 1025,
+                  "option_index": "a",
+                  "optionImgName": "44cd1266-ae58-48ed-ae0d-f34ce906bcde_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1026,
+                  "option_index": "b",
+                  "optionImgName": "a034d3d1-5356-407b-aef2-3e784ba7ee05_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1027,
+                  "option_index": "c",
+                  "optionImgName": "c64cfac7-679a-4c98-a22b-07be48431a29_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1028,
+                  "option_index": "d",
+                  "optionImgName": "9ae6e750-998f-439b-b25c-c45fe5d7a367_option.png",
+                  "user_answer": null
+                }
+              ],
+              "qtype": [
+                {
+                  "qtype_text": "MCQ4"
+                }
+              ],
+              "quesion_type": [
+                {
+                  "quesionTypeId": 1,
+                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+                }
+              ],
+              "answer": [
+                {
+                  "answer_text": "d"
+                }
+              ],
+              "useranswer": [
+                {
+                  "question_id": 257,
+                  "questionStatus": null
+                }
+              ],
+              "marks": [
+                {
+                  "marks_text": "3",
+                  "nmarks_text": "1"
+                }
+              ],
+              "sortid": [
+                {
+                  "sortid_text": "1"
+                }
+              ],
+              "solution": [
+                {
+                  "solution_id": 257,
+                  "solutionImgName": "9f2f4b54-d93f-44cf-bca6-19757b6a2382_solution.png"
+                }
+              ],
+              "paragraph": [],
+              "paragraphqno": []
+            },
+            {
+              "question_id": 258,
+              "questionImgName": "1e5fbee9-bece-482a-be91-38e1120c1347_question.png",
+              "document_name": "Chemistry(extra)-10",
+              "options": [
+                {
+                  "option_id": 1029,
+                  "option_index": "a",
+                  "optionImgName": "88e9a5e2-c1b9-4f87-b9d3-ee981b01b47d_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1030,
+                  "option_index": "b",
+                  "optionImgName": "3b983b8d-dd8b-44dc-b6e9-e4135e4cc4e7_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1031,
+                  "option_index": "c",
+                  "optionImgName": "df8689f2-8f49-4eee-94b4-92d5f1da2d18_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1032,
+                  "option_index": "d",
+                  "optionImgName": "4bf87ee9-c01c-4de8-9123-839adb373c5c_option.png",
+                  "user_answer": null
+                }
+              ],
+              "qtype": [
+                {
+                  "qtype_text": "MCQ4"
+                }
+              ],
+              "quesion_type": [
+                {
+                  "quesionTypeId": 1,
+                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+                }
+              ],
+              "answer": [
+                {
+                  "answer_text": "b"
+                }
+              ],
+              "useranswer": [
+                {
+                  "question_id": 258,
+                  "questionStatus": null
+                }
+              ],
+              "marks": [
+                {
+                  "marks_text": "3",
+                  "nmarks_text": "1"
+                }
+              ],
+              "sortid": [
+                {
+                  "sortid_text": "2"
+                }
+              ],
+              "solution": [
+                {
+                  "solution_id": 258,
+                  "solutionImgName": "a6222990-9aa7-42f4-bf06-e554337ea823_solution.png"
+                }
+              ],
+              "paragraph": [],
+              "paragraphqno": []
+            },
+            {
+              "question_id": 259,
+              "questionImgName": "26cd84d1-6926-4a9d-976d-ffefe3b03cd3_question.png",
+              "document_name": "Chemistry(extra)-10",
+              "options": [
+                {
+                  "option_id": 1033,
+                  "option_index": "a",
+                  "optionImgName": "ea755c78-d0da-41a6-a58c-09abf99304ea_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1034,
+                  "option_index": "b",
+                  "optionImgName": "79f19c78-b94b-4716-93c9-65481f7aebd8_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1035,
+                  "option_index": "c",
+                  "optionImgName": "9bbf1e2a-0b31-4a6f-b81d-087633c202f8_option.png",
+                  "user_answer": null
+                },
+                {
+                  "option_id": 1036,
+                  "option_index": "d",
+                  "optionImgName": "2b75f251-bfa1-4bfb-8d33-0cadecbf651f_option.png",
+                  "user_answer": null
+                }
+              ],
+              "qtype": [
+                {
+                  "qtype_text": "MCQ4"
+                }
+              ],
+              "quesion_type": [
+                {
+                  "quesionTypeId": 1,
+                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+                }
+              ],
+              "answer": [
+                {
+                  "answer_text": "c"
+                }
+              ],
+              "useranswer": [
+                {
+                  "question_id": 259,
+                  "questionStatus": null
+                }
+              ],
+              "marks": [
+                {
+                  "marks_text": "3",
+                  "nmarks_text": "1"
+                }
+              ],
+              "sortid": [
+                {
+                  "sortid_text": "3"
+                }
+              ],
+              "solution": [
+                {
+                  "solution_id": 259,
+                  "solutionImgName": "18867dab-1088-436f-85f5-be8fefa46215_solution.png"
+                }
+              ],
+              "paragraph": [],
+              "paragraphqno": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
