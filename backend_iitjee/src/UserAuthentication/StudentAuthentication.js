@@ -19,21 +19,29 @@ const STUDENT_PHOTO_FOLDER = 'student-data/';
 const AZURE_BLOB_URL = `https://iitstorage.blob.core.windows.net/${AZURE_ACCOUNT_NAME}?sp=rawl&st=2025-04-07T06:53:08Z&se=2025-04-08T14:53:08Z&sv=2024-11-04&sr=c&sig=kMpx6H6FqGNk%2BOkdI79%2BYwH3sG18ghJVJ9y8aRqSye0%3D`;
 
 // Upload file to Azure using SAS token
-const uploadToAzureWithSAS = async (file) => {
-  const blobServiceClient = new BlobServiceClient(`${AZURE_BLOB_URL}?${AZURE_SAS_TOKEN}`);
-  const containerClient = blobServiceClient.getContainerClient(AZURE_CONTAINER_NAME);
+async function uploadToAzureWithSAS(file) {
+  const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
+  const sasToken = process.env.AZURE_SAS_TOKEN;
+  const containerName = process.env.AZURE_CONTAINER_NAME;
 
-  const blobName = `${STUDENT_PHOTO_FOLDER}${Date.now()}-${file.originalname}`;
-  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+  const blobServiceClient = new BlobServiceClient(
+    `https://${accountName}.blob.core.windows.net?${sasToken}`
+  );
 
-  await blockBlobClient.uploadData(file.buffer, {
-    blobHTTPHeaders: {
-      blobContentType: file.mimetype,
-    },
-  });
+  const containerClient = blobServiceClient.getContainerClient(containerName);
+  const blockBlobClient = containerClient.getBlockBlobClient(file.originalname);
 
-  return `${blockBlobClient.url}?${AZURE_SAS_TOKEN}`;
-};
+  try {
+    const uploadBlobResponse = await blockBlobClient.uploadData(file.buffer, {
+      blobHTTPHeaders: { blobContentType: file.mimetype },
+    });
+    console.log(`Upload block blob ${file.originalname} successfully`, uploadBlobResponse.requestId);
+    return blockBlobClient.url;
+  } catch (error) {
+    console.error('Error uploading to Azure:', error);
+    throw error;
+  }
+}
 
 // Nodemailer setup
 const transporter = nodemailer.createTransport({
@@ -64,39 +72,39 @@ router.post('/studentRegistration', upload.fields([{ name: 'uploadedPhoto' }]), 
       ? await uploadToAzureWithSAS(files.uploadedPhoto[0])
       : null;
 
-    const portalId = `JEE-${Date.now()}`;
-
-    const insertQuery = `
-      INSERT INTO iit_student_registration 
-      (candidate_name, date_of_birth, gender, category, email_id, confirm_email_id, contact_no, father_name, occupation, mobile_no, line_1, state, districts, pincode, qualifications, college_name, passing_year, marks, uploaded_photo, portal_id, password, password_change_attempts, reset_code) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
+    const portalId =2;
 
     const values = [
-      form.candidateName,
-      form.dateOfBirth,
-      form.Gender,
-      form.Category,
-      form.emailId,
-      form.confirmEmailId,
-      form.contactNo,
-      form.fatherName,
-      form.occupation,
-      form.mobileNo,
-      form.line1,
-      form.state,
-      form.districts,
-      form.pincode,
-      form.qualifications,
-      form.NameOfCollege,
-      form.passingYear,
-      form.marks,
-      uploadedPhotoSASUrl,
+      form.candidateName || null,
+      form.dateOfBirth || null,
+      form.gender || null,
+      form.category || null,
+      form.emailId || null,
+      form.confirmEmailId || null,
+      form.contactNo || null,
+      form.fatherName || null,
+      form.occupation || null,
+      form.mobileNo || null,
+      form.line1 || null,
+      form.state || null,
+      form.district || null,
+      form.pincode || null,
+      form.qualification || null,
+      form.nameOfCollege || null,
+      form.passingYear || null,
+      form.marks || null,
+      uploadedPhotoSASUrl || null,
       portalId,
       hashedPassword,
       0,
       0,
     ];
+
+    const insertQuery = `
+      INSERT INTO iit_student_registration 
+      (candidate_name, date_of_birth, gender, category, email_id, confirm_email_id, contact_no, father_name, occupation, mobile_no, line_1, state, district, pincode, qualification, college_name, passing_year, marks, uploaded_photo, portal_id, password, password_change_attempts, reset_code) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
 
     const [result] = await db.execute(insertQuery, values);
 
