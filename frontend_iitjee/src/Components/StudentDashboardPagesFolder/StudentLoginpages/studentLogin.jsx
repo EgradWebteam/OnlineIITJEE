@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 import styles from "../../../Styles/StudentDashboardCSS/Student.module.css"; 
-import stdLogo from '../../../assets/logoCapImg.2509a17adb384c89e21a.jpeg'
+import stdLogo from '../../../assets/logoCap.jpeg'
 import MainHeader from '../../LandingPagesFolder/MainPageHeaderFooterFolder/mainHeader';
 import MainFooter from '../../LandingPagesFolder/MainPageHeaderFooterFolder/mainFooter';
 import { BASE_URL } from '../../../../apiConfig'; 

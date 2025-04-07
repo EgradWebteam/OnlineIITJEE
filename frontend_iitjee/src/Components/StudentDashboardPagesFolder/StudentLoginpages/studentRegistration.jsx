@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Styles from "../../../Styles/StudentDashboardCSS/StudentRegistration.module.css";
 import SRFormImage from "../../../assets/SRFormImage.jpg";
 import MainHeader from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainHeader";
@@ -357,7 +358,7 @@ const StudentRegistration = () => {
                 <div className={Styles.termsAndConditions}>
                   <label>
                     I accept all the{" "}
-                    <span className={Styles.tcLink}>terms & conditions</span>
+                    <span className={Styles.tcLink}><Link to='/TermsAndConditions'>terms & conditions</Link></span>
                   </label>
                 </div>
               </div>
