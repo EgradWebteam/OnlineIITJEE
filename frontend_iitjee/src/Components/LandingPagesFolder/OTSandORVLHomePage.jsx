@@ -3,6 +3,8 @@ import styles from "../../Styles/LandingPageCSS/LandingPageIITJEE.module.css";
 import { useLocation } from 'react-router-dom';
 const LandingPageNavbar = lazy(() => import("./LandingPageNavbar.jsx"));
 const OTSandORVLBannerComponent =lazy(() => import("./OTSandORVLBannerComponent.jsx"));
+const MainHeader = lazy(() => import('../LandingPagesFolder/MainPageHeaderFooterFolder/mainHeader.jsx'));
+const MainFooter = lazy(() => import('../LandingPagesFolder/MainPageHeaderFooterFolder/mainFooter.jsx'));
 const OTSandORVLHomePage = memo(() => {
     const location = useLocation();
 
@@ -13,8 +15,10 @@ const OTSandORVLHomePage = memo(() => {
     <div className={styles.otsAndOrvlHomePageMainDiv}>
       <div className={styles.otsAndOrvlHomePageSubDiv}>
         <Suspense fallback={<p>Loading Courses...</p>}>
+          <MainHeader/>
           <LandingPageNavbar />
           <OTSandORVLBannerComponent /> {/* Banner will internally handle what to render */}
+          <MainFooter/>
         </Suspense>
       </div>
     </div>

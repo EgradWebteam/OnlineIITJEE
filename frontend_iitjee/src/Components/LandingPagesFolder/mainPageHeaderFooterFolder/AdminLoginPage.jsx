@@ -1,5 +1,5 @@
 import React from 'react'
-import Styles from '../../../Styles/AdminLoginPage.module.css'
+import Styles from '../../../Styles/LandingPageCSS/AdminLoginPage.module.css'
 
 const AdminLoginPage = () => {
   return (

@@ -1,5 +1,5 @@
 import React from "react";
-import Styles from "../../../Styles/MainFooter.module.css";
+import Styles from "../../../Styles/LandingPageCSS/MainFooter.module.css";
 import { IoCall } from "react-icons/io5";
 import { IoIosMail } from "react-icons/io";
 import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
@@ -14,9 +14,9 @@ import { TbCircleLetterR } from "react-icons/tb";
             eGRADTutor
             <TbCircleLetterR />
           </div>
-          <li>Terms and Conditions</li>
-          <li>Privacy Policy</li>
-          <li>Pricing & Refund Policy</li>
+          <li><a>Terms and Conditions</a></li>
+          <li><a>Privacy Policy</a></li>
+          <li><a>Pricing & Refund Policy</a></li>
         </ul>
         <div className={Styles.Footer_contactDetails}>
           <div className={Styles.Footer_contactInfo}>

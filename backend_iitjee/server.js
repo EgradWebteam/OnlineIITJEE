@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config();
 
+require("dotenv").config();
+const db = require("./src/config/database.js"); // Ensure this path is correct
 const app = express();
 app.use(cors());
 app.use(express.json());
