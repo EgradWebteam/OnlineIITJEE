@@ -3,11 +3,13 @@ import styles from "../../Styles/LandingPageCSS/LandingPageIITJEE.module.css";
 import LandingPageNavbar from './LandingPageNavbar.jsx';
 import portalImage from "../../assets/HomePageBanner.png"
 const MainPageCourseCards = lazy(() => import("./MainPageCourseCards.jsx"));
-
+import MainHeader from "../LandingPagesFolder/MainPageHeaderFooterFolder/mainHeader.jsx";
+import MainFooter from "../LandingPagesFolder/MainPageHeaderFooterFolder/mainFooter.jsx";
 export default function LandingPageIITJEE() {
   return (
     <div className={styles.homePageMainContainer}>
       <div className={styles.homePageSubContainer}>
+        <MainHeader/>
         <LandingPageNavbar/>
         <div className={styles.bannerImage}>
           <img src={portalImage} alt='portalimage'/>
@@ -20,6 +22,7 @@ export default function LandingPageIITJEE() {
             <MainPageCourseCards />
           </Suspense>
         </div>
+        <MainFooter/>
       </div>
     
     </div>
