@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Styles from "../../../Styles/LandingPageCSS/MainFooter.module.css";
 import { IoCall } from "react-icons/io5";
 import { IoIosMail } from "react-icons/io";
@@ -14,7 +15,7 @@ import { TbCircleLetterR } from "react-icons/tb";
             eGRADTutor
             <TbCircleLetterR />
           </div>
-          <li><a>Terms and Conditions</a></li>
+          <li><Link to="/TermsAndConditions">Terms and Conditions</Link></li>
           <li><a>Privacy Policy</a></li>
           <li><a>Pricing & Refund Policy</a></li>
         </ul>
