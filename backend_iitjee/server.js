@@ -13,7 +13,8 @@ app.get("/",(req, res)=> {
 const adminLogin = require("./src/UserAuthentication/AdminLogin.js");
 app.use("/admin", adminLogin);
 
-
+const studentRegistration = require("./src/UserAuthentication/StudentAuthentication.js");
+app.use("/student", studentRegistration);
 
 const PORT = process.env.PORT ;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
