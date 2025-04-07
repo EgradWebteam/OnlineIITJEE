@@ -1,0 +1,111 @@
+/* General reset for padding and margin */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html {
+    font-size: 16px; /* 1rem = 16px */
+  }
+  
+  body, html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background-color: white;
+  }
+  
+  /* Centering the login page */
+  .studentLoginPage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  /* Styling the login container */
+  .studentLoginContainer {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 28rem;
+    text-align: center;
+  }
+  
+  /* Header style */
+  .studentLoginContainer h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  
+  /* Form style */
+  .studentLoginFormInput {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    text-align: left;
+    margin-bottom: 8%;
+  }
+  
+  .studentLoginFormInput label {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .studentLoginFormInput input {
+    padding: 0.75rem;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  
+  .studentLoginFormInput input:focus {
+    border-color: #007bff;
+  }
+  
+  /* Submit button */
+  .studentLoginFormSubmit {
+    margin-top: 1rem;
+  }
+  
+  .studentLoginFormSubmit button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .studentLoginFormSubmit button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Links */
+  .studentLoginLinks p {
+    font-size: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .studentLoginLinks a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .studentLoginLinks a:hover {
+    text-decoration: underline;
+  }
+  .backToLoginLink{
+    margin-top: 10%;
+  }

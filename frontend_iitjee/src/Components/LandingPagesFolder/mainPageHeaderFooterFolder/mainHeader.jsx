@@ -14,7 +14,7 @@ export default function MainHeader() {
         <div className={Styles.Header_logins_icons}>
           <div className={Styles.Header_Login}>Login</div>
           <div className={Styles.Header_icons}>
-            <IoMdHome />
+          <IoMdHome />
           </div>
           <div className={Styles.Header_icons}>
            <IoCall />
