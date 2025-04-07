@@ -1,0 +1,10 @@
+.studentDashboardHomeMainContainer{
+    width: 100%;
+}
+.studentDashboardHomeSubContainer{
+    width: 90%;
+    margin: 1rem auto;
+}
+.welcomeNoteStudentDashboard{
+    font-size: 35px;
+}

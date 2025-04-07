@@ -85,7 +85,7 @@ flex-direction: row;
     height: 100vh;
 }
 .studentDashboardLeftsidebar{
-    width: 250px;
+    width: 280px;
     display: flex;
     flex-direction: column;
     padding: 10px;
