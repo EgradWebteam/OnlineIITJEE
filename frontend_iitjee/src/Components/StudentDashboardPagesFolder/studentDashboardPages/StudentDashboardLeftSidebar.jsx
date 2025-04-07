@@ -9,7 +9,7 @@ import {
   FaTimes
 } from "react-icons/fa";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
-import clsx from 'clsx';
+
 // Sidebar data
 const sidebarItems = [
   { id: "dashboard", label: "Dashboard", icon: <FaTh /> },
