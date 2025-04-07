@@ -1,5 +1,5 @@
 import React from "react";
-import Styles from "../../../Styles/MainHeader.module.css";
+import Styles from "../../../Styles/LandingPageCSS/MainHeader.module.css";
 import { IoMdHome } from "react-icons/io";
 import { IoCall } from "react-icons/io5";
 import logoImg from "../../../assets/EGTLogoExamHeaderCompressed.jpg";

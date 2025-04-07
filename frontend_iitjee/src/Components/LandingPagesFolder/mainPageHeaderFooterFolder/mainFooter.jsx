@@ -1,5 +1,5 @@
 import React from "react";
-import Styles from "../../../Styles/MainFooter.module.css";
+import Styles from "../../../Styles/LandingPageCSS/MainFooter.module.css";
 import { IoCall } from "react-icons/io5";
 import { IoIosMail } from "react-icons/io";
 import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
