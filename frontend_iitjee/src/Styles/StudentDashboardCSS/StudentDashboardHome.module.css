@@ -1,10 +1,47 @@
-.studentDashboardHomeMainContainer{
-    width: 100%;
-}
-.studentDashboardHomeSubContainer{
-    width: 90%;
-    margin: 1rem auto;
-}
+
 .welcomeNoteStudentDashboard{
     font-size: 35px;
+    font-weight: 700;
+    color: #000;
+    text-align: start;
+}
+.studentHiMsg{
+    font-size: 20px;
+}
+.gretingContainer{
+    padding: 10px;
+}
+.exploreCardsDiv{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    padding: 1rem;
+    margin: 1rem 0rem;
+    justify-content: center;
+}
+.myCourseCarddivv{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    color: #fff;
+    border-radius: 10px;
+    padding: 1.5rem;
+    font-size: 18px;
+    width: 15rem;
+    font-weight: 600;
+    background: #444444;
+    justify-content: space-between;
+    align-items: center;
+}
+.exploreCoursesHeadingDiv{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    margin: 10px;
+}
+.exploreCoursesHeading{
+    color: #444444;
+    text-transform: uppercase;
+    font-size: 30px;
 }

@@ -13,13 +13,19 @@ export default function MainHeader() {
           <img src={logoImg} alt="logoImg" />
         </div>
         <div className={Styles.Header_logins_icons}>
-      <Link to="/LoginPage" ><div className={Styles.Header_Login}>Login</div></Link>
-         <Link to='/'> <div className={Styles.Header_icons}>
-          <IoMdHome />
-          </div>
+          <Link to="/LoginPage">
+            <div className={Styles.Header_Login}>Login</div>
+          </Link>
+          <Link to="/">
+            {" "}
+            <div className={Styles.Header_icons}>
+              <IoMdHome />
+            </div>
           </Link>
           <div className={Styles.Header_icons}>
-           <IoCall />
+            <Link to="/ContactUs">
+              <IoCall />
+            </Link>
           </div>
         </div>
       </div>
