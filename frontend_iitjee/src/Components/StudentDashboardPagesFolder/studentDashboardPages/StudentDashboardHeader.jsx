@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import styles from "../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
-import headerImage from '../../assets/EGTLogoExamHeaderCompressed.jpg';
-import logostudent from '../../assets/OtsCourseCardImages/ots1.png';
+import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
+import headerImage from '../../../assets/EGTLogoExamHeaderCompressed.jpg';
+import logostudent from '../../../assets/OtsCourseCardImages/ots1.png';
 
 export default function StudentDashboardHeader() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);

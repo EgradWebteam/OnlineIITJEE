@@ -96,9 +96,10 @@
     background-color: #444444;
     color: white;
     text-align: center;
+    text-transform: uppercase;
   }
   .exploreCoursesHeader h3{
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: bolder;
     margin: 0px;
   }
@@ -174,7 +175,11 @@
   padding: 2rem;
   gap: 2rem;
 }
-
+.imageSection{
+  padding: 2rem;
+  width: 90%;
+  margin: 0 auto;
+}
 
   @media (max-width:1440px) {
     .homePageSubContainer{

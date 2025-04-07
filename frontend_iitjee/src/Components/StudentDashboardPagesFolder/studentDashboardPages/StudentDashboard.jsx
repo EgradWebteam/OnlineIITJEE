@@ -1,5 +1,5 @@
 import React from 'react'
-import StudentDashboardHeader from '../StudentDashboardHeader.jsx';
+import StudentDashboardHeader from '../StudentDashboardPages/StudentDashboardHeader.jsx';
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css"
 import StudentDashboardLeftSideBar from '../StudentDashboardPages/StudentDashboardLeftSidebar.jsx'
 export default function StudentDashboard() {
