@@ -20,7 +20,7 @@ function App() {
       <Route path='/LoginPage' element={<StudentLogin />} />
       <Route path="/StudentRegistrationPage" element={<StudentRegistration />} />
       <Route path="/AdminLoginPage" element={<AdminLogin />} />
-      <Route path="/StudentDashboard" element={<StudentDashboard/>}/>
+      <Route path="/StudentDashboard/:sessionId" element={<StudentDashboard />} />
       <Route path='/TermsAndConditions' element={<TermsAndConditions/>}/>
     </Routes>
     </BrowserRouter>
