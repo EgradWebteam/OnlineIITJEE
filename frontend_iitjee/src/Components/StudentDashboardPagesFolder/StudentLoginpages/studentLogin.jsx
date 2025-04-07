@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styles from "../../../Styles/StudentDashboardCSS/Student.module.css"; // Using the same classes as StudentLogin
 import stdLogo from '../../../assets/logoCapImg.2509a17adb384c89e21a.jpeg'
 import MainHeader from '../../LandingPagesFolder/mainPageHeaderFooterFolder/MainHeader';
@@ -209,7 +210,7 @@ export default function StudentLogin() {
         {/* Forgot password link */}
         {!isForgotPassword && !isResetPassword && (
           <div className={styles.studentLoginLinks}>
-            <p>New here? <a href="/student-registration">Register</a></p>
+            <p>New here? <Link to="/StudentRegistrationPage">Register</Link></p>
             <p><a href="#" onClick={() => setIsForgotPassword(true)}>Forgot Password?</a></p>
           </div>
         )}
