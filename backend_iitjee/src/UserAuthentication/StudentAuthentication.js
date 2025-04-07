@@ -11,12 +11,6 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// Azure config
-const AZURE_SAS_TOKEN = process.env.AZURE_SAS_TOKEN;
-const AZURE_ACCOUNT_NAME = process.env.AZURE_STORAGE_ACCOUNT_NAME;
-const AZURE_CONTAINER_NAME = process.env.AZURE_CONTAINER_NAME;
-const STUDENT_PHOTO_FOLDER = 'student-data/';
-const AZURE_BLOB_URL = `https://iitstorage.blob.core.windows.net/${AZURE_ACCOUNT_NAME}?sp=rawl&st=2025-04-07T06:53:08Z&se=2025-04-08T14:53:08Z&sv=2024-11-04&sr=c&sig=kMpx6H6FqGNk%2BOkdI79%2BYwH3sG18ghJVJ9y8aRqSye0%3D`;
 
 // Upload file to Azure using SAS token
 async function uploadToAzureWithSAS(file) {
