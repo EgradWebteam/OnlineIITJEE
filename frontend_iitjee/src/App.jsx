@@ -1,5 +1,6 @@
 import React, {Suspense} from 'react'
 import {BrowserRouter, Routes, Route} from "react-router-dom";
+const TermsAndConditions = React.lazy(() => import('./Components/GlobalFiles/TermsAndConditions.jsx'));
 // const StudentDashboard = React.lazy(() => import('./Components/StudentDashboardPagesFolder/studentDashboardPages/StudentDashboard.jsx'));
 const LandingPageIITJEE = React.lazy(() => import('./Components/LandingPagesFolder/LandingPageIITJEE.jsx'));
 const OTSandORVLHomePage = React.lazy(() => import('./Components/LandingPagesFolder/OTSandORVLHomePage.jsx'));
@@ -20,6 +21,7 @@ function App() {
       <Route path="/StudentRegistrationPage" element={<StudentRegistration />} />
       <Route path="/AdminLoginPage" element={<AdminLogin />} />
       <Route path="/StudentDashboard" element={<StudentDashboard/>}/>
+      <Route path='/TermsAndConditions' element={<TermsAndConditions/>}/>
     </Routes>
     </BrowserRouter>
    </Suspense>

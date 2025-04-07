@@ -87,6 +87,9 @@ padding: 5px;
        flex-direction: row;
        padding: 0;
     }
+    .list_headingforfooter {
+        font-size: 1.2rem;
+    }
     .list_headingforfooter li{
         font-size: .8rem;
     }
