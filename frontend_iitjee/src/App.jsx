@@ -16,6 +16,7 @@ function App() {
       <Route path="/" element={<LandingPageIITJEE />} />
       <Route path="/OTSHomePage" element={<OTSandORVLHomePage/>}/>
       <Route path="/ORVLHomePage" element={<OTSandORVLHomePage/>}/>
+      <Route path='/LoginPage' element={<StudentLogin />} />
       <Route path="/StudentRegistrationPage" element={<StudentRegistration />} />
       <Route path="/AdminLoginPage" element={<AdminLogin />} />
       <Route path="/StudentDashboard" element={<StudentDashboard/>}/>
