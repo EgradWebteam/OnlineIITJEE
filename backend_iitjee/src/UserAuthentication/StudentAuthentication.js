@@ -121,4 +121,73 @@ router.post('/studentRegistration', upload.fields([{ name: 'uploadedPhoto' }]), 
   }
 });
 
+// Route: POST /api/studentLogin
+router.post("/studentLogin", async (req, res) => {
+  const { emailId, password, sessionId } = req.body;
+  console.log(emailId, password, sessionId);
+
+  try {
+    const sql = `
+      SELECT student_registration_id, candidate_name, password, email_id, 
+             last_login_time, is_logged_in, session_id, uploaded_photo, mobile_no 
+      FROM iit_student_registration 
+      WHERE email_id = ?`;
+    
+    const [users] = await db.query(sql, [emailId]);
+
+    if (users.length === 0) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    const user = users[0];
+    const newSessionId = crypto.randomBytes(16).toString("hex");
+
+    // If already logged in, check session ID
+    if (user.is_logged_in && user.session_id && user.session_id !== sessionId) {
+      return res.status(403).json({ message: "You are already logged in on another device." });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    const accessToken = jwt.sign(
+      { user_Id: user.student_registration_id },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+
+    const encryptedUserId = encryptDataWithAN(user.student_registration_id.toString());
+
+    // Update login status and session ID
+    const updateSql = `
+      UPDATE iit_student_registration 
+      SET is_logged_in = TRUE, last_login_time = NOW(), session_id = ? 
+      WHERE student_registration_id = ?`;
+    await db.query(updateSql, [newSessionId, user.student_registration_id]);
+
+    res.json({
+      studentId: encryptedUserId,
+      decryptedId: user.student_registration_id,
+      accessToken,
+      userDetails: {
+        student_registration_id: user.student_registration_id,
+        candidate_name: user.candidate_name,
+        email_id: user.email_id,
+        last_login_time: user.last_login_time,
+        uploaded_photo: user.uploaded_photo,
+        mobile_no: user.mobile_no,
+      },
+      sessionId: newSessionId,
+    });
+
+  } catch (error) {
+    console.error("Error during login:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
 module.exports = router;
