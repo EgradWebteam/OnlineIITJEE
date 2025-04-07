@@ -88,7 +88,6 @@ flex-direction: row;
     width: 280px;
     display: flex;
     flex-direction: column;
-    padding: 10px;
     background: #fcfcfc;
     height: auto;
     box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1);
@@ -98,32 +97,35 @@ flex-direction: row;
     z-index: 1;
 }
 .LeftsidebarItem{
-    display: flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
+  width: 100%;
   padding: 12px;
   font-weight: bold;
+  font-size: larger;
   color: black;
-  border-radius: 20px;
-  background-color: transparent;
+  background-color: white;
   border: none;
   cursor: pointer;
-  transition: background 0.3s ease;
-  font-size: larger;
-  justify-content: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 .LeftsidebarItem span{
     margin-left: 1.5rem;
 }
 .activeLeftSideItem{
+  position: relative;
     background: rgb(7, 174, 240);
     color: #ffffff;
     border-radius: 0 100px 100px 0;
-    width: 100%;
 }
 .StudentDashboardcontentArea{
-    flex-grow: 1;
-    padding: 20px;
-    overflow-y: auto;
+    /* flex-grow: 1; */
+    padding: 5px;
+    height: auto;
+    margin: 10px auto;
+    width: 90%;
+
 }
 .studentDashboardHamburgerMenu {
     display: none;
@@ -134,6 +136,10 @@ flex-direction: row;
     background: none;
     border: none;
     cursor: pointer;
+  }
+  .StudentDashboardRightSideContentHolder{
+    width: 100%;
+    overflow: scroll;
   }
   
   /* Sidebar Responsive Behavior */

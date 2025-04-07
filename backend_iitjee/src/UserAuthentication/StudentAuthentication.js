@@ -1,7 +1,9 @@
 const express = require('express');
 const multer = require('multer');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
 const { BlobServiceClient } = require('@azure/storage-blob');
 const db = require('../config/database'); // Make sure your DB connection is set up
 
@@ -11,32 +13,41 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// Azure config
-const AZURE_SAS_TOKEN = process.env.AZURE_SAS_TOKEN;
-const AZURE_ACCOUNT_NAME = process.env.AZURE_STORAGE_ACCOUNT_NAME;
-const AZURE_CONTAINER_NAME = process.env.AZURE_CONTAINER_NAME;
-const STUDENT_PHOTO_FOLDER = 'student-data/';
-const AZURE_BLOB_URL = `https://iitstorage.blob.core.windows.net/${AZURE_ACCOUNT_NAME}?sp=rawl&st=2025-04-07T06:53:08Z&se=2025-04-08T14:53:08Z&sv=2024-11-04&sr=c&sig=kMpx6H6FqGNk%2BOkdI79%2BYwH3sG18ghJVJ9y8aRqSye0%3D`;
 
+function encryptDataWithAN(data) {
+  const algorithm = 'aes-256-cbc';
+  const key = crypto.randomBytes(32); // Replace with your key
+  const iv = crypto.randomBytes(16);
+
+  const cipher = crypto.createCipheriv(algorithm, Buffer.from(key), iv);
+  let encrypted = cipher.update(data);
+  encrypted = Buffer.concat([encrypted, cipher.final()]);
+
+  return iv.toString('hex') + ':' + encrypted.toString('hex');
+}
 // Upload file to Azure using SAS token
 async function uploadToAzureWithSAS(file) {
   const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
   const sasToken = process.env.AZURE_SAS_TOKEN;
-  const containerName = process.env.AZURE_CONTAINER_NAME;
+  const containerName = process.env.AZURE_CONTAINER_NAME;0
+
 
   const blobServiceClient = new BlobServiceClient(
     `https://${accountName}.blob.core.windows.net?${sasToken}`
   );
 
   const containerClient = blobServiceClient.getContainerClient(containerName);
-  const blockBlobClient = containerClient.getBlockBlobClient(file.originalname);
+  const blobName = `${STUDENT_PHOTO_FOLDER}${Date.now()}-${file.originalname}`;
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
   try {
     const uploadBlobResponse = await blockBlobClient.uploadData(file.buffer, {
       blobHTTPHeaders: { blobContentType: file.mimetype },
     });
+    const fileUrl = blockBlobClient.url;
+    console.log(`File saved at: ${fileUrl}`);
     console.log(`Upload block blob ${file.originalname} successfully`, uploadBlobResponse.requestId);
-    return blockBlobClient.url;
+    return fileUrl;
   } catch (error) {
     console.error('Error uploading to Azure:', error);
     throw error;
@@ -131,8 +142,8 @@ router.post('/studentRegistration', upload.fields([{ name: 'uploadedPhoto' }]), 
 
 // Route: POST /api/studentLogin
 router.post("/studentLogin", async (req, res) => {
-  const { emailId, password, sessionId } = req.body;
-  console.log(emailId, password, sessionId);
+  const { email, password,sessionId } = req.body;
+  console.log(email, password,sessionId);
 
   try {
     const sql = `
@@ -141,7 +152,7 @@ router.post("/studentLogin", async (req, res) => {
       FROM iit_student_registration 
       WHERE email_id = ?`;
     
-    const [users] = await db.query(sql, [emailId]);
+    const [users] = await db.query(sql, [email]);
 
     if (users.length === 0) {
       return res.status(400).json({ message: "Invalid email or password" });
@@ -192,6 +203,34 @@ router.post("/studentLogin", async (req, res) => {
 
   } catch (error) {
     console.error("Error during login:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+router.post("/studentLogout", async (req, res) => {
+  const { sessionId } = req.body; // Assume sessionId is passed in the request body
+  
+  if (!sessionId) {
+    return res.status(400).json({ message: "Session ID is required" });
+  }
+
+  try {
+    // Update the database to set is_logged_in to false and clear the session ID
+    const updateSql = `
+      UPDATE iit_student_registration 
+      SET is_logged_in = FALSE, session_id = NULL 
+      WHERE session_id = ?`;
+    
+    const result = await db.query(updateSql, [sessionId]);
+
+    // Check if any rows were affected
+    if (result.affectedRows === 0) {
+      return res.status(400).json({ message: "Invalid session ID or user already logged out" });
+    }
+
+    res.json({ message: "Logged out successfully" });
+
+  } catch (error) {
+    console.error("Error during logout:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
