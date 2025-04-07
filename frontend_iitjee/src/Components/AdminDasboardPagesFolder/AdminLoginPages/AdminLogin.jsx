@@ -1,8 +1,8 @@
 import React from "react";
-import Styles from "../../../Styles/AdminLogin.module.css";
+import Styles from '../../../Styles/AdminDashboardCSS/AdminLogin.module.css'
 import AdminLoginPage from '../../LandingPagesFolder/mainPageHeaderFooterFolder/AdminLoginPage.jsx'
-import MainFooter from "../../LandingPagesFolder/mainPageHeaderFooterFolder/mainFooter.jsx";
-import MainHeader from "../../LandingPagesFolder/mainPageHeaderFooterFolder/mainHeader.jsx";
+import MainFooter from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainFooter.jsx";
+import MainHeader from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainHeader.jsx";
 
 export default function AdminLogin() {
   return (
