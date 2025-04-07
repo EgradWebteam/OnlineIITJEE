@@ -7,23 +7,30 @@
     flex-wrap: wrap;
     gap: 1rem;
     position: absolute;
-  top: 40%;
-  left: 50%;
-    transform: translate(-50%, -50%);
+   
+    left: 50%;
+    
 }
 .StudentAccountProfile{
-    border: 1px solid rgb(161, 160, 160);
+    border: 1px solid rgb(204, 202, 202);
     border-radius: 50%;
-    padding: 14px;
+    padding: 15px;
+    margin: 0 auto;
+    text-align: center;
+}
+.StudentAccountProfile2{
+    border: 1px solid black;
+    border-radius: 50%;
+    padding: 10px;
     margin: 0 auto;
     text-align: center;
 }
 .StudentAccountProfile svg{
- font-size: 70px;
+ font-size: 40px;
 }
 .StudentAccountPwds{
     display: flex;
-    gap: 1rem;
+    gap: 2rem;
 }
 .passwordsButton{
     background-color:rgb(7, 174, 240) ;
@@ -47,11 +54,12 @@
 .StudentDetails{
     display: flex;
 flex-direction: column;
+flex-wrap: wrap;
 margin: .7rem 0;
 padding: .5rem;
 justify-content: center;
 width: 100%;
-box-shadow: 0px 0px 2px 2px rgb(207, 207, 207);
+box-shadow:0 2px 7px rgba(0, 0, 0, 0.2);
 border-radius: 5px;
 font-weight: 500;
 }
@@ -59,6 +67,7 @@ font-weight: 500;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    flex-wrap: wrap;
     width: 400px;
     box-shadow:  0px 0px 3px 3px rgb(221, 218, 218);
     padding: 1rem;

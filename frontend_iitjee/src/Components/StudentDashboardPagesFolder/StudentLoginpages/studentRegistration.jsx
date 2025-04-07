@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import Styles from "../../../Styles/StudentDashboardCSS/StudentRegistration.module.css";
 import SRFormImage from "../../../assets/SRFormImage.jpg";
 import MainHeader from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainHeader";
 import MainFooter from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainFooter";
 import { BASE_URL } from "../../../../apiConfig";
+import TermsAndConditions from "../../GlobalFiles/TermsAndConditions.jsx";
+
 const StudentRegistration = () => {
   const [formData, setFormData] = useState({
     candidateName: '',
@@ -31,6 +32,8 @@ const StudentRegistration = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [openTermsAndConditions,setOpenTermsAndConditions] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -572,12 +575,14 @@ const StudentRegistration = () => {
                     <input
                       type="checkbox"
                       name="termsAccepted"
+                      className={Styles.checkboxAgree}
                       checked={formData.termsAccepted}
                       onChange={() => setFormData((prevData) => ({ ...prevData, termsAccepted: !prevData.termsAccepted }))}
-                    />
-                    I accept all the{" "}
-                    <span className={Styles.tcLink}><Link to='/TermsAndConditions'>terms & conditions</Link></span>
+                    /> 
+                     I accept all the{" "}
+                    <span onClick={setOpenTermsAndConditions} className={Styles.tcLink}>terms & conditions</span>
                   </label>
+                
                   {errors.termsAccepted && <p className={Styles.error}>{errors.termsAccepted}</p>}
                 </div>
               </div>
@@ -592,8 +597,13 @@ const StudentRegistration = () => {
               </div>
             </div>
           </form>
+          {openTermsAndConditions && (
+              <TermsAndConditions setIsModalOpen={setOpenTermsAndConditions}/>
+    )}
         </div>
+        
       </div>
+      
       <MainFooter />
     </div>
   );
