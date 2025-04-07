@@ -1,0 +1,171 @@
+/*student header css */
+.studentDashboardHeaderLogoDiv img{
+    width:100%;
+    height: 100%;
+}
+.studentDashboardHeaderLogoDiv{
+    width:250px;
+}
+.studentDashboardHeaderMain {
+    width: 95%;
+    height: 100%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+  }
+  .MainDivStudentDasboard{
+    background: white;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    height: 70px;
+    padding: 5px;
+  }
+.studentLogo{
+width: 60px;
+cursor: pointer;
+}
+  
+  .studentLogo img {
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    height: 100%;
+    border-radius: 50%;
+  }
+  
+  .onHoverOFstudent {
+    position: absolute;
+    top: 64px;
+    right: 3px;
+    background: white;
+    /* border: 1px solid #ccc; */
+    padding: 10px;
+    z-index: 100;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 170px;
+  }
+  
+  .onHoverOFstudent div {
+    padding: 6px 10px;
+    cursor: pointer;
+    font-weight: 500;
+    text-align: center;
+  }
+  
+  .profileWrapper {
+    position: relative;
+  }
+  .LogoutBtnDivStudent button{
+        border: 1px solid rgb(77, 166, 250);
+        background-color: rgb(77, 166, 250);
+        padding: 5px;
+        width: 155px;
+        border-radius: 30px;
+        color: white;
+  }
+  .LogoutBtnDivStudent button:hover{
+    border: 1px solid rgb(60, 129, 194);
+    background-color: rgb(60, 129, 194);
+    padding: 5px;
+    width: 155px;
+    border-radius: 30px;
+    color: white;
+}
+/*StudentDashboard css leftsidebar*/
+.StudentDashboardContentHolder{
+    display: flex;
+flex-direction: row;
+}
+.studentDashboardLeftNavHolder{
+    display: flex;
+}
+.stuentDashboardMainContentContainer{
+    display: flex;
+    height: 100vh;
+}
+.studentDashboardLeftsidebar{
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background: #fcfcfc;
+    height: auto;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1);
+    gap: 2rem;
+    align-items: center;
+}
+.LeftsidebarItem{
+    display: flex;
+  align-items: center;
+  padding: 12px;
+  font-weight: bold;
+  color: black;
+  border-radius: 20px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-size: larger;
+  justify-content: center;
+}
+.LeftsidebarItem span{
+    margin-left: 1.5rem;
+}
+.activeLeftSideItem{
+    background: rgb(7, 174, 240);
+    color: #ffffff;
+    border-radius: 0 100px 100px 0;
+    width: 100%;
+}
+.StudentDashboardcontentArea{
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+.studentDashboardHamburgerMenu {
+    display: none;
+  }
+  
+  .studentDashboardHamburgerMenu button {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* Sidebar Responsive Behavior */
+  @media (max-width: 768px) {
+    .studentDashboardLeftsidebar {
+      position: absolute;
+      top: 80px;
+      left: 0;
+      width: 220px;
+      height: 100vh;
+      background-color: #f9f9f9;
+      z-index: 1000;
+      /* transition: transform 0.3s ease-in-out; */
+    }
+  
+    .sidebarHidden {
+      transform: translateX(-100%);
+    }
+  
+    .sidebarVisible {
+      transform: translateX(0%);
+    }
+  
+    .studentDashboardHamburgerMenu {
+        display: block;
+        position: absolute;
+        top: 47px;
+        left: -3px;
+        z-index: 1100;
+    }
+  
+    .StudentDashboardcontentArea {
+      margin-top: 50px;
+      padding-left: 10px;
+    }
+  }
+  
