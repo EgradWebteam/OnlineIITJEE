@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import styles from "../../../Styles/StudentDashboardCSS/Student.module.css"; // Using the same classes as StudentLogin
+import stdLogo from '../../../assets/logoCapImg.2509a17adb384c89e21a.jpeg'
+import MainHeader from '../../LandingPagesFolder/mainPageHeaderFooterFolder/MainHeader';
+import MainFooter from '../../LandingPagesFolder/mainPageHeaderFooterFolder/MainFooter';
 
 export default function StudentLogin() {
   const [username, setUsername] = useState("");  // Track student username (email)
@@ -118,8 +121,13 @@ export default function StudentLogin() {
   };
 
   return (
+    <div className={styles.studentLoginHomePage}>
+       <MainHeader/>
     <div className={styles.studentLoginPage}>
       <div className={styles.studentLoginContainer}>
+        <div className={styles.studentLogo}>
+        <img src={stdLogo} alt=""stdLogo/>
+        </div>
         <h1>{isForgotPassword ? "Forgot Password" : "Student Login"}</h1>
 
         <form onSubmit={isForgotPassword ? (isResetPassword ? handleResetPassword : handleForgotPassword) : handleLogin}>
@@ -219,6 +227,8 @@ export default function StudentLogin() {
           </div>
         )}
       </div>
+    </div>
+    <MainFooter />
     </div>
   );
 }

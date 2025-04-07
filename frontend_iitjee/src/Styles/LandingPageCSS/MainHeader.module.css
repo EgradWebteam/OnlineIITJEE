@@ -9,18 +9,21 @@
 }
 .Header_Logo {
   width: 250px;
+  height: auto;
 }
 .Header_Logo img {
   width: 100%;
-  height: auto;
+  height: 100%;
 }
 .Header_logins_icons {
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 1rem;
   padding: 0 0.8rem;
 }
 .Header_Login {
-  background-color: rgb(68 68 68);
+  background-color: rgb(66, 66, 66);
   color: white;
   font-size: 18px;
   border-radius: 15px;
@@ -36,7 +39,7 @@
 
 @media (max-width: 600px) {
   .Header_MainPage {
-    background-color: rgb(189, 185, 185);
+    background-color: rgb(180, 177, 177);
   }
   .Header_container{
     padding: .5rem;
@@ -50,6 +53,7 @@
   }
   .Header_Login {
     padding: 0.4rem 0.7rem;
+    font-size: 15px;
   }
   .Header_logins_icons {
      padding: 0;
