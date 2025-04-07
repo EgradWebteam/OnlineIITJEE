@@ -1,10 +1,13 @@
 import React from "react";
 import Styles from "../../../Styles/StudentDashboardCSS/StudentRegistration.module.css";
 import SRFormImage from "../../../assets/SRFormImage.jpg";
+import MainHeader from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainHeader";
+import MainFooter from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainFooter";
 
 const StudentRegistration = () => {
   return (
     <div className={Styles.SRMainFormDiv}>
+      <MainHeader />
       <div className={Styles.SRMainSubFormDiv}>
         <div className={Styles.RegistrationParentDiv}>
           <h2 className={Styles.RegistrationHeading}>
@@ -352,7 +355,6 @@ const StudentRegistration = () => {
               </div>
               <div className={Styles.SRSubField2}>
                 <div className={Styles.termsAndConditions}>
-                  <input type="checkbox" required />
                   <label>
                     I accept all the{" "}
                     <span className={Styles.tcLink}>terms & conditions</span>
@@ -360,11 +362,11 @@ const StudentRegistration = () => {
                 </div>
               </div>
               <div>
-                <button type="submit" onClick={() => setSubmitType("buyNow")}>
+                <button type="submit" className={Styles.buttonforStdReg} onClick={() => setSubmitType("buyNow")}>
                   Pay Now
                 </button>
 
-                <button type="submit" onClick={() => setSubmitType("register")}>
+                <button type="submit"  className={Styles.buttonforStdReg} onClick={() => setSubmitType("register")}>
                   Register
                 </button>
               </div>
@@ -372,6 +374,7 @@ const StudentRegistration = () => {
           </form>
         </div>
       </div>
+      <MainFooter />
     </div>
   );
 };
