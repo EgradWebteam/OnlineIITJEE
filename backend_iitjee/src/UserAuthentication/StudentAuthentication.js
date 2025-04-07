@@ -1,70 +1,41 @@
-
 const express = require('express');
-const bcrypt = require('bcrypt');
 const multer = require('multer');
+const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
-const mysql = require('mysql2/promise');
-const {
-  BlobServiceClient,
-  StorageSharedKeyCredential,
-  generateBlobSASQueryParameters,
-  BlobSASPermissions,
-  SASProtocol
-} = require('@azure/storage-blob');
+const { BlobServiceClient } = require('@azure/storage-blob');
+const db = require('../config/database'); // Make sure your DB connection is set up
 
 const router = express.Router();
 
-// Azure Storage Config
-const AZURE_STORAGE_ACCOUNT_NAME = 'your_account_name';
-const AZURE_STORAGE_ACCOUNT_KEY = 'your_account_key';
-const AZURE_CONTAINER_NAME = 'iit-jee-container';
+// Multer setup
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+// Azure config
+const AZURE_SAS_TOKEN = process.env.AZURE_SAS_TOKEN;
+const AZURE_ACCOUNT_NAME = process.env.AZURE_STORAGE_ACCOUNT_NAME;
+const AZURE_CONTAINER_NAME = process.env.AZURE_CONTAINER_NAME;
 const STUDENT_PHOTO_FOLDER = 'student-data/';
+const AZURE_BLOB_URL = `https://iitstorage.blob.core.windows.net/${AZURE_ACCOUNT_NAME}?sp=rawl&st=2025-04-07T06:53:08Z&se=2025-04-08T14:53:08Z&sv=2024-11-04&sr=c&sig=kMpx6H6FqGNk%2BOkdI79%2BYwH3sG18ghJVJ9y8aRqSye0%3D`;
 
-const AZURE_CONNECTION_STRING = 'DefaultEndpointsProtocol=https;AccountName=your_account_name;AccountKey=your_account_key;EndpointSuffix=core.windows.net';
-
-// Azure Upload Function with SAS
+// Upload file to Azure using SAS token
 const uploadToAzureWithSAS = async (file) => {
-  const blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_CONNECTION_STRING);
+  const blobServiceClient = new BlobServiceClient(`${AZURE_BLOB_URL}?${AZURE_SAS_TOKEN}`);
   const containerClient = blobServiceClient.getContainerClient(AZURE_CONTAINER_NAME);
 
-  const uniqueBlobName = `${STUDENT_PHOTO_FOLDER}${Date.now()}-${file.originalname}`;
-  const blockBlobClient = containerClient.getBlockBlobClient(uniqueBlobName);
+  const blobName = `${STUDENT_PHOTO_FOLDER}${Date.now()}-${file.originalname}`;
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
   await blockBlobClient.uploadData(file.buffer, {
-    blobHTTPHeaders: { blobContentType: file.mimetype }
+    blobHTTPHeaders: {
+      blobContentType: file.mimetype,
+    },
   });
 
-  const sharedKeyCredential = new StorageSharedKeyCredential(
-    AZURE_STORAGE_ACCOUNT_NAME,
-    AZURE_STORAGE_ACCOUNT_KEY
-  );
-
-  const expiresOn = new Date(new Date().valueOf() + 7 * 24 * 60 * 60 * 1000); // 7 days
-  const sasToken = generateBlobSASQueryParameters({
-    containerName: AZURE_CONTAINER_NAME,
-    blobName: uniqueBlobName,
-    permissions: BlobSASPermissions.parse("r"),
-    startsOn: new Date(),
-    expiresOn,
-    protocol: SASProtocol.Https,
-  }, sharedKeyCredential).toString();
-
-  return `${blockBlobClient.url}?${sasToken}`;
+  return `${blockBlobClient.url}?${AZURE_SAS_TOKEN}`;
 };
 
-// Multer Setup
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
-// MySQL Database Setup
-const db = await mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: 'yourpassword',
-  database: 'yourdbname',
-});
-
-// Nodemailer Setup
+// Nodemailer setup
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -73,16 +44,15 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-
-// Password Generator (example)
+// Password generator
 const generatePassword = () => {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   return Array.from({ length: 10 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
 };
 
-// 📌 Student Registration API
+// Route: POST /api/studentRegistration
 router.post('/studentRegistration', upload.fields([{ name: 'UploadedPhoto' }]), async (req, res) => {
-  const stdRegisterFormData = req.body;
+  const form = req.body;
   const files = req.files;
 
   try {
@@ -93,67 +63,61 @@ router.post('/studentRegistration', upload.fields([{ name: 'UploadedPhoto' }]), 
       ? await uploadToAzureWithSAS(files.UploadedPhoto[0])
       : null;
 
-    const insertSQL = `
+    const portalId = `JEE-${Date.now()}`;
+
+    const insertQuery = `
       INSERT INTO iit_student_registration 
       (candidate_name, date_of_birth, gender, category, email_id, confirm_email_id, contact_no, father_name, occupation, mobile_no, line_1, state, districts, pincode, qualifications, college_name, passing_year, marks, uploaded_photo, portal_id, password, password_change_attempts, reset_code) 
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
-    const portalId = `JEE-${Date.now()}`;
-    const insertValues = [
-      stdRegisterFormData.candidateName,
-      stdRegisterFormData.dateOfBirth,
-      stdRegisterFormData.Gender,
-      stdRegisterFormData.Category,
-      stdRegisterFormData.emailId,
-      stdRegisterFormData.confirmEmailId,
-      stdRegisterFormData.contactNo,
-      stdRegisterFormData.fatherName,
-      stdRegisterFormData.occupation,
-      stdRegisterFormData.mobileNo,
-      stdRegisterFormData.line1,
-      stdRegisterFormData.state,
-      stdRegisterFormData.districts,
-      stdRegisterFormData.pincode,
-      stdRegisterFormData.qualifications,
-      stdRegisterFormData.NameOfCollege,
-      stdRegisterFormData.passingYear,
-      stdRegisterFormData.marks,
+    const values = [
+      form.candidateName,
+      form.dateOfBirth,
+      form.Gender,
+      form.Category,
+      form.emailId,
+      form.confirmEmailId,
+      form.contactNo,
+      form.fatherName,
+      form.occupation,
+      form.mobileNo,
+      form.line1,
+      form.state,
+      form.districts,
+      form.pincode,
+      form.qualifications,
+      form.NameOfCollege,
+      form.passingYear,
+      form.marks,
       uploadedPhotoSASUrl,
       portalId,
       hashedPassword,
       0,
-      0
+      0,
     ];
 
-    const [insertResult] = await db.execute(insertSQL, insertValues);
-    const studentregistrationId = insertResult.insertId;
+    const [result] = await db.execute(insertQuery, values);
 
-    // Confirmation email
     const mailOptions = {
       from: process.env.GMAIL_USER,
-      to: stdRegisterFormData.emailId,
+      to: form.emailId,
       subject: 'Registration Successful',
-      text: `Dear ${stdRegisterFormData.candidateName},\n\nYour registration is successful.\n\nHere is your auto-generated password: ${autoGeneratedPassword}\n\nPlease change your password after logging in.\n\nBest regards,\nYour Team`
+      text: `Hi ${form.candidateName},\n\nYour registration is successful.\nPortal ID: ${portalId}\nPassword: ${autoGeneratedPassword}\n\nPlease log in and change your password.`,
     };
 
     await transporter.sendMail(mailOptions);
 
     res.json({
       success: true,
-      message: 'Registration successful. Email sent!',
-      studentregistrationId,
-      portalId
+      message: 'Student registered successfully. Email sent!',
+      studentId: result.insertId,
+      portalId,
     });
-  } catch (error) {
-    console.error('Error during student registration:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error during registration',
-      error: error.message
-    });
+  } catch (err) {
+    console.error('Registration error:', err);
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 
 module.exports = router;
-
