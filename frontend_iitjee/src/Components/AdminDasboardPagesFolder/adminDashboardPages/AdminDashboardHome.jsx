@@ -1,6 +1,6 @@
 // AdminDashboardHome.jsx
 import React, { useState } from 'react';
-import "../../../Styles/AdminDashboardCSS/AdminDashboard.css";
+import styles  from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css'; // Importing CSS module for styling
 import AdminLeftSideBar from './AdminLeftSideBar';  // Static Sidebar
 import AdminDashboardHeader from './AdminDashboardHeader'; // Static Header
 import DashBoard from './DashBoard';
@@ -37,16 +37,16 @@ export default function AdminDashboardHome() {
   };
 
   return (
-    <div className="admin-dashboard">
+    <div >
       {/* Static Header */}
       <AdminDashboardHeader />
       
-      <div className="app-layout">
+      <div className={styles.appLayout}>
         {/* Static Sidebar */}
         <AdminLeftSideBar onMenuClick={handleMenuClick} activeComponent={activeComponent} />
 
         {/* Dynamic Main Content */}
-        <div className="main-content">
+        <div className={styles.mainContent}>
           {renderMainContent()} {/* Render dynamic content based on the selected component */}
         </div>
       </div>

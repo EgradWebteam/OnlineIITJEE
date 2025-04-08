@@ -1,0 +1,95 @@
+.courseContainer {
+  padding: 1.5rem;
+  background: #f9fafc; /* Light background for the main content */
+}
+
+.pageHeading {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+}
+
+.topRow {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.addCourseBtn {
+  background-color: #00b94a; /* Green background */
+  color: white;
+  padding: 8px 18px;
+  font-weight: bold;
+  border-radius: 6px;
+  border: none;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.addCourseBtn:hover {
+  background-color: #00a23f; /* Darker green on hover */
+}
+
+.leftOptionBtn {
+  background-color: #0a1f33; /* Dark blue background for the test option */
+  color: white;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.searchBarContainer {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 25px;
+  padding: 6px 12px;
+  box-shadow: 0 0 8px rgba(0, 120, 255, 0.2);
+  width: 100%;
+  margin: 1rem 0;
+  max-width: 100%;
+}
+
+.searchBarContainer input {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.searchIcon {
+  color: #999;
+  margin-right: 6px;
+}
+
+.subHeading {
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 1rem;
+  color: #1a1a1a;
+}
+
+.tableWrapper {
+  margin-top: 1.5rem;
+}
+
+/* Style for the Online Test Series option that appears when "Add Course" is clicked */
+.onlineTestDiv {
+  background-color: antiquewhite; /* Background color for the div */
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 1rem;
+  display: inline-block;
+}
