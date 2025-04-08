@@ -51,7 +51,7 @@ const AdminLoginForm = () => {
       if (response.ok) {
         localStorage.setItem('jwt_token', data.token);
         setMessage({ type: 'success', text: 'Login successful.' });
-        navigate('/admin-dashboard');
+        navigate('/AdminDashboard');
       } else {
         setMessage({ type: 'error', text: data.message || 'Login failed. Please try again.' });
       }
