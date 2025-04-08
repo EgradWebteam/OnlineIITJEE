@@ -24,6 +24,7 @@ function App() {
       <Route path="/StudentDashboard/:userId" element={<StudentDashboard />} />
       <Route path='/TermsAndConditions' element={<TermsAndConditions/>}/>
       <Route path='/ContactUs' element={<ContactUs/>}/>
+      <Route path='/AdminDashboard' element={<AdminDashboardHome/>}/>
       <Route path='/OTSRootFile' element={<OTSRootFile/>}/>
     </Routes>
     </BrowserRouter>
