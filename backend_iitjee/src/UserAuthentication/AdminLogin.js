@@ -2,9 +2,8 @@ const express = require("express");
 const db = require("../config/database.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");  // To send emails
 const crypto = require("crypto");  // To generate reset codes
-
+const sendMail = require('../utils/email'); // Assuming you have a separate email.js function
 const router = express.Router();
 
 // Admin Login API
@@ -49,6 +48,8 @@ router.post("/adminLogin", async (req, res) => {
 });
 
 // Forgot Password API (Send reset code without saving it in the database)
+
+
 router.post("/forgot-password", async (req, res) => {
     const { email } = req.body;
 
@@ -65,26 +66,25 @@ router.post("/forgot-password", async (req, res) => {
         const resetCode = crypto.randomBytes(3).toString('hex');
         console.log("Generated reset code:", resetCode);
 
-        const transporter = nodemailer.createTransport({
-            service: 'gmail', 
-            auth: {
-                user: process.env.GMAIL_USER,  // Use Gmail address (username)
-                pass: process.env.GMAIL_PASSWORD,  // Use the Gmail password or App password (for 2FA)
-            },
+        // Prepare the email content
+        const emailContent = `Here is your password reset code: ${resetCode}. Use it to reset your password.`;
+
+        // Use setImmediate to send the email asynchronously
+        setImmediate(() => {
+            const mailOptions = {
+                from: process.env.GMAIL_USER,
+                to: email,
+                subject: "Password Reset Request",
+                text: emailContent,
+            };
+
+            console.log("Sending email to:", email);
+            sendMail(mailOptions);  // Send email asynchronously
         });
 
-        const mailOptions = {
-            from: process.env.GMAIL_USER,
-            to: email,
-            subject: "Password Reset Request",
-            text: `Here is your password reset code: ${resetCode}. Use it to reset your password.`,
-        };
+        console.log("Password reset email will be sent asynchronously");
 
-        console.log("Sending email to:", email);
-        await transporter.sendMail(mailOptions);
-
-        console.log("Password reset email sent successfully");
-
+        // Respond to the client immediately after processing
         res.status(200).json({ message: "Password reset email sent" });
 
     } catch (error) {
@@ -93,8 +93,9 @@ router.post("/forgot-password", async (req, res) => {
     }
 });
 
+
 // Verify Reset Code and Update Password API
-router.post("/verify-reset-code", async (req, res) => {
+router.post("/reset-password", async (req, res) => {
     const { resetCode, newPassword } = req.body;
 
     console.log("Received reset code verification request:", { resetCode });

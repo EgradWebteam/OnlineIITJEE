@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import Styles from "../../../Styles/StudentDashboardCSS/StudentRegistration.module.css";
 import SRFormImage from "../../../assets/SRFormImage.jpg";
 import MainHeader from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainHeader";
@@ -29,7 +29,7 @@ const StudentRegistration = () => {
     proof: null,
     termsAccepted: false,
   });
-
+ const navigate = useNavigate(); 
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -153,6 +153,8 @@ const StudentRegistration = () => {
 
         const result = await response.json();
         console.log('Success:', result);
+        alert("Registration successful! Please check your email for further instructions.");
+        navigate('/LoginPage');
         // Handle success (e.g., show a success message, redirect, etc.)
       } catch (error) {
         console.error('Error:', error);
@@ -162,7 +164,9 @@ const StudentRegistration = () => {
     console.log("Form submitted successfully!");
 };
 
-
+const handleBackButtonClick = () => {
+  navigate('/LoginPage');  
+};
   return (
     <div className={Styles.SRMainFormDiv}>
       <MainHeader />
@@ -172,7 +176,7 @@ const StudentRegistration = () => {
             Student Registration Page
           </h2>
           <div className={Styles.RegistrationBackbtnDiv}>
-            <button className={Styles.SRBackbtn}>Back</button>
+            <button onClick={handleBackButtonClick} className={Styles.SRBackbtn}>Back</button>
           </div>
           <form className={Styles.SRForm} onSubmit={handleSubmit}>
             <div>
