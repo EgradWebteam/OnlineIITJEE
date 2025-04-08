@@ -29,8 +29,8 @@ function encryptDataWithAN(data) {
 async function uploadToAzureWithSAS(file) {
   const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
   const sasToken = process.env.AZURE_SAS_TOKEN;
-  const containerName = process.env.AZURE_CONTAINER_NAME;0
-
+  const containerName = process.env.AZURE_CONTAINER_NAME;
+const STUDENT_PHOTO_FOLDER = '/student-data'
 
   const blobServiceClient = new BlobServiceClient(
     `https://${accountName}.blob.core.windows.net?${sasToken}`
