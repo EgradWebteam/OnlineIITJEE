@@ -1,32 +1,43 @@
+// AdminLeftSideBar.jsx
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
 
-const AdminLeftSideBar = () => {
-  const location = useLocation();
-
-  const isActive = (path) => location.pathname === path;
-
+const AdminLeftSideBar = ({ onMenuClick, activeComponent }) => {
   return (
     <div className="sidebar">
       <ul className="sidebar-menu">
-        <li className={isActive('/admin/dashboard') ? 'active' : ''}>
-          <Link to="/admin/dashboard">Dashboard</Link>
+        <li
+          className={activeComponent === 'dashboard' ? 'active' : ''}
+          onClick={() => onMenuClick('dashboard')}
+        >
+          Dashboard
         </li>
-        <li className={isActive('/admin/course-creation') ? 'active' : ''}>
-          <Link to="/admin/course-creation">Course Creation</Link>
+        <li
+          className={activeComponent === 'course-creation' ? 'active' : ''}
+          onClick={() => onMenuClick('course-creation')}
+        >
+          Course Creation
         </li>
-        <li className={isActive('/admin/instruction') ? 'active' : ''}>
-          <Link to="/admin/instruction">Instruction</Link>
+        <li
+          className={activeComponent === 'instruction' ? 'active' : ''}
+          onClick={() => onMenuClick('instruction')}
+        >
+          Instruction
         </li>
-        <li className={isActive('/admin/test-creation') ? 'active' : ''}>
-          <Link to="/admin/test-creation">Test Creation</Link>
+        <li
+          className={activeComponent === 'test-creation' ? 'active' : ''}
+          onClick={() => onMenuClick('test-creation')}
+        >
+          Test Creation
         </li>
-        <li className={isActive('/admin/document-upload') ? 'active' : ''}>
-          <Link to="/admin/document-upload">Document Upload</Link>
+        <li
+          className={activeComponent === 'document-upload' ? 'active' : ''}
+          onClick={() => onMenuClick('document-upload')}
+        >
+          Document Upload
         </li>
       </ul>
     </div>
   );
 };
 
-export default AdminLeftSideBar;
+export default React.memo(AdminLeftSideBar);

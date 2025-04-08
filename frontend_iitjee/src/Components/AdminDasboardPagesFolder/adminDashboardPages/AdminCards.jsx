@@ -1,6 +1,7 @@
 import React from 'react'
 
 const AdminCards = ({ icon, label, value }) => {
+  console.log("AdminCards called")
   return (
     <div>
     <div className="icon-box">{icon}</div>

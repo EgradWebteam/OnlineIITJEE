@@ -2,6 +2,7 @@ import React from 'react'
 import AdminCards from './AdminCards'
 import { FaBook, FaFileAlt, FaUserGraduate, FaQuestionCircle } from 'react-icons/fa';
 const DashBoard = () => {
+    console.log("Dashboard called")
   return (
     <div className="dashboard-content">
     <h2 className="dashboard-title">DASHBOARD</h2>

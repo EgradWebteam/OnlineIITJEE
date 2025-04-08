@@ -1,6 +1,7 @@
 import React from 'react'
 
 const AdminDashboardHeader = () => {
+  console.log("AdminDashboardHeader")
   return (
     <div className="header">
     <div className="logo"></div>
@@ -14,4 +15,4 @@ const AdminDashboardHeader = () => {
   )
 }
 
-export default AdminDashboardHeader
+export default React.memo(AdminDashboardHeader)
