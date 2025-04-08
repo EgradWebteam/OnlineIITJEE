@@ -9,6 +9,7 @@ const AdminLogin = React.lazy(() => import('./Components/AdminDasboardPagesFolde
 const FooterTermsAndConditions = React.lazy(() => import('./Components/LandingPagesFolder/mainPageHeaderFooterFolder/FooterTermsAndConditions.jsx'));
 const StudentLogin= React.lazy(() => import('./Components/StudentDashboardPagesFolder/StudentLoginpages/studentLogin.jsx'));
 const StudentDashboard = React.lazy(() => import('./Components/StudentDashboardPagesFolder/studentDashboardPages/StudentDashboard.jsx'));
+const OTSRootFile = React.lazy(() => import('./Components/OTS/OTSRootFile.jsx'));
 function App() {
   return (
    <Suspense>
@@ -20,10 +21,11 @@ function App() {
       <Route path='/LoginPage' element={<StudentLogin />} />
       <Route path="/StudentRegistrationPage" element={<StudentRegistration />} />
       <Route path="/AdminLoginPage" element={<AdminLogin />} />
-      <Route path="/StudentDashboard/:sessionId" element={<StudentDashboard />} />
-      <Route path='/FooterTermsAndConditions' element={<FooterTermsAndConditions/>}/>
+      <Route path="/StudentDashboard/:userId" element={<StudentDashboard />} />
+      <Route path='/TermsAndConditions' element={<TermsAndConditions/>}/>
       <Route path='/ContactUs' element={<ContactUs/>}/>
-      
+      <Route path='/AdminDashboard' element={<AdminDashboardHome/>}/>
+      <Route path='/OTSRootFile' element={<OTSRootFile/>}/>
     </Routes>
     </BrowserRouter>
    </Suspense>

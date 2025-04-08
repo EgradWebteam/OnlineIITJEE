@@ -159,7 +159,7 @@
     background: #222;
   }
   /*OTS and orvl home page css */
-  .imageSection img{
+  .imageSection img, .FeatureimageSection img{
     width: 100%;
     height: 100%;
     margin: 0.8rem 0;
@@ -176,6 +176,12 @@
   gap: 2rem;
 }
 .imageSection{
+  /* padding: 2rem;
+  width: 90%; */
+  margin: 0 auto;
+}
+
+.FeatureimageSection{
   padding: 2rem;
   width: 90%;
   margin: 0 auto;

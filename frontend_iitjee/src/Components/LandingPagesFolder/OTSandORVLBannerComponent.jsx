@@ -74,7 +74,7 @@ const OTSandORVLBannerComponent = () => {
                 <div className={styles.exploreCoursesHeader}>
                     <h3>{bannerData.features}</h3>
                 </div>
-                <div className={styles.imageSection}>
+                <div className={styles.FeatureimageSection}>
                     <img src={bannerData.featureImage} alt={bannerData.title} />
                 </div>
 
