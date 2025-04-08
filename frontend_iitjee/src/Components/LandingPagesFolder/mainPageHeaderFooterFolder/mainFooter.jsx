@@ -15,7 +15,7 @@ import { TbCircleLetterR } from "react-icons/tb";
             eGRADTutor
             <TbCircleLetterR />
           </div>
-          <li><Link to="/TermsAndConditions">Terms and Conditions</Link></li>
+          <li><Link to="/FooterTermsAndConditions">Terms and Conditions</Link></li>
           <li><a>Privacy Policy</a></li>
           <li><a>Pricing & Refund Policy</a></li>
         </ul>

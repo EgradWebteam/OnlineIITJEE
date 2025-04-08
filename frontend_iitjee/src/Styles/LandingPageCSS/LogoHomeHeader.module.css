@@ -1,0 +1,22 @@
+
+.LogoHomeHeaderPage{
+    display: flex;
+    box-shadow: 0px 0px 3px 3px rgb(196, 193, 193);
+    justify-content: space-between;
+    align-items: center;
+  padding: 1rem;
+}
+.LogoForHeader{
+    width: 250px;
+    height: auto;
+}
+.LogoForHeader img{
+    width: 100%;
+    height: 100%;
+}
+.HomeIcon svg{
+    font-size: 30px;
+    color: rgb(68 68 68);
+    cursor: pointer;
+}
+  
