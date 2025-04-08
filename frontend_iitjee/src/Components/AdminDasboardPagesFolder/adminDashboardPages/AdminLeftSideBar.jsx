@@ -1,18 +1,32 @@
-import React from 'react'
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 const AdminLeftSideBar = () => {
+  const location = useLocation();
+
+  const isActive = (path) => location.pathname === path;
+
   return (
     <div className="sidebar">
-    <ul className="sidebar-menu">
-      <li>Dashboard</li>
-      <li>Course Creation</li>
-      <li>Instruction</li>
-      <li>Test Creation</li>
-      <li>Document Upload</li>
-    </ul>
-  </div>
-  )
-}
+      <ul className="sidebar-menu">
+        <li className={isActive('/admin/dashboard') ? 'active' : ''}>
+          <Link to="/admin/dashboard">Dashboard</Link>
+        </li>
+        <li className={isActive('/admin/course-creation') ? 'active' : ''}>
+          <Link to="/admin/course-creation">Course Creation</Link>
+        </li>
+        <li className={isActive('/admin/instruction') ? 'active' : ''}>
+          <Link to="/admin/instruction">Instruction</Link>
+        </li>
+        <li className={isActive('/admin/test-creation') ? 'active' : ''}>
+          <Link to="/admin/test-creation">Test Creation</Link>
+        </li>
+        <li className={isActive('/admin/document-upload') ? 'active' : ''}>
+          <Link to="/admin/document-upload">Document Upload</Link>
+        </li>
+      </ul>
+    </div>
+  );
+};
 
-export default AdminLeftSideBar
-
+export default AdminLeftSideBar;
