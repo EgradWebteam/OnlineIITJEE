@@ -7,10 +7,11 @@ import AdminDashboardMainContent from './AdminDashboardMainContent'
 export default function AdminDashboardHome() {
   return (
     <div>
+       <AdminDashboardHeader />
      <div className="app-layout">
       <AdminLeftSideBar />
       <div className="main-content">
-        <AdminDashboardHeader />
+       
         <AdminCards />
         <AdminDashboardMainContent />
       </div>
