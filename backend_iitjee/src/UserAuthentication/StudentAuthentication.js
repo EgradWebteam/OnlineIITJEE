@@ -74,7 +74,6 @@ router.post('/studentRegistration', upload.fields([{ name: 'uploadedPhoto' }]), 
   const form = req.body;
   const files = req.files;
 
-  const startTime = Date.now(); // Start time tracking
 
   console.log('Form Data:', form);
 
@@ -87,8 +86,6 @@ router.post('/studentRegistration', upload.fields([{ name: 'uploadedPhoto' }]), 
 
     // Wait for both async tasks concurrently
     const [hashedPassword, uploadedPhotoSASUrl] = await Promise.all([hashedPasswordPromise, uploadPhotoPromise]);
-
-    const portalId = 2;
 
     const values = [
       form.candidateName || null,
@@ -110,7 +107,6 @@ router.post('/studentRegistration', upload.fields([{ name: 'uploadedPhoto' }]), 
       form.passingYear || null,
       form.marks || null,
       uploadedPhotoSASUrl || null,
-      portalId,
       hashedPassword,
       0, // password_change_attempts
       0, // reset_code
@@ -118,8 +114,8 @@ router.post('/studentRegistration', upload.fields([{ name: 'uploadedPhoto' }]), 
 
     const insertQuery = `
       INSERT INTO iit_student_registration 
-      (candidate_name, date_of_birth, gender, category, email_id, confirm_email_id, contact_no, father_name, occupation, mobile_no, line_1, state, district, pincode, qualification, college_name, passing_year, marks, uploaded_photo, portal_id, password, password_change_attempts, reset_code) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (candidate_name, date_of_birth, gender, category, email_id, confirm_email_id, contact_no, father_name, occupation, mobile_no, line_1, state, district, pincode, qualification, college_name, passing_year, marks, uploaded_photo, password, password_change_attempts, reset_code) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const connection = await db.getConnection();
@@ -136,8 +132,8 @@ router.post('/studentRegistration', upload.fields([{ name: 'uploadedPhoto' }]), 
       success: true,
       message: 'Student registered successfully. Email sent!',
       studentId: result.insertId,
-      portalId,
-      executionTime, // Include execution time in the response
+ 
+   
     });
 
   } catch (err) {
