@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../../Styles/CourseCards.module.css"; 
 
-const CourseCard = ({ title, cardImage, price, context, onBuy, onGoToTest }) => {
+const CourseCard = React.memo(({ title, cardImage, price, context, onBuy, onGoToTest }) => {
   const showBuySection = context === "buyCourses" || context === "OTSHomePage" || context === "ORVLHomePage";
 
   return (
@@ -32,6 +32,6 @@ const CourseCard = ({ title, cardImage, price, context, onBuy, onGoToTest }) => 
       )}
     </div>
   );
-};
+});
 
 export default CourseCard;

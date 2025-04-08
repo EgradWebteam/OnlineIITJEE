@@ -116,7 +116,9 @@ label {
   flex-direction: row;
   gap: 5px;
 }
-
+input.checkboxAgree{
+  width: 15px !important;
+}
 .SRImportantField {
   color: red;
   font-weight: 600;

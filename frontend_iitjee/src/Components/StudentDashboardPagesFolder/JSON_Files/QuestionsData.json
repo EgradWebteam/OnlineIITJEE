@@ -15,75 +15,42 @@
           "questions": [
             {
               "question_id": 251,
-              "questionImgName": "What is the derivative of x2?",
+              "questionImgName": "What is the derivative of x²?",
               "document_name": "Maths-10",
               "options": [
                 {
                   "option_id": 1001,
                   "option_index": "a",
-                  "optionImgName": "2x",
-                  "user_answer": null
+                  "optionImgName": "2x"
                 },
                 {
                   "option_id": 1002,
                   "option_index": "b",
-                  "optionImgName": "x",
-                  "user_answer": null
+                  "optionImgName": "x"
                 },
                 {
                   "option_id": 1003,
                   "option_index": "c",
-                  "optionImgName": "x3",
-                  "user_answer": null
+                  "optionImgName": "x³"
                 },
                 {
                   "option_id": 1004,
                   "option_index": "d",
-                  "optionImgName": "1",
-                  "user_answer": null
+                  "optionImgName": "1"
                 }
               ],
-              "qtype": [
-                {
-                  "qtype_text": "MCQ4"
-                }
-              ],
-              "quesion_type": [
-                {
-                  "quesionTypeId": 1,
-                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
-                }
-              ],
-              "answer": [
-                {
-                  "answer_text": "a"
-                }
-              ],
-              "useranswer": [
-                {
-                  "question_id": 251,
-                  "questionStatus": null
-                }
-              ],
-              "marks": [
-                {
-                  "marks_text": "3",
-                  "nmarks_text": "1"
-                }
-              ],
-              "sortid": [
-                {
-                  "sortid_text": "1"
-                }
-              ],
-              "solution": [
-                {
-                  "solution_id": 251,
-                  "solutionImgName": "2x"
-                }
-              ],
-              "paragraph": [],
-              "paragraphqno": []
+              "answer": "a",
+              "marks_text": "3",
+              "nmarks_text": "1",
+              "questionType": {
+                "quesionTypeId": 1,
+                "qtype_text": "MCQ4",
+                "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+              },
+              "solution": {
+                "solution_id": 251,
+                "solutionImgName": "2x"
+              }
             },
             {
               "question_id": 252,
@@ -93,141 +60,75 @@
                 {
                   "option_id": 1005,
                   "option_index": "a",
-                  "optionImgName": "70deg",
-                  "user_answer": null
+                  "optionImgName": "70deg"
                 },
                 {
                   "option_id": 1006,
                   "option_index": "b",
-                  "optionImgName": "80deg",
-                  "user_answer": null
+                  "optionImgName": "80deg"
                 },
                 {
                   "option_id": 1007,
                   "option_index": "c",
-                  "optionImgName": "90deg",
-                  "user_answer": null
+                  "optionImgName": "90deg"
                 },
                 {
                   "option_id": 1008,
                   "option_index": "d",
-                  "optionImgName": "60deg",
-                  "user_answer": null
+                  "optionImgName": "60deg"
                 }
               ],
-              "qtype": [
-                {
-                  "qtype_text": "MCQ4"
-                }
-              ],
-              "quesion_type": [
-                {
-                  "quesionTypeId": 1,
-                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
-                }
-              ],
-              "answer": [
-                {
-                  "answer_text": "a"
-                }
-              ],
-              "useranswer": [
-                {
-                  "question_id": 252,
-                  "questionStatus": null
-                }
-              ],
-              "marks": [
-                {
-                  "marks_text": "3",
-                  "nmarks_text": "1"
-                }
-              ],
-              "sortid": [
-                {
-                  "sortid_text": "2"
-                }
-              ],
-              "solution": [
-                {
-                  "solution_id": 252,
-                  "solutionImgName": "70deg"
-                }
-              ],
-              "paragraph": [],
-              "paragraphqno": []
+              "answer": "a",
+              "marks_text": "3",
+              "nmarks_text": "1",
+              "questionType": {
+                "quesionTypeId": 1,
+                "qtype_text": "MCQ4",
+                "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+              },
+              "solution": {
+                "solution_id": 252,
+                "solutionImgName": "70deg"
+              }
             },
             {
               "question_id": 253,
-              "questionImgName": "What is the value of xdx",
+              "questionImgName": "What is the value of xdx?",
               "document_name": "Maths-10",
               "options": [
                 {
                   "option_id": 1009,
                   "option_index": "a",
-                  "optionImgName": "0.5",
-                  "user_answer": null
+                  "optionImgName": "0.5"
                 },
                 {
                   "option_id": 1010,
                   "option_index": "b",
-                  "optionImgName": "1",
-                  "user_answer": null
+                  "optionImgName": "1"
                 },
                 {
                   "option_id": 1011,
                   "option_index": "c",
-                  "optionImgName": "0",
-                  "user_answer": null
+                  "optionImgName": "0"
                 },
                 {
                   "option_id": 1012,
                   "option_index": "d",
-                  "optionImgName": "2",
-                  "user_answer": null
+                  "optionImgName": "2"
                 }
               ],
-              "qtype": [
-                {
-                  "qtype_text": "MCQ4"
-                }
-              ],
-              "quesion_type": [
-                {
-                  "quesionTypeId": 1,
-                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
-                }
-              ],
-              "answer": [
-                {
-                  "answer_text": "a"
-                }
-              ],
-              "useranswer": [
-                {
-                  "question_id": 253,
-                  "questionStatus": null
-                }
-              ],
-              "marks": [
-                {
-                  "marks_text": "3",
-                  "nmarks_text": "1"
-                }
-              ],
-              "sortid": [
-                {
-                  "sortid_text": "3"
-                }
-              ],
-              "solution": [
-                {
-                  "solution_id": 253,
-                  "solutionImgName": "0.5"
-                }
-              ],
-              "paragraph": [],
-              "paragraphqno": []
+              "answer": "a",
+              "marks_text": "3",
+              "nmarks_text": "1",
+              "questionType": {
+                "quesionTypeId": 1,
+                "qtype_text": "MCQ4",
+                "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+              },
+              "solution": {
+                "solution_id": 253,
+                "solutionImgName": "0.5"
+              }
             }
           ]
         }
@@ -249,69 +150,36 @@
                 {
                   "option_id": 1013,
                   "option_index": "a",
-                  "optionImgName": "Speed",
-                  "user_answer": null
+                  "optionImgName": "Speed"
                 },
                 {
                   "option_id": 1014,
                   "option_index": "b",
-                  "optionImgName": "Distance",
-                  "user_answer": null
+                  "optionImgName": "Distance"
                 },
                 {
                   "option_id": 1015,
                   "option_index": "c",
-                  "optionImgName": "Acceleration",
-                  "user_answer": null
+                  "optionImgName": "Acceleration"
                 },
                 {
                   "option_id": 1016,
                   "option_index": "d",
-                  "optionImgName": "Work",
-                  "user_answer": null
+                  "optionImgName": "Work"
                 }
               ],
-              "qtype": [
-                {
-                  "qtype_text": "MCQ4"
-                }
-              ],
-              "quesion_type": [
-                {
-                  "quesionTypeId": 1,
-                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
-                }
-              ],
-              "answer": [
-                {
-                  "answer_text": "c"
-                }
-              ],
-              "useranswer": [
-                {
-                  "question_id": 254,
-                  "questionStatus": null
-                }
-              ],
-              "marks": [
-                {
-                  "marks_text": "3",
-                  "nmarks_text": "1"
-                }
-              ],
-              "sortid": [
-                {
-                  "sortid_text": "1"
-                }
-              ],
-              "solution": [
-                {
-                  "solution_id": 254,
-                  "solutionImgName": "Acceleration"
-                }
-              ],
-              "paragraph": [],
-              "paragraphqno": []
+              "answer": "c",
+              "marks_text": "3",
+              "nmarks_text": "1",
+              "questionType": {
+                "quesionTypeId": 1,
+                "qtype_text": "MCQ4",
+                "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+              },
+              "solution": {
+                "solution_id": 254,
+                "solutionImgName": "Acceleration"
+              }
             },
             {
               "question_id": 255,
@@ -321,69 +189,36 @@
                 {
                   "option_id": 1017,
                   "option_index": "a",
-                  "optionImgName": "Joule",
-                  "user_answer": null
+                  "optionImgName": "Joule"
                 },
                 {
                   "option_id": 1018,
                   "option_index": "b",
-                  "optionImgName": "Pascal",
-                  "user_answer": null
+                  "optionImgName": "Pascal"
                 },
                 {
                   "option_id": 1019,
                   "option_index": "c",
-                  "optionImgName": "Newton",
-                  "user_answer": null
+                  "optionImgName": "Newton"
                 },
                 {
                   "option_id": 1020,
                   "option_index": "d",
-                  "optionImgName": "Watt",
-                  "user_answer": null
+                  "optionImgName": "Watt"
                 }
               ],
-              "qtype": [
-                {
-                  "qtype_text": "MCQ4"
-                }
-              ],
-              "quesion_type": [
-                {
-                  "quesionTypeId": 1,
-                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
-                }
-              ],
-              "answer": [
-                {
-                  "answer_text": "c"
-                }
-              ],
-              "useranswer": [
-                {
-                  "question_id": 255,
-                  "questionStatus": null
-                }
-              ],
-              "marks": [
-                {
-                  "marks_text": "3",
-                  "nmarks_text": "1"
-                }
-              ],
-              "sortid": [
-                {
-                  "sortid_text": "2"
-                }
-              ],
-              "solution": [
-                {
-                  "solution_id": 255,
-                  "solutionImgName": "Newton"
-                }
-              ],
-              "paragraph": [],
-              "paragraphqno": []
+              "answer": "c",
+              "marks_text": "3",
+              "nmarks_text": "1",
+              "questionType": {
+                "quesionTypeId": 1,
+                "qtype_text": "MCQ4",
+                "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+              },
+              "solution": {
+                "solution_id": 255,
+                "solutionImgName": "Newton"
+              }
             },
             {
               "question_id": 256,
@@ -393,69 +228,36 @@
                 {
                   "option_id": 1021,
                   "option_index": "a",
-                  "optionImgName": "Increases",
-                  "user_answer": null
+                  "optionImgName": "Increases"
                 },
                 {
                   "option_id": 1022,
                   "option_index": "b",
-                  "optionImgName": "Decreases",
-                  "user_answer": null
+                  "optionImgName": "Decreases"
                 },
                 {
                   "option_id": 1023,
                   "option_index": "c",
-                  "optionImgName": "Remains same",
-                  "user_answer": null
+                  "optionImgName": "Remains same"
                 },
                 {
                   "option_id": 1024,
                   "option_index": "d",
-                  "optionImgName": "Becomes zero",
-                  "user_answer": null
+                  "optionImgName": "Becomes zero"
                 }
               ],
-              "qtype": [
-                {
-                  "qtype_text": "MCQ4"
-                }
-              ],
-              "quesion_type": [
-                {
-                  "quesionTypeId": 1,
-                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
-                }
-              ],
-              "answer": [
-                {
-                  "answer_text": "b"
-                }
-              ],
-              "useranswer": [
-                {
-                  "question_id": 256,
-                  "questionStatus": null
-                }
-              ],
-              "marks": [
-                {
-                  "marks_text": "3",
-                  "nmarks_text": "1"
-                }
-              ],
-              "sortid": [
-                {
-                  "sortid_text": "3"
-                }
-              ],
-              "solution": [
-                {
-                  "solution_id": 256,
-                  "solutionImgName": "Decreases"
-                }
-              ],
-              "paragraph": [],
-              "paragraphqno": []
+              "answer": "b",
+              "marks_text": "3",
+              "nmarks_text": "1",
+              "questionType": {
+                "quesionTypeId": 1,
+                "qtype_text": "MCQ4",
+                "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+              },
+              "solution": {
+                "solution_id": 256,
+                "solutionImgName": "Decreases"
+              }
             }
           ]
         }
@@ -477,69 +279,36 @@
                 {
                   "option_id": 1025,
                   "option_index": "a",
-                  "optionImgName": " NaOH",
-                  "user_answer": null
+                  "optionImgName": "NaOH"
                 },
                 {
                   "option_id": 1026,
                   "option_index": "b",
-                  "optionImgName": "HCl",
-                  "user_answer": null
+                  "optionImgName": "HCl"
                 },
                 {
                   "option_id": 1027,
                   "option_index": "c",
-                  "optionImgName": "KOH",
-                  "user_answer": null
+                  "optionImgName": "KOH"
                 },
                 {
                   "option_id": 1028,
                   "option_index": "d",
-                  "optionImgName": "NH₃",
-                  "user_answer": null
+                  "optionImgName": "NH₃"
                 }
               ],
-              "qtype": [
-                {
-                  "qtype_text": "MCQ4"
-                }
-              ],
-              "quesion_type": [
-                {
-                  "quesionTypeId": 1,
-                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
-                }
-              ],
-              "answer": [
-                {
-                  "answer_text": "b"
-                }
-              ],
-              "useranswer": [
-                {
-                  "question_id": 257,
-                  "questionStatus": null
-                }
-              ],
-              "marks": [
-                {
-                  "marks_text": "3",
-                  "nmarks_text": "1"
-                }
-              ],
-              "sortid": [
-                {
-                  "sortid_text": "1"
-                }
-              ],
-              "solution": [
-                {
-                  "solution_id": 257,
-                  "solutionImgName": "HCl"
-                }
-              ],
-              "paragraph": [],
-              "paragraphqno": []
+              "answer": "b",
+              "marks_text": "3",
+              "nmarks_text": "1",
+              "questionType": {
+                "quesionTypeId": 1,
+                "qtype_text": "MCQ4",
+                "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+              },
+              "solution": {
+                "solution_id": 257,
+                "solutionImgName": "HCl"
+              }
             },
             {
               "question_id": 258,
@@ -549,69 +318,36 @@
                 {
                   "option_id": 1029,
                   "option_index": "a",
-                  "optionImgName": "6",
-                  "user_answer": null
+                  "optionImgName": "6"
                 },
                 {
                   "option_id": 1030,
                   "option_index": "b",
-                  "optionImgName": "12",
-                  "user_answer": null
+                  "optionImgName": "12"
                 },
                 {
                   "option_id": 1031,
                   "option_index": "c",
-                  "optionImgName": "8",
-                  "user_answer": null
+                  "optionImgName": "8"
                 },
                 {
                   "option_id": 1032,
                   "option_index": "d",
-                  "optionImgName": "4",
-                  "user_answer": null
+                  "optionImgName": "4"
                 }
               ],
-              "qtype": [
-                {
-                  "qtype_text": "MCQ4"
-                }
-              ],
-              "quesion_type": [
-                {
-                  "quesionTypeId": 1,
-                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
-                }
-              ],
-              "answer": [
-                {
-                  "answer_text": "a"
-                }
-              ],
-              "useranswer": [
-                {
-                  "question_id": 258,
-                  "questionStatus": null
-                }
-              ],
-              "marks": [
-                {
-                  "marks_text": "3",
-                  "nmarks_text": "1"
-                }
-              ],
-              "sortid": [
-                {
-                  "sortid_text": "2"
-                }
-              ],
-              "solution": [
-                {
-                  "solution_id": 258,
-                  "solutionImgName": "6"
-                }
-              ],
-              "paragraph": [],
-              "paragraphqno": []
+              "answer": "a",
+              "marks_text": "3",
+              "nmarks_text": "1",
+              "questionType": {
+                "quesionTypeId": 1,
+                "qtype_text": "MCQ4",
+                "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+              },
+              "solution": {
+                "solution_id": 258,
+                "solutionImgName": "6"
+              }
             },
             {
               "question_id": 259,
@@ -621,69 +357,36 @@
                 {
                   "option_id": 1033,
                   "option_index": "a",
-                  "optionImgName": "Oxygen",
-                  "user_answer": null
+                  "optionImgName": "Oxygen"
                 },
                 {
                   "option_id": 1034,
                   "option_index": "b",
-                  "optionImgName": "Nitrogen",
-                  "user_answer": null
+                  "optionImgName": "Nitrogen"
                 },
                 {
                   "option_id": 1035,
                   "option_index": "c",
-                  "optionImgName": "Hydrogen",
-                  "user_answer": null
+                  "optionImgName": "Hydrogen"
                 },
                 {
                   "option_id": 1036,
                   "option_index": "d",
-                  "optionImgName": "Carbon dioxide",
-                  "user_answer": null
+                  "optionImgName": "Carbon dioxide"
                 }
               ],
-              "qtype": [
-                {
-                  "qtype_text": "MCQ4"
-                }
-              ],
-              "quesion_type": [
-                {
-                  "quesionTypeId": 1,
-                  "typeofQuestion": "MCQ4(MCQ with 4 Options)"
-                }
-              ],
-              "answer": [
-                {
-                  "answer_text": "c"
-                }
-              ],
-              "useranswer": [
-                {
-                  "question_id": 259,
-                  "questionStatus": null
-                }
-              ],
-              "marks": [
-                {
-                  "marks_text": "3",
-                  "nmarks_text": "1"
-                }
-              ],
-              "sortid": [
-                {
-                  "sortid_text": "3"
-                }
-              ],
-              "solution": [
-                {
-                  "solution_id": 259,
-                  "solutionImgName": "Hydrogen"
-                }
-              ],
-              "paragraph": [],
-              "paragraphqno": []
+              "answer": "c",
+              "marks_text": "3",
+              "nmarks_text": "1",
+              "questionType": {
+                "quesionTypeId": 1,
+                "qtype_text": "MCQ4",
+                "typeofQuestion": "MCQ4(MCQ with 4 Options)"
+              },
+              "solution": {
+                "solution_id": 259,
+                "solutionImgName": "Hydrogen"
+              }
             }
           ]
         }

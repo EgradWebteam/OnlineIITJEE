@@ -9,6 +9,7 @@ const AdminLogin = React.lazy(() => import('./Components/AdminDasboardPagesFolde
 const AdminDashboardHome = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/AdminDashboardHome.jsx'));
 const StudentLogin= React.lazy(() => import('./Components/StudentDashboardPagesFolder/StudentLoginpages/studentLogin.jsx'));
 const StudentDashboard = React.lazy(() => import('./Components/StudentDashboardPagesFolder/studentDashboardPages/StudentDashboard.jsx'));
+const OTSRootFile = React.lazy(() => import('./Components/OTS/OTSRootFile.jsx'));
 function App() {
   return (
    <Suspense>
@@ -23,7 +24,7 @@ function App() {
       <Route path="/StudentDashboard/:userId" element={<StudentDashboard />} />
       <Route path='/TermsAndConditions' element={<TermsAndConditions/>}/>
       <Route path='/ContactUs' element={<ContactUs/>}/>
-      <Route path='/AdminDashboard' element={<AdminDashboardHome/>}/>
+      <Route path='/OTSRootFile' element={<OTSRootFile/>}/>
     </Routes>
     </BrowserRouter>
    </Suspense>

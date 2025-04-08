@@ -1,23 +1,22 @@
 import React from "react";
 import logo from "../../assets/EGTLogoExamHeaderCompressed.jpg";
+import styles from '../../Styles/GlobalFilesCSS/TermsAndConditions.module.css'
+
 const TermsAndConditions = ({ isModalOpen, setIsModalOpen }) => {
   const handleCloseTermsAndCond = () => {
     setIsModalOpen((prev) => !prev);
   };
 
   return (
-    <div>
-      <div>
-        <div>
+    <div className={styles.TermsAndConditionsHomePage}>
+      <div className={styles.TermsAdnConPopUp}>
+        <div className={styles.CloseBtnForTermsAndCon}>
           <button onClick={handleCloseTermsAndCond}>Close</button>
         </div>
-        <div>
-          <div>
+          <div className={styles.logoForTermsAndCon}>
             <img src={logo} alt="logoImg" />
           </div>
-        </div>
-
-        <div>
+        <div className={styles.TermsAdnConditionsContent}>
           <p>
             We at www.egradtutor.in value your trust placed in us by you (”
             subscriber”).{" "}
