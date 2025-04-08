@@ -1,5 +1,5 @@
 import React from 'react'
-import "../../../Styles/AdminDashboardCSS/"
+import "../../../Styles/AdminDashboardCSS/AdminDashboard.css"
 import AdminLeftSideBar from './AdminLeftSideBar'
 import AdminDashboardHeader from './AdminDashboardHeader'
 import AdminCards from './AdminCards'
