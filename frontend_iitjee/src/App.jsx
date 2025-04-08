@@ -6,7 +6,7 @@ const LandingPageIITJEE = React.lazy(() => import('./Components/LandingPagesFold
 const OTSandORVLHomePage = React.lazy(() => import('./Components/LandingPagesFolder/OTSandORVLHomePage.jsx'));
 const StudentRegistration = React.lazy(() => import('./Components/StudentDashboardPagesFolder/StudentLoginpages/studentRegistration.jsx'));
 const AdminLogin = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminLoginPages/AdminLogin.jsx'));
-const AdminDashboardHome = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/AdminDashboardHome.jsx'));
+const FooterTermsAndConditions = React.lazy(() => import('./Components/LandingPagesFolder/mainPageHeaderFooterFolder/FooterTermsAndConditions.jsx'));
 const StudentLogin= React.lazy(() => import('./Components/StudentDashboardPagesFolder/StudentLoginpages/studentLogin.jsx'));
 const StudentDashboard = React.lazy(() => import('./Components/StudentDashboardPagesFolder/studentDashboardPages/StudentDashboard.jsx'));
 function App() {
@@ -21,8 +21,9 @@ function App() {
       <Route path="/StudentRegistrationPage" element={<StudentRegistration />} />
       <Route path="/AdminLoginPage" element={<AdminLogin />} />
       <Route path="/StudentDashboard/:sessionId" element={<StudentDashboard />} />
-      <Route path='/TermsAndConditions' element={<TermsAndConditions/>}/>
+      <Route path='/FooterTermsAndConditions' element={<FooterTermsAndConditions/>}/>
       <Route path='/ContactUs' element={<ContactUs/>}/>
+      
     </Routes>
     </BrowserRouter>
    </Suspense>
