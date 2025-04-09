@@ -220,12 +220,13 @@ nav ul li .active {
     color: #888;
   }
   
-  .actions button {
+  .actions {
     margin: 0 4px;
     padding: 6px 10px;
     border-radius: 6px;
     border: none;
     cursor: pointer;
+    display:flex;
     font-size: 14px;
   }
   
