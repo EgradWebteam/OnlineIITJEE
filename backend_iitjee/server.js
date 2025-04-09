@@ -20,6 +20,8 @@ app.use("/student", studentRegistration);
 const CourseCreationTab = require("./src/AdminDashboardAPIs/CourseCreationTab");
 app.use("/CourseCreation", CourseCreationTab); // ✅ route mount point
 
+const StudentInfo = require('./src/UserAuthentication/StudentInfo.js')
+app.use("/students", StudentInfo);
 
 app.get("/",(req, res)=> {
     res.json({message: "Backend is working!"});
