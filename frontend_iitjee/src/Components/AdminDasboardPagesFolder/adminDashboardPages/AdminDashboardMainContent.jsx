@@ -4,7 +4,7 @@ import DashBoard from './DashBoard';
 import CourseCreation from './CourseCreation';
 import TestCreation from './TestCreation';
 import DocumentUpload from './DocumentUpload';
-import Instruction from './Instruction';
+import Instruction from './InstructionsTab';
 
 const AdminDashboardMainContent = ({ activeComponent }) => {
   console.log("AdminDashboardMainContent")
@@ -20,7 +20,7 @@ const AdminDashboardMainContent = ({ activeComponent }) => {
       case 'document-upload':
         return <DocumentUpload />;
       case 'instruction':
-        return <Instruction />;
+        return <InstructionsTab />;
       default:
         return <DashBoard />;
     }

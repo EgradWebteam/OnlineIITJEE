@@ -18,7 +18,11 @@ app.use("/student", studentRegistration);
 
 
 const CourseCreationTab = require("./src/AdminDashboardAPIs/CourseCreationTab");
-app.use("/CourseCreation", CourseCreationTab); // ✅ route mount point
+app.use("/CourseCreation", CourseCreationTab); 
+
+
+const InstructionsTab = require("./src/AdminDashboardAPIs/InstructionsTab");
+app.use("/Instructions", InstructionsTab); 
 
 
 app.get("/",(req, res)=> {
