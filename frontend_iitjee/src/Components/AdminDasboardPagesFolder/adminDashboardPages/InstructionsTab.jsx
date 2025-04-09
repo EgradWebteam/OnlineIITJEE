@@ -95,22 +95,19 @@ const InstructionsTab = () => {
         `${BASE_URL}/Instructions/GetInstructionPoints/${row.instruction_id}`
       );
       if (!res.ok) throw new Error("Failed to fetch instruction points");
-  
+
       const data = await res.json();
       setInstructionPoints(data.points || []);
       setInstructionImage(data.instructionImg || null); // <-- new
       setSelectedExam(row.exam_id);
       setHeading(row.heading);
       setIsReadOnly(true);
-
     } catch (error) {
       console.error("Error opening edit form:", error);
     }
   };
 
-
   const handleToggle = (row) => console.log("Toggle", row);
-
 
   const data = instructionDetails?.instructions
     ? instructionDetails.instructions.map((instruction, index) => ({
@@ -125,9 +122,7 @@ const InstructionsTab = () => {
     : [];
 
   const instructionId = instructionDetails?.instructions?.[0]?.instruction_id;
- 
-  
-  
+
   const handleUpdate = async () => {
     console.log("Updating instructionId:", instructionId);
     try {
@@ -135,14 +130,14 @@ const InstructionsTab = () => {
         .filter((point) => point.trim() !== "")
         .map((point) => point)
         .join("\n");
-  
+
       const payload = {
         exam_id: selectedExam,
         instruction_heading: heading,
         instruction_points: formattedPoints,
         instruction_img: instructionImage, // full base64 string
       };
-  
+
       const res = await fetch(
         `${BASE_URL}/Instructions/UpdateInstruction/${instructionId}`,
         {
@@ -153,7 +148,7 @@ const InstructionsTab = () => {
           body: JSON.stringify(payload),
         }
       );
-  
+
       const result = await res.json();
       if (res.ok) {
         alert("Instruction updated successfully!");
@@ -166,9 +161,7 @@ const InstructionsTab = () => {
       alert("An error occurred while updating.");
     }
   };
-  
-  
-  
+
   const handleDelete = async (row) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this instruction?"
@@ -288,72 +281,78 @@ const InstructionsTab = () => {
         />
       </div>
 
-   
       {instructionPoints.length > 0 && (
-  <div className={styles.instructionPoints}>
-    <h4>Instruction Points:</h4>
+        <div className={styles.instructionPoints}>
+          <h4>Instruction Points:</h4>
 
-    {instructionImage && (
-      <div className={styles.instructionImage}>
-        <img
-          src={`data:image/png;base64,${instructionImage}`}
-          alt="Instruction"
-          style={{ maxWidth: "100%", height: "auto", marginBottom: "1rem" }}
-        />
-      </div>
-    )}
-
-    <ol>
-      {instructionPoints.map((point, index) => (
-        <li key={index}>
-          {isReadOnly ? (
-            point
-          ) : (
-            <input
-              type="text"
-              value={point}
-              onChange={(e) => {
-                const updated = [...instructionPoints];
-                updated[index] = e.target.value;
-                setInstructionPoints(updated);
-              }}
-              style={{ width: "100%", height: "10rem" }}
-            />
+          {instructionImage && (
+            <div className={styles.instructionImage}>
+              <img
+                src={`data:image/png;base64,${instructionImage}`}
+                alt="Instruction"
+                style={{
+                  maxWidth: "100%",
+                  height: "auto",
+                  marginBottom: "1rem",
+                }}
+              />
+            </div>
           )}
-        </li>
-      ))}
-    </ol>
 
-    {isReadOnly ? (
-      <button onClick={() => setIsReadOnly(false)} className={styles.editBtn}>
-        Edit
-      </button>
-    ) : (
-      <button onClick={handleUpdate} className={styles.updateBtn}>
-        Update
-      </button>
-    )}
-  </div>
-)}
-{!isReadOnly && (
-  <div style={{ marginBottom: "1rem" }}>
-    <label htmlFor="imageUpload"><strong>Upload New Instruction Image:</strong></label>
-  
-    <input
-  type="file"
-  accept="image/*"
-  onChange={(e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setInstructionImage(reader.result); // full base64 string with mime
-    };
-    if (file) reader.readAsDataURL(file);
-  }}
-/>
-  </div>
-)}
+          <ol>
+            {instructionPoints.map((point, index) => (
+              <li key={index}>
+                {isReadOnly ? (
+                  point
+                ) : (
+                  <input
+                    type="text"
+                    value={point}
+                    onChange={(e) => {
+                      const updated = [...instructionPoints];
+                      updated[index] = e.target.value;
+                      setInstructionPoints(updated);
+                    }}
+                    style={{ width: "100%", height: "10rem" }}
+                  />
+                )}
+              </li>
+            ))}
+          </ol>
+          {!isReadOnly && (
+            <div style={{ marginBottom: "1rem" }}>
+              <label htmlFor="imageUpload">
+                <strong>Upload New Instruction Image:</strong>
+              </label>
 
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setInstructionImage(reader.result); // full base64 string with mime
+                  };
+                  if (file) reader.readAsDataURL(file);
+                }}
+              />
+            </div>
+          )}
+          {isReadOnly ? (
+            <button
+              onClick={() => setIsReadOnly(false)}
+              className={styles.editBtn}
+            >
+              Edit
+            </button>
+          ) : (
+            <button onClick={handleUpdate} className={styles.updateBtn}>
+              Update
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 };
