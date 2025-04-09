@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import headerImage from '../../../assets/EGTLogoExamHeaderCompressed.jpg';
-import logostudent from '../../../assets/OtsCourseCardImages/ots1.png';
+import logostudent from '../../../assets/OtsCourseCardImages/iit_jee1.png';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate to handle redirection
 import { BASE_URL } from '../../../../apiConfig'; // Import your API base URL
 
