@@ -1,0 +1,73 @@
+.addButton {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .uploadForm {
+    background: #dfd6d6;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .InstructionContainer {
+    padding: 1.5rem;
+    background: #f9fafc; /* Light background for the main content */
+  }
+  .addButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+  }
+  .pageHeading {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: bold;
+    border-bottom: 41px solid #1f1f22ed;
+    padding-bottom: -0.5rem;
+    height: 10%;
+    width: 100%;
+    line-height: 181%;
+    color: white;
+  }
+  
+  .uploadForm label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+  }
+  
+  .uploadForm input[type="text"],
+  .uploadForm input[type="file"],
+  .uploadForm select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .cancelBtn, .uploadBtn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+  
+  .cancelBtn {
+    background-color: red;
+    color: white;
+  }
+  
+  .uploadBtn {
+    background-color: #007bff;
+    color: white;
+    margin-left: 10px;
+  }
+  
