@@ -60,7 +60,6 @@ const StudentDashboard = React.lazy(() => import('./Components/StudentDashboardP
 const OTSRootFile = React.lazy(() => import('./Components/OTS/OTSRootFile.jsx'));
 const MainLayout = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/AdminMainLayout.jsx'));
 const CourseCreationTab = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/CourseCreationTab.jsx'));
-
 function App() {
   return (
    <Suspense>
