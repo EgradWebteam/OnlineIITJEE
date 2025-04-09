@@ -1,3 +1,5 @@
+/* OTS HEADER CSS */
+
 .OTSMainHeader{
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
@@ -8,6 +10,7 @@
 .OTSlogoHolder{
     width: 250px;
 }
+/* OTS NAVBAR CSS */
 .OTSNavbarMainContainer{
     display: flex;
     align-items: center;
@@ -37,3 +40,335 @@ font-size: 18px;
     font-size: 20px;
     margin: -4px 5px;
 }
+/* OTS SUBJECTS AND SECTIONS CONTAINER CSS */
+.SubjectsAndSectionsConatinerMainDiv{
+    /* border: 1px solid gray; */
+}
+.OTSSubjectandSectionButtonsGroup,.QuestionTypeHolderContainer,.QuestionNumberHolderContainer{
+    border: 1px solid gainsboro;
+    padding: 0px 10px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 8px;
+}
+.OTSSubjectButton {
+    padding: 10px 15px;
+    background-color: unset;
+    font-size: 1.046rem;
+    border: 1px solid gainsboro;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .activeSubjectAndSectionBtn {
+    background-color: #587dbd;
+    color: white;
+    border-color: #587dbd;
+  }
+  
+  .OTSSubjectButtonsGroup {
+    margin-bottom: 10px;
+  }
+  
+  .OTSSectionButtonsGroup {
+    margin-top: 10px;
+  }
+  /* QUESTIONS DISPLAYING CSS */
+  .QuestionTypeHolderContainer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .marksContainer{
+    display: flex;
+    align-items: center;
+  }
+  .marksSeparator{
+    margin: 0px 10px;
+    font-size: 20px;
+  }
+  .QuestionTypeHolderContainer,.QuestionNumberHolderContainer{
+    font-weight: 600;
+    font-size: 18px;
+  }
+  .crctMarksSpan, .negtMarksSpan{
+    font-weight: 700;
+  }
+  .crctMarksSpan{
+    color: green;
+  }
+  .negtMarksSpan{
+    color: red;
+  }
+  .QuestionParaNow{
+    margin: 1rem;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  /* QUESTION OPTIONS CONTAINER CSS */
+.QuestionLabel{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+.QuestionOptionsMainContainer{
+    margin: 1rem;
+}
+.NATInputHolder {
+    width: 250px;
+    background-color: #fff;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    gap: 4px;
+    border: 2px solid #c5c0c0;
+    box-shadow: rgba(0, 0, 0, 0.2) 1.95px 1.95px 2.6
+  }
+  
+  .NATLabel {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .NATInput {
+    width: 98%;
+    height: 40px;
+    border: 2px solid #ccc;
+    border-radius: 1.5rem;
+    padding: 5px;
+    text-align: right;
+    font-size: large;
+    font-weight: bold;
+    /* margin-top: 1rem; */
+  }
+  
+  .CalculatorBox {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(3, 50px);
+    justify-content: center;
+    padding: 10px;
+  }
+  
+  .CalcButton {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #aaa;
+    border-radius: 8px;
+    font-size: larger;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.2) 1.95px 1.95px 2.6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e4e4e4;
+    color: black;
+  }
+  
+  .CalcButton:hover {
+    background-color: #c4c2c2;
+  }
+  .backSpaceBtn{
+    display: flex;
+    justify-content: center;
+    width: 85%;
+    margin: auto;
+    margin: 10px;
+  }
+  .backSpaceBtn button{
+    width: 100%;
+    padding: 10px;
+    font-size: larger;
+    background-color: #d9d9d9;
+    border-radius: 20px;
+    font-weight: bold;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    border: 1px solid darkgray;
+    text-transform: uppercase;
+    color: black;
+  }
+  .backSpaceBtn button:hover{
+    background-color: #c4c2c2;
+  }
+  .arrowBtns{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    gap: 1rem;
+  }
+  .arrowBtns button{
+    width: 45px;
+    height: 45px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    background-color: #e0e0e0;
+    font-size: x-large;
+    font-weight: bolder;
+    cursor: pointer;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+  }
+  .arrowBtns button:hover {
+    background-color: #c4c2c2;
+  }
+  /* OTS RIGHT SIDE BAR CSS */
+  .OTSRightSideBarMainContainer{
+    position: absolute;
+    right: 0;
+    border: 1px solid gainsboro;
+    background-color: white;
+    width: 300px;
+    top: 0;
+  }
+  .StudentProfileHolderOTS{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    background: #e5f6fb;
+    gap: 10px;
+  }
+  .profileImage {
+    width: 100px;
+    height: 100px;
+  }
+  .profileImage img{
+     width: 100%;
+     height: 100%;
+  }
+  .OTSRightSideBarSubContainer{
+    background-color: #e5f6fb;
+   border: 2px solid;
+  }
+  .OTSBehaviourCountBtnsContainer{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 8px;
+    background-color: white;
+  }
+  .OTSBehaviourBtnsClass{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 5px;
+    margin-bottom: 10px;
+    width: 50%;
+  }
+  .behaviorBtnImg{
+    display: flex;
+    justify-content: center;
+    height: 45px;
+    width: 45px;
+  }
+  .AnsweredBehaviourBtns{
+    background-image: url(../../assets//OTSTestInterfaceImages/Answered.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: white;
+    line-height: 34px;
+  }
+  .NotAnsweredBehaviourBtns{
+    background-image: url(../../assets//OTSTestInterfaceImages/NotAnswered.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: white;
+    line-height: 34px;
+  }
+  .NotVisitedBehaviourBtns{
+    background-image: url(../../assets//OTSTestInterfaceImages/Visited.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: white;
+    line-height: 34px;
+  }
+  .MarkedforReviewBehaviourBtns{
+    background-image: url(../../assets/OTSTestInterfaceImages/MarkedForReview.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: white;
+    line-height: 34px;
+    width: 50%;
+  }
+  .AnsMarkedforReviewBehaviourBtns{
+    background-image: url(../../assets/OTSTestInterfaceImages/AnsMarkedForReview.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: white;
+    width: 36%;
+    height: 70px;
+    line-height: 33px;
+  }
+  .SectionsAndSubjectDiv{
+    background-color: #587dbd;
+    color: white;
+    padding: 6px;
+    display: flex;
+    font-weight: 500;
+    font-size: 18px;
+  }
+  .symbolGap{
+    margin: 0px 4px;
+  }
+  .fntSize{
+    font-size: 15px;
+  }
+  .behaviorBtnImgMarkedForReiew{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 5px;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  .OTSMainFileMainContainer{
+    width: 100%;
+    position: relative;
+  }
+  .OTSMainFileSubContainer{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    width: calc(100vw - 300px);;
+  }
+  .AllQuestionRenderBox{
+    padding: 10px;
+  }
+  .QuestionsBtnsConatiner{
+    margin-top: 5px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(45px, 40px));
+    grid-auto-rows: 50px;
+    padding: 0;
+    align-items: start;
+    justify-content: start;
+    gap: 6px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-top: 10px;
+    padding-left: 4px;
+  }
+  .OTSQuestionBtn{
+    height: 45px;
+    width: 45px;
+    background-color: unset;
+    background-image: url(../../assets//OTSTestInterfaceImages/Visited.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    color: black;
+  }

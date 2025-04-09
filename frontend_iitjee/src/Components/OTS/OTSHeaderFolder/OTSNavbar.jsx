@@ -3,11 +3,11 @@ import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import { FcDocument } from "react-icons/fc";
 import { IoIosAlert } from "react-icons/io";
 
-export default function OTSNavbar() {
+export default function OTSNavbar({testName}) {
   return (
     <div className={styles.OTSNavbarMainContainer}>
       <div className={styles.OTSTestNameHolder}>
-          <p>testname</p>
+          <p>{testName}</p>
       </div>
       <div className={styles.OTSInstrctionsDivHolder}>
           <p><IoIosAlert className={styles.InstIcon}/>View Questions</p>
