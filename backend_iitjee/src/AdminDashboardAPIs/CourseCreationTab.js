@@ -113,7 +113,7 @@ router.post(
     //   let imageUrl;
     const imageUrl = `${frontendBaseURL}/OtsCourseCardImages/${courseImageFile}`;
       
-      console.log("imageUrl", imageUrl,courseImageFile, req.file);
+      // console.log("imageUrl", imageUrl,courseImageFile, req.file);
       if (courseImageFile) {
         const azureUrl = await uploadToAzureWithSAS(imageUrl);
         console.log("azureUrl",azureUrl)

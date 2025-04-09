@@ -7,7 +7,7 @@ import DashBoard from './DashBoard';
 import CourseCreationTab from './CourseCreationTab';
 import TestCreation from './TestCreation';
 import DocumentUpload from './DocumentUpload';
-import Instruction from './Instruction';
+import Instruction from './InstructionsTab';
 
 export default function AdminDashboardHome() {
   // State to track the selected component
