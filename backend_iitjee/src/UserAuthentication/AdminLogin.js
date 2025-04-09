@@ -6,81 +6,96 @@ const crypto = require("crypto");  // To generate reset codes
 const sendMail = require('../utils/email'); // Assuming you have a separate email.js function
 const router = express.Router();
 
-// Admin Login API
+
+
 router.post("/adminLogin", async (req, res) => {
     const { email, password } = req.body;
-
-    console.log("Received login request:", { email });
-
-    try {
-        const [rows] = await db.query("SELECT password, role FROM iit_admin_data WHERE admin_email_id = ?", [email]);
-        if (rows.length === 0) {
-            console.log("Invalid email or password");
-            return res.status(401).json({ message: "Invalid email or password" });
-        }
-
-        const user = rows[0];
-        console.log("User found:", { email, role: user.role });
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            console.log("Password mismatch");
-            return res.status(401).json({ message: "Invalid email or password" });
-        }
-
-        const token = jwt.sign(
-            { role: user.role },
-            process.env.JWT_SECRET,
-            { expiresIn: "3h" }
-        );
-
-        console.log("Login successful, sending JWT token");
-
-        res.status(200).json({
-            message: "Login successful",
-            token,
-        });
-
-    } catch (error) {
-        console.error("Error in login:", error);
-        res.status(500).json({ message: "Server error" });
+  
+   
+    if (!email|| !password) {
+      return res.status(400).json({ message: "Email and password are required" });
     }
-});
+  
+    console.log("Received login request:", { email });
+  
+    let connection;
+  
+    try {
+       
+ 
+      connection = await db.getConnection();
+  
+      const [rows] = await connection.query(
+        "SELECT password, role FROM iit_admin_data WHERE admin_email_id = ?",
+        [email]
+      );
+  
+      if (rows.length === 0) {
+        console.log("Invalid email or password");
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+  
+      const user = rows[0];
+      console.log("User found:", { email, role: user.role });
+  
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        console.log("Password mismatch");
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+  
+      const token = jwt.sign(
+        { role: user.role },
+        process.env.JWT_SECRET,
+        { expiresIn: "3h" }
+      );
+  
+      console.log("Login successful, sending JWT token");
+  
+      res.status(200).json({
+        message: "Login successful",
+        token,
+      });
+    } catch (error) {
+      console.error("Error in login:", error);
+      res.status(500).json({ message: "Server error" });
+    } finally {
+      if (connection) connection.release();
+    }
+  });
+const generateResetCode = () => {
+    return Math.floor(100000 + Math.random() * 900000);
+  };
 
 // Forgot Password API (Send reset code without saving it in the database)
 
 
-router.post("/forgot-password", async (req, res) => {
+router.post("/forgot-passwordadmin", async (req, res) => {
     const { email } = req.body;
 
     console.log("Received forgot password request:", { email });
-
+    let connection;
     try {
-        const [userRows] = await db.query("SELECT * FROM iit_admin_data WHERE admin_email_id = ?", [email]);
+      
+        // ✅ Only reached if valid email and password provided
+        connection = await db.getConnection();
+        const [userRows] = await connection.query("SELECT admin_email_id FROM iit_admin_data WHERE admin_email_id = ?", [email]);
         if (userRows.length === 0) {
             console.log("Email not found in database");
             return res.status(404).json({ message: "Email not found" });
         }
 
         // Generate a 6-character reset code (e.g., 'a1b2c3')
-        const resetCode = crypto.randomBytes(3).toString('hex');
+        const resetCode = generateResetCode();
         console.log("Generated reset code:", resetCode);
-
-        // Prepare the email content
-        const emailContent = `Here is your password reset code: ${resetCode}. Use it to reset your password.`;
-
-        // Use setImmediate to send the email asynchronously
-        setImmediate(() => {
-            const mailOptions = {
-                from: process.env.GMAIL_USER,
-                to: email,
-                subject: "Password Reset Request",
-                text: emailContent,
-            };
-
-            console.log("Sending email to:", email);
-            sendMail(mailOptions);  // Send email asynchronously
-        });
+        const updateQuery =
+        "UPDATE iit_admin_data SET reset_code = ? WHERE admin_email_id = ?";
+      await connection.query(updateQuery, [resetCode, email]);
+       
+        const subject = "Password Reset Request";
+        const text = `Here is your password reset code: ${resetCode}. Use it to reset your password.`;
+        sendMail(email, subject, text);
+      
 
         console.log("Password reset email will be sent asynchronously");
 
@@ -90,31 +105,44 @@ router.post("/forgot-password", async (req, res) => {
     } catch (error) {
         console.error("Error in sending reset email:", error);
         res.status(500).json({ message: "Error sending reset email" });
-    }
+    } finally {
+        if (connection) connection.release();
+      }
 });
 
 
 // Verify Reset Code and Update Password API
-router.post("/reset-password", async (req, res) => {
-    const { resetCode, newPassword } = req.body;
-
-    console.log("Received reset code verification request:", { resetCode });
-
+router.post("/reset-passwordadmin", async (req, res) => {
+    const { resetCode, newPassword , email} = req.body;
+    if (!resetCode || !newPassword || !email) {
+        console.log("No reset code or new password or email  provided.");
+        return res.status(400).json({ message: "Reset code,email and  new password is required." });
+    }
+    console.log("Received reset code verification request:", { resetCode ,newPassword});
+    let connection;
     try {
-        // This is where you can check the reset code from the frontend and verify it matches with the reset code
-        // that the user received in their email. Since we're not saving the reset code in the database, you'll need
-        // to do the comparison on the frontend.
-
-        if (!resetCode) {
-            console.log("No reset code provided.");
-            return res.status(400).json({ message: "Reset code is required." });
+        connection = await db.getConnection();
+        const [rows] = await connection.query(
+            "SELECT reset_code FROM iit_admin_data WHERE admin_email_id = ?",
+            [email]
+          );
+          if (rows.length === 0) {
+            console.log("Email not found in database");
+            return res.status(404).json({ message: "Email not found" });
         }
-
-        // Hash the new password
+        console.log("Rows fetched:", rows[0].reset_code);
+        // Check if the reset code is valid
+        const isResetCodeMatch = Number(rows[0].reset_code) === String(resetCode);
+        if (!isResetCodeMatch) {
+            console.log("Invalid reset code");
+            return res.status(400).json({ message: "Invalid reset code" });
+        }
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
         // Update the password for the user (the reset code logic is now managed on the frontend)
-        await db.query("UPDATE iit_admin_data SET password = ? WHERE reset_code = ?", [hashedPassword, resetCode]);
+        const updateQuery =
+        "UPDATE iit_admin_data SET password = ? WHERE admin_email_id = ?";
+      await connection.query(updateQuery, [hashedPassword, email]);
 
         console.log("Password updated successfully for user");
 
@@ -123,7 +151,9 @@ router.post("/reset-password", async (req, res) => {
     } catch (error) {
         console.error("Error updating password:", error);
         res.status(500).json({ message: "Error updating password" });
-    }
+    } finally {
+        if (connection) connection.release();
+      }
 });
 
 module.exports = router;

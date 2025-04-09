@@ -19,8 +19,10 @@ app.use("/student", studentRegistration);
 
 const CourseCreationTab = require("./src/AdminDashboardAPIs/CourseCreationTab");
 app.use("/CourseCreation", CourseCreationTab); // ✅ route mount point
-
-
+const studentbuycourses = require("./src/StudentDashboardAPIs/BuyCourses.js");
+app.use("/studentbuycourses", studentbuycourses); // ✅ route mount point
+const studentMycourses = require("./src/StudentDashboardAPIs/MyCourses.js");
+app.use("/studentmycourses", studentMycourses);
 app.get("/",(req, res)=> {
     res.json({message: "Backend is working!"});
 });
