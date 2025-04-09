@@ -21,12 +21,12 @@ export default function StudentDashboardHeader() {
   // Handle logout functionality
   const handleLogout = async () => {
     const sessionId = localStorage.getItem('sessionId'); // Retrieve sessionId from localStorage
-
+  
     if (!sessionId) {
       alert("No session found. Please log in again.");
       return;
     }
-
+  
     try {
       const response = await fetch(`${BASE_URL}/student/studentLogout`, {
         method: "POST",
@@ -35,17 +35,15 @@ export default function StudentDashboardHeader() {
         },
         body: JSON.stringify({ sessionId }), // Send sessionId in the request body
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
-        // Clear session data from localStorage
-        localStorage.removeItem('sessionId');
-        
+        // Clear all items from localStorage
+        localStorage.clear(); // Removes all data stored in localStorage
+  
         // Redirect the user to the login page or home page after logout
         navigate("/LoginPage");
-
-        alert(data.message || "Logged out successfully.");
       } else {
         alert(data.message || "Logout failed. Please try again.");
       }
@@ -54,6 +52,7 @@ export default function StudentDashboardHeader() {
       alert("Something went wrong. Please try again later.");
     }
   };
+  
 
   return (
     <div className={styles.MainDivStudentDasboard}>
