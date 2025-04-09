@@ -4,7 +4,7 @@ import styles from '../../../Styles/AdminDashboardCSS/CourseCreation.module.css'
 import { FaSearch } from 'react-icons/fa';
 import TestCreationForm from './TestCreationForm'; // Import TestCreationForm component
 
-const TestCreation = () => {
+const TestCreationTab = () => {
   const [showAddTestForm, setShowAddTestForm] = useState(false);
   const [tests, setTests] = useState([]); // State to hold the test data
   const [testData, setTestData] = useState({
@@ -104,4 +104,4 @@ const TestCreation = () => {
   );
 };
 
-export default TestCreation;
+export default TestCreationTab;
