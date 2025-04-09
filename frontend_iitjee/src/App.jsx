@@ -11,7 +11,7 @@ const StudentLogin= React.lazy(() => import('./Components/StudentDashboardPagesF
 const StudentDashboard = React.lazy(() => import('./Components/StudentDashboardPagesFolder/studentDashboardPages/StudentDashboard.jsx'));
 const OTSRootFile = React.lazy(() => import('./Components/OTS/OTSRootFile.jsx'));
 const DashBoard = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/DashBoard.jsx'));
-const CourseCreation = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/CourseCreation.jsx'));
+const CourseCreationTab = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/CourseCreationTab.jsx'));
 const Instruction = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/Instruction.jsx'));
 const TestCreation = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/TestCreation.jsx'));
 const DocumentUpload = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/DocumentUpload.jsx'));
@@ -32,7 +32,7 @@ function App() {
       <Route path='/AdminDashboard' element={<AdminDashboardHome/>}/>
       <Route path='/OTSRootFile' element={<OTSRootFile/>}/>
    <Route path="/admin/dashboard" element={<DashBoard />} />
-            <Route path="/admin/course-creation" element={<CourseCreation />} />
+            <Route path="/CourseCreation" element={<CourseCreationTab />} />
             <Route path="/admin/instruction" element={<Instruction />} />
             <Route path="/admin/test-creation" element={<TestCreation />} />
             <Route path="/admin/document-upload" element={<DocumentUpload />} />

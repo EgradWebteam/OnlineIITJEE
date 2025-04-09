@@ -13,7 +13,7 @@ const AdminLeftSideBar = () => {
           <Link to="/admin/dashboard">Dashboard</Link>
         </li>
         <li className={isActive('/admin/course-creation') ? 'active' : ''}>
-          <Link to="/admin/course-creation">Course Creation</Link>
+          <Link to="/CourseCreation">Course Creation</Link>
         </li>
         <li className={isActive('/admin/instruction') ? 'active' : ''}>
           <Link to="/admin/instruction">Instruction</Link>

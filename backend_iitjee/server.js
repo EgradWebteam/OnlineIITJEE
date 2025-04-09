@@ -16,5 +16,14 @@ app.use("/admin", adminLogin);
 const studentRegistration = require("./src/UserAuthentication/StudentAuthentication.js");
 app.use("/student", studentRegistration);
 
+
+const CourseCreationTab = require("./src/AdminDashboardAPIs/CourseCreationTab");
+app.use("/CourseCreation", CourseCreationTab); // ✅ route mount point
+
+
+app.get("/",(req, res)=> {
+    res.json({message: "Backend is working!"});
+});
+
 const PORT = process.env.PORT ;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
