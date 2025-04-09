@@ -58,15 +58,15 @@
 import React from "react";
 import styles from "../../../Styles/AdminDashboardCSS/AdminDashboard.module.css";
 
-const DynamicTable = ({ columns, data, onEdit, onOpen, onDelete, onToggle,showEdit = true }) => {
+const DynamicTable = ({ columns, data, onEdit, onOpen, onDelete, onToggle,showEdit = true,showToggle = true }) => {
   return (
     <div className={styles.tableWrapper}>
       <table className={styles.table}>
         <thead>
           <tr>
             {columns.map((col, i) => <th key={i}>{col.header}</th>)}
-            <th>Action</th>
-            <th>Course Activation</th>
+            {/* <th>Action</th>
+            <th>Course Activation</th> */}
           </tr>
         </thead>
         <tbody>
@@ -89,12 +89,13 @@ const DynamicTable = ({ columns, data, onEdit, onOpen, onDelete, onToggle,showEd
                   <button className={styles.deleteBtn} onClick={() => onDelete(row)}>🗑️</button>
                 </td>
                 <td>
-                  <button
+                  {showToggle && <button
                     className={`${styles.toggleBtn} ${row.isActive ? styles.deactivate : styles.activate}`}
                     onClick={() => onToggle(row)}
                   >
                     {row.isActive ? "Deactivate Course" : "Activate Course"}
-                  </button>
+                  </button>}
+                  
                 </td>
               </tr>
             ))

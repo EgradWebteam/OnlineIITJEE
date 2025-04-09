@@ -18,6 +18,7 @@ const InstructionsTab = () => {
     { header: "Exam Name", accessor: "examName" },
     { header: "Instructions Heading", accessor: "heading" },
     { header: "Document Name", accessor: "docName" },
+    { header: "Action", accessor: "action" }
   ];
 
   // Fetch exam list
@@ -277,7 +278,8 @@ const InstructionsTab = () => {
           showEdit={false}
           onOpen={handleOpen}
           onDelete={handleDelete}
-          onToggle={handleToggle}
+          // onToggle={handleToggle}
+          showToggle={false}
         />
       </div>
 
