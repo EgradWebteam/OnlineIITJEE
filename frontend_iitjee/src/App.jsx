@@ -15,6 +15,7 @@ const CourseCreationTab = React.lazy(() => import('./Components/AdminDasboardPag
 const Instruction = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/Instruction.jsx'));
 const TestCreation = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/TestCreation.jsx'));
 const DocumentUpload = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/DocumentUpload.jsx'));
+const MainLayout = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/AdminMainLayout.jsx'));
 function App() {
   return (
    <Suspense>
