@@ -24,6 +24,8 @@ app.use("/CourseCreation", CourseCreationTab);
 const InstructionsTab = require("./src/AdminDashboardAPIs/InstructionsTab");
 app.use("/Instructions", InstructionsTab); 
 
+const StudentInfo = require('./src/UserAuthentication/StudentInfo.js')
+app.use("/students", StudentInfo);
 
 app.get("/",(req, res)=> {
     res.json({message: "Backend is working!"});

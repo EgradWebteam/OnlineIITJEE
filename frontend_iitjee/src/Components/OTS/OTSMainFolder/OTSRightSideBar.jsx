@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
-import studentImg from "../../../assets/OtsCourseCardImages/ots1.png";
+import studentImg from "../../../assets/OtsCourseCardImages/iit_jee1.png";
 
 export default function OTSRightSideBar({
   testData,
