@@ -1,11 +1,13 @@
 import React from 'react'
+import styles  from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css'; // Importing CSS module for styling
 
 const AdminCards = ({ icon, label, value }) => {
+  console.log("AdminCards called")
   return (
-    <div>
-    <div className="icon-box">{icon}</div>
-    <div className="label">{label}</div>
-    <div className="value">{value}</div>
+    <div className={styles.statCard}>
+    <div className={styles.iconBox}>{icon}</div>
+    <div className={styles.label}>{label}</div>
+    <div className={styles.value}>{value}</div>
   </div>
 );
   

@@ -29,7 +29,7 @@ function App() {
       <Route path="/StudentDashboard/:userId" element={<StudentDashboard />} />
       <Route path='/FooterTermsAndConditions' element={<FooterTermsAndConditions/>}/>
       <Route path='/ContactUs' element={<ContactUs/>}/>
-      <Route path='/AdminDashboard' element={<AdminDashboardHome/>}/>
+      <Route path='/AdminDashboard' element={<MainLayout/>}/>
       <Route path='/OTSRootFile' element={<OTSRootFile/>}/>
    <Route path="/admin/dashboard" element={<DashBoard />} />
             <Route path="/CourseCreation" element={<CourseCreationTab />} />

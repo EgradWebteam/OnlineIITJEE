@@ -1,32 +1,54 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import styles from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css'; // Importing CSS module for styling
+import { TbDeviceDesktopAnalytics } from 'react-icons/tb';  // Dashboard Icon
+import { FaTableList } from 'react-icons/fa6'; // Course Creation Icon
+import { PiBookOpenTextFill } from 'react-icons/pi'; // Instruction Icon
+import { DiGhostSmall } from 'react-icons/di'; // Test Creation Icon
+import { GrDocumentStore } from 'react-icons/gr'; // Document Upload Icon
 
-const AdminLeftSideBar = () => {
-  const location = useLocation();
 
-  const isActive = (path) => location.pathname === path;
-
+const AdminLeftSideBar = ({ onMenuClick, activeComponent }) => {
   return (
-    <div className="sidebar">
-      <ul className="sidebar-menu">
-        <li className={isActive('/admin/dashboard') ? 'active' : ''}>
-          <Link to="/admin/dashboard">Dashboard</Link>
+    <div className={styles.sidebar}>
+      <ul className={styles.sidebarMenu}>
+        <li
+          className={activeComponent === 'dashboard' ? styles.active : ''}
+          onClick={() => onMenuClick('dashboard')}
+        >
+          <TbDeviceDesktopAnalytics className={styles.icon} />
+          Dashboard
         </li>
-        <li className={isActive('/admin/course-creation') ? 'active' : ''}>
-          <Link to="/CourseCreation">Course Creation</Link>
+        <li
+          className={activeComponent === 'course-creation' ? styles.active : ''}
+          onClick={() => onMenuClick('course-creation')}
+        >
+          <FaTableList className={styles.icon} />
+          Course Creation
         </li>
-        <li className={isActive('/admin/instruction') ? 'active' : ''}>
-          <Link to="/admin/instruction">Instruction</Link>
+        <li
+          className={activeComponent === 'instruction' ? styles.active : ''}
+          onClick={() => onMenuClick('instruction')}
+        >
+          <PiBookOpenTextFill className={styles.icon} />
+          Instruction
         </li>
-        <li className={isActive('/admin/test-creation') ? 'active' : ''}>
-          <Link to="/admin/test-creation">Test Creation</Link>
+        <li
+          className={activeComponent === 'test-creation' ? styles.active : ''}
+          onClick={() => onMenuClick('test-creation')}
+        >
+          <DiGhostSmall className={styles.icon} />
+          Test Creation
         </li>
-        <li className={isActive('/admin/document-upload') ? 'active' : ''}>
-          <Link to="/admin/document-upload">Document Upload</Link>
+        <li
+          className={activeComponent === 'document-upload' ? styles.active : ''}
+          onClick={() => onMenuClick('document-upload')}
+        >
+          <GrDocumentStore className={styles.icon} />
+          Document Upload
         </li>
       </ul>
     </div>
   );
 };
 
-export default AdminLeftSideBar;
+export default React.memo(AdminLeftSideBar);
