@@ -4,7 +4,7 @@ import styles  from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css
 import AdminLeftSideBar from './AdminLeftSideBar';  // Static Sidebar
 import AdminDashboardHeader from './AdminDashboardHeader'; // Static Header
 import DashBoard from './DashBoard';
-import CourseCreation from './CourseCreation';
+import CourseCreationTab from './CourseCreationTab';
 import TestCreation from './TestCreation';
 import DocumentUpload from './DocumentUpload';
 import Instruction from './Instruction';
@@ -24,7 +24,7 @@ export default function AdminDashboardHome() {
       case 'dashboard':
         return <DashBoard />;
       case 'course-creation':
-        return <CourseCreation />;
+        return <CourseCreationTab />;
       case 'test-creation':
         return <TestCreation />;
       case 'document-upload':
