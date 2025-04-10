@@ -1,4 +1,4 @@
-import React, { lazy, useEffect, useState,Suspense } from 'react'
+import React, { lazy, useEffect, useState,Suspense, useCallback } from 'react'
 import StudentDashboardHeader from '../StudentDashboardPages/StudentDashboardHeader.jsx';
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import StudentDashboardLeftSideBar from '../StudentDashboardPages/StudentDashboardLeftSidebar.jsx';
@@ -11,7 +11,9 @@ const StudentDashboard_MyResults = lazy(() => import("../StudentDashboardPages/S
 const StudentDashboard_AccountSettings = lazy(() => import("../StudentDashboardPages/StudentDashboard_AccountSettings.jsx"));
 export default function StudentDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
-  
+  const [isLoading, setIsLoading] = useState(true);
+
+ 
     useEffect(() => {
       const savedSection = localStorage.getItem("activeSection");
       if (savedSection) {
@@ -19,10 +21,15 @@ export default function StudentDashboard() {
       }
     }, []);
   
-    const handleSectionChange = (section) => {
-        setActiveSection(section);
-        localStorage.setItem("activeSection", section);
-    };
+    const handleSectionChange = useCallback((section) => {
+      setActiveSection(section);
+      localStorage.setItem("activeSection", section);
+    }, []);
+    useEffect(() => {
+      const savedSection = localStorage.getItem("activeSection");
+      setActiveSection(savedSection || "dashboard"); // fallback to dashboard
+      setIsLoading(false); // always mark as done loading
+    }, []);
     
   
     const renderStudentDashboardContent = () => {
@@ -45,6 +52,11 @@ export default function StudentDashboard() {
           />;
       }
     };
+
+     // Until we know the correct section to show
+  if (isLoading) {
+    return <div>Loading Dashboard...</div>;
+  }
   
   return (
     <div>

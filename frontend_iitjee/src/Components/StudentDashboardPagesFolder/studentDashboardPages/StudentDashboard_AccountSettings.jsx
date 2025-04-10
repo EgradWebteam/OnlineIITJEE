@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaCircleUser } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa6";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
@@ -10,7 +10,9 @@ const StudentDashboard_AccountSettings = () => {
     new: false,
     confirm: false,
   });
-
+   useEffect(() => {
+  console.log("mysettings")
+    },[])
   const togglePasswordVisibility = (field) => {
     setShowPassword((prevState) => ({
       ...prevState,
