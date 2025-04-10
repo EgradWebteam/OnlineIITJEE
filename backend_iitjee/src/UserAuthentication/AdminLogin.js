@@ -72,7 +72,10 @@ const generateResetCode = () => {
 
 router.post("/forgot-passwordadmin", async (req, res) => {
     const { email } = req.body;
-
+    if (!email) {
+       
+        return res.status(400).json({ message: "Email is required." });
+    }
     console.log("Received forgot password request:", { email });
     let connection;
     try {

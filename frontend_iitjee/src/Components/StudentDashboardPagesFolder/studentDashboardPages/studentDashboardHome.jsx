@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboardHome.module.css";
 import MainPageCourseCards from '../../LandingPagesFolder/MainPageCourseCards';
 
 export default function StudentDashboardHome({handleSectionChange}) {
+
+  useEffect(() => {
+console.log("dashboardhome")
+  },[])
   return (
       <div>
       <div className={styles.gretingContainer}>

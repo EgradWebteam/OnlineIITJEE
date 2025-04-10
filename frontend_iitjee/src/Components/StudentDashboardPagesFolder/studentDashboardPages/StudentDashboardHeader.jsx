@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import headerImage from '../../../assets/EGTLogoExamHeaderCompressed.jpg';
 import logostudent from '../../../assets/OtsCourseCardImages/iit_jee1.png';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate to handle redirection
 import { BASE_URL } from "../../../config/apiConfig.js";// Import your API base URL
 
-export default function StudentDashboardHeader() {
+const  StudentDashboardHeader = ()  => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const navigate = useNavigate(); // Initialize navigate hook for redirection
-
+ useEffect(() => {
+console.log("headetstudentdashboard")
+  },[])
   // Handle mouse events to show/hide profile menu
   const handleMouseEnter = () => {
     setShowProfileMenu(true);
@@ -85,3 +87,5 @@ export default function StudentDashboardHeader() {
     </div>
   );
 }
+
+export default React.memo(StudentDashboardHeader);
