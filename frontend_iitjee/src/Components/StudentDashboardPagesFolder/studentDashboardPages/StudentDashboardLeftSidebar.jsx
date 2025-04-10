@@ -55,4 +55,4 @@ const StudentDashboardLeftSideBar = ({ activeSection, handleSectionChange }) => 
   );
 };
 
-export default StudentDashboardLeftSideBar;
+export default React.memo(StudentDashboardLeftSideBar);

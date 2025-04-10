@@ -1,37 +1,48 @@
 import React from "react";
-import styles from "../../Styles/CourseCards.module.css"; 
+import styles from "../../Styles/CourseCards.module.css";
 
-const CourseCard = React.memo(({ title, cardImage, price, context, onBuy, onGoToTest }) => {
-  const showBuySection = context === "buyCourses" || context === "OTSHomePage" || context === "ORVLHomePage";
+const CourseCard = React.memo(
+  ({ title, cardImage, price, context, onBuy, onGoToTest }) => {
+    // Show Buy Now if on OTS/ORVL landing or Buy Courses page
+    const showBuySection =
+      context === "buyCourses" || context === "OTSHomePage" || context === "ORVLHomePage";
 
-  return (
-    <div className={styles.cardMain}>
-      <h3 className={styles.Cardheader}>{title}</h3>
+    // Show Go to Test only on My Courses page
+    const showGoToTestSection = context === "myCourses";
 
-      <div className={styles.imageSectionCard}>
-        <img src={cardImage} alt={title} />
-      </div>
+    return (
+      <div>
+        <div className={styles.cardMain}>
+          <h3 className={styles.Cardheader}>{title}</h3>
 
-      {showBuySection ? (
-        <div className={styles.cardBottom}>
-                  <div className={styles.CardpriceSection}>
-                      <p>Price:</p>
-                      <p>₹{price}/-</p>
-                  </div>
-                  <div className={styles.buyNowContainer}>
-                      <button className={`${styles.buyButton} ${styles.cardBtnColor}`} onClick={onBuy}>
-                          Buy Now
-                      </button>
-                  </div>
-          
+          <div className={styles.imageSectionCard}>
+            <img src={cardImage} alt={title} />
+          </div>
+
+          {showBuySection ? (
+            <div className={styles.cardBottom}>
+              <div className={styles.CardpriceSection}>
+                <p>Price:</p>
+                <p>₹{price}/-</p>
+              </div>
+              <div className={styles.buyNowContainer}>
+                <button className={`${styles.buyButton} ${styles.cardBtnColor}`} onClick={onBuy}>
+                  Buy Now
+                </button>
+              </div>
+            </div>
+          ) : showGoToTestSection ? (
+            <div className={styles.cardBottomGototest}>
+
+            <button className={styles.testButton} onClick={onGoToTest}>
+              Go to Test <span>&raquo;</span>
+            </button>
+            </div>
+          ) : null}
         </div>
-      ) : (
-        <button className={styles.testButton} onClick={onGoToTest}>
-          Go to Test <span>&raquo;</span>
-        </button>
-      )}
-    </div>
-  );
-});
+      </div>
+    );
+  }
+);
 
-export default CourseCard;
+export default React.memo(CourseCard);
