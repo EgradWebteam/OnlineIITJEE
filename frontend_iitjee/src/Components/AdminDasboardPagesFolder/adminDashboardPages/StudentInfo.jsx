@@ -23,7 +23,7 @@ const StudentInfo = () => {
         setErrors((prevErrors) => ({
             ...prevErrors
           }));
-          alert("Email already exists");
+       alert("Enter valid email")
         return;
       }
 
