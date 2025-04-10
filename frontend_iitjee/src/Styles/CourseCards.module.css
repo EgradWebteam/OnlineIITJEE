@@ -1,3 +1,11 @@
+
+/* .cardHolderOTSORVLHome{
+  display: flex;
+  flex-wrap: wrap;
+  padding: 2rem;
+  gap: 2rem;
+} */
+
 .cardMain {
     display: flex;
     flex-direction: column;
@@ -82,8 +90,23 @@
   color: #444444;
   background-color: white;
   }
-  
+
   .testButton span {
     margin-left: 6px;
+  }
+  .testButton{
+    padding: 0.5rem 0.5rem;
+    width: 60%;
+  }
+  .cardBottomGototest{
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    font-weight: bolder;
+    color: white;
+    width: 100%;
+    background-color: #444444;
+    align-items: center;
+    justify-content: center;
   }
   
