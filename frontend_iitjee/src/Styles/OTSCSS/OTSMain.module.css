@@ -334,6 +334,7 @@ font-size: 18px;
   .OTSMainFileMainContainer{
     width: 100%;
     position: relative;
+    height: 79vh;
   }
   .OTSMainFileSubContainer{
     display: flex;
@@ -372,3 +373,53 @@ font-size: 18px;
     border: none;
     color: black;
   }
+
+/* QUESTIOPN NAVIGATION BTN CSS */
+.QuestionNavigationButtonsMainContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.markedForReviewNavigationBtn,.clearResponseBtn, .previousBtn,.saveandnextNavigationBtn,.submitNavigationBtn{
+  border: 1px solid rgb(153, 151, 151);
+  padding: 10px;
+}
+.saveandnextNavigationBtn{
+  background-color: rgb(61, 156, 245);
+}
+.QuestionNavigationBTns{
+  border: 1px solid rgb(204, 204, 204);
+  padding: 10px;
+  position: sticky;
+  width: 100%;
+  margin-top: 30px;
+}
+.navigationBtnHolderSubContainer{
+  display: flex;
+  gap: 10px;
+}
+.AnswerdBtnCls, .NotAnsweredBtnCls, .MarkedForReview, .AnsMarkedForReview{
+  height: 45px;
+  width: 45px;
+  background-color: unset;
+  background-repeat: no-repeat;
+  background-size: contain;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  color: white;
+}
+.AnswerdBtnCls{
+  background-image: url(../../assets//OTSTestInterfaceImages/Answered.png);
+}
+.NotAnsweredBtnCls{
+  background-image: url(../../assets//OTSTestInterfaceImages/NotAnswered.png);
+}
+.MarkedForReview{
+  background-image: url(../../assets//OTSTestInterfaceImages/MarkedForReview.png);
+}
+.AnsMarkedForReview{
+  background-image: url(../../assets//OTSTestInterfaceImages/AnsMarkedForReview.png);
+}

@@ -5,9 +5,9 @@ import AdminLeftSideBar from './AdminLeftSideBar';  // Static Sidebar
 import AdminDashboardHeader from './AdminDashboardHeader'; // Static Header
 import DashBoard from './DashBoard';
 import CourseCreationTab from './CourseCreationTab';
-import TestCreation from './TestCreation';
+import TestCreationTab from './TestCreationTab';
 import DocumentUpload from './DocumentUpload';
-import Instruction from './InstructionsTab';
+import InstructionsTab from './InstructionsTab';
 
 export default function AdminDashboardHome() {
   // State to track the selected component
@@ -26,11 +26,11 @@ export default function AdminDashboardHome() {
       case 'course-creation':
         return <CourseCreationTab />;
       case 'test-creation':
-        return <TestCreation />;
+        return <TestCreationTab />;
       case 'document-upload':
         return <DocumentUpload />;
       case 'instruction':
-        return <Instruction />;
+        return <InstructionsTab />;
       default:
         return <DashBoard />;
     }

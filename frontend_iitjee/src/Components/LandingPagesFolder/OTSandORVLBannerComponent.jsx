@@ -6,7 +6,7 @@ import otsBannerImg from "../../assets/PortalBanner.png";
 import orvlBannerImg from "../../assets/PortalBanner.png";
 import otsFeatureImg from "../../assets/TestSeriesDescription.png";
 import orvlFeatureImg from "../../assets/TestSeriesDescription.png";
-import cardImage from "../../assets/OtsCourseCardImages/ots1.png"
+import cardImage from "../../assets/OtsCourseCardImages/iit_jee1.png"
 import CourseCard from "./CourseCards";
 const OTSandORVLBannerComponent = () => {
     const location = useLocation();

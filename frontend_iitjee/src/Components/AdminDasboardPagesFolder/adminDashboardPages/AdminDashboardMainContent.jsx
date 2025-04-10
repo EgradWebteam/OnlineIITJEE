@@ -2,9 +2,9 @@
 import React from 'react';
 import DashBoard from './DashBoard';
 import CourseCreation from './CourseCreation';
-import TestCreation from './TestCreation';
+import TestCreationTab from './TestCreationTab';
 import DocumentUpload from './DocumentUpload';
-import Instruction from './InstructionsTab';
+import InstructionsTab from './InstructionsTab';
 
 const AdminDashboardMainContent = ({ activeComponent }) => {
   console.log("AdminDashboardMainContent")
@@ -16,7 +16,7 @@ const AdminDashboardMainContent = ({ activeComponent }) => {
       case 'course-creation':
         return <CourseCreation />;
       case 'test-creation':
-        return <TestCreation />;
+        return <TestCreationTab />;
       case 'document-upload':
         return <DocumentUpload />;
       case 'instruction':
