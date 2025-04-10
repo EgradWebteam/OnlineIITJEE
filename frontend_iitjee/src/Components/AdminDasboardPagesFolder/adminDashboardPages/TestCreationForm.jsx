@@ -1,58 +1,45 @@
-
-
 import React, { useState } from "react";
 import { RxCross2 } from "react-icons/rx";
-import styles from "../../../Styles/AdminDashboardCSS/TestCreation.module.css"; 
+import styles from "../../../Styles/AdminDashboardCSS/TestCreation.module.css";
 import { BASE_URL } from "../../../../apiConfig";
+import axios from "axios";
 
-const TestCreationForm = ({
-
-  setShowAddTestForm,
-  testCreationFormData,
-}) => {
-
+const TestCreationForm = ({ setShowAddTestForm, testCreationFormData }) => {
+  const [selectedCourse, setSelectedCourse] = useState("");
   const [includeSection, setIncludeSection] = useState(false);
-  const [sections, setSections] = useState([
-    {
-      id: Date.now(),
-      dropdownValue: "",
-      sectionName: "",
-      numberOfQuestions: "",
-    },
-  ]);
+  const [subjects, setSubjects] = useState([]);
 
   const handleCheckboxChange = () => {
     setIncludeSection(!includeSection);
   };
 
-  const handleSectionChange = (id, field, value) => {
-    setSections((prev) =>
-      prev.map((section) =>
-        section.id === id ? { ...section, [field]: value } : section
-      )
-    );
+  const [subjectSections, setSubjectSections] = useState([
+    { selectedSubject: "", sectionName: "", numOfQuestions: "" },
+  ]);
+
+  const handleSubjectSectionChange = (index, field, value) => {
+    const updatedSections = [...subjectSections];
+    updatedSections[index][field] = value;
+    setSubjectSections(updatedSections);
   };
-  const handleAddSection = () => {
-    setSections([
-      ...sections,
-      {
-        id: Date.now(),
-        dropdownValue: "",
-        sectionName: "",
-        numberOfQuestions: "",
-      },
+
+  const addSubjectSection = () => {
+    setSubjectSections([
+      ...subjectSections,
+      { selectedSubject: "", sectionName: "", numOfQuestions: "" },
     ]);
   };
 
-  const handleRemoveSection = (id) => {
-    const updatedSections = sections.filter((section) => section.id !== id);
-    setSections(updatedSections);
+  const removeSubjectSection = () => {
+    if (subjectSections.length > 1) {
+      setSubjectSections(subjectSections.slice(0, -1));
+    }
   };
 
   // Handle form submission
   const handleFormSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior
-    
+
     // Collect form data
     const formData = {
       testName: e.target.testName.value,
@@ -67,9 +54,13 @@ const TestCreationForm = ({
       duration: e.target.duration.value,
       totalQuestions: e.target.totalQuestions.value,
       totalMarks: e.target.totalMarks.value,
-      sections: sections, // Include section data
+      sections: subjectSections.map((section) => ({
+        subjectId: section.selectedSubject,
+        sectionName: section.sectionName,
+        numOfQuestions: section.numOfQuestions,
+      })),
     };
-console.log("formData",formData)
+    console.log("formData", formData);
     // Make a POST request to the server to insert the test data
     try {
       const response = await fetch(`${BASE_URL}/TestCreation/CreateTest`, {
@@ -79,7 +70,7 @@ console.log("formData",formData)
         },
         body: JSON.stringify(formData),
       });
-
+      console.log("formData", formData);
       if (response.ok) {
         // Handle success response
         alert("Test created successfully!");
@@ -92,15 +83,32 @@ console.log("formData",formData)
       console.error("Error submitting form:", error);
       alert("There was an error while submitting the form.");
     }
+    console.log("formData", formData);
+  };
+  // Function to fetch subjects based on selected course
+  const handleCourseChange = async (e) => {
+    const selectedCourseId = e.target.value;
+    setSelectedCourse(selectedCourseId); // Update the selected course state
+
+    if (selectedCourseId) {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/TestCreation/CourseSubjects/${selectedCourseId}`
+        );
+        setSubjects(response.data.subjects); // Assuming response.data.subjects contains the subjects array
+      } catch (err) {
+        console.error("Error fetching subjects:", err);
+        setSubjects([]); // Reset subjects if there's an error
+      }
+    } else {
+      setSubjects([]); // Reset subjects if no course is selected
+    }
   };
 
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.testCreationFormContainer}>
-        <form
-          className={styles.testCreationForm}
-          onSubmit={handleFormSubmit}
-        >
+        <form className={styles.testCreationForm} onSubmit={handleFormSubmit}>
           <div className={styles.formHeader}>
             <h3>Create a New Test</h3>
             <button
@@ -127,7 +135,12 @@ console.log("formData",formData)
               <label>
                 Select Course <span className={styles.required}>*</span>
               </label>
-              <select name="selectedCourse" required>
+              <select
+                name="selectedCourse"
+                value={selectedCourse}
+                onChange={handleCourseChange}
+                required
+              >
                 <option value="">Select a course</option>
                 {testCreationFormData &&
                   testCreationFormData.courses &&
@@ -244,7 +257,13 @@ console.log("formData",formData)
               <label>
                 Total Questions <span className={styles.required}>*</span>
               </label>
-              <input type="number" name="totalQuestions" min="1" max="200" required />
+              <input
+                type="number"
+                name="totalQuestions"
+                min="1"
+                max="200"
+                required
+              />
             </div>
 
             {/* Total Marks */}
@@ -252,43 +271,81 @@ console.log("formData",formData)
               <label>
                 Total Marks <span className={styles.required}>*</span>
               </label>
-              <input type="number" name="totalMarks" min="1" max="1000" required />
+              <input
+                type="number"
+                name="totalMarks"
+                min="1"
+                max="1000"
+                required
+              />
             </div>
 
             {/* Sections */}
             <div style={{ margin: "1rem 0" }}>
-              <label style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <label
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
                 <input type="checkbox" onChange={handleCheckboxChange} />
                 Click here if you want to include any section in the test
               </label>
 
-              {includeSection && (
+              <div>
                 <div>
-                  {sections.map((section, index) => (
-                    <div key={section.id} style={{ border: "1px solid #ccc", padding: "10px", margin: "10px 0" }}>
+                  {subjectSections.map((section, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        marginBottom: "20px",
+                        borderBottom: "1px solid #ccc",
+                        paddingBottom: "10px",
+                      }}
+                    >
                       <div style={{ marginBottom: "10px" }}>
-                        <label>Choose Section Type: </label>
+                        <label>Select a subject: </label>
                         <select
-                          value={section.dropdownValue}
+                          name="selectedSubject"
+                          value={section.selectedSubject}
                           onChange={(e) =>
-                            handleSectionChange(section.id, "dropdownValue", e.target.value)
+                            handleSubjectSectionChange(
+                              index,
+                              "selectedSubject",
+                              e.target.value
+                            )
                           }
+                          required
                         >
-                          <option value="">-- Select --</option>
-                          <option value="math">Math</option>
-                          <option value="science">Science</option>
-                          <option value="reasoning">Reasoning</option>
+                          <option value="">Select a subject</option>
+                          {subjects.length > 0 ? (
+                            subjects.map((subject) => (
+                              <option
+                                key={subject.subject_id}
+                                value={subject.subject_id}
+                              >
+                                {subject.subject_name}
+                              </option>
+                            ))
+                          ) : (
+                            <option value="no-subjects">
+                              No subjects available
+                            </option>
+                          )}
                         </select>
                       </div>
 
                       <div style={{ marginBottom: "10px" }}>
-                        <label>Section Name: </label>
+                        <label>Enter Section Name: </label>
                         <input
                           type="text"
+                          name="sectionName"
                           value={section.sectionName}
                           onChange={(e) =>
-                            handleSectionChange(section.id, "sectionName", e.target.value)
+                            handleSubjectSectionChange(
+                              index,
+                              "sectionName",
+                              e.target.value
+                            )
                           }
+                          required
                         />
                       </div>
 
@@ -296,40 +353,37 @@ console.log("formData",formData)
                         <label>No. of Questions: </label>
                         <input
                           type="number"
-                          value={section.numberOfQuestions}
+                          name="numOfQuestions"
+                          min={1}
+                          value={section.numOfQuestions}
                           onChange={(e) =>
-                            handleSectionChange(section.id, "numberOfQuestions", e.target.value)
+                            handleSubjectSectionChange(
+                              index,
+                              "numOfQuestions",
+                              e.target.value
+                            )
                           }
+                          required
                         />
                       </div>
-
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveSection(section.id)}
-                        style={{ color: "red", border: "none", background: "transparent" }}
-                      >
-                        Remove Section
-                      </button>
                     </div>
                   ))}
-                  <button
-                    type="button"
-                    onClick={handleAddSection}
-                    style={{
-                      marginTop: "10px",
-                      padding: "5px 10px",
-                      border: "1px solid #ccc",
-                      backgroundColor: "#4CAF50",
-                      color: "#fff",
-                    }}
-                  >
-                    Add New Section
-                  </button>
+
+                  <div style={{ marginTop: "10px" }}>
+                    <button type="button" onClick={addSubjectSection}>
+                      +
+                    </button>
+                    <button type="button" onClick={removeSubjectSection}>
+                      -
+                    </button>
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
 
-            <button type="submit" className={styles.submitBtn}>Create Test</button>
+            <button type="submit" className={styles.submitBtn}>
+              Create Test
+            </button>
           </div>
         </form>
       </div>
