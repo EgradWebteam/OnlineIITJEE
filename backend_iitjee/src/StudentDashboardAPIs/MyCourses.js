@@ -86,6 +86,73 @@ router.get("/Purchasedcourses/:studentregisterationid", async (req, res) => {
         if (connection) connection.release();
     }
 });
+router.get("/coursetestdetails/:course_creation_id", async (req, res) => {
+    const { course_creation_id } = req.params;
+    console.log("Received request for course test details:", { course_creation_id });
+ if(!course_creation_id) {
+        return res.status(400).json({ message: "Course creation ID is required" });
+ }
+    let connection;
+ 
+    try {
+        connection = await db.getConnection();
+ 
+        const [rows] = await connection.query(
+            `SELECT
+    tct.test_creation_table_id,
+    tct.test_name,
+    tct.course_type_of_test_id,
+    tct.total_marks,
+    tct.duration,
+    tct.course_creation_id,
+    cct.course_name,
+    tot.type_of_test_name
+FROM iit_test_creation_table tct
+LEFT JOIN iit_course_creation_table cct ON tct.course_creation_id = cct.course_creation_id
+LEFT JOIN iit_type_of_test tot ON tct.course_type_of_test_id = tot.type_of_test_id
+WHERE tct.course_creation_id = ?;
+`, // Ensure the query is properly formatted here.
+            [course_creation_id] // Pass the parameter as an array to the query function
+        );
+ 
+        if (rows.length === 0) {
+            console.log("No test details found for this course.");
+            return res.status(404).json({ message: "No test details found" });
+        }
+ 
+        console.log("Test details found:", rows);
+        // res.status(200).json(rows);
+        if (rows.length === 0) {
+            console.log("No test details found for this course.");
+            return res.status(404).json({ message: "No test details found" });
+        }
+
+        // Grouping the result into a course object with test details
+        const courseDetails = {
+            course_creation_id: rows[0].course_creation_id,
+            course_name: rows[0].course_name,
+            test_details: {
+                course_type_of_test_id: rows[0].course_type_of_test_id, // Assuming all tests have the same course_type_of_test_id
+                type_of_test_name: rows[0].type_of_test_name, // Assuming all tests have the same type_of_test_name
+                tests: rows.map(row => ({
+                    test_creation_table_id: row.test_creation_table_id,
+                    test_name: row.test_name,
+                    total_marks: row.total_marks,
+                    duration: row.duration
+                }))
+            }
+        };
+
+        console.log("Test details grouped:", courseDetails);
+        res.status(200).json(courseDetails);
+    } catch (error) {
+        console.error("Error fetching test details:", error);
+        res.status(500).json({ message: "Internal server error" });
+    } finally {
+        if (connection) connection.release();
+    }
+})
+
 
 
 module.exports = router;
