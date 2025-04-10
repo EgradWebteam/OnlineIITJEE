@@ -3,8 +3,51 @@
     border-radius: 1rem 1rem 0px 0px;
     border: none;
 }
-.examActiveBtn{
+.examActiveBtn,.portalActiveBtn{
     background-color: #09bffc;
     color: white;
     border: 1px solid #09bffc;
 }
+.examButtonsDiv{
+    margin: 2rem 2rem 0;
+    display: flex;
+    gap: 10px;
+  }
+  .cardHolderOTSORVLHome{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 2rem;
+    gap: 2rem;
+  }
+  .stuentDashboardGlobalHeading{
+    background-color: #444444;
+    color: white;
+    font-size: 1.7rem;
+    margin: 1rem;
+  }
+  .stuentDashboardGlobalHeading h3{
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .noCoursesContainer{
+    background-color: #09bffc;
+    color: white;
+    font-size: 1.2rem;
+    margin: 1rem;
+    padding: 0.5rem;
+    font-weight: bold;
+  }
+  .noCoursesMsg{
+    text-align: center;
+  }
+  .portalButtonsDiv{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .portalButtons{
+    background-color: white;
+    border-radius: 1rem;
+    border: none;
+    color: black;
+  }

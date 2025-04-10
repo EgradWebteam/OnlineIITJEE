@@ -164,17 +164,7 @@
     height: 100%;
     margin: 0.8rem 0;
   }
-  .examButtonsDiv{
-    margin: 1rem 2rem 0;
-    display: flex;
-    gap: 10px;
-}
-.cardHolderOTSORVLHome{
-  display: flex;
-  flex-wrap: wrap;
-  padding: 2rem;
-  gap: 2rem;
-}
+
 .imageSection{
   /* padding: 2rem;
   width: 90%; */
