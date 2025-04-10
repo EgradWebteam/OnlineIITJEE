@@ -4,7 +4,7 @@ import styles from "../../../Styles/StudentDashboardCSS/Student.module.css";
 import stdLogo from '../../../assets/logoCap.jpeg';
 import MainHeader from '../../LandingPagesFolder/mainPageHeaderFooterFolder/MainHeader';
 import MainFooter from '../../LandingPagesFolder/mainPageHeaderFooterFolder/MainFooter';
-import { BASE_URL } from '../../../../apiConfig';
+import { BASE_URL } from "../../../config/apiConfig.js";
 import StudentLoginForm from './studentLoginForm';
 
 export default function StudentLogin() {

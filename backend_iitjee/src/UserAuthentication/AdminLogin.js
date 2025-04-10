@@ -135,10 +135,10 @@ router.post("/reset-passwordadmin", async (req, res) => {
         }
         console.log("Rows fetched:", rows[0].reset_code);
         // Check if the reset code is valid
-        const isResetCodeMatch = Number(rows[0].reset_code) === String(resetCode);
+        const isResetCodeMatch = Number(rows[0].reset_code) === Number(resetCode);
         if (!isResetCodeMatch) {
             console.log("Invalid reset code");
-            return res.status(400).json({ message: "Invalid reset code" });
+            return res.status(401).json({ message: "Invalid reset code" });
         }
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
