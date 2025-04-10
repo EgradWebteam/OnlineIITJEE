@@ -3,7 +3,7 @@ import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.
 import headerImage from '../../../assets/EGTLogoExamHeaderCompressed.jpg';
 import logostudent from '../../../assets/OtsCourseCardImages/iit_jee1.png';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate to handle redirection
-import { BASE_URL } from '../../../../apiConfig'; // Import your API base URL
+import { BASE_URL } from "../../../config/apiConfig.js";// Import your API base URL
 
 export default function StudentDashboardHeader() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);

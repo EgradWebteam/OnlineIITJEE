@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { BASE_URL } from "../../../../apiConfig";
+import { BASE_URL } from "../../../config/apiConfig.js";
 import styles from "../../../Styles/AdminDashboardCSS/StudentInfo.module.css";
 
 const StudentInfo = () => {
