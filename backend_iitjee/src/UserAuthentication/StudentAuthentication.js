@@ -170,7 +170,7 @@ router.post("/forgot-password", async (req, res) => {
 
     // SQL query to update the reset code in the database
     const updateQuery =
-      "UPDATE iit_student_registration SET reset_code = ? WHERE email_id = ?";
+      "UPDATE iit_student_registration SET reset_code= ? WHERE email_id = ?";
     await db.query(updateQuery, [resetCode, email]);
 
     // Send the reset code via email asynchronously using the sendMail function

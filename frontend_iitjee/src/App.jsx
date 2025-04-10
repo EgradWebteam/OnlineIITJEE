@@ -60,6 +60,7 @@ const StudentDashboard = React.lazy(() => import('./Components/StudentDashboardP
 const OTSRootFile = React.lazy(() => import('./Components/OTS/OTSRootFile.jsx'));
 const MainLayout = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/AdminMainLayout.jsx'));
 const CourseCreationTab = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/CourseCreationTab.jsx'));
+const StudentInfo = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/StudentInfo.jsx'));
 function App() {
   return (
    <Suspense>
@@ -76,6 +77,7 @@ function App() {
       <Route path='/ContactUs' element={<ContactUs/>}/>
       <Route path='/AdminDashboard' element={<MainLayout/>}/>
       <Route path='/OTSRootFile' element={<OTSRootFile/>}/>
+      <Route path="/StudentInfo" element={<StudentInfo />} />
       <Route path="/CourseCreation" element={<CourseCreationTab />} />
     </Routes>
     </BrowserRouter>
