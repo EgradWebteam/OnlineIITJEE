@@ -19,7 +19,7 @@ router.get("/Purchasedcourses/:studentregisterationid", async (req, res) => {
                 e.exam_name,
                 p.portal_id,
                 p.portal_name,
-                cct.total_price,
+              
                 cct.portal_id,
                 cct.card_image
             FROM 
@@ -43,7 +43,41 @@ router.get("/Purchasedcourses/:studentregisterationid", async (req, res) => {
         }
 
         console.log("purchased courses found:", rows);
-        res.status(200).json(rows);
+        // res.status(200).json(rows);
+        const coursesByPortalAndExam = {};
+
+        // Loop through the rows and organize the data
+        rows.forEach((course) => {
+            // Check if portal_id exists in the coursesByPortalAndExam object
+            if (!coursesByPortalAndExam[course.portal_id]) {
+                coursesByPortalAndExam[course.portal_id] = {
+                    portal_id: course.portal_id,
+                    portal_name: course.portal_name,
+                    exams: {},
+                };
+            }
+        
+            // Check if exam_id exists under the portal
+            if (!coursesByPortalAndExam[course.portal_id].exams[course.exam_id]) {
+                coursesByPortalAndExam[course.portal_id].exams[course.exam_id] = {
+                    exam_id: course.exam_id,
+                    exam_name: course.exam_name,
+                    courses: [],
+                };
+            }
+        
+            // Add the course to the correct exam under the correct portal
+            coursesByPortalAndExam[course.portal_id].exams[course.exam_id].courses.push({
+                course_creation_id: course.course_creation_id,
+                course_name: course.course_name,
+               
+                card_image: course.card_image
+            });
+        });
+        
+        // Convert the structure to an array for easier handling on the frontend
+        const structuredCourses = Object.values(coursesByPortalAndExam);
+        res.status(200).json(structuredCourses);
     } catch (error) {
         console.error("Error fetching purchased courses:", error);
         res.status(500).json({ message: "Internal server error" });
