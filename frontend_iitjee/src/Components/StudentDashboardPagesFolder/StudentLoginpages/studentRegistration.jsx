@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import { Link,useNavigate } from "react-router-dom";
+import React, { useState,useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Styles from "../../../Styles/StudentDashboardCSS/StudentRegistration.module.css";
 import SRFormImage from "../../../assets/SRFormImage.jpg";
 import MainHeader from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainHeader";
 import MainFooter from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainFooter";
 import { BASE_URL } from "../../../config/apiConfig.js";
 import TermsAndConditions from "../../GlobalFiles/TermsAndConditions.jsx";
-
+import { useLocation } from 'react-router-dom';
+import axios from "axios";
 const StudentRegistration = () => {
   const [formData, setFormData] = useState({
     candidateName: '',
@@ -31,11 +32,26 @@ const StudentRegistration = () => {
     proof: null,
     termsAccepted: false,
   });
- const navigate = useNavigate(); 
+  const location = useLocation();
+  const { courseCreationId } = location.state || {};
   const [errors, setErrors] = useState({});
-  const [openTermsAndConditions,setOpenTermsAndConditions] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
+  const [courseid, setCourseid] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  useEffect(() => {
+   
+    const fetchCourseData = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/studentbuycourses/ActiveCourses/${courseCreationId}`);
+       
+        setCourseid(response.data); // Store data in state
+      } catch (error) {
+        console.error('Failed to fetch course data'); // Handle error
+      }
+    };
 
+    fetchCourseData();
+  }, []);
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
 
@@ -103,14 +119,16 @@ const StudentRegistration = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Step 1: Validate the form
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
     } else {
-      // Create a FormData object to send data to the server
+      // Step 2: Create a FormData object to send data to the server
       const formDataToSend = new FormData();
-
-      // Append all form data (text fields) to FormData
+    
+      // Step 3: Append all form data (text fields) to FormData
       formDataToSend.append('candidateName', formData.candidateName);
       formDataToSend.append('dateOfBirth', formData.dateOfBirth);
       formDataToSend.append('gender', formData.gender);
@@ -129,48 +147,61 @@ const StudentRegistration = () => {
       formDataToSend.append('nameOfCollege', formData.nameOfCollege);
       formDataToSend.append('passingYear', formData.passingYear);
       formDataToSend.append('marks', formData.marks);
-
-      // Append files (if they exist)
+    
+      // Step 4: Append files (if they exist)
       if (formData.uploadedPhoto) {
         formDataToSend.append('uploadedPhoto', formData.uploadedPhoto);
       }
       if (formData.proof) {
         formDataToSend.append('proof', formData.proof);
       }
-
-      // Append termsAccepted as a string or boolean
+    
+      // Step 5: Append termsAccepted as a string or boolean
       formDataToSend.append('termsAccepted', formData.termsAccepted.toString());
-
-      // Convert FormData to an object and log it
+    
+      // Step 6: Log the FormData object (for debugging purposes)
       const formDataObject = Object.fromEntries(formDataToSend.entries());
       console.log('FormData Object:', formDataObject);
-
+    
+      // Step 7: Determine which API to call based on courseCreationId
+      const apiEndpoint = courseCreationId 
+        ? '/studentbuycourses/studentRegistrationBuyCourses' 
+        : '/student/studentRegistration';
+      
       try {
-        const response = await fetch(`${BASE_URL}/student/studentRegistration`, {
+        // Step 8: Send the form data to the backend using fetch
+        const response = await fetch(`${BASE_URL}${apiEndpoint}`, {
           method: 'POST',
           body: formDataToSend,
         });
-
+    
+        // Step 9: Check if the response is successful
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-
+    
         const result = await response.json();
         console.log('Success:', result);
+    
+        // Step 10: Handle success (e.g., show a success message, redirect, etc.)
         alert("Registration successful! Please check your email for further instructions.");
-        navigate('/LoginPage');
-        // Handle success (e.g., show a success message, redirect, etc.)
+        navigate('/LoginPage');  // Redirect to login page after success
       } catch (error) {
+        // Step 11: Handle any errors during form submission
         console.error('Error:', error);
-        // Handle error (e.g., show an error message)
+        alert('There was an error with your registration. Please try again.');
       }
     }
+    
+    // Log completion of form submission
     console.log("Form submitted successfully!");
-};
-
-const handleBackButtonClick = () => {
-  navigate('/LoginPage');  
-};
+  };
+  
+  
+  
+  const handleBackButtonClick = () => {
+    navigate('/LoginPage');
+  };
   return (
     <div className={Styles.SRMainFormDiv}>
       <MainHeader />
@@ -179,6 +210,15 @@ const handleBackButtonClick = () => {
           <h2 className={Styles.RegistrationHeading}>
             Student Registration Page
           </h2>
+          {courseid && (
+          <div className={Styles.CourseDetails}>
+       
+            <p><strong>Course Name:</strong></p>
+            <div> {courseid[0].course_name}</div>
+            <p><strong>Duration:</strong></p>
+            <div> {courseid[0].course_duration} to {courseid[0].course_end_date}</div>
+          </div>
+        )}
           <div className={Styles.RegistrationBackbtnDiv}>
             <button onClick={handleBackButtonClick} className={Styles.SRBackbtn}>Back</button>
           </div>
@@ -583,11 +623,11 @@ const handleBackButtonClick = () => {
                       className={Styles.checkboxAgree}
                       checked={formData.termsAccepted}
                       onChange={() => setFormData((prevData) => ({ ...prevData, termsAccepted: !prevData.termsAccepted }))}
-                    /> 
-                     I accept all the{" "}
+                    />
+                    I accept all the{" "}
                     <span onClick={setOpenTermsAndConditions} className={Styles.tcLink}>terms & conditions</span>
                   </label>
-                
+
                   {errors.termsAccepted && <p className={Styles.error}>{errors.termsAccepted}</p>}
                 </div>
               </div>
@@ -596,19 +636,27 @@ const handleBackButtonClick = () => {
                   Pay Now
                 </button> */}
 
-                <button type="submit" className={Styles.buttonforStdReg}>
-                  Register
-                </button>
+                <div>
+                {courseCreationId ? (
+              <button type="submit" className={Styles.buttonforStdReg} disabled={isSubmitting}>
+                Pay Now
+              </button>
+            ) : (
+              <button type="submit" className={Styles.buttonforStdReg} disabled={isSubmitting}>
+                Register
+              </button>
+            )}
+                </div>
               </div>
             </div>
           </form>
           {openTermsAndConditions && (
-              <TermsAndConditions setIsModalOpen={setOpenTermsAndConditions}/>
-    )}
+            <TermsAndConditions setIsModalOpen={setOpenTermsAndConditions} />
+          )}
         </div>
-        
+
       </div>
-      
+
       <MainFooter />
     </div>
   );
