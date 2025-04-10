@@ -31,7 +31,8 @@ app.use("/Instructions", InstructionsTab);
 
 const StudentInfo = require('./src/UserAuthentication/StudentInfo.js')
 app.use("/students", StudentInfo);
-
+const CourseHomePage = require('./src/LandingPageApis/CourseHomePage.js')
+app.use("/CourseHomePage", CourseHomePage);
 app.get("/",(req, res)=> {
     res.json({message: "Backend is working!"});
 });
