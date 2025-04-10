@@ -321,9 +321,13 @@ export default function QuestionNavigationButtons({
         <button className={styles.clearResponseBtn} onClick={handleClearResponse}>Clear Response</button>
       </div>
       <div className={styles.navigationBtnHolderSubContainer}>
-      {activeQuestionIndex > 0 && (
-          <button className={styles.previousBtn} onClick={handlePrevious}>Previous</button>
-        )}
+        {!(
+          activeQuestionIndex === 0 &&
+          testData?.subjects?.[0]?.SubjectName === activeSubject &&
+          testData?.subjects?.[0]?.sections?.[0]?.SectionName === activeSection
+        ) && (
+            <button className={styles.previousBtn} onClick={handlePrevious}>Previous</button>
+          )}
         <button className={styles.saveandnextNavigationBtn} onClick={handleSaveAndNext}>Save & Next</button>
       </div>
       <div>

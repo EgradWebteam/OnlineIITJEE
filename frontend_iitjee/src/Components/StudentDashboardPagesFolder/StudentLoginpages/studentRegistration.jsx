@@ -4,7 +4,7 @@ import Styles from "../../../Styles/StudentDashboardCSS/StudentRegistration.modu
 import SRFormImage from "../../../assets/SRFormImage.jpg";
 import MainHeader from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainHeader";
 import MainFooter from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainFooter";
-import { BASE_URL } from "../../../../apiConfig";
+import { BASE_URL } from "../../../config/apiConfig.js";
 import TermsAndConditions from "../../GlobalFiles/TermsAndConditions.jsx";
 
 const StudentRegistration = () => {
