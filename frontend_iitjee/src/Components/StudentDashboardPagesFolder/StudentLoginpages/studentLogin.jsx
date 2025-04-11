@@ -44,12 +44,14 @@ export default function StudentLogin() {
       const data = await response.json();
 
       if (response.ok) {
-        const userId = data.user_Id;  // Assuming the userId is in the response
+        const decryptedId = data.decryptedId;  // Assuming the userId is in the response
         const accessToken = data.accessToken;  // The access token received from the backend
         const sessionId = data.sessionId;  // Assuming sessionId is returned in the response
-
+        const userId=data.user_Id
         // Store the user ID, access token, and session ID in localStorage
-        localStorage.setItem('userId', userId);
+        localStorage.setItem('decryptedId', decryptedId);
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem("userId",userId)
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('sessionId', sessionId);  // Store sessionId as well
 

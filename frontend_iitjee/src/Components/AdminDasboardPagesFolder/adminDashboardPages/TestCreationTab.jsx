@@ -1,77 +1,50 @@
-import React, { useState,useEffect } from 'react';
-import DynamicTable from './DynamicTable'; // Ensure you have this component
-import styles from '../../../Styles/AdminDashboardCSS/CourseCreation.module.css'; // Importing CSS module for styling
+import React, { useState, useEffect } from "react";
+import DynamicTable from "./DynamicTable"; // Ensure you have this component
+import styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css";
 // import { FaSearch } from 'react-icons/fa';
-import TestCreationForm from './TestCreationForm'; // Import TestCreationForm component
-import axios from 'axios';
+import TestCreationForm from "./TestCreationForm"; // Import TestCreationForm component
+import axios from "axios";
 import { BASE_URL } from "../../../../apiConfig";
 
 const TestCreationTab = () => {
   const [showAddTestForm, setShowAddTestForm] = useState(false);
-  const [tests, setTests] = useState([]); // State to hold the test data
-  // const [testData, setTestData] = useState({
-  //   testName: '',
-  //   selectedCourse: '',
-  //   testDate: '',
-  //   startTime: '',
-  //   endTime: '',
-  //   totalQuestions: '',
-  //   questionsUploaded: ''
-  // });
+  const [selectedTestData, setSelectedTestData] = useState(null);
+  const [testCreationFormData, setTestCreationFormData] = useState(null);
 
-  // const [search, setSearch] = useState("");
-
-  // // Form Handlers
-  // const handleInputChange = (e) => {
-  //   setTestData({
-  //     ...testData,
-  //     [e.target.name]: e.target.value
-  //   });
-  // };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newTest = {
-      serial: tests.length + 1,
-      ...testData,
-      testStarted: "No", // Set as "No" or "Yes" based on your logic
-      actions: 'Edit | Delete', // Placeholder for actions
-      testActivation: 'Inactive' // Placeholder for activation status
-    };
-    setTests([...tests, newTest]);
-    setShowAddTestForm(false); // Close the form after adding the test
+  // API fetch function
+  const fetchFormData = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/TestCreation/TestCreationFormData`
+      );
+      setTestCreationFormData(response.data);
+    } catch (error) {
+      console.error("Error fetching form data:", error);
+    }
   };
-
-  // const handleSearch = (e) => {
-  //   setSearch(e.target.value);
-  // };
-
-
-
-
-const [testCreationFormData, setTestCreationFormData] = useState(null);
-
-// API fetch function
-const fetchFormData = async () => {
-  try {
-    const response = await axios.get(`${BASE_URL}/TestCreation/TestCreationFormData`);
-    setTestCreationFormData(response.data);
-  } catch (error) {
-    console.error('Error fetching form data:', error);
-  }
-};
-
-// Called on button click
-const handleAddTestClick = () => {
-  setShowAddTestForm(true);
-  fetchFormData(); // Fetch data only when button is clicked
-};
-
-
-  const handleCloseForm = () => {
-    setShowAddTestForm(false);
+  
+  const handleAddTestClick = () => {
+    setShowAddTestForm(true);
+    fetchFormData(); 
   };
+  const handleEdit = (testData) => {
+    console.log("Selected Test Data for Edit:", testData); 
+    setSelectedTestData(testData); 
+    setShowAddTestForm(true);
+  };
+  
 
+  const [testTableData, setTestTableData] = useState([]);
+  useEffect(() => {
+    fetch(`${BASE_URL}/TestCreation/FetchTestDataFortable`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("API Response:", data); // Log the full response to inspect
+        setTestTableData(data); // Ensure that data.data is correct
+      })
+      .catch((error) => console.error("Error fetching Testdata:", error));
+  }, []);
+  console.log("testTableData",testTableData)
 
   return (
     <div className={styles.dashboardContent}>
@@ -84,42 +57,33 @@ const handleAddTestClick = () => {
       {/* Conditionally render the Add Test Form */}
       {showAddTestForm && (
         <TestCreationForm
-          handleSubmit={handleSubmit}
-          // formErrors={{}} 
-          // courses={[]} 
-          // typeOfTests={[]} 
-          // handleInputChange={handleInputChange}
-          // handleSelectChange={() => {}}
-          // handleSelectTypeOfTest={() => {}} 
-          // handleDurationChange={() => {}} 
-          // handleTotalQuestionsChange={() => {}} 
-          // handleTotalMarksChange={() => {}} 
           setShowAddTestForm={setShowAddTestForm}
-          // testData={testData}
           testCreationFormData={testCreationFormData}
+          editData={selectedTestData} // ✅ pass it here
         />
       )}
+
 
       {/* Table for displaying test data */}
       <div className={styles.tableWrapper}>
         <DynamicTable
           columns={[
-            { header: 'S.No', accessor: 'serial' },
-            { header: 'Test Name', accessor: 'testName' },
-            { header: 'Selected Course', accessor: 'selectedCourse' },
-            { header: 'Test Started', accessor: 'testStarted' },
-            { header: 'Test Date', accessor: 'testDate' },
-            { header: 'Start Time', accessor: 'startTime' },
-            { header: 'End Time', accessor: 'endTime' },
-            { header: 'Total Questions', accessor: 'totalQuestions' },
-            { header: 'Questions Uploaded', accessor: 'questionsUploaded' },
-            { header: 'Actions', accessor: 'actions' },
-            { header: 'Test Activation', accessor: 'testActivation' }
+            { header: "S.No", accessor: "serial" },
+            { header: "Test Name", accessor: "test_name" },
+            { header: "Selected Course", accessor: "course_name" },
+            { header: "Test Started", accessor: "test_start_date" },
+            { header: "Test Date", accessor: "test_end_date" },
+            { header: "Start Time", accessor: "test_start_time" },
+            { header: "End Time", accessor: "test_end_time" },
+            { header: "Total Questions", accessor: "number_of_questions" },
+            { header: "Questions Uploaded", accessor: "uploaded_questions" },
+            { header: "Actions", accessor: "actions" },
+            { header: "Test Activation", accessor: "test_activation" },
           ]}
-          data={tests}
-          onEdit={(item) => console.log('Edit', item)}
-          onDelete={(item) => console.log('Delete', item)}
-          onToggle={(item) => console.log('Toggle Activation', item)}
+          data={testTableData}
+          onEdit={handleEdit}
+          onDelete={(item) => console.log("Delete", item)}
+          onToggle={(item) => console.log("Toggle Activation", item)}
         />
       </div>
     </div>

@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../config/database.js");
+const cors = require('cors');
+router.use(cors());
+
 
 
 router.get('/TestCreationFormData', async (req, res) => {
@@ -124,6 +127,44 @@ router.get('/TestCreationFormData', async (req, res) => {
     }
   });
   
+
+  router.get('/FetchTestDataFortable', async (req, res) => {
+    const sql = `
+        SELECT 
+            tct.test_creation_table_id,
+            tct.test_name,
+            cct.course_name,
+            tct.test_start_date,
+            tct.test_end_date,
+            tct.test_start_time,
+            tct.test_end_time,
+            tct.total_questions AS number_of_questions,
+            COUNT(q.question_id) AS uploaded_questions,
+            tct.status AS test_activation
+        FROM iit_test_creation_table tct
+        JOIN iit_course_creation_table cct ON tct.course_creation_id = cct.course_creation_id
+        LEFT JOIN iit_questions q ON tct.test_creation_table_id = q.test_creation_table_id
+        GROUP BY 
+            tct.test_creation_table_id, 
+            tct.test_name, 
+            cct.course_name, 
+            tct.test_start_date, 
+            tct.test_end_date, 
+            tct.test_start_time, 
+            tct.test_end_time, 
+            tct.total_questions, 
+            tct.status;
+    `;
+
+    try {
+        const [rows] = await db.query(sql);  // db is a promise-based pool
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching test details:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
   
 
   module.exports = router;
