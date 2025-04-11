@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../../../../apiConfig";
  
-const CourseCreationTab = ({ onCourseCreated, courseData }) => {
+const CourseForm = ({ onCourseCreated, courseData }) => {
   const IITCourseCardImages = [
     "iit_jee1.png",
     "iit_jee2.png",
@@ -344,4 +344,4 @@ const CourseCreationTab = ({ onCourseCreated, courseData }) => {
   );
 };
  
-export default CourseCreationTab;
+export default CourseForm;

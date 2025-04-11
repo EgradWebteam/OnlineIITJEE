@@ -4,7 +4,7 @@ import DynamicTable from "./DynamicTable";
 import { BASE_URL } from "../../../../apiConfig";
 import Styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css"; // Importing styles
 
-const CourseManagementTabs = () => {
+const CourseCreationTab = () => {
   const [courses, setCourses] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); // State for pagination
@@ -158,4 +158,4 @@ const CourseManagementTabs = () => {
   );
 };
 
-export default CourseManagementTabs;
+export default CourseCreationTab;

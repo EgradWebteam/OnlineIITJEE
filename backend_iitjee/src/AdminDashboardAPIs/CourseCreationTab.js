@@ -82,218 +82,105 @@ async function uploadToAzureWithSAS(imageUrl) {
   // Return the Azure URL of the uploaded image
   return blockBlobClient.url;
 }
-async function deleteOldImageFromAzure(oldImageUrl) {
-  const blobServiceClient = new BlobServiceClient(
-    `https://${accountName}.blob.core.windows.net?${sasToken}`
-  );
-  const containerClient = blobServiceClient.getContainerClient(containerName);
-  const blockBlobClient = containerClient.getBlockBlobClient(oldImageUrl);
+
+router.put("/UpdateCourse/:courseId", async (req, res) => {
+  const conn = await db.getConnection();
+  await conn.beginTransaction();
 
   try {
-    await blockBlobClient.deleteIfExists();
-    console.log(`Old image deleted: ${oldImageUrl}`);
-  } catch (err) {
-    console.error(`Error deleting old image from Azure: ${err.message}`);
-  }
-}
-router.put(
-  "/UpdateCourse/:courseId",
-  upload.single("courseImageFile"), // Handle image file upload
-  async (req, res) => {
-    const conn = await db.getConnection();
-    await conn.beginTransaction();
+    const { courseId } = req.params;
+    const {
+      courseName,
+      selectedYear,
+      courseStartDate,
+      courseEndDate,
+      cost,
+      discount,
+      totalPrice,
+      selectedExamId,
+    } = req.body;
 
-    try {
-      const { courseId } = req.params;
-      const {
-        courseName,
-        selectedYear,
-        courseStartDate,
-        courseEndDate,
-        cost,
-        discount,
-        totalPrice,
-        selectedExamId,
-        courseImageFile
-      } = req.body;
+    console.log(`Received request to update course with ID: ${courseId}`);
 
-      console.log(`Received request to update course with ID: ${courseId}`);
+    // Function to parse input arrays (subjects and test types)
+    const parseInputArray = (input) => {
+      if (!input) return [];
+      if (Array.isArray(input)) return input.map(Number);
+      try {
+        const parsed = JSON.parse(input);
+        return Array.isArray(parsed) ? parsed.map(Number) : [Number(parsed)];
+      } catch {
+        return String(input).split(",").map(Number);
+      }
+    };
 
-      // Function to parse input arrays (subjects and test types)
-      const parseInputArray = (input) => {
-        if (!input) return [];
-        if (Array.isArray(input)) return input.map(Number);
-        try {
-          const parsed = JSON.parse(input);
-          return Array.isArray(parsed) ? parsed.map(Number) : [Number(parsed)];
-        } catch {
-          return String(input).split(",").map(Number);
-        }
-      };
+    const selectedSubjects = parseInputArray(req.body.selectedSubjects);
+    const selectedTypes = parseInputArray(req.body.selectedTypes);
 
-      const selectedSubjects = parseInputArray(req.body.selectedSubjects);
-      const selectedTypes = parseInputArray(req.body.selectedTypes);
+    console.log("Parsed selected subjects:", selectedSubjects);
+    console.log("Parsed selected test types:", selectedTypes);
 
-      console.log("Parsed selected subjects:", selectedSubjects);
-      console.log("Parsed selected test types:", selectedTypes);
+    // Update course data in the database (without image update)
+    console.log("Updating course data in the database...");
+    const updateCourseQuery = `
+      UPDATE iit_course_creation_table 
+      SET 
+        course_name = ?, 
+        course_year = ?, 
+        exam_id = ?, 
+        course_start_date = ?, 
+        course_end_date = ?, 
+        cost = ?, 
+        discount = ?, 
+        total_price = ?
+      WHERE course_creation_id = ?
+    `;
 
-      // Step 1: Fetch the current course details from the database
-      console.log("Fetching current course data from the database...");
-      const [existingCourse] = await conn.query(
-        "SELECT card_image FROM iit_course_creation_table WHERE course_creation_id = ?",
-        [courseId]
+    const updateCourseValues = [
+      courseName,
+      selectedYear,
+      selectedExamId,
+      courseStartDate,
+      courseEndDate,
+      cost,
+      discount,
+      totalPrice,
+      courseId,
+    ];
+
+    await conn.query(updateCourseQuery, updateCourseValues);
+    console.log("Course updated successfully in the database.");
+
+    // Update related subjects and test types
+    console.log("Updating related subjects and test types...");
+    await conn.query("DELETE FROM iit_course_subjects WHERE course_creation_id = ?", [courseId]);
+    await conn.query("DELETE FROM iit_course_type_of_tests WHERE course_creation_id = ?", [courseId]);
+
+    for (const subjectId of selectedSubjects) {
+      await conn.query(
+        "INSERT INTO iit_course_subjects (course_creation_id, subject_id) VALUES (?, ?)",
+        [courseId, subjectId]
       );
-
-      if (!existingCourse.length) {
-        console.log("Course not found in the database.");
-        return res.status(404).json({ success: false, message: "Course not found" });
-      }
-
-      console.log("Course found:", existingCourse[0]);
-      const currentImageUrl = existingCourse[0].card_image; // Existing image URL in the database
-
-      let azureFileName = currentImageUrl; // Default to current image from DB
-
-      // Step 2: Check if a new image is uploaded
-      if (req.file) {
-        // If a new image is uploaded from the frontend
-        console.log("New image uploaded. Processing upload...");
-
-        const frontendBaseURL = "http://localhost:5173"; // Replace with actual frontend base URL
-        const imageUrl = `${frontendBaseURL}/OtsCourseCardImages/${req.file.originalname}`;
-
-        console.log("Uploading new image to Azure:", imageUrl);
-        const newAzureUrl = await uploadToAzureWithSAS(imageUrl);
-        azureFileName = newAzureUrl.split("/").pop().split("?")[0]; // Get the file name from the URL
-
-        console.log("New Azure file name:", azureFileName);
-
-        // Step 3: Delete the old image from Azure if the new image is different
-        if (courseImageFile !== azureFileName) {
-          console.log(`Old image detected. Deleting old image from Azure: ${currentImageUrl}`);
-          await deleteOldImageFromAzure(currentImageUrl);
-        } else {
-          console.log("New image is the same as the current image. No need to delete the old image.");
-        }
-      } else {
-        console.log("No new image uploaded. Retaining existing image.");
-      }
-
-      // Step 4: Update course data in the database with the new or existing image
-      console.log("Updating course data in the database...");
-      const updateCourseQuery = `
-        UPDATE iit_course_creation_table 
-        SET 
-          course_name = ?, 
-          course_year = ?, 
-          exam_id = ?, 
-          course_start_date = ?, 
-          course_end_date = ?, 
-          cost = ?, 
-          discount = ?, 
-          total_price = ?, 
-          card_image = ? 
-        WHERE course_creation_id = ?
-      `;
-
-      const updateCourseValues = [
-        courseName,
-        selectedYear,
-        selectedExamId,
-        courseStartDate,
-        courseEndDate,
-        cost,
-        discount,
-        totalPrice,
-        azureFileName, // Updated or retained image file name
-        courseId,
-      ];
-
-      await conn.query(updateCourseQuery, updateCourseValues);
-      console.log("Course updated successfully in the database.");
-
-      // Step 5: Update related subjects and test types
-      console.log("Updating related subjects and test types...");
-      await conn.query("DELETE FROM iit_course_subjects WHERE course_creation_id = ?", [courseId]);
-      await conn.query("DELETE FROM iit_course_type_of_tests WHERE course_creation_id = ?", [courseId]);
-
-      console.log("Deleted old related subjects and test types.");
-
-      // Re-insert selected subjects
-      for (const subjectId of selectedSubjects) {
-        await conn.query(
-          "INSERT INTO iit_course_subjects (course_creation_id, subject_id) VALUES (?, ?)",
-          [courseId, subjectId]
-        );
-        console.log(`Added subject with ID: ${subjectId}`);
-      }
-
-      // Re-insert selected test types
-      for (const typeId of selectedTypes) {
-        await conn.query(
-          "INSERT INTO iit_course_type_of_tests (course_creation_id, type_of_test_id) VALUES (?, ?)",
-          [courseId, typeId]
-        );
-        console.log(`Added test type with ID: ${typeId}`);
-      }
-
-      // Commit the transaction
-      console.log("Committing the transaction...");
-      await conn.commit();
-
-      console.log("🎉 Course Updated Successfully!");
-      res.status(200).json({ success: true, message: "Course Updated Successfully" });
-    } catch (err) {
-      console.error("Error in course update:", err.message);
-      await conn.rollback();
-      res.status(500).json({ success: false, error: err.message });
-    } finally {
-      conn.release();
     }
-  }
-);
 
+    for (const typeId of selectedTypes) {
+      await conn.query(
+        "INSERT INTO iit_course_type_of_tests (course_creation_id, type_of_test_id) VALUES (?, ?)",
+        [courseId, typeId]
+      );
+    }
 
-// Function to delete old image from Azure
-async function deleteOldImageFromAzure(oldImageUrl) {
-  console.log("Preparing to delete old image from Azure:", oldImageUrl);
-
-  const blobServiceClient = new BlobServiceClient(
-    `https://${accountName}.blob.core.windows.net?${sasToken}`
-  );
-  const containerClient = blobServiceClient.getContainerClient(containerName);
-  const blobName = oldImageUrl.split("/").pop().split("?")[0]; // Extract the blob name from URL
-
-  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-
-  try {
-    console.log(`Deleting old image: ${blobName}`);
-    await blockBlobClient.delete();
-    console.log(`Old image deleted successfully: ${blobName}`);
+    await conn.commit();
+    console.log("🎉 Course Updated Successfully!");
+    res.status(200).json({ success: true, message: "Course Updated Successfully" });
   } catch (err) {
-    console.error("Error deleting old image from Azure:", err.message);
+    console.error("Error in course update:", err.message);
+    await conn.rollback();
+    res.status(500).json({ success: false, error: err.message });
+  } finally {
+    conn.release();
   }
-}
-
-
-async function deleteOldImageFromAzure(oldImageUrl) {
-  const blobServiceClient = new BlobServiceClient(
-    `https://${accountName}.blob.core.windows.net?${sasToken}`
-  );
-  const containerClient = blobServiceClient.getContainerClient(containerName);
-  const blobName = oldImageUrl.split("/").pop().split("?")[0]; // Extract the blob name from URL
-
-  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-
-  try {
-    await blockBlobClient.delete();
-    console.log(`Deleted old image: ${blobName}`);
-  } catch (err) {
-    console.error("Error deleting old image from Azure:", err.message);
-  }
-}
-
-
+});
 router.post(
   "/CreateCourse",
   upload.single("courseImageFile"),

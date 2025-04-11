@@ -8,7 +8,7 @@ import { BASE_URL } from "../../../../apiConfig";
 
 const TestCreationTab = () => {
   const [showAddTestForm, setShowAddTestForm] = useState(false);
-
+  const [selectedTestData, setSelectedTestData] = useState(null);
   const [testCreationFormData, setTestCreationFormData] = useState(null);
 
   // API fetch function
@@ -22,12 +22,17 @@ const TestCreationTab = () => {
       console.error("Error fetching form data:", error);
     }
   };
-
-  // Called on button click
+  
   const handleAddTestClick = () => {
     setShowAddTestForm(true);
-    fetchFormData(); // Fetch data only when button is clicked
+    fetchFormData(); 
   };
+  const handleEdit = (testData) => {
+    console.log("Selected Test Data for Edit:", testData); 
+    setSelectedTestData(testData); 
+    setShowAddTestForm(true);
+  };
+  
 
   const [testTableData, setTestTableData] = useState([]);
   useEffect(() => {
@@ -53,8 +58,10 @@ const TestCreationTab = () => {
         <TestCreationForm
           setShowAddTestForm={setShowAddTestForm}
           testCreationFormData={testCreationFormData}
+          editData={selectedTestData} // ✅ pass it here
         />
       )}
+
 
       {/* Table for displaying test data */}
       <div className={styles.tableWrapper}>
@@ -73,7 +80,7 @@ const TestCreationTab = () => {
             { header: "Test Activation", accessor: "test_activation" },
           ]}
           data={testTableData}
-          onEdit={(item) => console.log("Edit", item)}
+          onEdit={handleEdit}
           onDelete={(item) => console.log("Delete", item)}
           onToggle={(item) => console.log("Toggle Activation", item)}
         />
