@@ -32,12 +32,15 @@ const StudentRegistration = () => {
     proof: null,
     termsAccepted: false,
   });
+  const navigate = useNavigate();
   const location = useLocation();
   const { courseCreationId } = location.state || {};
   const [errors, setErrors] = useState({});
   const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
   const [courseid, setCourseid] = useState("")
+ console.log(courseid)
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
   useEffect(() => {
 
     const fetchCourseData = async () => {
@@ -160,6 +163,7 @@ const StudentRegistration = () => {
       formDataToSend.append('college_name', formData.nameOfCollege);
       formDataToSend.append('passingYear', formData.passingYear);
       formDataToSend.append('marks', formData.marks);
+      formDataToSend.append('PoralId',)
   
       // Append files (if any)
       if (formData.uploadedPhoto) {
@@ -177,28 +181,135 @@ const StudentRegistration = () => {
       console.log('FormData Object:', formDataObject);
   
       // Step 5: Determine API endpoint
-      const apiEndpoint = courseCreationId 
-        ? '/studentbuycourses/studentRegistrationBuyCourses' 
-        : '/student/studentRegistration';
+      // const apiEndpoint = courseCreationId 
+      //   ? '/studentbuycourses/studentRegistrationBuyCourses' 
+      //   : '/student/studentRegistration';
   
       try {
         // Step 6: Submit the form data using fetch
-        const response = await fetch(`${BASE_URL}${apiEndpoint}`, {
+        const response = await fetch(`${BASE_URL}/student/studentRegistration`, {
           method: 'POST',
           body: formDataToSend,
         });
+        const result = await response.json();
+
+        if (result.success) {
+          const studentId = result.studentId;
+          const courseId = courseCreationId; 
+        if(courseCreationId){
+        
+
+  try {
+      if (!courseId || !studentId) return console.error("Invalid course ID or student ID.");
+  
+      const response = await fetch(`${BASE_URL}/studentbuycourses/studentpaymentcreation/${studentId}/${courseId}`);
+      const data = await response.json();
+      const { student, course } = data;
+  
+      if (!student || !course) return console.error("Invalid student or course data.");
+  
+      const { student_registration_id, candidate_name, email_id, mobile_no } = student;
+      const { course_creation_id, course_name, total_price } = course;
+  
+      const orderRes = await fetch(`${BASE_URL}/razorpay/razorpay-create-order`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: total_price * 100,
+          currency: "INR",
+        }),
+      });
+  
+      const { orderData } = await orderRes.json();
+      if (!orderData?.id) return console.error("Invalid order data:", orderData);
+  
+      const options = {
+        key: razorpayKey,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "eGRADTutor",
+        description: `Payment for ${course_name}`,
+        order_id: orderData.id,
+  
+        handler: async function (response) {
+          try{
+            const paymentsuccess = await fetch(`${BASE_URL}/razorpay/paymentsuccess`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              email: email_id,
+              name: candidate_name,
+              course_name: course_name,
+              studentId: student_registration_id,
+              courseId: course_creation_id,
+            }),
+          });
+          console.log("Payment success response", paymentsuccess);
+     
+        } catch (error) {
+          console.error("Error processing payment success:", error);
+        }
+          // SUCCESS HANDLER
+          
+        },
+  
+        prefill: {
+          name: candidate_name,
+          email: email_id,
+          contact: mobile_no,
+        },
+  
+        notes: {
+          address: "Corporate Office, eGRADTutor(eGATETutor Academy), Hyderabad",
+        },
+  
+        theme: { color: "#3399cc" },
+      };
+  
+      const paymentObject = new window.Razorpay(options);
+  
+      paymentObject.on("payment.failed", async function (response) {
+      try{
+        const paymentfailure = await fetch(`${BASE_URL}/razorpay/paymentfailure`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: email_id,
+            name: candidate_name,
+            course_name: course_name,
+            studentId: student_registration_id,
+            courseId: course_creation_id,
+          }),
+        });
+        console.error("Payment failed");
+        console.log("Payment failure response", paymentfailure);
+      } catch (error) {
+        console.error("Error processing payment failure:", error);
+      }
+      });
+  
+      paymentObject.open();
+    } catch (error) {
+      console.error("Error creating payment session:", error);
+    }
+
+
+        }
   
         // Step 7: Handle the response
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
   
-        const result = await response.json();
+      
         console.log('Success:', result);
   
         // Step 8: Handle success (e.g., show a success message, redirect, etc.)
         alert("Registration successful! Please check your email for further instructions.");
-        navigate('/LoginPage');  // Redirect to login page after success
+        navigate('/LoginPage');
+       } // Redirect to login page after success
       } catch (error) {
         // Step 9: Handle errors during form submission
         console.error('Error:', error);

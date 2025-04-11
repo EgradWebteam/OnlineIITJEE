@@ -235,16 +235,16 @@ import globalCSS from "../../../Styles/Global.module.css";
 import CourseCard from '../../LandingPagesFolder/CourseCards';
 import { BASE_URL } from '../../../../apiConfig';
 
-export default function StudentDashboard_BuyCourses() {
+export default function StudentDashboard_BuyCourses({setActiveSection,studentId}) {
   useEffect(() => {
     console.log("buycourses");
   }, []);
-  const studentId = 6; // Replace with actual ID from auth/session
 
+console.log("Student ID:", studentId); // Check the student ID
   const [structuredCourses, setStructuredCourses] = useState([]);
   const [selectedExam, setSelectedExam] = useState("");
   const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
-  console.log("Razorpay Key:", razorpayKey);
+ 
 
   useEffect(() => {
     const fetchCoursesInBuyCourses = async () => {
@@ -341,8 +341,8 @@ export default function StudentDashboard_BuyCourses() {
         order_id: orderData.id,
   
         handler: async function (response) {
-          // SUCCESS HANDLER
-          await fetch(`${BASE_URL}/razorpay/paymentsuccess`, {
+          try{
+            const paymentsuccess = await fetch(`${BASE_URL}/razorpay/paymentsuccess`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -355,7 +355,13 @@ export default function StudentDashboard_BuyCourses() {
               courseId: course_creation_id,
             }),
           });
-          console.log("Payment success response");
+          console.log("Payment success response", paymentsuccess);
+          setActiveSection("myCourses"); // Navigate to My Courses section
+        } catch (error) {
+          console.error("Error processing payment success:", error);
+        }
+          // SUCCESS HANDLER
+          
         },
   
         prefill: {
@@ -374,7 +380,8 @@ export default function StudentDashboard_BuyCourses() {
       const paymentObject = new window.Razorpay(options);
   
       paymentObject.on("payment.failed", async function (response) {
-        await fetch(`${BASE_URL}/razorpay/paymentfailure`, {
+      try{
+        const paymentfailure = await fetch(`${BASE_URL}/razorpay/paymentfailure`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -386,6 +393,10 @@ export default function StudentDashboard_BuyCourses() {
           }),
         });
         console.error("Payment failed");
+        console.log("Payment failure response", paymentfailure);
+      } catch (error) {
+        console.error("Error processing payment failure:", error);
+      }
       });
   
       paymentObject.open();

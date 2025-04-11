@@ -299,6 +299,8 @@ router.post("/studentLogin", async (req, res) => {
  
     console.log("Comparing password...");
     const isMatch = await bcrypt.compare(password, user.password);
+    const hashedPassword = bcrypt.hash(password, 10); // Store the hashed password for debugging
+    console.log(hashedPassword, user.password); // Log the password comparison for debugging
     console.log("Password match result:", isMatch);
 
     if (!isMatch) {
