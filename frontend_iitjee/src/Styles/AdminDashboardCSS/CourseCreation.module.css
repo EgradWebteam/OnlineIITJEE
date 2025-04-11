@@ -24,16 +24,17 @@
   margin-bottom: 1rem;
 }
 
+.flex{
+  display: flex;
+  justify-content: end;
+}
 .addCourseBtn {
-  background-color: #00b94a; /* Green background */
+  background-color: #28a745;
   color: white;
-  padding: 8px 18px;
-  font-weight: bold;
-  border-radius: 6px;
+  padding: 8px 16px;
   border: none;
-  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
   cursor: pointer;
-  transition: 0.3s ease;
 }
 
 .addCourseBtn:hover {

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import Styles from "../../../Styles/StudentDashboardCSS/StudentRegistration.module.css";
 import SRFormImage from "../../../assets/SRFormImage.jpg";
 import MainHeader from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainHeader";
 import MainFooter from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainFooter";
 import { BASE_URL } from "../../../config/apiConfig.js";
 import TermsAndConditions from "../../GlobalFiles/TermsAndConditions.jsx";
-import { useLocation } from 'react-router-dom';
+import { useLocation,Link,useNavigate } from 'react-router-dom';
 import axios from "axios";
 const StudentRegistration = () => {
   const [formData, setFormData] = useState({
@@ -323,8 +322,13 @@ const StudentRegistration = () => {
 
 
   const handleBackButtonClick = () => {
-    navigate('/LoginPage');
+    if (courseCreationId) {
+      navigate('/buycourses');
+    } else {
+      navigate('/LoginPage');
+    }
   };
+  
   return (
     <div className={Styles.SRMainFormDiv}>
       <MainHeader />

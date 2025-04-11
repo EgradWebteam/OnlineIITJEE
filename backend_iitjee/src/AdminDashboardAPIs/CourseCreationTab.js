@@ -305,6 +305,44 @@ router.post(
     }
   }
 );
+router.delete("/delete/:courseId", async (req, res) => {
+  const { courseId } = req.params;
+  const conn = await db.getConnection();
+  await conn.beginTransaction();
+
+  try {
+    console.log(`Attempting to delete course with ID: ${courseId}`);
+
+    // Delete related subjects
+    await conn.query(
+      "DELETE FROM iit_course_subjects WHERE course_creation_id = ?",
+      [courseId]
+    );
+
+    // Delete related test types
+    await conn.query(
+      "DELETE FROM iit_course_type_of_tests WHERE course_creation_id = ?",
+      [courseId]
+    );
+
+    // Delete the course itself
+    await conn.query(
+      "DELETE FROM iit_course_creation_table WHERE course_creation_id = ?",
+      [courseId]
+    );
+
+    await conn.commit();
+    console.log("🗑️ Course and related data deleted successfully.");
+    res.status(200).json({ success: true, message: "Course deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting course:", error.message);
+    await conn.rollback();
+    res.status(500).json({ success: false, error: "Failed to delete course." });
+  } finally {
+    conn.release();
+  }
+});
+
 router.get("/GetAllCourses", async (req, res) => {
   const conn = await db.getConnection();
   
@@ -363,12 +401,5 @@ GROUP BY c.course_creation_id;
     conn.release();
   }
 });
-
-
-
-
-
-
-
 
 module.exports = router;

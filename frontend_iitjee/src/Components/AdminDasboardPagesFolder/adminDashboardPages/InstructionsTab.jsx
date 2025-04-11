@@ -19,7 +19,7 @@ const InstructionsTab = () => {
     { header: "Exam Name", accessor: "examName" },
     { header: "Instructions Heading", accessor: "heading" },
     { header: "Document Name", accessor: "docName" },
-    { header: "Action", accessor: "action" }
+   
   ];
 
   // Fetch exam list

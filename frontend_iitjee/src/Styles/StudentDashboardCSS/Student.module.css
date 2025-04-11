@@ -163,6 +163,30 @@
   .backToLoginLink{
     margin-top: 10%;
   }
+  .passwordInputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .passwordToggle {
+    position: absolute;
+    right: 10px; 
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #aaa;  /* Icon color */
+  }
+  
+  input {
+    padding-right: 30px; 
+  }
+  
+  .passwordError {
+    color: red;
+    font-size: 0.9rem;
+  }
+  
   @media(max-width:1150px){
     .studentLoginHomePage{
       width: 100%;

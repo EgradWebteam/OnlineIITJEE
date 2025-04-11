@@ -95,7 +95,7 @@
 //                   >
 //                     {row.isActive ? "Deactivate Course" : "Activate Course"}
 //                   </button>}
-                  
+
 //                 </td>
 //               </tr>
 //             ))
@@ -118,8 +118,9 @@
 import React from "react";
 import styles from "../../../Styles/AdminDashboardCSS/AdminDashboard.module.css";
 
-const DynamicTable = ({ columns,isOpen, data, onEdit, onOpen, onDelete, onToggle,showEdit = true,showToggle = true }) => {
-  console.log("columns",columns)
+const DynamicTable = ({ columns, isOpen, data, onEdit, onOpen, onDelete, onToggle, showEdit = true, showToggle = true }) => {
+  console.log("columns", columns)
+  console.log("data", data)
   return (
     <div className={styles.tableWrapper}>
       <table className={styles.table}>
@@ -139,12 +140,15 @@ const DynamicTable = ({ columns,isOpen, data, onEdit, onOpen, onDelete, onToggle
             data.map((row, ri) => (
               <tr key={ri}>
                 {columns.map((col, ci) => (
-                  <td key={ci}>{row[col.accessor]}</td> // Ensures the correct data is displayed
+                  <td key={ci}>
+                    {col.render ? col.render(row, ci) : row[col.accessor]}
+                  </td>
                 ))}
+
                 <td className={styles.actions}>
-                 {isOpen && <button className={styles.onOpen} onClick={() => onOpen(row)}>Open</button>}
+                  {isOpen && <button className={styles.onOpen} onClick={() => onOpen(row)}>Open</button>}
                   {/* <button className={styles.editBtn} onClick={() => onEdit?.(row)}>✏️</button> */}
-                  {showEdit && (
+                  {onEdit && (
                     <button className={styles.editBtn} onClick={() => onEdit?.(row)}>✏️</button>
                   )}
                   <button className={styles.deleteBtn} onClick={() => onDelete(row)}>🗑️</button>
