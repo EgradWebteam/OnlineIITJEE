@@ -3,11 +3,16 @@ name: Build and Deploy Node.js App to Azure Web App
 on:
   push:
     branches:
-      - main  # Trigger deployment on push to the main branch
+      - main
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -15,23 +20,23 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '20'  # Specify the Node.js version
+          node-version: '20'
 
       - name: Install dependencies
         run: |
           cd backend_iitjee
-          npm install  # Install dependencies
-      - name: Login to Azure
+          npm install
+
+      - name: Login to Azure with federated identity
         uses: azure/login@v1
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          environment: azurecloud  # Ensure you're using the correct Azure cloud environment
- 
+          environment: azurecloud
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'iit-server'  # Your App Service name
-          package: 'backend_iitjee'  # Path to your app's root directory (where package.json is located)
+          app-name: 'iit-server' #  azure app service name
+          package: 'backend_iitjee' #github backend folder name
