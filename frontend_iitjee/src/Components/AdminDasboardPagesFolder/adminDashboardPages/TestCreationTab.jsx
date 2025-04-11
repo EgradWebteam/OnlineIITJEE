@@ -39,6 +39,7 @@ const TestCreationTab = () => {
       })
       .catch((error) => console.error("Error fetching Testdata:", error));
   }, []);
+  console.log("testTableData",testTableData)
 
   return (
     <div className={styles.dashboardContent}>
@@ -63,8 +64,8 @@ const TestCreationTab = () => {
             { header: "S.No", accessor: "serial" },
             { header: "Test Name", accessor: "test_name" },
             { header: "Selected Course", accessor: "course_name" },
-            { header: "Test Started", accessor: "test_started" },
-            { header: "Test Date", accessor: "test_start_date" },
+            { header: "Test Started", accessor: "test_start_date" },
+            { header: "Test Date", accessor: "test_end_date" },
             { header: "Start Time", accessor: "test_start_time" },
             { header: "End Time", accessor: "test_end_time" },
             { header: "Total Questions", accessor: "number_of_questions" },
