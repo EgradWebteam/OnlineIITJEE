@@ -32,6 +32,9 @@ app.use("/Instructions", InstructionsTab);
 const TestCreationTab = require("./src/AdminDashboardAPIs/TestCreationTab");
 app.use("/TestCreation", TestCreationTab);
 
+const EncryptDecrypt = require("./src/EncryptDecryptAPIs/encryptDecryptController.js");
+app.use("/EncryptDecrypt", EncryptDecrypt)
+
 const StudentInfo = require('./src/UserAuthentication/StudentInfo.js')
 app.use("/students", StudentInfo);
 const CourseHomePage = require('./src/LandingPageApis/CourseHomePage.js')

@@ -289,7 +289,7 @@ font-size: 18px;
     background-image: url(../../assets//OTSTestInterfaceImages/Visited.png);
     background-repeat: no-repeat;
     background-size: contain;
-    color: white;
+    color: black;
     line-height: 34px;
   }
   .MarkedforReviewBehaviourBtns{
@@ -297,17 +297,17 @@ font-size: 18px;
     background-repeat: no-repeat;
     background-size: contain;
     color: white;
-    line-height: 34px;
+    line-height: 43px;
     width: 50%;
   }
   .AnsMarkedforReviewBehaviourBtns{
-    background-image: url(../../assets/OTSTestInterfaceImages/AnsMarkedForReview.png);
+    background-image: url(/src/assets/OTSTestInterfaceImages/AnsMarkedForReview.png);
     background-repeat: no-repeat;
     background-size: contain;
     color: white;
-    width: 36%;
-    height: 70px;
-    line-height: 33px;
+    width: 20%;
+    height: 60px;
+    line-height: 38px;
   }
   .SectionsAndSubjectDiv{
     background-color: #587dbd;
@@ -379,13 +379,16 @@ font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
 }
 .markedForReviewNavigationBtn,.clearResponseBtn, .previousBtn,.saveandnextNavigationBtn,.submitNavigationBtn{
   border: 1px solid rgb(153, 151, 151);
   padding: 10px;
 }
 .saveandnextNavigationBtn{
-  background-color: rgb(61, 156, 245);
+  background-color: rgb(69, 140, 207);
+  color: white;
+  border: none;
 }
 .QuestionNavigationBTns{
   border: 1px solid rgb(204, 204, 204);
@@ -393,6 +396,7 @@ font-size: 18px;
   position: sticky;
   width: 100%;
   margin-top: 30px;
+  height: 7vh;
 }
 .navigationBtnHolderSubContainer{
   display: flex;
@@ -423,3 +427,223 @@ font-size: 18px;
 .AnsMarkedForReview{
   background-image: url(../../assets//OTSTestInterfaceImages/AnsMarkedForReview.png);
 }
+.btnsSubContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 85%;
+}
+/* .submitBtnCls{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  background-color: rgb(94, 135, 163);
+} */
+
+/* OTS EXAM SUMMARY CSS */
+.examSummaryContainer {
+  padding: 24px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.summaryTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.summaryTable th,
+.summaryTable td {
+  border: 1px solid #ccc;
+  padding: 12px;
+}
+
+.confirmationText {
+  margin-top: 24px;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.buttonGroup {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.noBtn {
+  margin-right: 20px;
+  padding: 10px 24px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.yesBtn {
+  padding: 10px 24px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.submissionPopup {
+  text-align: center;
+  padding: 2rem;
+  background-color: #f0fff0;
+  border: 2px solid #22bb33;
+  border-radius: 10px;
+}
+
+.viewReportBtn {
+  background-color: #22bb33;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.ExamSummaryMainDiv{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+/* page not found css */
+.pageNotFoundMaindiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+}
+.pagenotFoundImage img{
+  width: 100%;
+  height:100%
+}
+/* .pagenotFoundImage{
+  width: 400px;
+  height: 300px;
+} */
+.errorMSGPAGE{
+  font-size: 2rem;
+  font-weight: 600;
+}
+.pagenotfoundPARA{
+  display:flex;
+  align-items: center;
+  margin-top: 1rem;
+  flex-direction: column;
+}
+/*instrction page css */
+.instrctionMianHeading {
+  background-color: lightblue;
+  color: #3d3636;
+  padding: 6px;
+  padding-left: 3rem;
+}
+
+.instructionHeading {
+  text-decoration: underline;
+  margin-bottom: 5px;
+}
+
+.instructionSubdiv{
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  overflow: auto;
+  min-height: 60vh;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 1rem 1rem 1rem 3rem;
+}
+
+.instructionSection ul {
+  list-style-type: none;
+  padding-left: 10px;
+}
+
+.instructionSection ul li {
+  line-height:34px;
+}
+
+.tableOFbtns {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid;
+  width: 60%;
+  margin: 10px 0;
+}
+
+.rowTableClass, .displayIcon{
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  gap: 5px;
+  border-top: none;
+
+}
+.rowTableClass div{
+  border: 1px solid black;
+}
+.forTotalWidth{
+  border: 1px solid black;
+  padding: 10px;
+  width: 100%;
+}
+.displayIcon{
+  width: 7%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+.functionimageCls{
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  justify-content: center;
+}
+.nextBtnDiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nextBtnDiv button{
+  background-color: #04c7f8;
+  padding: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+  border: 1px solid #04c7f8;
+  border-radius: 5px;
+}
+.nextBtnArrow{
+  font-size: large;
+}
+.userImageDivInst{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.7rem;
+  word-wrap: break-word;
+  border-left: 1px solid gray;
+}
+

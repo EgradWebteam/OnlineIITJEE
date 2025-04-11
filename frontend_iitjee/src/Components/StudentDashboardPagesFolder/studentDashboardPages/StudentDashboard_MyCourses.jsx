@@ -3,6 +3,7 @@ import globalCSS from "../../../Styles/global.module.css";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import CourseCard from '../../LandingPagesFolder/CourseCards';
 import { BASE_URL } from '../../../../apiConfig';
+import TestDetailsContainer from './TestDetailsContainer';
 
 export default function StudentDashboard_MyCourses() {
   const studentId = 6;
@@ -10,6 +11,8 @@ export default function StudentDashboard_MyCourses() {
   const [selectedPortal, setSelectedPortal] = useState(null);
   const [selectedExam, setSelectedExam] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedTestCourse, setSelectedTestCourse] = useState(null);
+
 
   useEffect(() => {
     const fetchPurchasedCourses = async () => {
@@ -55,6 +58,19 @@ export default function StudentDashboard_MyCourses() {
     }));
   }, [portalData, selectedExam]);
 
+  const handleGoToTest = (course) => {
+    setSelectedTestCourse(course);
+  };
+  
+  if (selectedTestCourse) {
+    return (
+      <TestDetailsContainer
+        course={selectedTestCourse}
+        onBack={() => setSelectedTestCourse(null)} 
+        studentId={studentId}
+      />
+    );
+  }
   return (
     <div className={styles.studentDashboardMyCoursesMainDiv}>
       <div className={globalCSS.stuentDashboardGlobalHeading}>
@@ -112,7 +128,7 @@ export default function StudentDashboard_MyCourses() {
               title={course.course_name}
               cardImage={course.card_image}
               context="myCourses"
-              onGoToTest={() => console.log("Go to Test:", course.course_creation_id)}
+              onGoToTest={() => handleGoToTest(course)}
             />
           ))}
         </div>
