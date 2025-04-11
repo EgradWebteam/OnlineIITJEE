@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { decryptBatch as decryptDataBatch } from '../../../utils/cryptoUtils.jsx'; // Batch API decryption
+import { decryptBatch as decryptDataBatch, encryptBatch } from '../../../utils/cryptoUtils.jsx'; // Batch API decryption
 import { Intstruction_content } from './InstructionsData.js';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css"
 import OTSHeader from '../OTSHeaderFolder/OTSHeader.jsx';
@@ -54,14 +54,25 @@ const GeneralInstructions = () => {
 
     if (isDecrypting) {
         return (
-            <div style={{ padding: '2rem', textAlign: 'center' }}>
-                <h2>Verifying test link...</h2>
+            <div>
+                <h2>loading...</h2>
             </div>
         );
     }
-const handleNextClick = () => {
+    const handleNextClick = async () => {
+        try {
+          const encryptedArray = await encryptBatch([realTestId, realStudentId]); // ⬅️ Await the result
+          const encryptedTestId = encodeURIComponent(encryptedArray[0]);
+          const encryptedStudentId = encodeURIComponent(encryptedArray[1]);
+      
+          navigate(`/ExamInstructions/${encryptedTestId}/${encryptedStudentId}`);
+        } catch (error) {
+          console.error("Encryption failed:", error);
+          navigate("/Error");
+        }
+      };
+      
     
-}
     return (
         <div className={styles.InstrcutionMainDiv}>
             <div>
