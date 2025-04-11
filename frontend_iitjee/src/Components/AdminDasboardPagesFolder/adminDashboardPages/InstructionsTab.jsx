@@ -4,6 +4,7 @@ import styles from "../../../Styles/AdminDashboardCSS/Instruction.module.css";
 import DynamicTable from "./DynamicTable";
 
 const InstructionsTab = () => {
+  const isOpen=true
   const [showForm, setShowForm] = useState(false);
   const [exams, setExams] = useState([]);
   const [selectedExam, setSelectedExam] = useState("");
@@ -273,6 +274,7 @@ const InstructionsTab = () => {
 
       <div style={{ marginTop: "20px" }}>
         <DynamicTable
+        isOpen={isOpen}
           columns={columns}
           data={data}
           showEdit={false}
