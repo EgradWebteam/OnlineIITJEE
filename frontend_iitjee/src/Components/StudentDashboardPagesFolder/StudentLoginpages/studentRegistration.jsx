@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Styles from "../../../Styles/StudentDashboardCSS/StudentRegistration.module.css";
 import SRFormImage from "../../../assets/SRFormImage.jpg";
@@ -39,11 +39,11 @@ const StudentRegistration = () => {
   const [courseid, setCourseid] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false);
   useEffect(() => {
-   
+
     const fetchCourseData = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/studentbuycourses/ActiveCourses/${courseCreationId}`);
-       
+
         setCourseid(response.data); // Store data in state
       } catch (error) {
         console.error('Failed to fetch course data'); // Handle error
@@ -113,22 +113,35 @@ const StudentRegistration = () => {
     if (!formData.marks) newErrors.marks = "Marks are required.";
     if (!formData.uploadedPhoto) newErrors.uploadedPhoto = "Photo upload is required.";
     if (!formData.termsAccepted) newErrors.termsAccepted = "You must accept the terms and conditions.";
-
+    if (!formData.termsAccepted) {
+      newErrors.termsAccepted = "You must accept the terms and conditions.";
+    }
     return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+  
     // Step 1: Validate the form
     const validationErrors = validateForm();
+    
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      
+      // Step 2: Create an error message showing missing fields
+      let errorMessage = "Please fill in the following required fields:\n";
+      Object.keys(validationErrors).forEach((key) => {
+        errorMessage += `- ${key}\n`;  // Append the field name that is missing
+      });
+      
+      // Show an alert with the missing fields
+      alert(errorMessage);  // This will now list the fields that are not filled
+      return; // Prevent form submission if validation errors exist
     } else {
-      // Step 2: Create a FormData object to send data to the server
+      // Step 3: Proceed with form data submission
       const formDataToSend = new FormData();
-    
-      // Step 3: Append all form data (text fields) to FormData
+  
+      // Append form data
       formDataToSend.append('candidateName', formData.candidateName);
       formDataToSend.append('dateOfBirth', formData.dateOfBirth);
       formDataToSend.append('gender', formData.gender);
@@ -141,64 +154,63 @@ const StudentRegistration = () => {
       formDataToSend.append('mobileNo', formData.mobileNo);
       formDataToSend.append('line1', formData.line1);
       formDataToSend.append('state', formData.state);
-      formDataToSend.append('districts', formData.districts);
+      formDataToSend.append('district', formData.districts);
       formDataToSend.append('pincode', formData.pincode);
       formDataToSend.append('qualifications', formData.qualifications);
-      formDataToSend.append('nameOfCollege', formData.nameOfCollege);
+      formDataToSend.append('college_name', formData.nameOfCollege);
       formDataToSend.append('passingYear', formData.passingYear);
       formDataToSend.append('marks', formData.marks);
-    
-      // Step 4: Append files (if they exist)
+  
+      // Append files (if any)
       if (formData.uploadedPhoto) {
         formDataToSend.append('uploadedPhoto', formData.uploadedPhoto);
       }
       if (formData.proof) {
         formDataToSend.append('proof', formData.proof);
       }
-    
-      // Step 5: Append termsAccepted as a string or boolean
+  
+      // Append termsAccepted as a string or boolean
       formDataToSend.append('termsAccepted', formData.termsAccepted.toString());
-    
-      // Step 6: Log the FormData object (for debugging purposes)
+  
+      // Step 4: Log the FormData object for debugging
       const formDataObject = Object.fromEntries(formDataToSend.entries());
       console.log('FormData Object:', formDataObject);
-    
-      // Step 7: Determine which API to call based on courseCreationId
+  
+      // Step 5: Determine API endpoint
       const apiEndpoint = courseCreationId 
         ? '/studentbuycourses/studentRegistrationBuyCourses' 
         : '/student/studentRegistration';
-      
+  
       try {
-        // Step 8: Send the form data to the backend using fetch
+        // Step 6: Submit the form data using fetch
         const response = await fetch(`${BASE_URL}${apiEndpoint}`, {
           method: 'POST',
           body: formDataToSend,
         });
-    
-        // Step 9: Check if the response is successful
+  
+        // Step 7: Handle the response
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-    
+  
         const result = await response.json();
         console.log('Success:', result);
-    
-        // Step 10: Handle success (e.g., show a success message, redirect, etc.)
+  
+        // Step 8: Handle success (e.g., show a success message, redirect, etc.)
         alert("Registration successful! Please check your email for further instructions.");
         navigate('/LoginPage');  // Redirect to login page after success
       } catch (error) {
-        // Step 11: Handle any errors during form submission
+        // Step 9: Handle errors during form submission
         console.error('Error:', error);
-        alert('There was an error with your registration. Please try again.');
       }
     }
-    
+  
     // Log completion of form submission
     console.log("Form submitted successfully!");
   };
   
-  
-  
+
+
   const handleBackButtonClick = () => {
     navigate('/LoginPage');
   };
@@ -211,14 +223,14 @@ const StudentRegistration = () => {
             Student Registration Page
           </h2>
           {courseid && (
-          <div className={Styles.CourseDetails}>
-       
-            <p><strong>Course Name:</strong></p>
-            <div> {courseid[0].course_name}</div>
-            <p><strong>Duration:</strong></p>
-            <div> {courseid[0].course_duration} to {courseid[0].course_end_date}</div>
-          </div>
-        )}
+            <div className={Styles.CourseDetails}>
+
+              <p><strong>Course Name:</strong></p>
+              <div> {courseid[0].course_name}</div>
+              <p><strong>Duration:</strong></p>
+              <div> {courseid[0].course_duration} to {courseid[0].course_end_date}</div>
+            </div>
+          )}
           <div className={Styles.RegistrationBackbtnDiv}>
             <button onClick={handleBackButtonClick} className={Styles.SRBackbtn}>Back</button>
           </div>
@@ -625,9 +637,10 @@ const StudentRegistration = () => {
                       onChange={() => setFormData((prevData) => ({ ...prevData, termsAccepted: !prevData.termsAccepted }))}
                     />
                     I accept all the{" "}
-                    <span onClick={setOpenTermsAndConditions} className={Styles.tcLink}>terms & conditions</span>
+                    <span onClick={() => setOpenTermsAndConditions(true)} className={Styles.tcLink}>terms & conditions</span>
                   </label>
 
+                  {/* Display error message if terms are not accepted */}
                   {errors.termsAccepted && <p className={Styles.error}>{errors.termsAccepted}</p>}
                 </div>
               </div>
@@ -637,15 +650,15 @@ const StudentRegistration = () => {
                 </button> */}
 
                 <div>
-                {courseCreationId ? (
-              <button type="submit" className={Styles.buttonforStdReg} disabled={isSubmitting}>
-                Pay Now
-              </button>
-            ) : (
-              <button type="submit" className={Styles.buttonforStdReg} disabled={isSubmitting}>
-                Register
-              </button>
-            )}
+                  {courseCreationId ? (
+                    <button type="submit" className={Styles.buttonforStdReg} disabled={isSubmitting}>
+                      Pay Now
+                    </button>
+                  ) : (
+                    <button type="submit" className={Styles.buttonforStdReg} disabled={isSubmitting}>
+                      Register
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

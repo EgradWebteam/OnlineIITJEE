@@ -3,7 +3,7 @@ import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.
 import globalCSS from "../../../Styles/Global.module.css";
 import CourseCard from '../../LandingPagesFolder/CourseCards';
 import { BASE_URL } from '../../../../apiConfig';
-import { useNavigate } from 'react-router-dom';
+
 export default function StudentDashboard_BuyCourses() {
    useEffect(() => {
       console.log("buycourses")
@@ -12,7 +12,7 @@ export default function StudentDashboard_BuyCourses() {
 
   const [structuredCourses, setStructuredCourses] = useState([]);
   const [selectedExam, setSelectedExam] = useState("");
-  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchCoursesInBuyCourses = async () => {
       try {
@@ -104,7 +104,7 @@ export default function StudentDashboard_BuyCourses() {
               context="buyCourses"
               onBuy={() => {
                 console.log("Navigating to Student Registration with Course ID:", course.course_creation_id); // Log the course ID
-                navigate('/StudentRegistrationPage', { state: { courseCreationId: course.course_creation_id } });
+  
                 }
               }
             

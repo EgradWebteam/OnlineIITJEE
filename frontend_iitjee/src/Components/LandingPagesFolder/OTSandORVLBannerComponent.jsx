@@ -10,13 +10,13 @@ import orvlFeatureImg from "../../assets/TestSeriesDescription.png";
 import pqbBannerImg from "../../assets/PortalBanner.png";
 import pqbFeatureImg from "../../assets/TestSeriesDescription.png";
 import { BASE_URL } from "../../../apiConfig";
-
+import { useNavigate } from 'react-router-dom';
 import CourseCard from "./CourseCards";
 
 const OTSandORVLBannerComponent = () => {
   const location = useLocation();
   const path = location.pathname;
-
+  const navigate = useNavigate();
   let portalId = null;
   if (path === "/OTSHomePage") portalId = 1;
   else if (path === "/PQBHomePage") portalId = 2;
@@ -144,7 +144,11 @@ const OTSandORVLBannerComponent = () => {
                   ? "PQBHomePage"
                   : "ORVLHomePage"
               }
-              onBuy={() => console.log("Buy Now:", course.course_creation_id)}
+              onBuy={() => {
+                console.log("Navigating to Student Registration with Course ID:", course.course_creation_id); // Log the course ID
+                navigate('/StudentRegistrationPage', { state: { courseCreationId: course.course_creation_id } });
+                }
+              }
               onGoToTest={() => console.log("Go to Test:", course.course_creation_id)}
             />
           ))
