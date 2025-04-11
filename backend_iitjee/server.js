@@ -38,6 +38,9 @@ app.use("/DocumentUpload", TestPaperDocumentUpload);
 const TestPaper = require("./src/StudentDashboardAPIs/TestPaper");
 app.use("/OTS", TestPaper);
 
+const EncryptDecrypt = require("./src/EncryptDecryptAPIs/encryptDecryptController.js");
+app.use("/EncryptDecrypt", EncryptDecrypt)
+
 const StudentInfo = require('./src/UserAuthentication/StudentInfo.js')
 app.use("/students", StudentInfo);
 const CourseHomePage = require('./src/LandingPageApis/CourseHomePage.js')
@@ -45,6 +48,7 @@ app.use("/CourseHomePage", CourseHomePage);
 app.get("/",(req, res)=> {
     res.json({message: "Backend is working!"});
 });
-
+const razorpay = require("./src/PaymentGateway/Razorpay.js");
+app.use("/razorpay", razorpay); // ✅ route mount point
 const PORT = process.env.PORT ;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

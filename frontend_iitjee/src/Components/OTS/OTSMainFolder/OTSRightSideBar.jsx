@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import studentImg from "../../../assets/OtsCourseCardImages/iit_jee1.png";
 
@@ -23,37 +23,59 @@ export default function OTSRightSideBar({
   const section = subject?.sections?.find(
     (sec) => sec.SectionName === activeSection
   );
- // Calculate counts for each category (Answered, Not Answered, Not Visited, Marked for Review, etc.)
- const answeredCount = section?.questions?.filter(q => {
-  const savedAnswer = userAnswers?.[q.question_id];
-  return savedAnswer?.buttonClass === styles.AnswerdBtnCls || savedAnswer?.buttonClass === styles.AnsMarkedforReviewBehaviourBtns;
-}).length || 0;
 
-const notAnsweredCount = section?.questions?.filter(q => {
-  const savedAnswer = userAnswers?.[q.question_id];
-  return savedAnswer?.buttonClass === styles.NotAnsweredBtnCls;
-}).length || 0;
+  useEffect(() => {
+    if (!testData || !Array.isArray(testData.subjects)) return;
+  
+    const subject = testData.subjects.find(subj => subj.SubjectName === activeSubject);
+    const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
+    const firstQuestion = section?.questions?.[0];
+  
+    if (firstQuestion && !userAnswers?.[firstQuestion.question_id]) {
+      setUserAnswers(prev => ({
+        ...prev,
+        [firstQuestion.question_id]: {
+          subjectId: subject.subjectId,
+          sectionId: section.sectionId,
+          questionId: firstQuestion.question_id,
+          buttonClass: styles.NotAnsweredBtnCls,
+          type: "", // no answer yet
+        }
+      }));
+    }
+  }, [testData, activeSubject, activeSection]);
+  // Calculate counts for each category (Answered, Not Answered, Not Visited, Marked for Review, etc.)
+  const answeredCount = section?.questions?.filter(q => {
+    const savedAnswer = userAnswers?.[q.question_id];
+    return savedAnswer?.buttonClass === styles.AnswerdBtnCls || savedAnswer?.buttonClass === styles.AnsMarkedforReviewBehaviourBtns;
+  }).length || 0;
 
-const notVisitedCount = section?.questions?.filter(q => {
-  const savedAnswer = userAnswers?.[q.question_id];
-  return !savedAnswer;  // No saved answer means it has not been visited
-}).length || 0;
+  const notAnsweredCount = section?.questions?.filter(q => {
+    const savedAnswer = userAnswers?.[q.question_id];
+    return savedAnswer?.buttonClass === styles.NotAnsweredBtnCls;
+  }).length || 0;
 
-const markedForReviewCount = section?.questions?.filter(q => {
-  const savedAnswer = userAnswers?.[q.question_id];
-  return savedAnswer?.buttonClass === styles.MarkedForReview;
-}).length || 0;
+  const notVisitedCount = section?.questions?.filter(q => {
+    const savedAnswer = userAnswers?.[q.question_id];
+    return !savedAnswer;  // No saved answer means it has not been visited
+  }).length || 0;
 
-const answeredAndMarkedForReviewCount = section?.questions?.filter(q => {
-  const savedAnswer = userAnswers?.[q.question_id];
-  return savedAnswer?.buttonClass === styles.AnsMarkedforReviewBehaviourBtns;
-}).length || 0;
+  const markedForReviewCount = section?.questions?.filter(q => {
+    const savedAnswer = userAnswers?.[q.question_id];
+    return savedAnswer?.buttonClass === styles.MarkedForReview;
+  }).length || 0;
+
+  const answeredAndMarkedForReviewCount = section?.questions?.filter(q => {
+    const savedAnswer = userAnswers?.[q.question_id];
+    return savedAnswer?.buttonClass === styles.AnsMarkedForReview;
+  }).length || 0;
+
   const handleQuestionClick = (index) => {
     const question = section?.questions?.[index];
     if (!question) return;
-  
+
     const existing = userAnswers?.[question.question_id];
-  
+
     // Only apply NotAnsweredBtnCls if this question hasn't been touched
     if (!existing) {
       setUserAnswers(prev => ({
@@ -67,13 +89,13 @@ const answeredAndMarkedForReviewCount = section?.questions?.filter(q => {
         }
       }));
     }
-  
+
     setActiveQuestionIndex(index);
   };
-  
-  
 
-  
+
+
+
   return (
     <div className={styles.OTSRightSideBarMainContainer}>
 
@@ -88,26 +110,27 @@ const answeredAndMarkedForReviewCount = section?.questions?.filter(q => {
       {/* Question Behavior Legends */}
       <div className={styles.OTSRightSideBarSubContainer}>
         <div className={styles.OTSBehaviourCountBtnsContainer}>
-        <div className={styles.OTSBehaviourBtnsClass}>
-            <p className={`${styles.behaviorBtnImg} ${styles.AnsweredBehaviourBtns}`}></p>
-            <p className={styles.fntSize}>Answered ({answeredCount})</p>
+          <div className={styles.OTSBehaviourBtnsClass}>
+            <p className={`${styles.behaviorBtnImg} ${styles.AnsweredBehaviourBtns}`}><span>{answeredCount}</span></p>
+            <p className={styles.fntSize}>Answered </p>
           </div>
           <div className={styles.OTSBehaviourBtnsClass}>
-            <p className={`${styles.behaviorBtnImg} ${styles.NotAnsweredBehaviourBtns}`} id='NotAnsweredBehaviourBtns'></p>
-            <p className={styles.fntSize}>Not Answered ({notAnsweredCount})</p>
+            <p className={`${styles.behaviorBtnImg} ${styles.NotAnsweredBehaviourBtns}`}><span>{notAnsweredCount}</span></p>
+            <p className={styles.fntSize}>Not Answered </p>
           </div>
           <div className={styles.OTSBehaviourBtnsClass}>
-            <p className={`${styles.behaviorBtnImg} ${styles.NotVisitedBehaviourBtns}`} id="NotVisitedBehaviourBtns"></p>
-            <p className={styles.fntSize}>Not Visited ({notVisitedCount})</p>
+            <p className={`${styles.behaviorBtnImg} ${styles.NotVisitedBehaviourBtns}`}><span>{notVisitedCount}</span></p>
+            <p className={styles.fntSize}>Not Visited </p>
           </div>
           <div className={styles.OTSBehaviourBtnsClass}>
-            <p className={`${styles.behaviorBtnImg} ${styles.MarkedforReviewBehaviourBtns}`} id='MarkedforReviewBehaviourBtns'></p>
-            <p className={styles.fntSize}>Marked for Review ({markedForReviewCount})</p>
+            <p className={`${styles.behaviorBtnImg} ${styles.MarkedforReviewBehaviourBtns}`}><span>{markedForReviewCount}</span></p>
+            <p className={styles.fntSize}>Marked for Review </p>
           </div>
           <div className={styles.behaviorBtnImgMarkedForReiew}>
-            <p className={`${styles.behaviorBtnImg} ${styles.AnsMarkedforReviewBehaviourBtns}`} id='AnsMarkedforReviewBehaviourBtns'></p>
-            <p className={styles.fntSize}>Answered & Marked for Review ({answeredAndMarkedForReviewCount})</p>
+            <p className={`${styles.behaviorBtnImg} ${styles.AnsMarkedforReviewBehaviourBtns}`}><span>{answeredAndMarkedForReviewCount}</span></p>
+            <p className={styles.fntSize}>Answered & Marked for Review </p>
           </div>
+
         </div>
       </div>
 

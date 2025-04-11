@@ -154,6 +154,68 @@ WHERE
         if (connection) connection.release();
     }
 })
+router.get("/studentpaymentcreation/:studentregisterationid/:coursecreationid", async (req, res) => {
+    const { studentregisterationid, coursecreationid } = req.params;
+    console.log("Received request for student payment creation:", { studentregisterationid, coursecreationid });
+
+    let connection;
+
+    try {
+        connection = await db.getConnection();
+
+        const [rows] = await connection.query(
+            `SELECT
+                cct.course_creation_id,
+                cct.course_name,
+                cct.total_price,
+                sr.student_registration_id,
+                sr.candidate_name,
+                sr.email_id,
+                sr.mobile_no
+            FROM
+                iit_course_creation_table cct,
+                iit_student_registration sr
+            WHERE
+                sr.student_registration_id = ? AND cct.course_creation_id = ?`,
+            [studentregisterationid, coursecreationid]
+        );
+
+        if (rows.length === 0) {
+            console.log("No courses found for this student and course creation ID.");
+            return res.status(404).json({ message: "No courses found for this student and course creation ID" });
+        }
+
+        // Extracting the student and course data
+        const studentdata = {
+            student_registration_id: rows[0].student_registration_id, // Corrected the field name
+            candidate_name: rows[0].candidate_name,
+            email_id: rows[0].email_id,
+            mobile_no: rows[0].mobile_no
+        };
+
+        const courseData = {
+            course_creation_id: rows[0].course_creation_id,
+            course_name: rows[0].course_name,
+            total_price: rows[0].total_price
+        };
+
+        // Combining both student and course data into a single object
+        const responseData = {
+            student: studentdata,
+            course: courseData
+        };
+
+        // Sending the combined response
+        res.status(200).json(responseData);
+
+    } catch (error) {
+        console.error("Error fetching courses:", error);
+        res.status(500).json({ message: "Internal server error" });
+    } finally {
+        if (connection) connection.release();
+    }
+});
+
 router.get("/ActiveCourses/:coursecreationid", async (req, res) => {
     const { coursecreationid } = req.params;
     console.log("Received request for active course:", { coursecreationid });

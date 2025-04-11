@@ -153,6 +153,42 @@ WHERE tct.course_creation_id = ?;
     }
 })
 
-
+router.get("/instructions/:test_creation_table_id", async (req, res) => {
+    const { test_creation_table_id } = req.params;
+    console.log("Received request for instructions:", { test_creation_table_id });
+ if(!test_creation_table_id) {
+        return res.status(400).json({ message: "Test creation ID is required" });
+ }
+    let connection;
+ 
+    try {
+        connection = await db.getConnection();
+ 
+        const [rows] = await connection.query(
+            `SELECT tc.test_creation_table_id,i.instruction_id,i.exam_id,
+e.exam_name,i.instruction_heading,
+i.document_name,i.instruction_img,
+ip.instruction_point
+ FROM iit_test_creation_table tc
+ LEFT JOIN  iit_instructions i ON tc.instruction_id = i.instruction_id
+ LEFT JOIN iit_instruction_points ip ON i.instruction_id=ip.instruction_id
+ LEFT JOIN  iit_exams e ON i.exam_id= e.exam_id
+ WHERE tc.test_creation_table_id= ?;`, // Ensure the query is properly formatted here.
+            [test_creation_table_id] // Pass the parameter as an array to the query function
+        );
+ 
+        if (rows.length === 0) {
+            console.log("No instructions found for this test.");
+            return res.status(404).json({ message: "No instructions found" });
+        }
+  
+        res.status(200).json(rows);
+    } catch (error) {
+        console.error("Error fetching instruction details:", error);
+        res.status(500).json({ message: "Internal server error" });
+    } finally {
+        if (connection) connection.release();
+    }
+})
 
 module.exports = router;
