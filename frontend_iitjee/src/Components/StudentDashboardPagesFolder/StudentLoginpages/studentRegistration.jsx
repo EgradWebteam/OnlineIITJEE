@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import Styles from "../../../Styles/StudentDashboardCSS/StudentRegistration.module.css";
 import SRFormImage from "../../../assets/SRFormImage.jpg";
 import MainHeader from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainHeader";
 import MainFooter from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainFooter";
 import { BASE_URL } from "../../../config/apiConfig.js";
 import TermsAndConditions from "../../GlobalFiles/TermsAndConditions.jsx";
-import { useLocation } from 'react-router-dom';
+import { useLocation,Link,useNavigate } from 'react-router-dom';
 import axios from "axios";
 const StudentRegistration = () => {
   const [formData, setFormData] = useState({
@@ -38,6 +37,7 @@ const StudentRegistration = () => {
   const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
   const [courseid, setCourseid] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate=useNavigate()
   useEffect(() => {
 
     const fetchCourseData = async () => {
@@ -198,6 +198,33 @@ const StudentRegistration = () => {
   
         // Step 8: Handle success (e.g., show a success message, redirect, etc.)
         alert("Registration successful! Please check your email for further instructions.");
+        setFormData({
+          candidateName: '',
+          dateOfBirth: '',
+          gender: '',
+          category: '',
+          emailId: '',
+          confirmEmailId: '',
+          contactNo: '',
+          fatherName: '',
+          occupation: '',
+          mobileNo: '',
+          line1: '',
+          state: '',
+          districts: '',
+          pincode: '',
+          qualifications: '',
+          nameOfCollege: '',
+          passingYear: '',
+          marks: '',
+          uploadedPhoto: null,
+          proof: null,
+          termsAccepted: false,
+        });
+        
+        // ✅ Optionally reset errors too
+        setErrors({});
+        
         navigate('/LoginPage');  // Redirect to login page after success
       } catch (error) {
         // Step 9: Handle errors during form submission
@@ -212,8 +239,13 @@ const StudentRegistration = () => {
 
 
   const handleBackButtonClick = () => {
-    navigate('/LoginPage');
+    if (courseCreationId) {
+      navigate('/buycourses');
+    } else {
+      navigate('/LoginPage');
+    }
   };
+  
   return (
     <div className={Styles.SRMainFormDiv}>
       <MainHeader />

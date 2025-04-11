@@ -30,21 +30,52 @@ const TestCreationTab = () => {
   const handleEdit = (testData) => {
     console.log("Selected Test Data for Edit:", testData); 
     setSelectedTestData(testData); 
+    fetchFormData(); 
     setShowAddTestForm(true);
   };
   
-
+  const handleDelete = async (testData) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete the test "${testData.test_name}"?`
+    );
+  
+    if (!confirmDelete) return;
+  
+    try {
+      const response = await fetch(`${BASE_URL}/TestCreation/DeleteTest/${testData.test_creation_table_id}`, {
+        method: "DELETE",
+      });
+  
+      if (response.ok) {
+        alert("Test deleted successfully!");
+        // Refetch the test table data
+        const updatedData = await fetch(`${BASE_URL}/TestCreation/FetchTestDataFortable`);
+        const data = await updatedData.json();
+        setTestTableData(data);
+      } else {
+        const errorData = await response.json();
+        alert(`Error deleting test: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error("Error deleting test:", error);
+      alert("An error occurred while trying to delete the test.");
+    }
+  };
+  
   const [testTableData, setTestTableData] = useState([]);
+  const fetchTestTableData = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/TestCreation/FetchTestDataFortable`);
+      const data = await response.json();
+      setTestTableData(data);
+    } catch (error) {
+      console.error("Error fetching Testdata:", error);
+    }
+  };
   useEffect(() => {
-    fetch(`${BASE_URL}/TestCreation/FetchTestDataFortable`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("API Response:", data); // Log the full response to inspect
-        setTestTableData(data); // Ensure that data.data is correct
-      })
-      .catch((error) => console.error("Error fetching Testdata:", error));
+    fetchTestTableData();
   }, []);
-  console.log("testTableData",testTableData)
+    
 
   return (
     <div className={styles.dashboardContent}>
@@ -59,13 +90,14 @@ const TestCreationTab = () => {
         <TestCreationForm
           setShowAddTestForm={setShowAddTestForm}
           testCreationFormData={testCreationFormData}
-          editData={selectedTestData} // ✅ pass it here
+          editData={selectedTestData} 
+          onTestSaved={fetchTestTableData}
         />
       )}
 
 
       {/* Table for displaying test data */}
-      <div className={styles.tableWrapper}>
+      <div  style={{padding:"3%"}} className={styles.tableWrapper}>
         <DynamicTable
           columns={[
             { header: "S.No", accessor: "serial" },
@@ -77,12 +109,11 @@ const TestCreationTab = () => {
             { header: "End Time", accessor: "test_end_time" },
             { header: "Total Questions", accessor: "number_of_questions" },
             { header: "Questions Uploaded", accessor: "uploaded_questions" },
-            { header: "Actions", accessor: "actions" },
             { header: "Test Activation", accessor: "test_activation" },
           ]}
           data={testTableData}
           onEdit={handleEdit}
-          onDelete={(item) => console.log("Delete", item)}
+          onDelete={handleDelete}
           onToggle={(item) => console.log("Toggle Activation", item)}
         />
       </div>

@@ -360,6 +360,55 @@ router.post(
   }
 );
 
+router.get("/getUploadedDocuments", async (req, res) => {
+  const connection = await db.getConnection();
+  try {
+    await connection.beginTransaction();
+
+    // Retrieve query parameters
+    const { testCreationTableId, subjectId } = req.query;
+
+    // Start the query to fetch documents from the iit_ots_document table
+    let queryString = `
+      SELECT d.document_id, d.*, t.test_name
+      FROM iit_ots_document d
+      LEFT JOIN iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
+    `;
+
+    const queryParams = [];
+
+    // Apply filters if provided (testCreationTableId and subjectId)
+    if (testCreationTableId) {
+      queryString += ` WHERE d.iit_test_creation_table_id = ?`;
+      queryParams.push(testCreationTableId);
+    }
+
+    if (subjectId) {
+      queryString += queryParams.length > 0 ? ` AND` : ` WHERE`;
+      queryString += ` d.subject_id = ?`;
+      queryParams.push(subjectId);
+    }
+
+    // Execute the query
+    const result = await connection.query(queryString, queryParams);
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: "No documents found." });
+    }
+
+    await connection.commit();
+
+    console.log(`✅ Fetched documents successfully.`);
+    res.status(200).json({ documents: result });
+
+  } catch (err) {
+    await connection.rollback();
+    console.error("❌ Fetch error:", err);
+    res.status(500).json({ error: "Failed to fetch documents." });
+  } finally {
+    connection.release();
+  }
+});
 
 
 
