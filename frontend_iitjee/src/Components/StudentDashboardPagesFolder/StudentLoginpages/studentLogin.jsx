@@ -6,7 +6,7 @@ import MainHeader from '../../LandingPagesFolder/mainPageHeaderFooterFolder/Main
 import MainFooter from '../../LandingPagesFolder/mainPageHeaderFooterFolder/MainFooter';
 import { BASE_URL } from "../../../config/apiConfig.js";
 import StudentLoginForm from './studentLoginForm';
-
+import { v4 as uuidv4 } from 'uuid';
 export default function StudentLogin() {
   const [username, setUsername] = useState(""); 
   const [password, setPassword] = useState("");  
@@ -16,10 +16,11 @@ export default function StudentLogin() {
   const [isForgotPassword, setIsForgotPassword] = useState(false); 
   const [isResetPassword, setIsResetPassword] = useState(false);  
   const navigate = useNavigate();
-  
+ 
 
   // Handle login form submission
   const handleLogin = async (e) => {
+    const sessionId = uuidv4(); 
     e.preventDefault();
     if (!username || !password) {
       alert("Please enter both username and password");
@@ -29,6 +30,7 @@ export default function StudentLogin() {
     const loginData = {
       email: username,  // Use 'email' field for student login
       password: password,
+      sessionId: sessionId
     };
 
     try {
@@ -42,12 +44,14 @@ export default function StudentLogin() {
       const data = await response.json();
 
       if (response.ok) {
-        const userId = data.user_Id;  // Assuming the userId is in the response
+        const decryptedId = data.decryptedId;  // Assuming the userId is in the response
         const accessToken = data.accessToken;  // The access token received from the backend
         const sessionId = data.sessionId;  // Assuming sessionId is returned in the response
-
+        const userId=data.user_Id
         // Store the user ID, access token, and session ID in localStorage
-        localStorage.setItem('userId', userId);
+        localStorage.setItem('decryptedId', decryptedId);
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem("userId",userId)
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('sessionId', sessionId);  // Store sessionId as well
 

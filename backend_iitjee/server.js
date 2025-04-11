@@ -32,6 +32,12 @@ app.use("/Instructions", InstructionsTab);
 const TestCreationTab = require("./src/AdminDashboardAPIs/TestCreationTab");
 app.use("/TestCreation", TestCreationTab);
 
+const TestPaperDocumentUpload = require("./src/AdminDashboardAPIs/TestPaperDocumentUpload");
+app.use("/DocumentUpload", TestPaperDocumentUpload);
+
+const TestPaper = require("./src/StudentDashboardAPIs/TestPaper");
+app.use("/OTS", TestPaper);
+
 const EncryptDecrypt = require("./src/EncryptDecryptAPIs/encryptDecryptController.js");
 app.use("/EncryptDecrypt", EncryptDecrypt)
 

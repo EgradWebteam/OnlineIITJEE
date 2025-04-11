@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../config/database.js");
+const cors = require('cors');
+router.use(cors());
+
 
 
 router.get('/TestCreationFormData', async (req, res) => {
@@ -31,7 +34,7 @@ router.get('/TestCreationFormData', async (req, res) => {
     try {
       const [subjects] = await db.query(
         `
-        SELECT iits.subject_name
+        SELECT iits.subject_name,iits.subject_id
         FROM iit_subjects iits
         JOIN iit_course_subjects iitcs
           ON iits.subject_id = iitcs.subject_id
@@ -68,73 +71,100 @@ router.get('/TestCreationFormData', async (req, res) => {
       duration,
       totalQuestions,
       totalMarks,
-      sections,
+      sections, // Expecting sections to be an array of { sectionName, noOfQuestions, subjectId }
     } = req.body;
   
-    // Example SQL query to insert into the test table
-    const query = `
-    INSERT INTO iit_test_creation_table 
-  (test_name, 
-   course_creation_id, 
-   course_type_of_test_id, 
-   instruction_id, 
-   test_start_date, 
-   test_end_date, 
-   test_start_time, 
-   test_end_time, 
-   duration, 
-   total_questions, 
-   total_marks, 
-   status, 
-   options_pattern_id)
-VALUES 
-  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);
-
+    const insertTestQuery = `
+      INSERT INTO iit_test_creation_table 
+        (test_name, course_creation_id, course_type_of_test_id, instruction_id, 
+        test_start_date, test_end_date, test_start_time, test_end_time, 
+        duration, total_questions, total_marks, status, options_pattern_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    `;
+  
+    const insertSectionQuery = `
+      INSERT INTO iit_sections 
+        (test_creation_table_id, section_name, no_of_questions, subject_id) 
+      VALUES (?, ?, ?, ?);
     `;
   
     try {
-      const result = await db.query(query, [
-        testName, 
-  selectedCourse, 
-  selectedTypeOfTest, 
-  selectedInstruction, 
-  startDate, 
-  endDate, 
-  startTime, 
-  endTime, 
-  duration, 
-  totalQuestions, 
-  totalMarks, 
-  "active",  // Set the status to 'active' by default
-  selectedOptionPattern
+      // Insert the test and get the inserted ID
+      const [testResult] = await db.query(insertTestQuery, [
+        testName,
+        selectedCourse,
+        selectedTypeOfTest,
+        selectedInstruction,
+        startDate,
+        endDate,
+        startTime,
+        endTime,
+        duration,
+        totalQuestions,
+        totalMarks,
+        "active",
+        selectedOptionPattern
       ]);
   
-      const testId = result.test_creation_table_id; // Assuming the inserted test gets a unique test ID
+      const testCreationTableId = testResult.insertId;
+  console.log("sections",sections)
+      // Insert each section with the retrieved test ID
+      for (const section of sections) {
+        const { sectionName, numOfQuestions, subjectId } = section;
   
-      // Insert sections if there are any
-      if (sections.length > 0) {
-        const sectionQuery = `
-          INSERT INTO iit_sections (test_creation_table_id, section_name, no_of_questions, subject_id)
-          VALUES (?, ?, ?, ?)
-        `;
-  
-        for (const section of sections) {
-          await db.query(sectionQuery, [
-            testId,
-            section.sectionName,
-            section.numberOfQuestions,
-            section.dropdownValue,
-          ]);
-        }
+        await db.query(insertSectionQuery, [
+          testCreationTableId,
+          sectionName,
+          numOfQuestions,
+          subjectId
+        ]);
       }
-  
-      // Return success response
-      res.status(201).json({ message: "Test created successfully!" });
+
+      res.status(201).json({ message: "Test and sections created successfully!" });
     } catch (error) {
-      console.error("Error inserting test data:", error);
-      res.status(500).json({ message: "There was an error creating the test." });
+      console.error("Error creating test and sections:", error);
+      res.status(500).json({ message: "There was an error creating the test and sections." });
     }
   });
+  
+
+  router.get('/FetchTestDataFortable', async (req, res) => {
+    const sql = `
+        SELECT 
+            tct.test_creation_table_id,
+            tct.test_name,
+            cct.course_name,
+            tct.test_start_date,
+            tct.test_end_date,
+            tct.test_start_time,
+            tct.test_end_time,
+            tct.total_questions AS number_of_questions,
+            COUNT(q.question_id) AS uploaded_questions,
+            tct.status AS test_activation
+        FROM iit_test_creation_table tct
+        JOIN iit_course_creation_table cct ON tct.course_creation_id = cct.course_creation_id
+        LEFT JOIN iit_questions q ON tct.test_creation_table_id = q.test_creation_table_id
+        GROUP BY 
+            tct.test_creation_table_id, 
+            tct.test_name, 
+            cct.course_name, 
+            tct.test_start_date, 
+            tct.test_end_date, 
+            tct.test_start_time, 
+            tct.test_end_time, 
+            tct.total_questions, 
+            tct.status;
+    `;
+
+    try {
+        const [rows] = await db.query(sql);  // db is a promise-based pool
+        res.json(rows);
+    } catch (err) {
+        console.error('Error fetching test details:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
   
 
   module.exports = router;

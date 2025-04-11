@@ -102,7 +102,12 @@ export default function StudentDashboard_BuyCourses() {
               cardImage={course.card_image}
               price={course.total_price}
               context="buyCourses"
-              onBuy={() => console.log("Buy Now:", course.course_creation_id)}
+              onBuy={() => {
+                console.log("Navigating to Student Registration with Course ID:", course.course_creation_id); // Log the course ID
+  
+                }
+              }
+            
               onGoToTest={() => console.log("Go to Test:", course.course_creation_id)}
             />
           ))
