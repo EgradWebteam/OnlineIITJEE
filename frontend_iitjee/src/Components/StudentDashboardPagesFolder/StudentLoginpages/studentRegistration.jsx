@@ -162,7 +162,7 @@ const StudentRegistration = () => {
       formDataToSend.append('college_name', formData.nameOfCollege);
       formDataToSend.append('passingYear', formData.passingYear);
       formDataToSend.append('marks', formData.marks);
-      formDataToSend.append('PoralId',)
+     
   
       // Append files (if any)
       if (formData.uploadedPhoto) {
