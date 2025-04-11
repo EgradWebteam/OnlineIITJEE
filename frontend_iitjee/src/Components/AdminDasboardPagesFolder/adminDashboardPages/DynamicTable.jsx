@@ -55,18 +55,76 @@
 
 
 
+// import React from "react";
+// import styles from "../../../Styles/AdminDashboardCSS/AdminDashboard.module.css";
+
+// const DynamicTable = ({ columns, data, onEdit, onOpen, onDelete, onToggle,showEdit = true,showToggle = true }) => {
+//   return (
+//     <div className={styles.tableWrapper}>
+//       <table className={styles.table}>
+//         <thead>
+//           <tr>
+//             {columns.map((col, i) => <th key={i}>{col.header}</th>)}
+//             {/* <th>Action</th>
+//             <th>Course Activation</th> */}
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {data.length === 0 ? (
+//             <tr>
+//               <td colSpan={columns.length + 2} className={styles.noData}>No data available</td>
+//             </tr>
+//           ) : (
+//             data.map((row, ri) => (
+//               <tr key={ri}>
+//                 {columns.map((col, ci) => (
+//                   <td key={ci}>{row[col.accessor]}</td>
+//                 ))}
+//                 <td className={styles.actions}>
+//                   <button className={styles.onOpen} onClick={() => onOpen(row)}>Open</button>
+//                   {/* <button className={styles.editBtn} onClick={() => onEdit?.(row)}>✏️</button> */}
+//                   {showEdit && (
+//                     <button className={styles.editBtn} onClick={() => onEdit?.(row)}>✏️</button>
+//                   )}
+//                   <button className={styles.deleteBtn} onClick={() => onDelete(row)}>🗑️</button>
+//                 </td>
+//                 <td>
+//                   {showToggle && <button
+//                     className={`${styles.toggleBtn} ${row.isActive ? styles.deactivate : styles.activate}`}
+//                     onClick={() => onToggle(row)}
+//                   >
+//                     {row.isActive ? "Deactivate Course" : "Activate Course"}
+//                   </button>}
+                  
+//                 </td>
+//               </tr>
+//             ))
+//           )}
+//         </tbody>
+//       </table>
+//     </div>
+//   );
+// };
+
+// export default DynamicTable;
+
+
+
+
+
+
+
+
 import React from "react";
 import styles from "../../../Styles/AdminDashboardCSS/AdminDashboard.module.css";
 
-const DynamicTable = ({ columns, data, onEdit, onOpen, onDelete, onToggle,showEdit = true,showToggle = true }) => {
+const DynamicTable = ({ columns, data, onEdit, onOpen, onDelete, onToggle, showEdit = true, showToggle = true }) => {
   return (
     <div className={styles.tableWrapper}>
       <table className={styles.table}>
         <thead>
           <tr>
             {columns.map((col, i) => <th key={i}>{col.header}</th>)}
-            {/* <th>Action</th>
-            <th>Course Activation</th> */}
           </tr>
         </thead>
         <tbody>
@@ -78,24 +136,23 @@ const DynamicTable = ({ columns, data, onEdit, onOpen, onDelete, onToggle,showEd
             data.map((row, ri) => (
               <tr key={ri}>
                 {columns.map((col, ci) => (
-                  <td key={ci}>{row[col.accessor]}</td>
+                  <td key={ci}>{row[col.accessor]}</td> // Ensures the correct data is displayed
                 ))}
                 <td className={styles.actions}>
-                  <button className={styles.onOpen} onClick={() => onOpen(row)}>Open</button>
-                  {/* <button className={styles.editBtn} onClick={() => onEdit?.(row)}>✏️</button> */}
                   {showEdit && (
                     <button className={styles.editBtn} onClick={() => onEdit?.(row)}>✏️</button>
                   )}
                   <button className={styles.deleteBtn} onClick={() => onDelete(row)}>🗑️</button>
                 </td>
                 <td>
-                  {showToggle && <button
-                    className={`${styles.toggleBtn} ${row.isActive ? styles.deactivate : styles.activate}`}
-                    onClick={() => onToggle(row)}
-                  >
-                    {row.isActive ? "Deactivate Course" : "Activate Course"}
-                  </button>}
-                  
+                  {showToggle && (
+                    <button
+                      className={`${styles.toggleBtn} ${row.test_activation === "active" ? styles.deactivate : styles.activate}`}
+                      onClick={() => onToggle(row)}
+                    >
+                      {row.test_activation === "active" ? "Deactivate" : "Activate"}
+                    </button>
+                  )}
                 </td>
               </tr>
             ))
