@@ -39,6 +39,7 @@ app.use("/CourseHomePage", CourseHomePage);
 app.get("/",(req, res)=> {
     res.json({message: "Backend is working!"});
 });
-
+const razorpay = require("./src/PaymentGateway/Razorpay.js");
+app.use("/razorpay", razorpay); // ✅ route mount point
 const PORT = process.env.PORT ;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
