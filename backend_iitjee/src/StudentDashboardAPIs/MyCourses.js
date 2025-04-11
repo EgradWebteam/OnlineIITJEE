@@ -181,11 +181,7 @@ ip.instruction_point
             console.log("No instructions found for this test.");
             return res.status(404).json({ message: "No instructions found" });
         }
- 
-    
-     
-
-        
+  
         res.status(200).json(rows);
     } catch (error) {
         console.error("Error fetching instruction details:", error);
