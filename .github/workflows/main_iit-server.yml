@@ -25,7 +25,7 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}  # Use the service principal credentials in JSON format
-          auth-type: service_principal  # Ensure you're using service_principal here
+          auth-type: federated  # Ensure you're using app registration federated cred authentication here
           environment: azurecloud  # Ensure you're using the correct Azure cloud environment
  
 
