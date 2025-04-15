@@ -5,8 +5,9 @@ import styles from '../../Styles/OTSCSS/OTSMain.module.css';
 import OTSHeader from './OTSHeaderFolder/OTSHeader.jsx';
 import OTSNavbar from './OTSHeaderFolder/OTSNavbar.jsx';
 import OTSMain from './OTSMainFolder/OTSMain.jsx';
-import testData from '../StudentDashboardPagesFolder/JSON_Files/WithSections.json';
-
+// import testData from '../StudentDashboardPagesFolder/JSON_Files/WithSections.json';
+import axios from 'axios'
+import {BASE_URL} from '../../../apiConfig.js'
 
 export default function OTSRootFile() {
   const { testId, studentId } = useParams();
@@ -14,7 +15,7 @@ export default function OTSRootFile() {
 
   const [realTestId, setRealTestId] = useState('');
   const [realStudentId, setRealStudentId] = useState('');
-  const [testName, setTestName] = useState('');
+  // const [testName, setTestName] = useState('');
   const [fullTestData, setFullTestData] = useState({});
 
   useEffect(() => {
@@ -35,8 +36,8 @@ export default function OTSRootFile() {
         setRealStudentId(decryptedStudentId);
 
         //  Keep decryption, but use static test data
-        setFullTestData(testData);
-        setTestName(testData.TestName || "Test");
+        // setFullTestData(testData);
+        // setTestName(testData.TestName || "Test");
       } catch (error) {
         console.error("Decryption failed:", error);
         navigate("/Error");
@@ -47,12 +48,29 @@ export default function OTSRootFile() {
   }, [testId, studentId, navigate]);
 
 
+  
+  const [testPaperData, setTestPaperData] = useState([]);
+ 
+useEffect(() => {
+  const fetchTestPaper = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/OTS/QuestionPaper/${realTestId}`);
+      setTestPaperData(response.data);
+    } catch (err) {
+      console.error("Error fetching test paper:", err);
+    }
+  };
 
+  fetchTestPaper();
+}, [realTestId]);
+console.log("testPaperData",testPaperData)
+
+const testName = testPaperData.TestName
   return (
     <div className={styles.OTSRootMainContainer}>
       <OTSHeader />
-      <OTSNavbar testName={testName} />
-      <OTSMain testData={fullTestData} realTestId={realTestId} />
+      <OTSNavbar testName={testName} testData={testPaperData}/>
+      <OTSMain testData={testPaperData}  />
     </div>
   );
 }

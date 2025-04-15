@@ -136,16 +136,16 @@ export default function QuestionsMainContainer({
 
     return (
       <>
-        {isImageQuestion ? (
+        {/* {isImageQuestion ? ( */}
           <div className={styles.QuestionImage}>
             <img
-              src={`/path-to-images/${question.questionImgName}`}
+              src={question.questionImgName}
               alt="Question"
             />
           </div>
-        ) : (
+        {/* ) : (
           <p className={styles.QuestionParaNow}>{question.questionImgName}</p>
-        )}
+        )} */}
       </>
     );
   };

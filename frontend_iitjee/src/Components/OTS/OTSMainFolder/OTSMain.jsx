@@ -4,10 +4,9 @@ import SubjectsAndSectionsConatiner from './SubjectsAndSectionsConatiner.jsx';
 import QuestionsMainContainer from './QuestionsMainContainer.jsx';
 import OTSRightSideBar from './OTSRightSideBar.jsx';
 import QuestionNavigationButtons from './QuestionNavigationButtons.jsx';
-import axios from 'axios'
-import {BASE_URL} from '../../../../apiConfig.js'
 
-export default function OTSMain({ testData,realTestId }) {
+
+export default function OTSMain({ testData }) {
   const [activeSubject, setActiveSubject] = useState(null);
   const [activeSection, setActiveSection] = useState(null);
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
@@ -22,23 +21,8 @@ export default function OTSMain({ testData,realTestId }) {
     setActiveQuestionIndex(0); // This resets to 1st question when section changes
   }, [activeSection]);
 
-  
-  const [testPaperData, setTestPaperData] = useState([]);
- 
-useEffect(() => {
-  const fetchTestPaper = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/OTS/QuestionPaper/${realTestId}`);
-      setTestPaperData(response.data);
-    } catch (err) {
-      console.error("Error fetching test paper:", err);
-    }
-  };
 
-  fetchTestPaper();
-}, [realTestId]);
 
- 
   const autoSaveNATIfNeeded = () => {
     const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
     const section = subject?.sections?.find(sec => sec.SectionName === activeSection);

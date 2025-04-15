@@ -145,11 +145,11 @@ console.log("questionId", questionId);
                 
               />
               <span className={styles.OptionIndex}>{getLabel(index, option.option_index)}</span>
-              {isImage ? (
-                <img src={`/path-to-images/${option.optionImgName}`} alt={`Option ${option.option_index}`} className={styles.OptionImage} />
-              ) : (
+              {/* {isImage ? ( */}
+                <img src={option.optionImgName} alt={`Option ${option.option_index}`} className={styles.OptionImage} />
+              {/* ) : (
                 <span className={styles.OptionText}>{option.optionImgName}</span>
-              )}
+              )} */}
             </label>
           </div>
         );
@@ -183,11 +183,11 @@ console.log("questionId", questionId);
                 onChange={toggleOption}
               />
               <span className={styles.OptionIndex}>{getLabel(index, option.option_index)}</span>
-              {isImage ? (
-                <img src={`/path-to-images/${option.optionImgName}`} alt={`Option ${option.option_index}`} className={styles.OptionImage} />
-              ) : (
+              {/* {isImage ? ( */}
+                <img src={option.optionImgName} alt={`Option ${option.option_index}`} className={styles.OptionImage} />
+              {/* ) : (
                 <span className={styles.OptionText}>{option.optionImgName}</span>
-              )}
+              )} */}
             </label>
           </div>
         );
