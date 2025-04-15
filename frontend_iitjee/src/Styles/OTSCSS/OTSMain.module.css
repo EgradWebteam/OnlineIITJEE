@@ -229,7 +229,7 @@ font-size: 18px;
     right: 0;
     border: 1px solid gainsboro;
     background-color: white;
-    width: 300px;
+    width: 282px;
     top: 0;
   }
   .StudentProfileHolderOTS{
@@ -334,7 +334,7 @@ font-size: 18px;
   .OTSMainFileMainContainer{
     width: 100%;
     position: relative;
-    height: 79vh;
+    height: 75vh;
   }
   .OTSMainFileSubContainer{
     display: flex;
@@ -396,7 +396,7 @@ font-size: 18px;
   position: sticky;
   width: 100%;
   margin-top: 30px;
-  height: 7vh;
+  height: 3.5vh;
 }
 .navigationBtnHolderSubContainer{
   display: flex;
@@ -687,6 +687,30 @@ background-color: #04c7f8;
   color: white !important;
   cursor: not-allowed !important;
 }
+.rightChevronBtn{
+  position: absolute;
+    top: 26rem;
+    left: -7%;
+}
+.rightChevronBtn button{
+  padding: 12px 3px;
+    background: black;
+    color: white;
+    border-radius: 5px;
+    border-radius: 4px;
+}
+
+.hiddenSidebar {
+  display: none; /* Or visibility: hidden; */
+}
+.OTSQuestionContainerMainDiv{
+  width: 100%;
+}
+.fullWidth {
+  width: 100vw;
+}
+
+
 
 @media (max-width:1280px) {
   .OTSMainFileMainContainer{

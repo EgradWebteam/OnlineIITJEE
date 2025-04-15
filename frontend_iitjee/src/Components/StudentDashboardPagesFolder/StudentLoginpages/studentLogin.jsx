@@ -44,7 +44,7 @@ export default function StudentLogin() {
         body: JSON.stringify(loginData),
       });
       const data = await response.json();
-debugger
+// debugger
       if (response.ok) {
         if (response.ok) {
           const decryptedId = data.decryptedId;

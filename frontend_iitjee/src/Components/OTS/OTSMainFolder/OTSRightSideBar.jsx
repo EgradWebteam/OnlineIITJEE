@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import studentImg from "../../../assets/OtsCourseCardImages/iit_jee1.png";
-
+import { FaChevronRight } from "react-icons/fa";
 export default function OTSRightSideBar({
   testData,
   activeSubject,
@@ -9,9 +9,10 @@ export default function OTSRightSideBar({
   activeQuestionIndex,
   setActiveQuestionIndex,
   userAnswers,
-  setUserAnswers
+  setUserAnswers,
+  autoSaveNATIfNeeded,
 }) {
-
+ 
   if (!testData || !Array.isArray(testData.subjects)) return null;
 
   // Find active subject
@@ -24,6 +25,27 @@ export default function OTSRightSideBar({
     (sec) => sec.SectionName === activeSection
   );
 
+  // useEffect(() => {
+  //   if (!testData || !Array.isArray(testData.subjects)) return;
+
+  //   const subject = testData.subjects.find(subj => subj.SubjectName === activeSubject);
+  //   const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
+  //   const firstQuestion = section?.questions?.[0];
+
+  //   if (firstQuestion && !userAnswers?.[firstQuestion.question_id]) {
+  //     setUserAnswers(prev => ({
+  //       ...prev,
+  //       [firstQuestion.question_id]: {
+  //         subjectId: subject.subjectId,
+  //         sectionId: section.sectionId,
+  //         questionId: firstQuestion.question_id,
+  //         buttonClass: styles.NotAnsweredBtnCls,
+  //         type: "", // no answer yet
+  //       }
+  //     }));
+  //   }
+  // }, [testData, activeSubject, activeSection]);
+  
   useEffect(() => {
     if (!testData || !Array.isArray(testData.subjects)) return;
   
@@ -43,7 +65,10 @@ export default function OTSRightSideBar({
         }
       }));
     }
-  }, [testData, activeSubject, activeSection]);
+  }, [testData, activeSubject, activeSection, userAnswers]);
+  
+  
+  
   // Calculate counts for each category (Answered, Not Answered, Not Visited, Marked for Review, etc.)
   const answeredCount = section?.questions?.filter(q => {
     const savedAnswer = userAnswers?.[q.question_id];
@@ -71,6 +96,7 @@ export default function OTSRightSideBar({
   }).length || 0;
 
   const handleQuestionClick = (index) => {
+    autoSaveNATIfNeeded();
     const question = section?.questions?.[index];
     if (!question) return;
 
@@ -92,10 +118,11 @@ export default function OTSRightSideBar({
 
     setActiveQuestionIndex(index);
   };
-
-
-
-
+  const [showSidebar, setShowSidebar] = useState(true); 
+   // Toggle Sidebar visibility when button is clicked
+   const toggleSidebar = () => {
+    setShowSidebar(prev => !prev); // Toggle state
+  };
   return (
     <div className={styles.OTSRightSideBarMainContainer}>
 
@@ -107,6 +134,12 @@ export default function OTSRightSideBar({
         <p>Student</p>
       </div>
 
+      <div className={styles.rightChevronBtn}>
+       <button onClick={toggleSidebar}>
+          <FaChevronRight />
+        </button>
+      </div>
+      <div className={ showSidebar ? '' : styles.hiddenSidebar}>
       {/* Question Behavior Legends */}
       <div className={styles.OTSRightSideBarSubContainer}>
         <div className={styles.OTSBehaviourCountBtnsContainer}>
@@ -173,6 +206,7 @@ export default function OTSRightSideBar({
             );
           })}
         </div>
+      </div>
       </div>
     </div>
   );
