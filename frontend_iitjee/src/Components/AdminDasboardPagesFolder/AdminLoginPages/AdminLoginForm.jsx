@@ -51,12 +51,15 @@ const AdminLoginForm = () => {
         admin_id: data.admin_id, // Assuming the admin_id is in the response
       }// Assuming the token is in the response
       setLoading(false);
-
-      if (response.ok) {
-        localStorage.setItem('admin_auth', JSON.stringify(loginauth)); // Store the token in local storage
-        setMessage({ type: 'success', text: 'Login successful.' });
+ if (response.ok) {
+        const loginAuth={
+          token:data.token,
+          adminName:data.name,
+          adminEmail:data.email
+        }
+        localStorage.setItem("adminInfo", JSON.stringify(loginAuth));
         navigate('/AdminDashboard');
-      } else {
+      }else {
         setMessage({ type: 'error', text: data.message || 'Login failed. Please try again.' });
       }
     } catch (error) {

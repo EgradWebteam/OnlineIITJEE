@@ -369,6 +369,7 @@ const handleSelectAll = (isChecked) => {
         onSelectAll={handleSelectAll}
         onEdit={false}
         isOpen={true}
+        type="document"
       />
       </div>
      

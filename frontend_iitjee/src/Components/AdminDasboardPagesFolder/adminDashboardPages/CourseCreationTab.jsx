@@ -67,23 +67,31 @@ const CourseCreationTab = () => {
     }
   };
 
-  // Handle toggling the course status
-  const handleToggle = (course) => {
-    const newStatus = course.active_course === "active" ? "inactive" : "active"; // Toggle between 'active' and 'inactive'
-    fetch(`${BASE_URL}/CourseCreation/toggle-status/${course.course_creation_id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ active_course: newStatus }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        if (result.success) {
-          fetchCourses(); // Refresh courses after status change
-        }
+  const handleToggle = async (course) => {
+    const newStatus = course.active_course === "active" ? "inactive" : "active"; 
+  
+    try {
+      const response = await fetch(`${BASE_URL}/CourseCreation/toggleCourseStatus`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          courseCreationTableId: course.course_creation_id, 
+        }),
       });
+  
+      const result = await response.json();
+      if (result.success) {
+        console.log(`Course status updated to ${newStatus}`);
+        fetchCourses();
+      } else {
+        console.error("Failed to update course status:", result.message);
+      }
+    } catch (error) {
+      console.error("Error toggling course status:", error);
+    }
   };
-
-  // Prepare columns for the table (use the course data keys)
   const columns = courses.length
 
     ? Object.keys(courses[0])
@@ -153,6 +161,7 @@ const CourseCreationTab = () => {
         onOpen={handleOpen}
         onDelete={handleDelete}
         onToggle={handleToggle}
+        type="course" 
       />
       </div>
       

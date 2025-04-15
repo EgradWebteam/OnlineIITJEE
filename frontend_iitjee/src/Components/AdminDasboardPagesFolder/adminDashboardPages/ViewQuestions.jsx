@@ -3,7 +3,7 @@ import styles from "../../../Styles/AdminDashboardCSS/TestCreation.module.css";
 import axios from 'axios'
 import {BASE_URL} from '../../../../apiConfig'
 
-const ViewQuestions = ({ data, onClose }) => {
+const ViewQuestions = ({ onClose }) => {
   const [imagesLoaded, setImagesLoaded] = useState(true);
 
   if (!data) return null;
@@ -62,6 +62,7 @@ console.log("viewTestPaperData",viewTestPaperData)
       <div className={styles.popup_viewquestioncontent}>
         <button onClick={onClose} className={styles.closebutton_viewquestion}>✖</button>
         <h2 className={styles.viewquestion_title}>{data.TestName}</h2>
+
         <button onClick={handlePrint} className={styles.printbutton_viewquestion} disabled={!imagesLoaded}>
           {imagesLoaded ? "Print Question Paper" : "Loading Images... Please Wait"}
         </button>

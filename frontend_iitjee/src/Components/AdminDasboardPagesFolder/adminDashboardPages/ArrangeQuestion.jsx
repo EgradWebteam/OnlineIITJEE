@@ -76,7 +76,6 @@ const ArrangeQuestions = ({ data, onClose }) => {
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className={styles.questionsList}
               >
                 {viewTestPaperData.map((question, index) => (
                   <Draggable
@@ -89,7 +88,7 @@ const ArrangeQuestions = ({ data, onClose }) => {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        className={styles.questionBlock}
+                        className={styles.questionblock_viewquestion}
                       >
                         <div>
                           <h2>{viewTestPaperData.TestName}</h2>

@@ -29,46 +29,79 @@ const TestCreationForm = ({ setShowAddTestForm, testCreationFormData, editData,o
   ]);
 
   useEffect(() => {
-    if (isEditMode && editData) {
-      setFormFields({
-        testName: editData.test_name || "",
-        selectedTypeOfTest: editData.type_of_test_id || "",
-        selectedInstruction: editData.instruction_id || "",
-        startDate: editData.test_start_date || "",
-        endDate: editData.test_end_date || "",
-        startTime: editData.test_start_time || "",
-        endTime: editData.test_end_time || "",
-        selectedOptionPattern: editData.options_pattern_id || "",
-        duration: editData.duration || "",
-        totalQuestions: editData.number_of_questions || "",
-        totalMarks: editData.total_marks || "",
-      });
-
-      setSelectedCourse(editData.course_id || "");
-
-      if (editData.course_id) {
-        axios
-          .get(`${BASE_URL}/TestCreation/CourseSubjects/${editData.course_id}`)
-          .then((res) => {
-            setSubjects(res.data.subjects || []);
-          })
-          .catch((err) => {
-            console.error("Error loading subjects in edit mode:", err);
-          });
-      }
-
-      if (editData.sections && editData.sections.length > 0) {
-        setIncludeSection(true);
-        setSubjectSections(
-          editData.sections.map((section) => ({
+    const loadEditData = async () => {
+      if (isEditMode && editData) {
+        console.log("💡 Edit Mode - Received Edit Data:", editData);
+  
+        // Pre-fill main test form fields
+        setFormFields({
+          testName: editData.test_name || "",
+          selectedTypeOfTest: editData.course_type_of_test_id || "",
+          selectedInstruction: editData.instruction_id || "",
+          startDate: editData.test_start_date || "",
+          endDate: editData.test_end_date || "",
+          startTime: editData.test_start_time || "",
+          endTime: editData.test_end_time || "",
+          selectedOptionPattern: editData.options_pattern_id || "",
+          duration: editData.duration || "",
+          totalQuestions: editData.number_of_questions || "",
+          totalMarks: editData.total_marks || "",
+        });
+  
+        // Pre-select course
+        setSelectedCourse(editData.course_creation_id || "");
+  
+        // Fetch & populate subjects for the selected course
+        if (editData.course_creation_id) {
+          try {
+            const response = await axios.get(`${BASE_URL}/TestCreation/CourseSubjects/${editData.course_creation_id}`);
+            setSubjects(response.data.subjects || []);
+          } catch (err) {
+            console.error("Error fetching subjects:", err);
+          }
+        }
+  
+        // Pre-fill sections if present
+        if (Array.isArray(editData.sections) && editData.sections.length > 0) {
+          console.log("🧩 Prefilling sections:", editData.sections);
+  
+          setIncludeSection(true);
+          const mappedSections = editData.sections.map((section) => ({
             selectedSubject: section.subject_id || "",
             sectionName: section.section_name || "",
-            numOfQuestions: section.num_of_questions || "",
-          }))
-        );
+            numOfQuestions: section.no_of_questions || "", // Ensure this matches your DB column
+          }));
+          setSubjectSections(mappedSections);
+        } else {
+          setIncludeSection(false);
+          setSubjectSections([{ selectedSubject: "", sectionName: "", numOfQuestions: "" }]);
+        }
+      } else {
+        // Reset form in Add mode
+        setFormFields({
+          testName: "",
+          selectedTypeOfTest: "",
+          selectedInstruction: "",
+          startDate: "",
+          endDate: "",
+          startTime: "",
+          endTime: "",
+          selectedOptionPattern: "",
+          duration: "",
+          totalQuestions: "",
+          totalMarks: "",
+        });
+        setSelectedCourse("");
+        setIncludeSection(false);
+        setSubjectSections([{ selectedSubject: "", sectionName: "", numOfQuestions: "" }]);
+        setSubjects([]);
       }
-    }
+    };
+  
+    loadEditData();
   }, [isEditMode, editData]);
+  
+  
 
   const handleFormFieldChange = (e) => {
     const { name, value } = e.target;

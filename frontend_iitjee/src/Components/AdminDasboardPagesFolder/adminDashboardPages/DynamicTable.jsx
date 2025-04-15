@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../../../Styles/AdminDashboardCSS/AdminDashboard.module.css";
 import ArrangeQuestions from "./ArrangeQuestion";
 import ViewQuestions from "./ViewQuestions";
+import ViewResults from "./ViewResults"; // Assuming ViewResults is another component
+
 
 const DynamicTable = ({
   columns,
   isOpen,
   data,
-  type,
+  type, // "test" or "course"
   onEdit,
   onOpen,
   onDelete,
@@ -16,9 +18,14 @@ const DynamicTable = ({
   onDownload,
   showEdit = true,
   showToggle = true,
+  tableType, // Pass a tableType to differentiate between multiple tables
 }) => {
   const [selectedRow, setSelectedRow] = useState(null);
-  const [popupType, setPopupType] = useState(""); // "arrange" or "viewQuestions"
+  const [popupType, setPopupType] = useState(""); // "arrange", "viewQuestions", or "viewResults"
+
+  useEffect(() => {
+    console.log("Selected Row", selectedRow); // This will log selected row whenever it changes
+  }, [selectedRow]);
 
   const handleOptionSelect = (e, row) => {
     const selectedOption = e.target.value;
@@ -39,7 +46,8 @@ const DynamicTable = ({
         setPopupType("arrange");
         break;
       case "viewResults":
-        alert("View Results clicked");
+        setSelectedRow(row);
+        setPopupType("viewResults");
         break;
       case "takeTest":
         alert("Take Test clicked");
@@ -48,7 +56,7 @@ const DynamicTable = ({
         onAssign?.(row);
         break;
       case "downloadPaper":
-        onDownload?.(row);
+        setSelectedRow(row); // Set the selected row when download is triggered
         break;
       case "deleteTest":
         onDelete?.(row);
@@ -70,7 +78,9 @@ const DynamicTable = ({
           <tr>
             {columns.map((col, i) => <th key={i}>{col.header}</th>)}
             <th>Action</th>
-            {showToggle && <th>Course Activation</th>}
+            {showToggle && type !== "document" && (
+              <th>{type === "test" ? "Test Activation" : "Course Activation"}</th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -89,7 +99,7 @@ const DynamicTable = ({
                   </td>
                 ))}
                 <td className={styles.actions}>
-                  {type === "testCreation" ? (
+                  {type === "test" ? (
                     <div className={styles.dropdownWrapper}>
                       <select
                         className={styles.dropdownMenu}
@@ -97,13 +107,12 @@ const DynamicTable = ({
                       >
                         <option value="Action">Actions ▼</option>
                         <option value="edit">Edit Test</option>
-                        <option value="addDocx">Add Question DOCX</option>
                         <option value="viewQuestions">View Questions</option>
                         <option value="arrangeQuestions">⇅ Arrange Questions</option>
-                        <option value="viewResults">View Results</option>
+                        <option value="viewResults">View Results</option> 
                         <option value="takeTest">Take Test</option>
                         <option value="assignTest">📌 Assign to Test</option>
-                        <option value="downloadPaper">Download Paper</option>
+                        <option value="downloadPaper">Download Question Paper</option>
                         <option value="deleteTest">🗑️ Delete Test</option>
                       </select>
                     </div>
@@ -125,13 +134,31 @@ const DynamicTable = ({
                     </>
                   )}
                 </td>
-                {showToggle && (
+                {showToggle && type !== "document" && (
                   <td>
                     <button
-                      className={`${styles.toggleBtn} ${row.test_activation === "active" ? styles.deactivate : styles.activate}`}
-                      onClick={() => onToggle(row)}
+                      className={`${styles.toggleBtn} ${
+                        type === "test"
+                          ? row.test_creation_status === "active"
+                            ? styles.deactivate
+                            : styles.activate
+                          : row.active_course === "active"
+                          ? styles.deactivate
+                          : styles.activate
+                      }`}
+                      onClick={() => {
+                        console.log("Toggle clicked for row:", row);
+                        onToggle(row);
+                      }}
                     >
-                      {row.test_activation === "active" ? "Deactivate" : "Activate"}
+                      {type === "test"
+                        ? row.test_creation_status === "active"
+                          ? "Deactivate Test"
+                          : "Activate Test"
+                        : row.active_course === "active"
+                        ? "Deactivate Course"
+                        : "Activate Course"
+                      }
                     </button>
                   </td>
                 )}
@@ -153,6 +180,17 @@ const DynamicTable = ({
           <ViewQuestions data={selectedRow} onClose={handleClosePopup} />
         </div>
       )}
+
+      {popupType === "viewResults" && selectedRow && (
+        <div className={styles.popupWrapper}>
+          <ViewResults
+            testCreationTableId={selectedRow.test_creation_table_id}
+            data={selectedRow}
+            onClose={handleClosePopup}
+          />
+        </div>
+      )}
+
     </div>
   );
 };

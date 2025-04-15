@@ -255,6 +255,23 @@ router.delete("/DeleteTest/:testId", async (req, res) => {
     res.status(500).json({ message: "Failed to delete the test." });
   }
 });
+router.post('/toggleTestStatus', async (req, res) => {
+  const { testCreationTableId, newStatus } = req.body;
+
+  try {
+    await db.query(
+      'UPDATE iit_test_creation_table SET status = ? WHERE test_creation_table_id = ?',
+      [newStatus, testCreationTableId]
+    );
+
+    res.status(200).json({ message: `Test status updated to ${newStatus}` });
+  } catch (error) {
+    console.error('Error updating test status:', error);
+    res.status(500).json({ message: 'Failed to update test status' });
+  }
+});
+
+
 
 router.get("/FetchTestDataFortable", async (req, res) => {
   const sql = `

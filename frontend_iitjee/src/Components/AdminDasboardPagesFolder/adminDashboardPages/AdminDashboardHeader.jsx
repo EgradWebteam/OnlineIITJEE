@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import styles from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css'; // Importing CSS module for styling
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import styles from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css';
 import headerImage from '../../../assets/EGTLogoExamHeaderCompressed.jpg';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,7 +19,12 @@ const navigate = useNavigate();
   }
   return (
     <div className={styles.header}>
-      <div className="logo"></div>
+      {/* Logo/Header Image */}
+      <div className={styles.headerImg}>
+        <img src={headerImage} alt="Header Image" />
+      </div>
+
+      {/* Navigation Buttons */}
       <div className={styles.headerButtons}>
         <button
           className={activeButton === 'admin' ? styles.active : ''}
@@ -46,7 +52,6 @@ const navigate = useNavigate();
           onClick={() => handleLogoutClick('logout')}
         >
           LogOut
-          {activeButton === 'logout' && <span className={styles.activeDot}></span>}
         </button>
       </div>
     </div>
