@@ -9,25 +9,35 @@ const axios = require("axios");
 const path = require("path");
 
 router.get("/CourseCreationFormData", async (req, res) => {
+  let connection;
   try {
-    const [exams] = await db.query("SELECT exam_id, exam_name FROM iit_exams");
-    const [types] = await db.query(
-      "SELECT type_of_test_id, type_of_test_name FROM iit_type_of_test"
-    );
+    connection = await db.getConnection();
+
+    const [examsResult, typesResult] = await Promise.all([
+      connection.query("SELECT exam_id, exam_name FROM iit_exams"),
+      connection.query("SELECT type_of_test_id, type_of_test_name FROM iit_type_of_test"),
+    ]);
+
+    const [exams] = examsResult;
+    const [types] = typesResult;
 
     res.json({ exams, types });
   } catch (err) {
     console.error("Error fetching IIT data:", err);
     res.status(500).json({ error: "Failed to fetch IIT data" });
+  } finally{
+    if (connection) connection.release(); 
   }
 });
+
 
 // GET subjects by exam_id
 router.get("/ExamSubjects/:examId", async (req, res) => {
   const { examId } = req.params;
-
+let connection;
   try {
-    const [subjects] = await db.query(
+    connection = await db.getConnection();
+    const [subjects] = await connection.query(
       `
         SELECT s.subject_id, s.subject_name 
         FROM iit_subjects s
@@ -41,6 +51,8 @@ router.get("/ExamSubjects/:examId", async (req, res) => {
   } catch (err) {
     console.error("Error fetching subjects:", err);
     res.status(500).json({ error: "Failed to fetch subjects" });
+  } finally {
+    if (connection) connection.release(); 
   }
 });
 
