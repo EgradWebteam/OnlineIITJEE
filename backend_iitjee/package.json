@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@azure/identity": "^4.8.0",
     "@azure/storage-blob": "^12.27.0",
     "axios": "^1.8.4",
     "bcrypt": "^5.1.1",

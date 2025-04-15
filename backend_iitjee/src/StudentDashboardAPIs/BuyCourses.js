@@ -157,7 +157,10 @@ WHERE
 router.get("/studentpaymentcreation/:studentregisterationid/:coursecreationid", async (req, res) => {
     const { studentregisterationid, coursecreationid } = req.params;
     console.log("Received request for student payment creation:", { studentregisterationid, coursecreationid });
-
+if(!studentregisterationid || !coursecreationid) {
+    console.log("Missing student registration ID or course creation ID.");
+    return res.status(400).json({ message: "Student registration ID and course creation ID are required." });
+}
     let connection;
 
     try {

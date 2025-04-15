@@ -5,7 +5,11 @@ import { IoCall } from "react-icons/io5";
 import logoImg from "../../../assets/EGTLogoExamHeaderCompressed.jpg";
 import { Link } from "react-router-dom";
 
-export default function MainHeader() {
+export default function                 
+
+
+
+MainHeader() {
   return (
     <div className={Styles.Header_MainPage}>
       <div className={Styles.Header_container}>

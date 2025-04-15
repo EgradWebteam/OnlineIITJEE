@@ -105,7 +105,13 @@ const CourseForm = ({ onCourseCreated, courseData }) => {
     }
     return years;
   };
- 
+  const getImageFile = (imageName) => {
+    const imgPath = `/OtsCourseCardImages/${imageName}`;
+    // Return a dummy file object (not the actual file, but for simulation)
+    return fetch(imgPath)
+      .then((response) => response.blob())
+      .then((blob) => new File([blob], imageName, { type: blob.type }));
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
  
@@ -121,8 +127,12 @@ const CourseForm = ({ onCourseCreated, courseData }) => {
     formData.append("selectedExamId", selectedExamId);
     formData.append("selectedSubjects", JSON.stringify(selectedSubjects));
     formData.append("selectedTypes", JSON.stringify(selectedTypes));
+    // if (selectedImage) {
+    //   formData.append("courseImageFile", `${ImagePath}/${selectedImage}`);
+    // }
     if (selectedImage) {
-      formData.append("courseImageFile", `${ImagePath}/${selectedImage}`);
+      const imageFile = await getImageFile(selectedImage);
+      formData.append("courseImageFile", imageFile);
     }
  
     if (isEditMode && courseData.course_creation_id) {
