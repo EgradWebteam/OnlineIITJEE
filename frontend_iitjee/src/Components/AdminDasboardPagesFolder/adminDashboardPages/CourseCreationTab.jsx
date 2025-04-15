@@ -8,7 +8,7 @@ const CourseCreationTab = () => {
   const [courses, setCourses] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); // State for pagination
-  const [itemsPerPage, setItemsPerPage] = useState(10); // Number of items per page
+  const [itemsPerPage, setItemsPerPage] = useState(6); // Number of items per page
   const [selectedCourseId, setSelectedCourseId] = useState(null); 
   const [editCourseData, setEditCourseData] = useState(null); 
   // Fetch courses data from the new API
@@ -111,7 +111,10 @@ const CourseCreationTab = () => {
 
       {/* Button to add a new course */}
       {!showForm && (
-        <button className={Styles.addCourseBtn} onClick={() => setShowForm(true)}>➕ Add Course</button>
+        <div className={Styles.flex}>
+          <button className={Styles.addCourseBtn} onClick={() => setShowForm(true)}> Add Course</button>
+          </div>
+        
       )}
 
       {/* Show the course form if showForm is true */}
@@ -137,6 +140,7 @@ const CourseCreationTab = () => {
 
 
       {/* Display courses in a dynamic table */}
+      <div style={{padding:"2%"}}>
       <DynamicTable
         columns={columns}
         data={currentCourses} // Show paginated courses
@@ -145,6 +149,8 @@ const CourseCreationTab = () => {
         onDelete={handleDelete}
         onToggle={handleToggle}
       />
+      </div>
+      
 
       {/* Pagination controls */}
       <div className={Styles.pagination}>

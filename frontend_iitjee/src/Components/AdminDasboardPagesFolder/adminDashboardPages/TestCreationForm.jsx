@@ -1,33 +1,106 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RxCross2 } from "react-icons/rx";
 import styles from "../../../Styles/AdminDashboardCSS/TestCreation.module.css";
 import { BASE_URL } from "../../../../apiConfig";
 import axios from "axios";
 
-const TestCreationForm = ({ setShowAddTestForm, testCreationFormData }) => {
+const TestCreationForm = ({ setShowAddTestForm, testCreationFormData, editData,onTestSaved }) => {
+  const isEditMode = !!editData;
+
   const [selectedCourse, setSelectedCourse] = useState("");
   const [includeSection, setIncludeSection] = useState(false);
   const [subjects, setSubjects] = useState([]);
-
-  const handleCheckboxChange = () => {
-    setIncludeSection(!includeSection);
-  };
+  const [formFields, setFormFields] = useState({
+    testName: "",
+    selectedTypeOfTest: "",
+    selectedInstruction: "",
+    startDate: "",
+    endDate: "",
+    startTime: "",
+    endTime: "",
+    selectedOptionPattern: "",
+    duration: "",
+    totalQuestions: "",
+    totalMarks: "",
+  });
 
   const [subjectSections, setSubjectSections] = useState([
     { selectedSubject: "", sectionName: "", numOfQuestions: "" },
   ]);
 
+  useEffect(() => {
+    if (isEditMode && editData) {
+      setFormFields({
+        testName: editData.test_name || "",
+        selectedTypeOfTest: editData.type_of_test_id || "",
+        selectedInstruction: editData.instruction_id || "",
+        startDate: editData.test_start_date || "",
+        endDate: editData.test_end_date || "",
+        startTime: editData.test_start_time || "",
+        endTime: editData.test_end_time || "",
+        selectedOptionPattern: editData.options_pattern_id || "",
+        duration: editData.duration || "",
+        totalQuestions: editData.number_of_questions || "",
+        totalMarks: editData.total_marks || "",
+      });
+
+      setSelectedCourse(editData.course_id || "");
+
+      if (editData.course_id) {
+        axios
+          .get(`${BASE_URL}/TestCreation/CourseSubjects/${editData.course_id}`)
+          .then((res) => {
+            setSubjects(res.data.subjects || []);
+          })
+          .catch((err) => {
+            console.error("Error loading subjects in edit mode:", err);
+          });
+      }
+
+      if (editData.sections && editData.sections.length > 0) {
+        setIncludeSection(true);
+        setSubjectSections(
+          editData.sections.map((section) => ({
+            selectedSubject: section.subject_id || "",
+            sectionName: section.section_name || "",
+            numOfQuestions: section.num_of_questions || "",
+          }))
+        );
+      }
+    }
+  }, [isEditMode, editData]);
+
+  const handleFormFieldChange = (e) => {
+    const { name, value } = e.target;
+    setFormFields((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCheckboxChange = () => {
+    setIncludeSection(!includeSection);
+  };
+
+  const handleCourseChange = async (e) => {
+    const selectedCourseId = e.target.value;
+    setSelectedCourse(selectedCourseId);
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/TestCreation/CourseSubjects/${selectedCourseId}`
+      );
+      setSubjects(response.data.subjects || []);
+    } catch (err) {
+      console.error("Error fetching subjects:", err);
+      setSubjects([]);
+    }
+  };
+
   const handleSubjectSectionChange = (index, field, value) => {
-    const updatedSections = [...subjectSections];
-    updatedSections[index][field] = value;
-    setSubjectSections(updatedSections);
+    const updated = [...subjectSections];
+    updated[index][field] = value;
+    setSubjectSections(updated);
   };
 
   const addSubjectSection = () => {
-    setSubjectSections([
-      ...subjectSections,
-      { selectedSubject: "", sectionName: "", numOfQuestions: "" },
-    ]);
+    setSubjectSections([...subjectSections, { selectedSubject: "", sectionName: "", numOfQuestions: "" }]);
   };
 
   const removeSubjectSection = () => {
@@ -36,72 +109,46 @@ const TestCreationForm = ({ setShowAddTestForm, testCreationFormData }) => {
     }
   };
 
-  // Handle form submission
   const handleFormSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
 
-    // Collect form data
     const formData = {
-      testName: e.target.testName.value,
-      selectedCourse: e.target.selectedCourse.value,
-      selectedTypeOfTest: e.target.selectedTypeOfTest.value,
-      selectedInstruction: e.target.selectedInstruction.value,
-      startDate: e.target.startDate.value,
-      endDate: e.target.endDate.value,
-      startTime: e.target.startTime.value,
-      endTime: e.target.endTime.value,
-      selectedOptionPattern: e.target.selectedOptionPattern.value,
-      duration: e.target.duration.value,
-      totalQuestions: e.target.totalQuestions.value,
-      totalMarks: e.target.totalMarks.value,
-      sections: subjectSections.map((section) => ({
-        subjectId: section.selectedSubject,
-        sectionName: section.sectionName,
-        numOfQuestions: section.numOfQuestions,
-      })),
+      ...formFields,
+      selectedCourse,
+      sections: includeSection
+        ? subjectSections.map((section) => ({
+            subjectId: section.selectedSubject,
+            sectionName: section.sectionName,
+            numOfQuestions: section.numOfQuestions,
+          }))
+        : [],
     };
-    console.log("formData", formData);
-    // Make a POST request to the server to insert the test data
+
     try {
-      const response = await fetch(`${BASE_URL}/TestCreation/CreateTest`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      console.log("formData", formData);
+      const response = await fetch(
+        `${BASE_URL}/TestCreation/${isEditMode ? `UpdateTest/${editData.test_creation_table_id}` : "CreateTest"}`,
+        {
+          method: isEditMode ? "PUT" : "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+      
+
       if (response.ok) {
-        // Handle success response
-        alert("Test created successfully!");
-        setShowAddTestForm(false); // Close the form
-      } else {
+        alert(`Test ${isEditMode ? "updated" : "created"} successfully!`);
+        setShowAddTestForm(false);
+        onTestSaved() // Close the form
+      }
+       else {
         const errorData = await response.json();
         alert(`Error: ${errorData.message}`);
       }
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error("Submission error:", error);
       alert("There was an error while submitting the form.");
-    }
-    console.log("formData", formData);
-  };
-  // Function to fetch subjects based on selected course
-  const handleCourseChange = async (e) => {
-    const selectedCourseId = e.target.value;
-    setSelectedCourse(selectedCourseId); // Update the selected course state
-
-    if (selectedCourseId) {
-      try {
-        const response = await axios.get(
-          `${BASE_URL}/TestCreation/CourseSubjects/${selectedCourseId}`
-        );
-        setSubjects(response.data.subjects); // Assuming response.data.subjects contains the subjects array
-      } catch (err) {
-        console.error("Error fetching subjects:", err);
-        setSubjects([]); // Reset subjects if there's an error
-      }
-    } else {
-      setSubjects([]); // Reset subjects if no course is selected
     }
   };
 
@@ -110,7 +157,7 @@ const TestCreationForm = ({ setShowAddTestForm, testCreationFormData }) => {
       <div className={styles.testCreationFormContainer}>
         <form className={styles.testCreationForm} onSubmit={handleFormSubmit}>
           <div className={styles.formHeader}>
-            <h3>Create a New Test</h3>
+            <h3>{isEditMode ? "Edit Test" : "Create a New Test"}</h3>
             <button
               type="button"
               className={styles.closeFormBtn}
@@ -120,269 +167,145 @@ const TestCreationForm = ({ setShowAddTestForm, testCreationFormData }) => {
             </button>
           </div>
 
-          {/* Grid Layout for the Form */}
           <div className={styles.gridForm}>
-            {/* Test Name */}
             <div className={styles.formGroup}>
-              <label>
-                Test Name <span className={styles.required}>*</span>
-              </label>
-              <input type="text" name="testName" required />
+              <label>Test Name *</label>
+              <input type="text" name="testName" value={formFields.testName} onChange={handleFormFieldChange} required />
             </div>
 
-            {/* Course Selection */}
             <div className={styles.formGroup}>
-              <label>
-                Select Course <span className={styles.required}>*</span>
-              </label>
-              <select
-                name="selectedCourse"
-                value={selectedCourse}
-                onChange={handleCourseChange}
-                required
-              >
+              <label>Select Course *</label>
+              <select name="selectedCourse" value={selectedCourse} onChange={handleCourseChange} required>
                 <option value="">Select a course</option>
-                {testCreationFormData &&
-                  testCreationFormData.courses &&
-                  testCreationFormData.courses.map((course) => (
-                    <option
-                      key={course.course_creation_id}
-                      value={course.course_creation_id}
-                    >
-                      {course.course_name}
-                    </option>
-                  ))}
+                {testCreationFormData?.courses?.map((course) => (
+                  <option key={course.course_creation_id} value={course.course_creation_id}>
+                    {course.course_name}
+                  </option>
+                ))}
               </select>
             </div>
 
-            {/* Type of Test */}
             <div className={styles.formGroup}>
-              <label>
-                Type of Test <span className={styles.required}>*</span>
-              </label>
-              <select name="selectedTypeOfTest" required>
+              <label>Type of Test *</label>
+              <select name="selectedTypeOfTest" value={formFields.selectedTypeOfTest} onChange={handleFormFieldChange} required>
                 <option value="">Select a test type</option>
-                {testCreationFormData &&
-                  testCreationFormData.testTypes &&
-                  testCreationFormData.testTypes.map((test) => (
-                    <option
-                      key={test.type_of_test_id}
-                      value={test.type_of_test_id}
-                    >
-                      {test.type_of_test_name}
-                    </option>
-                  ))}
+                {testCreationFormData?.testTypes?.map((type) => (
+                  <option key={type.type_of_test_id} value={type.type_of_test_id}>
+                    {type.type_of_test_name}
+                  </option>
+                ))}
               </select>
             </div>
 
-            {/* Select instructions */}
             <div className={styles.formGroup}>
-              <label>
-                Select instructions <span className={styles.required}>*</span>
-              </label>
-              <select name="selectedInstruction" required>
+              <label>Select instructions *</label>
+              <select name="selectedInstruction" value={formFields.selectedInstruction} onChange={handleFormFieldChange} required>
                 <option value="">Select instructions</option>
-                {testCreationFormData &&
-                  testCreationFormData.instructions &&
-                  testCreationFormData.instructions.map((inst) => (
-                    <option
-                      key={inst.instruction_id}
-                      value={inst.instruction_id}
-                    >
-                      {inst.instruction_heading}
-                    </option>
-                  ))}
+                {testCreationFormData?.instructions?.map((inst) => (
+                  <option key={inst.instruction_id} value={inst.instruction_id}>
+                    {inst.instruction_heading}
+                  </option>
+                ))}
               </select>
             </div>
 
-            {/* Test Date & Time */}
             <div className={styles.formGroup}>
-              <label>
-                Start Date <span className={styles.required}>*</span>
-              </label>
-              <input type="date" name="startDate" required />
+              <label>Start Date *</label>
+              <input type="date" name="startDate" value={formFields.startDate} onChange={handleFormFieldChange} required />
             </div>
 
             <div className={styles.formGroup}>
-              <label>
-                End Date <span className={styles.required}>*</span>
-              </label>
-              <input type="date" name="endDate" required />
+              <label>End Date *</label>
+              <input type="date" name="endDate" value={formFields.endDate} onChange={handleFormFieldChange} required />
             </div>
 
             <div className={styles.formGroup}>
-              <label>
-                Start Time <span className={styles.required}>*</span>
-              </label>
-              <input type="time" name="startTime" required />
+              <label>Start Time *</label>
+              <input type="time" name="startTime" value={formFields.startTime} onChange={handleFormFieldChange} required />
             </div>
 
             <div className={styles.formGroup}>
-              <label>
-                End Time <span className={styles.required}>*</span>
-              </label>
-              <input type="time" name="endTime" required />
+              <label>End Time *</label>
+              <input type="time" name="endTime" value={formFields.endTime} onChange={handleFormFieldChange} required />
             </div>
 
-            {/* Option Pattern */}
             <div className={styles.formGroup}>
-              <label>
-                Select Option pattern <span className={styles.required}>*</span>
-              </label>
-              <select name="selectedOptionPattern" required>
+              <label>Option Pattern *</label>
+              <select name="selectedOptionPattern" value={formFields.selectedOptionPattern} onChange={handleFormFieldChange} required>
                 <option value="">Select an option pattern</option>
-                {testCreationFormData &&
-                  testCreationFormData.optionPatterns &&
-                  testCreationFormData.optionPatterns.map((pattern) => (
-                    <option
-                      key={pattern.options_pattern_id}
-                      value={pattern.options_pattern_id}
-                    >
-                      {pattern.options_pattern_name}
-                    </option>
-                  ))}
+                {testCreationFormData?.optionPatterns?.map((pattern) => (
+                  <option key={pattern.options_pattern_id} value={pattern.options_pattern_id}>
+                    {pattern.options_pattern_name}
+                  </option>
+                ))}
               </select>
             </div>
 
-            {/* Duration */}
             <div className={styles.formGroup}>
-              <label>
-                Duration (in minutes) <span className={styles.required}>*</span>
-              </label>
-              <input type="number" name="duration" min="1" max="300" required />
+              <label>Duration (minutes) *</label>
+              <input type="number" name="duration" value={formFields.duration} onChange={handleFormFieldChange} required />
             </div>
 
-            {/* Total Questions */}
             <div className={styles.formGroup}>
-              <label>
-                Total Questions <span className={styles.required}>*</span>
-              </label>
-              <input
-                type="number"
-                name="totalQuestions"
-                min="1"
-                max="200"
-                required
-              />
+              <label>Total Questions *</label>
+              <input type="number" name="totalQuestions" value={formFields.totalQuestions} onChange={handleFormFieldChange} required />
             </div>
 
-            {/* Total Marks */}
             <div className={styles.formGroup}>
-              <label>
-                Total Marks <span className={styles.required}>*</span>
-              </label>
-              <input
-                type="number"
-                name="totalMarks"
-                min="1"
-                max="1000"
-                required
-              />
+              <label>Total Marks *</label>
+              <input type="number" name="totalMarks" value={formFields.totalMarks} onChange={handleFormFieldChange} required />
             </div>
 
-            {/* Sections */}
-            <div style={{ margin: "1rem 0" }}>
-              <label
-                style={{ display: "flex", alignItems: "center", gap: "10px" }}
-              >
-                <input type="checkbox" onChange={handleCheckboxChange} />
-                Click here if you want to include any section in the test
+            <div>
+              <label>
+                <input type="checkbox" checked={includeSection} onChange={handleCheckboxChange} />
+                Include section(s) in the test
               </label>
 
-              <div>
-                <div>
-                  {subjectSections.map((section, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        marginBottom: "20px",
-                        borderBottom: "1px solid #ccc",
-                        paddingBottom: "10px",
-                      }}
-                    >
-                      <div style={{ marginBottom: "10px" }}>
-                        <label>Select a subject: </label>
-                        <select
-                          name="selectedSubject"
-                          value={section.selectedSubject}
-                          onChange={(e) =>
-                            handleSubjectSectionChange(
-                              index,
-                              "selectedSubject",
-                              e.target.value
-                            )
-                          }
-                          required
-                        >
-                          <option value="">Select a subject</option>
-                          {subjects.length > 0 ? (
-                            subjects.map((subject) => (
-                              <option
-                                key={subject.subject_id}
-                                value={subject.subject_id}
-                              >
-                                {subject.subject_name}
-                              </option>
-                            ))
-                          ) : (
-                            <option value="no-subjects">
-                              No subjects available
-                            </option>
-                          )}
-                        </select>
-                      </div>
+              {includeSection && subjectSections.map((section, index) => (
+                <div key={index} style={{ borderBottom: "1px solid #ccc", marginBottom: "10px" }}>
+                  <label>Subject</label>
+                  <select
+                    value={section.selectedSubject}
+                    onChange={(e) => handleSubjectSectionChange(index, "selectedSubject", e.target.value)}
+                    required
+                  >
+                    <option value="">Select a subject</option>
+                    {subjects.map((subj) => (
+                      <option key={subj.subject_id} value={subj.subject_id}>
+                        {subj.subject_name}
+                      </option>
+                    ))}
+                  </select>
 
-                      <div style={{ marginBottom: "10px" }}>
-                        <label>Enter Section Name: </label>
-                        <input
-                          type="text"
-                          name="sectionName"
-                          value={section.sectionName}
-                          onChange={(e) =>
-                            handleSubjectSectionChange(
-                              index,
-                              "sectionName",
-                              e.target.value
-                            )
-                          }
-                          required
-                        />
-                      </div>
+                  <label>Section Name</label>
+                  <input
+                    type="text"
+                    value={section.sectionName}
+                    onChange={(e) => handleSubjectSectionChange(index, "sectionName", e.target.value)}
+                    required
+                  />
 
-                      <div style={{ marginBottom: "10px" }}>
-                        <label>No. of Questions: </label>
-                        <input
-                          type="number"
-                          name="numOfQuestions"
-                          min={1}
-                          value={section.numOfQuestions}
-                          onChange={(e) =>
-                            handleSubjectSectionChange(
-                              index,
-                              "numOfQuestions",
-                              e.target.value
-                            )
-                          }
-                          required
-                        />
-                      </div>
-                    </div>
-                  ))}
-
-                  <div style={{ marginTop: "10px" }}>
-                    <button type="button" onClick={addSubjectSection}>
-                      +
-                    </button>
-                    <button type="button" onClick={removeSubjectSection}>
-                      -
-                    </button>
-                  </div>
+                  <label>No. of Questions</label>
+                  <input
+                    type="number"
+                    value={section.numOfQuestions}
+                    onChange={(e) => handleSubjectSectionChange(index, "numOfQuestions", e.target.value)}
+                    required
+                  />
                 </div>
-              </div>
+              ))}
+
+              {includeSection && (
+                <div>
+                  <button type="button" onClick={addSubjectSection}>+ Add Section</button>
+                  <button type="button" onClick={removeSubjectSection}>- Remove Section</button>
+                </div>
+              )}
             </div>
 
             <button type="submit" className={styles.submitBtn}>
-              Create Test
+              {isEditMode ? "Update Test" : "Create Test"}
             </button>
           </div>
         </form>

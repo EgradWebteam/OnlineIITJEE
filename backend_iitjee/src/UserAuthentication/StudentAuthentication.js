@@ -217,13 +217,12 @@ router.post("/reset-password", async (req, res) => {
   const { email, resetCode, newPassword } = req.body;
 
   try {
-    // Select the necessary fields (email_id, reset_code, student_registration_id)
+    // 1. Find the user by email
     const sql = `
       SELECT student_registration_id, email_id, reset_code 
       FROM iit_student_registration 
       WHERE email_id = ?;
     `;
-
     const [userRows] = await db.query(sql, [email]);
 
     if (userRows.length === 0) {
@@ -232,55 +231,45 @@ router.post("/reset-password", async (req, res) => {
 
     const user = userRows[0];
 
-    // Verify if the reset code matches
+    // 2. Verify if the reset code matches
     if (user.reset_code !== resetCode) {
       return res.status(400).json({ message: "Invalid reset code" });
     }
 
-    // Hash the new password before saving it
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    // 3. Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword.trim(), 10);
+    console.log("New hashed password:", hashedPassword); // Optional: for debug
 
-    // Update the password in the database
+    // 4. Update password in DB and clear reset code
     const updatePasswordSql = `
       UPDATE iit_student_registration 
       SET password = ?, reset_code = NULL 
       WHERE student_registration_id = ?;
     `;
-    await db.query(updatePasswordSql, [
-      hashedPassword,
-      user.student_registration_id,
-    ]);
+    await db.query(updatePasswordSql, [hashedPassword, user.student_registration_id]);
 
-    res
-      .status(200)
-      .json({ message: "Password reset successfully. You can now log in." });
+    res.status(200).json({ message: "Password reset successfully. You can now log in." });
   } catch (error) {
     console.error("Error in resetting password:", error);
     res.status(500).json({ message: "Error resetting password" });
   }
 });
-
 // Route: POST /api/studentLogin
 router.post("/studentLogin", async (req, res) => {
   let { email, password, sessionId } = req.body;
 
-  // Remove any leading or trailing spaces from email and password
   email = email.trim();
   password = password.trim();
- 
-  console.log("Login attempt:", email, password, sessionId); // Logging email, password, and sessionId from request body
 
   try {
+    // 1. Fetch student by email
     const sql = `
       SELECT student_registration_id, candidate_name, password, email_id,
              last_login_time, is_logged_in, session_id, uploaded_photo, mobile_no
       FROM iit_student_registration
-      WHERE email_id = ?`;
- 
-    console.log("Executing query to check user:", sql, email);  // Log the query and email for debugging
+      WHERE email_id = ?
+    `;
     const [users] = await db.query(sql, [email]);
-    
-    console.log("Query result:", users); // Log query result
 
     if (users.length === 0) {
       return res.status(400).json({ message: "Invalid email or password" });
@@ -288,45 +277,43 @@ router.post("/studentLogin", async (req, res) => {
 
     const user = users[0];
     const newSessionId = crypto.randomBytes(16).toString("hex");
- 
-    // If already logged in, check session ID
+
+    // 2. Check session conflict
     if (user.is_logged_in && user.session_id && user.session_id !== sessionId) {
-      console.log("Already logged in on another device. Current session ID:", user.session_id, "Provided session ID:", sessionId);
-      return res
-        .status(403)
-        .json({ message: "You are already logged in on another device." });
+      return res.status(403).json({ message: "You are already logged in on another device." });
     }
- 
-    console.log("Comparing password...");
+
+    // 3. Compare password
+    console.log("Comparing input password:", password);
+    console.log("With stored hashed password:", user.password);
+
     const isMatch = await bcrypt.compare(password, user.password);
+    const hashedPassword = bcrypt.hash(password, 10); // Store the hashed password for debugging
+    console.log(hashedPassword, user.password); // Log the password comparison for debugging
     console.log("Password match result:", isMatch);
 
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
- 
-    console.log("Generating JWT...");
+
+    // 4. Generate access token
     const accessToken = jwt.sign(
       { user_Id: user.student_registration_id },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
- 
-    console.log("Encrypting user ID...");
-    const encryptedUserId = encryptDataWithAN(
-      user.student_registration_id.toString()
-    );
- 
-    // Update login status and session ID
+
+    const encryptedUserId = encryptDataWithAN(user.student_registration_id.toString());
+
+    // 5. Update login status
     const updateSql = `
       UPDATE iit_student_registration
       SET is_logged_in = TRUE, last_login_time = NOW(), session_id = ?
-      WHERE student_registration_id = ?`;
-    
-    console.log("Executing update query:", updateSql, newSessionId, user.student_registration_id);
+      WHERE student_registration_id = ?
+    `;
     await db.query(updateSql, [newSessionId, user.student_registration_id]);
- 
-    // Create the response object
+
+    // 6. Send response
     const responseData = {
       user_Id: encryptedUserId,
       decryptedId: user.student_registration_id,
@@ -341,18 +328,13 @@ router.post("/studentLogin", async (req, res) => {
       },
       sessionId: newSessionId,
     };
- 
-    console.log("Response data being sent to frontend:", responseData); // Log the response data before sending it to the frontend
- 
-    // Send the response to the frontend
+
     res.json(responseData);
   } catch (error) {
-    console.error("Error during login:", error); // This will catch and log any errors during the try block
+    console.error("Error during login:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
-
-
 router.post("/studentLogout", async (req, res) => {
   const { sessionId } = req.body; // Assume sessionId is passed in the request body
 

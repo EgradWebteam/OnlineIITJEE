@@ -126,34 +126,154 @@ router.get('/TestCreationFormData', async (req, res) => {
       res.status(500).json({ message: "There was an error creating the test and sections." });
     }
   });
+  router.put("/UpdateTest/:testId", async (req, res) => {
+    const { testId } = req.params;
+    const {
+      testName,
+      selectedCourse,
+      selectedTypeOfTest,
+      selectedInstruction,
+      startDate,
+      endDate,
+      startTime,
+      endTime,
+      selectedOptionPattern,
+      duration,
+      totalQuestions,
+      totalMarks,
+      sections, // Array of { sectionName, numOfQuestions, subjectId }
+    } = req.body;
+  
+    const updateTestQuery = `
+      UPDATE iit_test_creation_table 
+      SET 
+        test_name = ?, 
+        course_creation_id = ?, 
+        course_type_of_test_id = ?, 
+        instruction_id = ?, 
+        test_start_date = ?, 
+        test_end_date = ?, 
+        test_start_time = ?, 
+        test_end_time = ?, 
+        duration = ?, 
+        total_questions = ?, 
+        total_marks = ?, 
+        options_pattern_id = ?
+      WHERE test_creation_table_id = ?;
+    `;
+  
+    const deleteOldSectionsQuery = `
+      DELETE FROM iit_sections WHERE test_creation_table_id = ?;
+    `;
+  
+    const insertSectionQuery = `
+      INSERT INTO iit_sections 
+        (test_creation_table_id, section_name, no_of_questions, subject_id) 
+      VALUES (?, ?, ?, ?);
+    `;
+  
+    try {
+      // Update test main info
+      await db.query(updateTestQuery, [
+        testName,
+        selectedCourse,
+        selectedTypeOfTest,
+        selectedInstruction,
+        startDate,
+        endDate,
+        startTime,
+        endTime,
+        duration,
+        totalQuestions,
+        totalMarks,
+        selectedOptionPattern,
+        testId,
+      ]);
+  
+      // Delete old sections
+      await db.query(deleteOldSectionsQuery, [testId]);
+  
+      // Insert new sections if any
+      if (Array.isArray(sections) && sections.length > 0) {
+        for (const section of sections) {
+          const { sectionName, numOfQuestions, subjectId } = section;
+          await db.query(insertSectionQuery, [
+            testId,
+            sectionName,
+            numOfQuestions,
+            subjectId,
+          ]);
+        }
+      }
+  
+      res.status(200).json({ message: "Test and sections updated successfully." });
+    } catch (error) {
+      console.error("Error updating test and sections:", error);
+      res.status(500).json({ message: "Failed to update test and sections." });
+    }
+  });
+  router.delete("/DeleteTest/:testId", async (req, res) => {
+    const { testId } = req.params;
+  
+    const deleteSectionsQuery = `
+      DELETE FROM iit_sections 
+      WHERE test_creation_table_id = ?;
+    `;
+  
+    const deleteTestQuery = `
+      DELETE FROM iit_test_creation_table 
+      WHERE test_creation_table_id = ?;
+    `;
+  
+    try {
+      // First delete associated sections
+      await db.query(deleteSectionsQuery, [testId]);
+  
+      // Then delete the test itself
+      const [result] = await db.query(deleteTestQuery, [testId]);
+  
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: "Test not found." });
+      }
+  
+      res.status(200).json({ message: "Test deleted successfully." });
+    } catch (error) {
+      console.error("Error deleting test:", error);
+      res.status(500).json({ message: "Failed to delete the test." });
+    }
+  });
   
 
   router.get('/FetchTestDataFortable', async (req, res) => {
     const sql = `
-        SELECT 
-            tct.test_creation_table_id,
-            tct.test_name,
-            cct.course_name,
-            tct.test_start_date,
-            tct.test_end_date,
-            tct.test_start_time,
-            tct.test_end_time,
-            tct.total_questions AS number_of_questions,
-            COUNT(q.question_id) AS uploaded_questions,
-            tct.status AS test_activation
-        FROM iit_test_creation_table tct
-        JOIN iit_course_creation_table cct ON tct.course_creation_id = cct.course_creation_id
-        LEFT JOIN iit_questions q ON tct.test_creation_table_id = q.test_creation_table_id
-        GROUP BY 
-            tct.test_creation_table_id, 
-            tct.test_name, 
-            cct.course_name, 
-            tct.test_start_date, 
-            tct.test_end_date, 
-            tct.test_start_time, 
-            tct.test_end_time, 
-            tct.total_questions, 
-            tct.status;
+       SELECT 
+        tct.test_creation_table_id,
+        tct.test_name,
+        cct.course_name,
+        tct.test_start_date,
+        tct.test_end_date,
+        tct.test_start_time,
+        tct.test_end_time,
+        tct.total_questions AS number_of_questions,
+        COUNT(q.question_id) AS uploaded_questions,
+        tct.status AS test_activation,
+        tct.total_marks,
+        tct.duration
+    FROM iit_test_creation_table tct
+    JOIN iit_course_creation_table cct ON tct.course_creation_id = cct.course_creation_id
+    LEFT JOIN iit_questions q ON tct.test_creation_table_id = q.test_creation_table_id
+    GROUP BY 
+        tct.test_creation_table_id, 
+        tct.test_name, 
+        cct.course_name, 
+        tct.test_start_date, 
+        tct.test_end_date, 
+        tct.test_start_time, 
+        tct.test_end_time, 
+        tct.total_questions, 
+        tct.status,
+        tct.total_marks,
+        tct.duration;
     `;
 
     try {

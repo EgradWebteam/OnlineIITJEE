@@ -13,7 +13,7 @@ export default function StudentDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [isLoading, setIsLoading] = useState(true);
 
- 
+  const studentId = localStorage.getItem('decryptedId');
     useEffect(() => {
       const savedSection = localStorage.getItem("activeSection");
       if (savedSection) {
@@ -57,9 +57,9 @@ export default function StudentDashboard() {
           handleSectionChange={handleSectionChange}
           />;
         case "myCourses":
-          return <StudentDashboard_MyCourses />;
+          return <StudentDashboard_MyCourses studentId = {studentId}/>;
         case "buyCourses":
-          return <StudentDashboard_BuyCourses />;
+          return <StudentDashboard_BuyCourses setActiveSection = {setActiveSection} studentId = {studentId}/>;
         case "results":
           return <StudentDashboard_MyResults />;
         case "account":

@@ -5,8 +5,8 @@ import CourseCard from '../../LandingPagesFolder/CourseCards';
 import { BASE_URL } from '../../../../apiConfig';
 import TestDetailsContainer from './TestDetailsContainer';
 
-export default function StudentDashboard_MyCourses() {
-  const studentId = 6;
+export default function StudentDashboard_MyCourses({studentId}) {
+ 
   const [structuredCourses, setStructuredCourses] = useState([]);
   const [selectedPortal, setSelectedPortal] = useState(null);
   const [selectedExam, setSelectedExam] = useState(null);

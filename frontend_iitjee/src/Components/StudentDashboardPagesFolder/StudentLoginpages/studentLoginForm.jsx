@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Importing React icons
 import styles from "../../../Styles/StudentDashboardCSS/Student.module.css"; 
 
 export default function StudentLoginForm({ 
@@ -17,8 +17,12 @@ export default function StudentLoginForm({
   setResetCode, 
   handleLogin, 
   handleForgotPassword, 
-  handleResetPassword
+  handleResetPassword 
 }) {
+
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [showNewPassword, setShowNewPassword] = useState(false); // State to toggle new password visibility
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State to toggle confirm password visibility
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -26,35 +30,49 @@ export default function StudentLoginForm({
   const confirmPasswordRef = useRef(null);
   const resetCodeRef = useRef(null);
 
+  // Validation function for new password and confirm password
+  const isPasswordValid = newPassword && confirmPassword && newPassword === confirmPassword;
+
   return (
     <form onSubmit={isForgotPassword ? (isResetPassword ? handleResetPassword : handleForgotPassword) : handleLogin}>
+      
       {/* Email input for login and forgot password */}
-      <div className={styles.studentLoginFormInput}>
-        <label>Email ID:</label>
-        <input
-          type="email"
-          placeholder="Enter your email here"
-          name="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          ref={emailRef} // Use ref here
-          required
-        />
-      </div>
+      {!isResetPassword && (
+        <div className={styles.studentLoginFormInput}>
+          <label>Email ID:</label>
+          <input
+            type="email"
+            placeholder="Enter your email here"
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            ref={emailRef} // Use ref here
+            required
+          />
+        </div>
+      )}
 
       {/* Password input for login */}
       {!isForgotPassword && !isResetPassword && (
         <div className={styles.studentLoginFormInput}>
           <label>Password:</label>
-          <input
-            type="password"
-            placeholder="Enter your password here"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            ref={passwordRef} // Use ref here
-            required
-          />
+          <div className={styles.passwordInputWrapper}>
+            <input
+              type={showPassword ? "text" : "password"} // Toggle password visibility
+              placeholder="Enter your password here"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              ref={passwordRef} // Use ref here
+              required
+            />
+            <span 
+              className={styles.passwordToggle} 
+              onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
         </div>
       )}
 
@@ -75,34 +93,54 @@ export default function StudentLoginForm({
           </div>
           <div className={styles.studentLoginFormInput}>
             <label>New Password:</label>
-            <input
-              type="password"
-              placeholder="Enter your new password"
-              name="newPassword"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              ref={newPasswordRef} // Use ref here
-              required
-            />
+            <div className={styles.passwordInputWrapper}>
+              <input
+                type={showNewPassword ? "text" : "password"} // Toggle password visibility
+                placeholder="Enter your new password"
+                name="newPassword"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                ref={newPasswordRef} // Use ref here
+                required
+              />
+              <span 
+                className={styles.passwordToggle} 
+                onClick={() => setShowNewPassword(!showNewPassword)} // Toggle new password visibility
+              >
+                {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
+            </div>
           </div>
           <div className={styles.studentLoginFormInput}>
             <label>Confirm Password:</label>
-            <input
-              type="password"
-              placeholder="Confirm your new password"
-              name="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              ref={confirmPasswordRef} // Use ref here
-              required
-            />
+            <div className={styles.passwordInputWrapper}>
+              <input
+                type={showConfirmPassword ? "text" : "password"} // Toggle password visibility
+                placeholder="Confirm your new password"
+                name="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                ref={confirmPasswordRef} // Use ref here
+                required
+              />
+              <span 
+                className={styles.passwordToggle} 
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)} // Toggle confirm password visibility
+              >
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
+            </div>
+            {/* Display error if new password and confirm password do not match */}
+            {newPassword && confirmPassword && newPassword !== confirmPassword && (
+              <p className={styles.passwordError}>Passwords do not match</p>
+            )}
           </div>
         </>
       )}
 
       {/* Submit button */}
       <div className={styles.studentLoginFormSubmit}>
-        <button type="submit">
+        <button type="submit" disabled={isResetPassword && !isPasswordValid}> 
           {isForgotPassword ? (isResetPassword ? "Submit New Password" : "Send Reset Code") : "Login"}
         </button>
       </div>
