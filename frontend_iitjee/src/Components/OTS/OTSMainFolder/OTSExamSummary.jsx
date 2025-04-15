@@ -51,6 +51,28 @@ const ExamSummaryComponent = ({
     setShowSubmittedPopup(true);
   };
 
+  const handleViewReport = () => {
+  // Pass 'results' section via URL param (for immediate effect)
+  const destinationURL = `/StudentDashboard/6?section=results`;
+
+  if (window.opener) {
+    // Set location of opener (parent window)
+    window.opener.location.href = destinationURL;
+
+    // Optional: Add safety net token too
+    window.opener.localStorage.setItem("activeSection", "results");
+
+    // Close current popup
+    setTimeout(() => {
+      window.open('', '_self').close();
+    }, 50);
+  } else {
+    // Fallback if not a popup
+    localStorage.setItem("activeSection", "results");
+    window.location.href = destinationURL;
+  }
+  }
+
   return (
     <div className={styles.examSummaryContainer}>
       {!showSubmittedPopup ? (
@@ -96,9 +118,7 @@ const ExamSummaryComponent = ({
           <p>You can now view your report.</p>
           <button
             className={styles.viewReportBtn}
-            onClick={() => {
-              console.log("Navigating to report...");
-            }}
+            onClick={handleViewReport}
           >
             View Report
           </button>

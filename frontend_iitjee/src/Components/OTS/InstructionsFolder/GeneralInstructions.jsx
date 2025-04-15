@@ -60,6 +60,8 @@ const GeneralInstructions = () => {
         );
     }
     const handleNextClick = async () => {
+        //  Store token before navigation
+        sessionStorage.setItem("navigationToken", "valid");
         try {
           const encryptedArray = await encryptBatch([realTestId, realStudentId]); // ⬅️ Await the result
           const encryptedTestId = encodeURIComponent(encryptedArray[0]);
