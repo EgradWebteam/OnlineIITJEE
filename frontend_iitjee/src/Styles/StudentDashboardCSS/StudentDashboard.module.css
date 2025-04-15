@@ -259,4 +259,44 @@ flex-direction: row;
     gap: 1rem;
     flex-direction: column;
   }
+
+  /* My results css */
+  .resultsMainDiv{
+    display: flex;
+    padding: 1.5rem;
+    width: 210px;
+    background-color: #444444;
+    color: white;
+    border-radius: 6px;
+    margin: 1rem;
+  }
+  .resultsSubDiv{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+  }
+  .testNameInResults{
+      font-size: 20px;
+      font-weight: 600;
+  }
+  .resultsViewReportBtn{
+    display: flex;
+    align-items: center;
+  }
+  .resultsViewReportBtn button{
+      background-color:rgba(8, 145, 209, 0.89);
+      color: white;
+      border-radius: 10px;
+      padding: 0.2em 1em;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+  }
+  .resultsBtnIcon{
+    font-size: 20px;
+    margin-top:10px;
+  }
+
   
