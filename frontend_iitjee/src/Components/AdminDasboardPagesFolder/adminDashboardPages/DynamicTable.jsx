@@ -144,7 +144,7 @@ const DynamicTable = ({
       {/* ✅ Popup handler */}
       {popupType === "arrange" && selectedRow && (
         <div className={styles.popupWrapper}>
-          <ArrangeQuestions row={selectedRow} onClose={handleClosePopup} />
+          <ArrangeQuestions data={selectedRow} onClose={handleClosePopup} />
         </div>
       )}
 

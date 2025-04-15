@@ -7,9 +7,9 @@ const ViewQuestions = ({ data, onClose }) => {
   const [imagesLoaded, setImagesLoaded] = useState(true);
 
   if (!data) return null;
-console.log("data",data)
+
 const testId = data.test_creation_table_id;
-console.log("testId",testId)
+
   const handleImageLoad = () => {
     setImagesLoaded(true);
   };

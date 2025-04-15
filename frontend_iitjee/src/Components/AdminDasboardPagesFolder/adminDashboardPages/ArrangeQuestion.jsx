@@ -1,52 +1,75 @@
-import React, { useState } from 'react';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import axios from "axios";
 import styles from "../../../Styles/AdminDashboardCSS/TestCreation.module.css";
-
-const AZURE_STORAGE_ACCOUNT_NAME = 'iitstorage';
-const AZURE_SAS_TOKEN = 'sv=2024-11-04&ss=b&srt=o&sp=rwdlactfx&se=2025-04-11T17:23:35Z&st=2025-04-09T09:23:35Z&spr=https,http&sig=jgevAvQaT%2FhAeJnJ36jhkE%2FVNern7BjpG3g1JQ6%2FNMA%3D';
-const AZURE_CONTAINER_NAME = 'iit-jee-container';
-
-// Blob base URL with SAS token
-const AZURE_STORAGE_CONNECTION_STRING = `https://${AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/${AZURE_CONTAINER_NAME}?${AZURE_SAS_TOKEN}`;
+import { BASE_URL } from "../../../../apiConfig";
 
 const ArrangeQuestions = ({ data, onClose }) => {
-  const [questions, setQuestions] = useState(data?.questions || []);
+  const [viewTestPaperData, setViewTestPaperData] = useState([]);
 
+  console.log("data", data);
+  const testId = data.test_creation_table_id;
   const handleDragEnd = async (result) => {
     const { destination, source } = result;
     if (!destination) return;
 
-    const reorderedQuestions = Array.from(questions);
+    const reorderedQuestions = Array.from(viewTestPaperData);
     const [movedQuestion] = reorderedQuestions.splice(source.index, 1);
     reorderedQuestions.splice(destination.index, 0, movedQuestion);
-    setQuestions(reorderedQuestions);
+    setViewTestPaperData(reorderedQuestions);
 
     try {
-      await axios.post('/TestCreation/updateQuestionOrder', {
+      await axios.post(`${BASE_URL}/TestCreation/updateQuestionOrder`, {
         questions: reorderedQuestions.map((q, index) => ({
           question_id: q.question_id,
           sort_order: index + 1,
         })),
       });
     } catch (error) {
-      console.error('Error updating sort order:', error);
-      alert('Failed to update sort order.');
+      console.error("Error updating sort order:", error);
+      alert("Failed to update sort order.");
     }
   };
 
-  const getBlobUrl = (blobName) => {
-    return `${AZURE_STORAGE_CONNECTION_STRING}/${blobName}`;
-  };
+  useEffect(() => {
+    const fetchTestPaper = async () => {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/TestCreation/ViewTestPaper/${testId}`
+        );
+        setViewTestPaperData(response.data);
+      } catch (err) {
+        console.error("Error fetching test paper:", err);
+      }
+    };
 
+    fetchTestPaper();
+  }, [testId]);
+  console.log("viewTestPaperData", viewTestPaperData);
   return (
     <div className={styles.popupContainer}>
       <div className={styles.popupContent}>
         <button onClick={onClose} className={styles.closeButton}>
           Close
         </button>
-        <h2 className={styles.title}>{data?.TestName || 'Arrange Questions'}</h2>
+        <h2 className={styles.title}>
+          {viewTestPaperData?.TestName || "Arrange Questions"}
+        </h2>
 
+        {/* Show paper info once */}
+        {viewTestPaperData?.subjects?.map((subject) => (
+          <div key={subject.subjectId}>
+            <h3>Subject: {subject.SubjectName}</h3>
+            {subject.sections.map((section) => (
+              <div key={section.sectionId}>
+                <h4>Section: {section.SectionName}</h4>
+                {/* Optional display here */}
+              </div>
+            ))}
+          </div>
+        ))}
+
+        {/* DRAGGABLE QUESTIONS */}
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId="questions">
             {(provided) => (
@@ -55,7 +78,7 @@ const ArrangeQuestions = ({ data, onClose }) => {
                 ref={provided.innerRef}
                 className={styles.questionsList}
               >
-                {questions.map((question, index) => (
+                {viewTestPaperData.map((question, index) => (
                   <Draggable
                     key={question.question_id}
                     draggableId={question.question_id.toString()}
@@ -68,56 +91,65 @@ const ArrangeQuestions = ({ data, onClose }) => {
                         {...provided.dragHandleProps}
                         className={styles.questionBlock}
                       >
-                        <div className={styles.questionTitle}>
-                          <h5>Question: {index + 1}</h5>
-                          <img
-                            src={getBlobUrl(`${question.document_name}/questions/${question.questionImgName}`)}
-                            alt={`Question ${question.question_id}`}
-                            className={styles.imageContainer}
-                          />
+                        <div>
+                          <h2>{viewTestPaperData.TestName}</h2>
+
+                          {viewTestPaperData.subjects?.map((subject) => (
+                            <div key={subject.subjectId}>
+                              <h3>Subject: {subject.SubjectName}</h3>
+
+                              {subject.sections.map((section) => (
+                                <div key={section.sectionId}>
+                                  <h4>Section: {section.SectionName}</h4>
+
+                                  {section.questions.map((question) => (
+                                    <div
+                                      key={question.question_id}
+                                      style={{ marginBottom: "2rem" }}
+                                    >
+                                      <p>Question ID: {question.question_id}</p>
+                                      <img
+                                        src={question.questionImgName}
+                                        alt={`Question ${
+                                          (question.question_id,
+                                          question.questionImgName)
+                                        }`}
+                                        style={{
+                                          width: "300px",
+                                          height: "auto",
+                                        }}
+                                      />
+                                      <div style={{ marginTop: "1rem" }}>
+                                        {question.options.map((option) => (
+                                          <div
+                                            key={option.option_id}
+                                            style={{
+                                              display: "flex",
+                                              alignItems: "center",
+                                            }}
+                                          >
+                                            <strong>
+                                              {option.option_index}:
+                                            </strong>
+                                            <img
+                                              src={option.optionImgName}
+                                              alt={`Option ${option.option_index}`}
+                                              style={{
+                                                width: "150px",
+                                                height: "auto",
+                                                marginLeft: "10px",
+                                              }}
+                                            />
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              ))}
+                            </div>
+                          ))}
                         </div>
-
-                        {question.options && question.options.length > 0 && (
-                          <div className={styles.optionsBlock}>
-                            <h5>Options:</h5>
-                            {question.options.map((option) => (
-                              <div
-                                className={styles.optionBlock}
-                                key={option.option_id}
-                              >
-                                <span>{option.option_index}:</span>
-                                <img
-                                  src={getBlobUrl(`${question.document_name}/options/${option.optionImgName}`)}
-                                  alt={`Option ${option.option_index}`}
-                                />
-                              </div>
-                            ))}
-                          </div>
-                        )}
-
-                        {question.solution &&
-                          question.solution.solutionImgName && (
-                            <div className={styles.solutionBlock}>
-                              <h5>Solution:</h5>
-                              <img
-                                src={getBlobUrl(`${question.document_name}/solution/${question.solution.solutionImgName}`)}
-                                alt="Solution"
-                                className={styles.imageContainer}
-                              />
-                            </div>
-                          )}
-
-                        {question.paragraph &&
-                          question.paragraph.paragraphImg && (
-                            <div className={styles.paragraphBlock}>
-                              <h5>Paragraph:</h5>
-                              <img
-                                src={getBlobUrl(`${question.document_name}/paragraph/${question.paragraph.paragraphImg}`)}
-                                alt="Paragraph"
-                                className={styles.imageContainer}
-                              />
-                            </div>
-                          )}
                       </div>
                     )}
                   </Draggable>

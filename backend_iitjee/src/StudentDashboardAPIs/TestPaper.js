@@ -330,6 +330,4 @@ router.delete("/ClearResponse/:studentId/:testCreationTableId/:questionId", asyn
   }
 });
 
-
-
 module.exports = router;
