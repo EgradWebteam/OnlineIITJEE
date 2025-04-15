@@ -22,7 +22,19 @@ const TestCreationTab = () => {
       console.error("Error fetching form data:", error);
     }
   };
+
   
+  const handleToggle = (row) => {
+    console.log("Toggle Activation", row);
+  };
+  
+  const handleAssign = (row) => {
+    console.log("Assign to Test", row);
+  };
+  
+  const handleDownload = (row) => {
+    console.log("Download Paper", row);
+  };
   const handleAddTestClick = () => {
     setShowAddTestForm(true);
     fetchFormData(); 
@@ -98,24 +110,28 @@ const TestCreationTab = () => {
 
       {/* Table for displaying test data */}
       <div  style={{padding:"3%"}} className={styles.tableWrapper}>
-        <DynamicTable
-          columns={[
-            { header: "S.No", accessor: "serial" },
-            { header: "Test Name", accessor: "test_name" },
-            { header: "Selected Course", accessor: "course_name" },
-            { header: "Test Started", accessor: "test_start_date" },
-            { header: "Test Date", accessor: "test_end_date" },
-            { header: "Start Time", accessor: "test_start_time" },
-            { header: "End Time", accessor: "test_end_time" },
-            { header: "Total Questions", accessor: "number_of_questions" },
-            { header: "Questions Uploaded", accessor: "uploaded_questions" },
-            { header: "Test Activation", accessor: "test_activation" },
-          ]}
-          data={testTableData}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onToggle={(item) => console.log("Toggle Activation", item)}
-        />
+      <DynamicTable
+  type="testCreation" // this activates the dropdown with test-related actions
+  columns={[
+    { header: "S.No", accessor: "serial" },
+    { header: "Test Name", accessor: "test_name" },
+    { header: "Selected Course", accessor: "course_name" },
+    { header: "Test Started", accessor: "test_start_date" },
+    { header: "Test Date", accessor: "test_end_date" },
+    { header: "Start Time", accessor: "test_start_time" },
+    { header: "End Time", accessor: "test_end_time" },
+    { header: "Total Questions", accessor: "number_of_questions" },
+    { header: "Questions Uploaded", accessor: "uploaded_questions" },
+
+  ]}
+  data={testTableData} // array of test data
+  onEdit={handleEdit}
+  onDelete={handleDelete}
+  onToggle={handleToggle}
+  onAssign={handleAssign}
+  onDownload={handleDownload}
+/>
+
       </div>
     </div>
   );

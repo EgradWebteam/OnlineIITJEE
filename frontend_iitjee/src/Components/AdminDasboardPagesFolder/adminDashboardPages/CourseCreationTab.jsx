@@ -13,11 +13,13 @@ const CourseCreationTab = () => {
   const [editCourseData, setEditCourseData] = useState(null); 
   // Fetch courses data from the new API
   const fetchCourses = () => {
+    debugger
     fetch(`${BASE_URL}/CourseCreation/GetAllCourses`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           setCourses(data.data || []);
+
         } else {
           console.error("Error fetching courses:", data.message || "Unknown error");
         }
@@ -83,8 +85,10 @@ const CourseCreationTab = () => {
 
   // Prepare columns for the table (use the course data keys)
   const columns = courses.length
+
     ? Object.keys(courses[0])
-        .filter((key) => key !== "subject_ids" && key !== "exam_ids") // Filter out 'subject_ids' and 'exam_ids'
+
+        .filter((key) => key !== "subject_ids" && key !== "exam_ids" && key !=="card_image") // Filter out 'subject_ids' and 'exam_ids'
         .map((key) => ({
           header: key.replace(/_/g, " ").toUpperCase(),
           accessor: key,

@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
 import styles from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css'; // Importing CSS module for styling
 import headerImage from '../../../assets/EGTLogoExamHeaderCompressed.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const AdminDashboardHeader = () => {
   // State to track active button
   const [activeButton, setActiveButton] = useState('admin');
-
+const navigate = useNavigate();
   // Handle click on buttons and update activeButton state
   const handleButtonClick = (buttonName) => {
     setActiveButton(buttonName);
   };
-
+  const handleLogoutClick = (buttonName) => {
+    setActiveButton(buttonName);
+    localStorage.removeItem('admin_auth'); 
+    navigate("/")// Remove the token from local storage
+  }
   return (
     <div className={styles.header}>
       <div className="logo"></div>
@@ -38,7 +43,7 @@ const AdminDashboardHeader = () => {
         </button>
         <button
           className={activeButton === 'logout' ? styles.active : ''}
-          onClick={() => handleButtonClick('logout')}
+          onClick={() => handleLogoutClick('logout')}
         >
           LogOut
           {activeButton === 'logout' && <span className={styles.activeDot}></span>}

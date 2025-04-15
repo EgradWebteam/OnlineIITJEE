@@ -51,3 +51,28 @@
     border: none;
     color: black;
   }
+@media (max-width:768px) {
+  .stuentDashboardGlobalHeading{
+    background-color: #444444;
+    color: white;
+    font-size: 1.3rem;
+    margin: 1rem;
+}
+}
+
+@media (max-width:425px) {
+  .stuentDashboardGlobalHeading{
+    background-color: #444444;
+    color: white;
+    font-size: 1rem;
+    margin: 1rem;
+}
+.noCoursesContainer{
+  background-color: #09bffc;
+  color: white;
+  font-size: 1rem;
+  margin: 1rem;
+  padding: 0.5rem;
+  font-weight: bold;
+}
+}

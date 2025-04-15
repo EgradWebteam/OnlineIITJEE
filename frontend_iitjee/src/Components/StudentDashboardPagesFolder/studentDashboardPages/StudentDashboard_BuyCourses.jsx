@@ -428,36 +428,37 @@ console.log("Student ID:", studentId); // Check the student ID
       </div>
 
       {/* Course Cards */}
+      {/* Course Cards or No Courses Message */}
+    {filteredCourses.length > 0 ? (
       <div className={globalCSS.cardHolderOTSORVLHome}>
-        {filteredCourses.length > 0 ? (
-          filteredCourses.map((course) => (
-            <CourseCard
-              key={`${course.portal_id}-${course.course_creation_id}`}
-              title={course.course_name}
-              cardImage={course.card_image}
-              price={course.total_price}
-              context="buyCourses"
-              onBuy={() => {
-                const courseId = course.course_creation_id;
-                if (!courseId) {
-                  console.error("Course ID is missing:", course);
-                  return;
-                }
-                studentpaymentcreation(courseId, studentId);
-              }}
-              onGoToTest={() =>
-                console.log("Go to Test:", course.course_creation_id)
+        {filteredCourses.map((course) => (
+          <CourseCard
+            key={`${course.portal_id}-${course.course_creation_id}`}
+            title={course.course_name}
+            cardImage={course.card_image}
+            price={course.total_price}
+            context="buyCourses"
+            onBuy={() => {
+              const courseId = course.course_creation_id;
+              if (!courseId) {
+                console.error("Course ID is missing:", course);
+                return;
               }
-            />
-          ))
-        ) : (
-          <div className={globalCSS.noCoursesContainer}>
-            <p className={globalCSS.noCoursesMsg}>
-              No courses available at the moment.
-            </p>
-          </div>
-        )}
+              studentpaymentcreation(courseId, studentId);
+            }}
+            onGoToTest={() =>
+              console.log("Go to Test:", course.course_creation_id)
+            }
+          />
+        ))}
       </div>
+    ) : (
+      <div className={globalCSS.noCoursesContainer}>
+        <p className={globalCSS.noCoursesMsg}>
+          No courses available at the moment.
+        </p>
+      </div>
+    )}
     </div>
   );
 }
