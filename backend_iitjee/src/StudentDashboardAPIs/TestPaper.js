@@ -154,7 +154,181 @@ router.get('/QuestionPaper/:test_creation_table_id', async (req, res) => {
   }
 });
 
+// CHECK FUNCTION
+async function checkIfResponseExists(connection, identifiers) {
+  const checkQuery = `
+    SELECT student_registration_id,test_creation_table_id,subject_id,section_id,question_id,question_type_id FROM iit_user_responses
+    WHERE student_registration_id = ? AND test_creation_table_id = ? AND subject_id = ? AND section_id = ?
+    AND question_id = ? AND question_type_id = ?
+  `;
 
+  const checkValues = [
+    parseInt(identifiers.studentId, 10),
+    parseInt(identifiers.test_creation_table_id, 10),
+    identifiers.subject_id ? parseInt(identifiers.subject_id, 10) : null,
+    identifiers.section_id ? parseInt(identifiers.secsection_idtionId, 10) : 0,
+    parseInt(identifiers.question_id, 10),
+    parseInt(identifiers.question_type_id, 10),
+  ];
+
+  const [result] = await connection.query(checkQuery, checkValues);
+  return result.length > 0;
+}
+
+// INSERT FUNCTION
+async function insertResponse(connection, data) {
+  const insertQuery = `
+    INSERT INTO iit_user_responses (
+      student_registration_id,
+      test_creation_table_id,
+      subject_id,
+      section_id,
+      question_id,
+      question_type_id,
+      user_answer,
+      option_id,
+      question_status
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  const insertValues = [
+    parseInt(data.studentId, 10),
+    parseInt(data.test_creation_table_id, 10),
+    data.subject_id ? parseInt(data.subject_id, 10) : null,
+    data.section_id ? parseInt(data.section_id, 10) : 0,
+    parseInt(data.question_id, 10),
+    parseInt(data.question_type_id, 10),
+    data.userAnswer,
+    data.optionIds,
+    data.answered,
+  ];
+
+  return await connection.query(insertQuery, insertValues);
+}
+
+// UPDATE FUNCTION
+async function updateResponse(connection, data) {
+  const updateQuery = `
+    UPDATE iit_user_responses
+    SET user_answer = ?, option_id = ?, question_status = ?
+    WHERE student_registration_id = ? AND test_creation_table_id = ? AND subject_id = ? AND section_id = ?
+    AND question_id = ? AND question_type_id = ?
+  `;
+
+  const updateValues = [
+    data.userAnswer,
+    data.optionIds,
+    data.answered,
+    parseInt(data.studentId, 10),
+    parseInt(data.test_creation_table_id, 10),
+    data.subject_id ? parseInt(data.subject_id, 10) : null,
+    data.section_id ? parseInt(data.section_id, 10) : 0,
+    parseInt(data.question_id, 10),
+    parseInt(data.question_type_id, 10),
+  ];
+
+  return await connection.query(updateQuery, updateValues);
+}
+
+// MASTER ROUTE
+router.post("/SaveResponse", async (req, res) => {
+  let connection;
+  try {
+    const {
+      studentId,
+      questionId,
+      questionTypeId,
+      test_creation_table_id,
+      subject_id,
+      section_id,
+      optionIndexes1 = "",
+      optionIndexes2 = "",
+      optionIndexes1CharCodes = [],
+      optionIndexes2CharCodes = [],
+      calculatorInputValue = "",
+      answered = "",
+    } = req.body;
+
+    console.log("SaveResponse request received:", req.body);
+
+    connection = await db.getConnection();
+
+    const commonAnswer = optionIndexes1CharCodes.join(",") + optionIndexes2CharCodes.join(",") + calculatorInputValue;
+    const commonOptions = optionIndexes1 + optionIndexes2;
+
+    const identifiers = {
+      studentId,
+      questionId,
+      questionTypeId,
+      test_creation_table_id,
+      subject_id,
+      section_id,
+    };
+
+    const exists = await checkIfResponseExists(connection, identifiers);
+
+    const data = {
+      ...identifiers,
+      userAnswer: commonAnswer,
+      optionIds: commonOptions,
+      answered,
+    };
+
+    if (exists) {
+      await updateResponse(connection, data);
+      console.log("Response updated");
+      return res.status(200).json({ success: true, message: "Response updated successfully" });
+    } else {
+      await insertResponse(connection, data);
+      console.log("Response inserted");
+      return res.status(200).json({ success: true, message: "Response inserted successfully" });
+    }
+
+  } catch (error) {
+    console.error("SaveResponse Error:", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
+  } finally {
+    if (connection) connection.release();
+  }
+});
+
+//CLEAR RESPONSE API
+router.delete("/ClearResponse/:studentId/:testCreationTableId/:questionId", async (req, res) => {
+  let connection;
+  try {
+    const { studentId, testCreationTableId, questionId } = req.params;
+
+    console.log(`Clearing response for studentId: ${studentId}, testCreationTableId: ${testCreationTableId}, questionId: ${questionId}`);
+
+    connection = await db.getConnection();
+
+    const deleteQuery = `
+      DELETE FROM iit_user_responses
+      WHERE student_registration_id = ? AND test_creation_table_id = ? AND question_id = ?
+    `;
+
+    const deleteValues = [
+      parseInt(studentId, 10),
+      parseInt(testCreationTableId, 10),
+      parseInt(questionId, 10),
+    ];
+
+    const [deleteResult] = await connection.query(deleteQuery, deleteValues);
+
+    if (deleteResult.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: "No matching response found to clear" });
+    }
+
+    console.log("Response cleared successfully");
+    res.status(200).json({ success: true, message: "Response cleared successfully" });
+
+  } catch (error) {
+    console.error("ClearResponse Error:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  } finally {
+    if (connection) connection.release();
+  }
+});
 
 
 
