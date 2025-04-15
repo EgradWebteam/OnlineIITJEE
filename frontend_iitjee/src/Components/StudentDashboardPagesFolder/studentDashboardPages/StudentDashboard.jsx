@@ -2,7 +2,7 @@ import React, { lazy, useEffect, useState,Suspense, useCallback } from 'react'
 import StudentDashboardHeader from '../StudentDashboardPages/StudentDashboardHeader.jsx';
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import StudentDashboardLeftSideBar from '../StudentDashboardPages/StudentDashboardLeftSidebar.jsx';
-
+import { useLocation, useParams } from 'react-router-dom';
 // Lazy loaded components
 const StudentDashboardHome = lazy(() => import("../StudentDashboardPages/StudentDashboardHome.jsx"));
 const StudentDashboard_MyCourses = lazy(() => import("../StudentDashboardPages/StudentDashboard_MyCourses.jsx"));
@@ -13,7 +13,7 @@ export default function StudentDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [isLoading, setIsLoading] = useState(true);
 
- 
+  const studentId = localStorage.getItem('decryptedId');
     useEffect(() => {
       const savedSection = localStorage.getItem("activeSection");
       if (savedSection) {
@@ -30,6 +30,24 @@ export default function StudentDashboard() {
       setActiveSection(savedSection || "dashboard"); // fallback to dashboard
       setIsLoading(false); // always mark as done loading
     }, []);
+    const location = useLocation();
+
+    // useEffect(() => {
+    //   const params = new URLSearchParams(location.search);
+    //   const sectionFromURL = params.get("section");
+  
+    //   if (sectionFromURL) {
+    //     // Priority: URL param
+    //     setActiveSection(sectionFromURL);
+    //     localStorage.setItem("activeSection", sectionFromURL);
+    //   } else {
+    //     // Fallback: localStorage
+    //     const savedSection = localStorage.getItem("activeSection") || "dashboard";
+    //     setActiveSection(savedSection);
+    //   }
+  
+    //   setIsLoading(false);
+    // }, [location.search]);
     
   
     const renderStudentDashboardContent = () => {
@@ -39,9 +57,9 @@ export default function StudentDashboard() {
           handleSectionChange={handleSectionChange}
           />;
         case "myCourses":
-          return <StudentDashboard_MyCourses />;
+          return <StudentDashboard_MyCourses studentId = {studentId}/>;
         case "buyCourses":
-          return <StudentDashboard_BuyCourses />;
+          return <StudentDashboard_BuyCourses setActiveSection = {setActiveSection} studentId = {studentId}/>;
         case "results":
           return <StudentDashboard_MyResults />;
         case "account":

@@ -626,7 +626,7 @@ font-size: 18px;
   align-items: center;
   justify-content: center;
 }
-.nextBtnDiv button{
+.nextBtnDiv button, .previuosBtn{
   background-color: #04c7f8;
   padding: 0.5rem;
   font-weight: 600;
@@ -636,7 +636,7 @@ font-size: 18px;
   border-radius: 5px;
 }
 .nextBtnArrow{
-  font-size: large;
+  font-size: 15px;
 }
 .userImageDivInst{
   display: flex;
@@ -646,4 +646,60 @@ font-size: 18px;
   word-wrap: break-word;
   border-left: 1px solid gray;
 }
+.instructionList{
+padding: 3rem;
+}
+.instructionList li{
+  list-style: disc;
+}
+.examinstructionSubdiv{
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  overflow: auto;
+  min-height: 80vh;
+  overflow-y: auto;
+}
+.termsandConditionsDiv{
+  margin: 1rem;
+}
+.readytoBeginDiv{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1.5rem;
+}
+.readyBeginBtn{
+  padding: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+background-color: #04c7f8;
+}
+.spanAccept{
+  margin-left: 5px;
+}
+.previosBtnArrow{
+  margin-right: 4px;
+}
+.disabledBtn {
+  background-color: #5aa1b3 !important;
+  color: white !important;
+  cursor: not-allowed !important;
+}
 
+@media (max-width:1280px) {
+  .OTSMainFileMainContainer{
+    width: 100%;
+    position: relative;
+    height: 72vh;
+}
+.QuestionNavigationBTns{
+  border: 1px solid rgb(204, 204, 204);
+  padding: 7px;
+  position: sticky;
+  width: 100%;
+  margin-top: 30px;
+  height: 8vh;
+}
+}

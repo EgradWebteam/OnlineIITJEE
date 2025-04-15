@@ -5,8 +5,8 @@ import CourseCard from '../../LandingPagesFolder/CourseCards';
 import { BASE_URL } from '../../../../apiConfig';
 import TestDetailsContainer from './TestDetailsContainer';
 
-export default function StudentDashboard_MyCourses() {
-  const studentId = 6;
+export default function StudentDashboard_MyCourses({studentId}) {
+ 
   const [structuredCourses, setStructuredCourses] = useState([]);
   const [selectedPortal, setSelectedPortal] = useState(null);
   const [selectedExam, setSelectedExam] = useState(null);
@@ -114,7 +114,7 @@ export default function StudentDashboard_MyCourses() {
       {/* Loading or Not Ready */}
       {(!structuredCourses.length || !selectedPortal || !selectedExam || filteredCourses === null) ? (
         <div className={globalCSS.noCoursesContainer}>
-          <p className={globalCSS.noCoursesMsg}>Loading courses...</p>
+          <p className={globalCSS.noCoursesMsg}>No courses available for this exam in the selected portal.</p>
         </div>
       ) : filteredCourses.length === 0 ? (
         <div className={globalCSS.noCoursesContainer}>

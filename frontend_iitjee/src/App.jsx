@@ -79,7 +79,7 @@ function App() {
       <Route path='/FooterTermsAndConditions' element={<FooterTermsAndConditions/>}/>
       <Route path='/ContactUs' element={<ContactUs/>}/>
       <Route path='/AdminDashboard' element={<MainLayout/>}/>
-      <Route path='/OTSRootFile' element={<OTSRootFile/>}/>
+      <Route path='/OTSRootFile/:testId/:studentId' element={<OTSRootFile/>}/>
       <Route path="/StudentInfo" element={<StudentInfo />} />
       <Route path="/CourseCreation" element={<CourseCreationTab />} />
       <Route path='/GeneralInstructions/:testId/:studentId' element={<GeneralInstructions/>}/>
