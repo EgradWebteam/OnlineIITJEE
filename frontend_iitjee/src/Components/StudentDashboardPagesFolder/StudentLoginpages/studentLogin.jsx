@@ -6,6 +6,7 @@ import MainHeader from '../../LandingPagesFolder/mainPageHeaderFooterFolder/Main
 import MainFooter from '../../LandingPagesFolder/mainPageHeaderFooterFolder/MainFooter';
 import { BASE_URL } from "../../../config/apiConfig.js";
 import StudentLoginForm from './studentLoginForm';
+import { useStudent } from '../../../context/StudentContext.jsx';
 import { v4 as uuidv4 } from 'uuid';
 export default function StudentLogin() {
   const [username, setUsername] = useState(""); 
@@ -16,7 +17,8 @@ export default function StudentLogin() {
   const [isForgotPassword, setIsForgotPassword] = useState(false); 
   const [isResetPassword, setIsResetPassword] = useState(false);  
   const navigate = useNavigate();
- 
+  const { setStudentData } = useStudent();
+
 
   // Handle login form submission
   const handleLogin = async (e) => {
@@ -42,21 +44,25 @@ export default function StudentLogin() {
         body: JSON.stringify(loginData),
       });
       const data = await response.json();
-
+debugger
       if (response.ok) {
-        const decryptedId = data.decryptedId;  // Assuming the userId is in the response
-        const accessToken = data.accessToken;  // The access token received from the backend
-        const sessionId = data.sessionId;  // Assuming sessionId is returned in the response
-        const userId=data.user_Id
-        // Store the user ID, access token, and session ID in localStorage
-        localStorage.setItem('decryptedId', decryptedId);
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem("userId",userId)
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('sessionId', sessionId);  // Store sessionId as well
-
-        // Navigate to the dashboard with the user ID
-        navigate(`/StudentDashboard/${userId}`);  // Use userId in the URL to navigate to the dashboard
+        if (response.ok) {
+          const decryptedId = data.decryptedId;
+          const accessToken = data.accessToken;
+          const sessionId = data.sessionId;
+          const userId = data.user_Id;
+          const studentInfo = data
+        
+          // Save basic stuff in localStorage
+          localStorage.setItem('decryptedId', decryptedId);
+          localStorage.setItem('accessToken', accessToken);
+          localStorage.setItem('sessionId', sessionId);
+          localStorage.setItem('userId', userId);
+          setStudentData(studentInfo);
+          console.log(studentInfo)
+          navigate(`/StudentDashboard/${userId}`);
+        }
+        
       } else {
         alert(data.message || "Login failed. Please try again.");
       }
