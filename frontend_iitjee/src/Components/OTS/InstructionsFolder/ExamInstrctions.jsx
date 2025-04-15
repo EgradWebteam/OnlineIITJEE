@@ -59,8 +59,9 @@ const ExamInstructions = () => {
     return <div className={styles.loadingText}>Loading Exam Instructions...</div>;
   }
 
+
   const examName = instructionsData[0]?.exam_name || "Exam";
-  const instructionPoints = instructionsData.map(item => item.instruction_point);
+  const instructionPoints = instructionsData[0]?.instruction_points || [];
 
   const handleBeginTest = async () => {
     //  Store token before navigation

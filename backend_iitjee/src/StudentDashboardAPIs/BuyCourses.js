@@ -59,6 +59,19 @@ const generatePassword = (length = 12) => {
     }
   }
 
+  const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
+const sasToken = process.env.AZURE_SAS_TOKEN;
+const containerName = process.env.AZURE_CONTAINER_NAME;
+const CourseCardImagesFolderName = process.env.AZURE_COURSECARDS_FOLDER;  
+
+// Helper to get image URL
+const getImageUrl = ( fileName) => {
+
+  if (!fileName ) return null;
+  return `https://${accountName}.blob.core.windows.net/${containerName}/${CourseCardImagesFolderName}/${fileName}?${sasToken}`;
+};
+
+
 router.get("/UnPurchasedcourses/:studentregisterationid",async (req,res) => {
     const { studentregisterationid } = req.params;
     console.log("Received request for unpurchased courses:", { studentregisterationid });
@@ -138,7 +151,7 @@ WHERE
                 course_creation_id: course.course_creation_id,
                 course_name: course.course_name,
                 total_price: course.total_price,
-                card_image: course.card_image,
+                card_image: getImageUrl(course.card_image),
                 total_tests: course.total_tests,
             });
         });
@@ -157,7 +170,10 @@ WHERE
 router.get("/studentpaymentcreation/:studentregisterationid/:coursecreationid", async (req, res) => {
     const { studentregisterationid, coursecreationid } = req.params;
     console.log("Received request for student payment creation:", { studentregisterationid, coursecreationid });
-
+if(!studentregisterationid || !coursecreationid) {
+    console.log("Missing student registration ID or course creation ID.");
+    return res.status(400).json({ message: "Student registration ID and course creation ID are required." });
+}
     let connection;
 
     try {

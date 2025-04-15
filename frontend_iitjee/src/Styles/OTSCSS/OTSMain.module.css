@@ -29,10 +29,13 @@ text-transform: uppercase;
     align-items: center;
     justify-content: center;
 }
-.OTSInstrctionsDivHolder p{
+.OTSInstrctionsDivHolder button{
  color: white;
 margin-right: 6px;
 font-size: 18px;
+background-color:black;
+border: none;
+cursor: pointer;
 }
 .InstIcon{
     color: rgb(33, 150, 243);
@@ -229,7 +232,7 @@ font-size: 18px;
     right: 0;
     border: 1px solid gainsboro;
     background-color: white;
-    width: 300px;
+    width: 282px;
     top: 0;
   }
   .StudentProfileHolderOTS{
@@ -334,7 +337,7 @@ font-size: 18px;
   .OTSMainFileMainContainer{
     width: 100%;
     position: relative;
-    height: 79vh;
+    height: 75vh;
   }
   .OTSMainFileSubContainer{
     display: flex;
@@ -396,7 +399,7 @@ font-size: 18px;
   position: sticky;
   width: 100%;
   margin-top: 30px;
-  height: 7vh;
+  height: 3.5vh;
 }
 .navigationBtnHolderSubContainer{
   display: flex;
@@ -687,6 +690,72 @@ background-color: #04c7f8;
   color: white !important;
   cursor: not-allowed !important;
 }
+.rightChevronBtn{
+  position: absolute;
+    top: 26rem;
+    left: -7%;
+}
+.rightChevronBtn button{
+  padding: 12px 3px;
+    background: black;
+    color: white;
+    border-radius: 5px;
+    border-radius: 4px;
+}
+
+.hiddenSidebar {
+  display: none; /* Or visibility: hidden; */
+}
+.OTSQuestionContainerMainDiv{
+  width: 100%;
+}
+.fullWidth {
+  width: 100vw;
+}
+/*Questionpaper css */
+.OTSQuestionPaperMainDiv{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 10px;
+}
+.logoDiv img {
+  width: 100%;
+  height: 100%;
+}
+.logoDiv{
+  width: 250px;
+}
+.navDivForQuestionPaper{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.OTSQuestionPaperSubDiv{
+  background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 1200px;
+    max-height: 90%;
+    overflow-y: auto;
+    position: relative;
+}
+.QuestionOptionsDIV{
+  margin: 20px 0;
+padding: 10px;
+border: 1px solid #ddd;
+border-radius: 10px;
+}
+
+
 
 @media (max-width:1280px) {
   .OTSMainFileMainContainer{

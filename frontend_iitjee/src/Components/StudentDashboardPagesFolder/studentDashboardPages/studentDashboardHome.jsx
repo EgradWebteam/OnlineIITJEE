@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboardHome.module.css";
 import MainPageCourseCards from '../../LandingPagesFolder/MainPageCourseCards';
 
-export default function StudentDashboardHome({handleSectionChange}) {
+export default function StudentDashboardHome({handleSectionChange, studentName}) {
 
   useEffect(() => {
 console.log("dashboardhome")
@@ -11,7 +11,7 @@ console.log("dashboardhome")
       <div>
       <div className={styles.gretingContainer}>
         <h3 className={styles.welcomeNoteStudentDashboard}>Welcome to eGRADTutor UG Online Courses.</h3>
-        <p className={styles.studentHiMsg}>Hi, ...</p>
+        <p className={styles.studentHiMsg}>Hi, {studentName}</p>
       </div>
         
         <div className={styles.exploreCardsDiv}>

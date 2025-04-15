@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import CourseForm from "./CourseForm"; // updated component name
 import DynamicTable from "./DynamicTable";
 import { BASE_URL } from "../../../../apiConfig";
-import Styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css"; // Importing styles
+import Styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css";
+
 
 const CourseCreationTab = () => {
   const [courses, setCourses] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1); // State for pagination
-  const [itemsPerPage, setItemsPerPage] = useState(6); // Number of items per page
-  const [selectedCourseId, setSelectedCourseId] = useState(null); 
+  const [currentPage, setCurrentPage] = useState(1); 
+  const [itemsPerPage, setItemsPerPage] = useState(6); 
   const [editCourseData, setEditCourseData] = useState(null); 
   // Fetch courses data from the new API
   const fetchCourses = () => {
@@ -116,6 +116,7 @@ const CourseCreationTab = () => {
   for (let i = 1; i <= Math.ceil(courses.length / itemsPerPage); i++) {
     pageNumbers.push(i);
   }
+
 
   return (
     <div>

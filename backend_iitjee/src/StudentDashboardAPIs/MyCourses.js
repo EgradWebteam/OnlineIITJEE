@@ -2,6 +2,23 @@ const express = require("express");
 const db = require("../config/database.js");
 // Assuming you have a separate email.js function
 const router = express.Router();
+
+
+
+const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
+const sasToken = process.env.AZURE_SAS_TOKEN;
+const containerName = process.env.AZURE_CONTAINER_NAME;
+const CourseCardImagesFolderName = process.env.AZURE_COURSECARDS_FOLDER;  
+
+// Helper to get image URL
+const getImageUrl = ( fileName) => {
+  if (!fileName ) return null;
+  return `https://${accountName}.blob.core.windows.net/${containerName}/${CourseCardImagesFolderName}/${fileName}?${sasToken}`;
+};
+
+
+
+
 router.get("/Purchasedcourses/:studentregisterationid", async (req, res) => {
     const { studentregisterationid } = req.params;
     console.log("Received request for unpurchased courses:", { studentregisterationid });
@@ -71,7 +88,7 @@ router.get("/Purchasedcourses/:studentregisterationid", async (req, res) => {
                 course_creation_id: course.course_creation_id,
                 course_name: course.course_name,
                
-                card_image: course.card_image,
+                card_image: getImageUrl(course.card_image),
                 total_tests: course.total_tests,
             });
         });
@@ -182,7 +199,32 @@ ip.instruction_point
             return res.status(404).json({ message: "No instructions found" });
         }
   
-        res.status(200).json(rows);
+        // res.status(200).json(rows);
+        const instructionMap = new Map();
+
+        rows.forEach(row => {
+            if (!instructionMap.has(row.instruction_id)) {
+                instructionMap.set(row.instruction_id, {
+                    test_creation_table_id: row.test_creation_table_id,
+                    instruction_id: row.instruction_id,
+                    exam_id: row.exam_id,
+                    exam_name: row.exam_name,
+                    instruction_heading: row.instruction_heading,
+                    document_name: row.document_name,
+                    instruction_img: row.instruction_img,
+                    instruction_points: []
+                });
+            }
+
+            // Push the instruction point if it's not null
+            if (row.instruction_point) {
+                instructionMap.get(row.instruction_id).instruction_points.push(row.instruction_point);
+            }
+        });
+
+        const groupedInstructions = Array.from(instructionMap.values());
+
+        res.status(200).json(groupedInstructions);
     } catch (error) {
         console.error("Error fetching instruction details:", error);
         res.status(500).json({ message: "Internal server error" });

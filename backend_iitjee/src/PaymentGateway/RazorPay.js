@@ -108,7 +108,7 @@ router.post("/paymentfailure", async (req, res) => {
 
   const messagetext = `Dear ${name},\n\nYour payment for the "${course_name}" was unsuccessful.\n\nPlease try again.\n\nBest regards,\neGRADTutor`;
   sendMail(email, "Payment Unsuccessful", messagetext);
-  return res.status(200).json({ message: "Payment failure handled" });
+  return res.status(200).json({ message: `Payment failure handled for studentId: ${studentId} and courseId: ${courseId}` });
 })
 
 module.exports = router;

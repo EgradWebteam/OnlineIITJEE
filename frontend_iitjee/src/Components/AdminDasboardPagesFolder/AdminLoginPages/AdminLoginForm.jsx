@@ -46,6 +46,10 @@ const AdminLoginForm = () => {
       });
 
       const data = await response.json();
+      const loginauth = {
+        token: data.token, // Assuming the token is in the response
+        admin_id: data.admin_id, // Assuming the admin_id is in the response
+      }// Assuming the token is in the response
       setLoading(false);
  if (response.ok) {
         const loginAuth={

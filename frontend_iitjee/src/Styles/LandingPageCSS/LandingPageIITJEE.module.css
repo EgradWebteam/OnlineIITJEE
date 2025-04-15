@@ -15,11 +15,12 @@
 .navBarBtn{
     border-radius: 10px;
     background: white;
-
+    padding: 0.5rem;
 }
 .activeBtn{
     background-color: #17bddf;
     color: white;
+    padding: 0.5rem;
 }
 .navBarLinks li {
     position: relative;

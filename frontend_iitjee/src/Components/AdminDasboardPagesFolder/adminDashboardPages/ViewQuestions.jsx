@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import styles from "../../../Styles/AdminDashboardCSS/TestCreation.module.css";
-import QuestioData from "../../../Components/StudentDashboardPagesFolder/JSON_Files/QuestionsData.json";
-
-const AZURE_STORAGE_ACCOUNT_NAME = "iitstorage";
-const AZURE_CONTAINER_NAME = "iit-jee-container";
-const AZURE_SAS_TOKEN = "sv=2024-11-04&ss=b&srt=o&sp=rwdlactfx&se=2025-04-11T17:23:35Z&st=2025-04-09T09:23:35Z&spr=https,http&sig=jgevAvQaT%2FhAeJnJ36jhkE%2FVNern7BjpG3g1JQ6%2FNMA%3D";
-const AZURE_STORAGE_BASE_URL = `https://${AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/${AZURE_CONTAINER_NAME}`;
+import axios from 'axios'
+import {BASE_URL} from '../../../../apiConfig'
 
 const ViewQuestions = ({ onClose }) => {
   const [imagesLoaded, setImagesLoaded] = useState(true);
 
-  const data = QuestioData;
-
+  if (!data) return null;
+console.log("data",data)
+const testId = data.test_creation_table_id;
+console.log("testId",testId)
   const handleImageLoad = () => {
     setImagesLoaded(true);
   };
@@ -41,6 +39,24 @@ const ViewQuestions = ({ onClose }) => {
     document.body.innerHTML = originalContent;
   };
 
+    
+  const [viewTestPaperData, setViewTestPaperData] = useState([]);
+ 
+useEffect(() => {
+  const fetchTestPaper = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/TestCreation/ViewTestPaper/${testId}`);
+      setViewTestPaperData(response.data);
+    } catch (err) {
+      console.error("Error fetching test paper:", err);
+    }
+  };
+
+  fetchTestPaper();
+}, [testId]);
+console.log("viewTestPaperData",viewTestPaperData)
+
+
   return (
     <div className={styles.popup_viewquestion}>
       <div className={styles.popup_viewquestioncontent}>
@@ -52,80 +68,45 @@ const ViewQuestions = ({ onClose }) => {
         </button>
 
         <div id="printable-content">
-          {data.subjects.map((subject) => (
-            <div key={subject.subjectId}>
-              <h3 className={styles.subject_heading}>{subject.SubjectName}</h3>
-
-              {subject.sections.map((section, secIndex) => (
-                <div key={secIndex}>
-                  {section.SectionName && <h4>{section.SectionName}</h4>}
-
-                  {section.questions.map((question) => (
-                    <div key={question.question_id} className={styles.questionblock_viewquestion}>
-                      {/* Question */}
-                      <div>
-                        <h5 className={styles.viewquestion_heading}>Question:</h5>
+        <div>
+      <h2>{viewTestPaperData.TestName}</h2>
+ 
+      {viewTestPaperData.subjects?.map((subject) => (
+        <div key={subject.subjectId}>
+          <h3>Subject: {subject.SubjectName}</h3>
+ 
+          {subject.sections.map((section) => (
+            <div key={section.sectionId}>
+              <h4>Section: {section.SectionName}</h4>
+ 
+              {section.questions.map((question) => (
+                <div key={question.question_id} style={{ marginBottom: "2rem" }}>
+                  <p>Question ID: {question.question_id}</p>
+                  <img
+                    src={question.questionImgName}
+                    alt={`Question ${question.question_id,question.questionImgName}`}
+                    style={{ width: "300px", height: "auto" }}
+                  />
+                  <div style={{ marginTop: "1rem" }}>
+                    {question.options.map((option) => (
+                      <div key={option.option_id} style={{ display: "flex", alignItems: "center" }}>
+                        <strong>{option.option_index}:</strong>
                         <img
-                          src={`${AZURE_STORAGE_BASE_URL}/${question.document_name}/questions/${question.questionImgName}?${AZURE_SAS_TOKEN}`}
-                          alt={`Question ${question.question_id}`}
-                          onLoad={handleImageLoad}
-                          onError={handleImageError}
-                          className={styles.viewquestion_image}
+                          src={option.optionImgName}
+                          alt={`Option ${option.option_index}`}
+                          style={{ width: "150px", height: "auto", marginLeft: "10px" }}
                         />
                       </div>
-
-                      {/* Options */}
-                      {question.options && (
-                        <div>
-                          <h5 className={styles.viewquestion_heading}>Options:</h5>
-                          {question.options.map((option) => (
-                            <div className={styles.optionblock_viewquestion} key={option.option_id}>
-                              <span>{option.option_index}:</span>
-                              <img
-                                src={`${AZURE_STORAGE_BASE_URL}/${question.document_name}/options/${option.optionImgName}?${AZURE_SAS_TOKEN}`}
-                                alt={`Option ${option.option_index}`}
-                                onLoad={handleImageLoad}
-                                onError={handleImageError}
-                                className={styles.viewquestion_image}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Paragraph */}
-                      {question.paragraph && question.paragraph.paragraphImg && (
-                        <div>
-                          <h5 className={styles.viewquestion_heading}>Paragraph:</h5>
-                          <img
-                            src={`${AZURE_STORAGE_BASE_URL}/${question.document_name}/paragraph/${question.paragraph.paragraphImg}?${AZURE_SAS_TOKEN}`}
-                            alt="Paragraph"
-                            onLoad={handleImageLoad}
-                            onError={handleImageError}
-                            className={styles.viewquestion_image}
-                          />
-                        </div>
-                      )}
-
-                      {/* Solution */}
-                      {question.solution && question.solution.solutionImgName && (
-                        <div>
-                          <h5 className={styles.viewquestion_heading}>Solution:</h5>
-                          <img
-                            src={`${AZURE_STORAGE_BASE_URL}/${question.document_name}/solution/${question.solution.solutionImgName}?${AZURE_SAS_TOKEN}`}
-                            alt="Solution"
-                            onLoad={handleImageLoad}
-                            onError={handleImageError}
-                            className={styles.viewquestion_image}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
           ))}
+        </div>
+      ))}
+    </div>
+ 
         </div>
       </div>
     </div>

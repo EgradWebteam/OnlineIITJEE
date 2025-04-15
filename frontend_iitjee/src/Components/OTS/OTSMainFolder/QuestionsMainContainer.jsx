@@ -118,7 +118,11 @@ export default function QuestionsMainContainer({
       negativeMarks: question?.nmarks_text || "N/A",
     };
   };
-
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const handleLeftClickMain = () => {
+    console.log("in handle left click in main page");
+    setIsCollapsed((prev) => !prev);
+  };
   const { questionType, marks, negativeMarks } = getQuestionMeta();
 
   //  Render question content (image or text)
@@ -132,22 +136,21 @@ export default function QuestionsMainContainer({
 
     return (
       <>
-        {isImageQuestion ? (
+        {/* {isImageQuestion ? ( */}
           <div className={styles.QuestionImage}>
             <img
-              src={`/path-to-images/${question.questionImgName}`}
+              src={question.questionImgName}
               alt="Question"
             />
           </div>
-        ) : (
+        {/* ) : (
           <p className={styles.QuestionParaNow}>{question.questionImgName}</p>
-        )}
+        )} */}
       </>
     );
   };
-
   return (
-    <div className={styles.OTSQuestionContainerMainDiv}>
+    <div className={!isCollapsed ? styles.OTSQuestionContainerMainDiv : styles.fullWidth }>
       <div className={styles.QuestionTypeHolderContainer}>
         <p>Question Type: <strong>{questionType}</strong></p>
         <div className={styles.marksContainer}>
@@ -178,6 +181,16 @@ export default function QuestionsMainContainer({
         natValue={natValue}
         setNatValue={setNatValue}
       />
+
+      {isCollapsed && (
+        <div className={styles.rightChevronBtn}>
+        <button
+          onClick={handleLeftClickMain}
+        >
+          <FaChevronLeft />
+        </button>
+        </div>
+      )}
     </div>
   );
 }
