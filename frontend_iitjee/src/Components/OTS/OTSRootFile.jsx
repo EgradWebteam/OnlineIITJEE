@@ -7,6 +7,7 @@ import OTSNavbar from './OTSHeaderFolder/OTSNavbar.jsx';
 import OTSMain from './OTSMainFolder/OTSMain.jsx';
 import testData from '../StudentDashboardPagesFolder/JSON_Files/WithSections.json';
 
+
 export default function OTSRootFile() {
   const { testId, studentId } = useParams();
   const navigate = useNavigate();
@@ -45,11 +46,13 @@ export default function OTSRootFile() {
     decryptParams();
   }, [testId, studentId, navigate]);
 
+
+
   return (
     <div className={styles.OTSRootMainContainer}>
       <OTSHeader />
       <OTSNavbar testName={testName} />
-      <OTSMain testData={fullTestData} />
+      <OTSMain testData={fullTestData} realTestId={realTestId} />
     </div>
   );
 }
