@@ -262,88 +262,102 @@ const handleSelectAll = (isChecked) => {
         </div>
       )}
 
-      {showForm && (
-        <form className={styles.formContainer} onSubmit={handleSubmit}>
-          <div className={styles.DocumentUploadForm}>
-            <div>
-              <label>Select Test:</label>
-              <select
-                name="test"
-                value={selectedTest}
-                onChange={(e) => setSelectedTest(e.target.value)}
-              >
-                <option value="">Select Test</option>
-                {testDetails.map((test) => (
-                  <option key={test.test_creation_table_id} value={test.test_creation_table_id}>
-                    {test.test_name}
-                  </option>
-                ))}
-              </select>
-            </div>
+{showForm && (
+  <form className={styles.formContainer} onSubmit={handleSubmit}>
+    {/* Header row with Close Button */}
+    <div className={styles.formHeader}>
+      <h3>Upload Test Paper Form</h3>
+      <button
+        type="button"
+        className={styles.closeButton}
+        onClick={() => setShowForm(false)}
+      >
+        ✖ Close
+      </button>
+    </div>
 
-            <div>
-              <label>Select Subject:</label>
-              <select
-                name="subject"
-                value={selectedSubject}
-                onChange={(e) => setSelectedSubject(e.target.value)}
-                required
-                disabled={!selectedTest}
-              >
-                <option value="">-- Select Subject --</option>
-                {subjects.map((subject) => (
-                  <option key={subject.subject_id} value={subject.subject_id}>
-                    {subject.subject_name}
-                  </option>
-                ))}
-              </select>
-            </div>
+    <div className={styles.DocumentUploadForm}>
+      <div>
+        <label>Select Test:</label>
+        <select
+          name="test"
+          value={selectedTest}
+          onChange={(e) => setSelectedTest(e.target.value)}
+        >
+          <option value="">Select Test</option>
+          {testDetails.map((test) => (
+            <option key={test.test_creation_table_id} value={test.test_creation_table_id}>
+              {test.test_name}
+            </option>
+          ))}
+        </select>
+      </div>
 
-            <div>
-              <label>Select Section:</label>
-              <select
-                name="section"
-                value={selectedSection}
-                onChange={(e) => setSelectedSection(e.target.value)}
-                required
-                disabled={!selectedSubject}
-              >
-                <option value="">-- Select Section --</option>
-                {sections.map((section) => (
-                  <option key={section.section_id} value={section.section_id}>
-                    {section.section_name}
-                  </option>
-                ))}
-              </select>
-            </div>
+      <div>
+        <label>Select Subject:</label>
+        <select
+          name="subject"
+          value={selectedSubject}
+          onChange={(e) => setSelectedSubject(e.target.value)}
+          required
+          disabled={!selectedTest}
+        >
+          <option value="">-- Select Subject --</option>
+          {subjects.map((subject) => (
+            <option key={subject.subject_id} value={subject.subject_id}>
+              {subject.subject_name}
+            </option>
+          ))}
+        </select>
+      </div>
 
-            <div>
-              <label>Upload Document:</label>
-              <input
-                type="file"
-                onChange={handleDocumentUpload}
-                onClick={handleFileClick}
-                accept=".docx"
-                required
-              />
-            </div>
-          </div>
+      <div>
+        <label>Select Section:</label>
+        <select
+          name="section"
+          value={selectedSection}
+          onChange={(e) => setSelectedSection(e.target.value)}
+          required
+          disabled={!selectedSubject}
+        >
+          <option value="">-- Select Section --</option>
+          {sections.map((section) => (
+            <option key={section.section_id} value={section.section_id}>
+              {section.section_name}
+            </option>
+          ))}
+        </select>
+      </div>
 
-          {file && isDocumentVisible && (
-            <div className={styles.DocumentContentDiv}>
-              <h2>Test Paper Content:</h2>
-              <div
-                className={styles.TestPaperContent}
-                dangerouslySetInnerHTML={{ __html: testPaperContent }}
-              />
-              {validationErrors.length === 0 && (
-                <button onClick={handleSaveDocument}>Upload</button>
-              )}
-              {loading && <div>Uploading the test paper. Please wait...</div>}
-            </div>
-          )}
-        </form>
-      )}
+      <div>
+        <label>Upload Document:</label>
+        <input
+          type="file"
+          onChange={handleDocumentUpload}
+          onClick={handleFileClick}
+          accept=".docx"
+          required
+        />
+      </div>
+    </div>
+
+    {file && isDocumentVisible && (
+      <div className={styles.DocumentContentDiv}>
+        <h2>Test Paper Content:</h2>
+        <div
+          className={styles.TestPaperContent}
+          dangerouslySetInnerHTML={{ __html: testPaperContent }}
+        />
+        {validationErrors.length === 0 && (
+          <button onClick={handleSaveDocument}>Upload</button>
+        )}
+        {loading && <div>Uploading the test paper. Please wait...</div>}
+      </div>
+    )}
+  </form>
+)}
+
+
 
       {/* Render the table with the fetched documents */}
       <div style={{padding:"3%"}}>
