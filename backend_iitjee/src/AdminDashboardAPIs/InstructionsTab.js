@@ -31,6 +31,77 @@ router.get("/InstructionsFormData", async (req, res) => {
   }
 });
 
+// router.post(
+//   "/UploadInstructions",
+//   upload.single("document"),
+//   async (req, res) => {
+//     const docxFilePath = `uploads/${req.file.filename}`;
+//     const fileName = req.file.originalname;
+
+//     try {
+//       const fileContent = await mammoth.extractRawText({ path: docxFilePath });
+//       const result = await mammoth.convertToHtml({ path: docxFilePath });
+
+//       const htmlContent = result.value;
+//       const $ = cheerio.load(htmlContent);
+
+//       // Extract base64 images from HTML (if any)
+//       const images = [];
+//       $("img").each(function () {
+//         const src = $(this).attr("src");
+//         if (src && src.startsWith("data:image/")) {
+//           const base64Data = src.replace(/^data:image\/\w+;base64,/, "");
+//           const imageBuffer = Buffer.from(base64Data, "base64");
+//           images.push(imageBuffer);
+//         }
+//       });
+
+//       // Use the first image or null if no image exists
+//       const imageToInsert = images.length > 0 ? images[0] : null;
+
+//       // Insert into iit_instructions
+//       const [instructionResult] = await db.query(
+//         "INSERT INTO iit_instructions (exam_id, instruction_heading, document_name, instruction_img) VALUES (?, ?, ?, ?)",
+//         [
+//           req.body.exam_id,
+//           req.body.instruction_heading,
+//           fileName,
+//           imageToInsert,
+//         ]
+//       );
+
+//       const instructionId = instructionResult.insertId;
+
+//       const pointsArray = fileContent.value
+//         .split("/")
+//         .map((point) => point.trim());
+//       const filteredPointsArray = pointsArray.filter((point) => point !== "");
+
+//       for (const point of filteredPointsArray) {
+//         await db.query(
+//           "INSERT INTO iit_instruction_points (exam_id, instruction_point, instruction_id) VALUES (?, ?, ?)",
+//           [req.body.exam_id, point, instructionId]
+//         );
+//       }
+
+//       fs.unlinkSync(docxFilePath); // delete uploaded file
+
+//       res.status(200).json({
+//         success: true,
+//         instructionId,
+//         message: "File uploaded successfully with instructions.",
+//       });
+//     } catch (error) {
+//       console.error("Upload failed:", error);
+//       res.status(500).json({
+//         success: false,
+//         message: "Upload failed",
+//         error: error.message,
+//       });
+//     }
+//   }
+// );
+// GET: Fetch instruction and its points by instruction_id
 router.post(
   "/UploadInstructions",
   upload.single("document"),
@@ -56,7 +127,6 @@ router.post(
         }
       });
 
-      // Use the first image or null if no image exists
       const imageToInsert = images.length > 0 ? images[0] : null;
 
       // Insert into iit_instructions
@@ -72,11 +142,10 @@ router.post(
 
       const instructionId = instructionResult.insertId;
 
-      const pointsArray = fileContent.value
-        .split("/")
-        .map((point) => point.trim());
-      const filteredPointsArray = pointsArray.filter((point) => point !== "");
-
+      //  Split by double newlines (paragraphs)
+      const rawPoints = fileContent.value.split(/\r?\n/).map(line => line.trim());
+      const filteredPointsArray = rawPoints.filter(line => line.length > 0);
+      
       for (const point of filteredPointsArray) {
         await db.query(
           "INSERT INTO iit_instruction_points (exam_id, instruction_point, instruction_id) VALUES (?, ?, ?)",
@@ -101,7 +170,8 @@ router.post(
     }
   }
 );
-// GET: Fetch instruction and its points by instruction_id
+
+
 router.get("/GetInstructionDetails", async (req, res) => {
   try {
     const [instructions] = await db.query(
