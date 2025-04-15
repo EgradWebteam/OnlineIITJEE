@@ -2,6 +2,7 @@
     background-color: white;
     border-radius: 1rem 1rem 0px 0px;
     border: none;
+    padding: 0.7rem;
 }
 .examActiveBtn,.portalActiveBtn{
     background-color: #09bffc;

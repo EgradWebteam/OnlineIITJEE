@@ -6,7 +6,8 @@ export default function SubjectsAndSectionsContainer(
   activeSubject,
   setActiveSubject,
   activeSection,
-  setActiveSection, }) {
+  setActiveSection,
+  autoSaveNATIfNeeded }) {
 
   //  Function: Get all subject names
   const getSubjects = () => {
@@ -37,6 +38,7 @@ export default function SubjectsAndSectionsContainer(
   }, [testData]); // runs only once when testData is loaded
 
   const handleSubjectClick = (subjectName) => {
+    autoSaveNATIfNeeded();
     setActiveSubject(subjectName);
     const subjectSections = getSections(subjectName);
     if (subjectSections.length > 0) {
@@ -47,6 +49,7 @@ export default function SubjectsAndSectionsContainer(
   };
 
   const handleSectionClick = (sectionName) => {
+    autoSaveNATIfNeeded();
     setActiveSection(sectionName);
   };
 

@@ -4,7 +4,7 @@ import { FaUser } from "react-icons/fa6";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard_AccountSettings.module.css";
 
-const StudentDashboard_AccountSettings = () => {
+const StudentDashboard_AccountSettings = ({userData}) => {
   const [activeSection, setActiveSection] = useState("profile");
   const [showPassword, setShowPassword] = useState({
     new: false,
@@ -19,7 +19,9 @@ const StudentDashboard_AccountSettings = () => {
       [field]: !prevState[field],
     }));
   };
-
+const studentName =userData?.candidate_name;
+const studentEmail = userData?.email_id;
+const studentContact = userData?.mobile_no;
   return (
     <div className={styles.studetnDashboard_SettingsHomePage}>
       <div className={styles.StdAccountPwdContainer}>
@@ -49,9 +51,9 @@ const StudentDashboard_AccountSettings = () => {
 
         {activeSection === "profile" && (
           <div className={styles.StudentAccountDetails}>
-            <div className={styles.StudentDetails}>Name:</div>
-            <div className={styles.StudentDetails}>Email:</div>
-            <div className={styles.StudentDetails}>Mobile Number:</div>
+            <div className={styles.StudentDetails}>Name: {studentName}</div>
+            <div className={styles.StudentDetails}>Email:{studentEmail}</div>
+            <div className={styles.StudentDetails}>Mobile Number: {studentContact}</div>
           </div>
         )}
         {activeSection === "password" && (

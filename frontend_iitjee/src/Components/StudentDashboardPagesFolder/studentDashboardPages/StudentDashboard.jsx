@@ -3,6 +3,7 @@ import StudentDashboardHeader from '../StudentDashboardPages/StudentDashboardHea
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import StudentDashboardLeftSideBar from '../StudentDashboardPages/StudentDashboardLeftSidebar.jsx';
 import { useLocation, useParams } from 'react-router-dom';
+import { useStudent } from '../../../context/StudentContext.jsx';
 // Lazy loaded components
 const StudentDashboardHome = lazy(() => import("../StudentDashboardPages/StudentDashboardHome.jsx"));
 const StudentDashboard_MyCourses = lazy(() => import("../StudentDashboardPages/StudentDashboard_MyCourses.jsx"));
@@ -12,7 +13,9 @@ const StudentDashboard_AccountSettings = lazy(() => import("../StudentDashboardP
 export default function StudentDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [isLoading, setIsLoading] = useState(true);
-
+  const studentData = JSON.parse(localStorage.getItem('studentData'));
+  console.log("studentData:", studentData);
+  const studentName = studentData?.userDetails?.candidate_name;
   const studentId = localStorage.getItem('decryptedId');
     useEffect(() => {
       const savedSection = localStorage.getItem("activeSection");
@@ -20,7 +23,7 @@ export default function StudentDashboard() {
         setActiveSection(savedSection);
       }
     }, []);
-  
+   
     const handleSectionChange = useCallback((section) => {
       setActiveSection(section);
       localStorage.setItem("activeSection", section);
@@ -32,28 +35,10 @@ export default function StudentDashboard() {
     }, []);
     const location = useLocation();
 
-    // useEffect(() => {
-    //   const params = new URLSearchParams(location.search);
-    //   const sectionFromURL = params.get("section");
-  
-    //   if (sectionFromURL) {
-    //     // Priority: URL param
-    //     setActiveSection(sectionFromURL);
-    //     localStorage.setItem("activeSection", sectionFromURL);
-    //   } else {
-    //     // Fallback: localStorage
-    //     const savedSection = localStorage.getItem("activeSection") || "dashboard";
-    //     setActiveSection(savedSection);
-    //   }
-  
-    //   setIsLoading(false);
-    // }, [location.search]);
-    
-  
     const renderStudentDashboardContent = () => {
       switch (activeSection) {
         case "dashboard":
-          return <StudentDashboardHome 
+          return <StudentDashboardHome studentName ={studentName}
           handleSectionChange={handleSectionChange}
           />;
         case "myCourses":
@@ -63,7 +48,7 @@ export default function StudentDashboard() {
         case "results":
           return <StudentDashboard_MyResults />;
         case "account":
-          return <StudentDashboard_AccountSettings />;
+          return <StudentDashboard_AccountSettings userData ={studentData?.userDetails}/>;
         default:
           return <StudentDashboardHome 
           handleSectionChange={handleSectionChange}
