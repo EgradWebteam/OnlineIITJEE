@@ -33,7 +33,7 @@ export default function OTSRootFile() {
         setRealTestId(decryptedTestId);
         setRealStudentId(decryptedStudentId);
 
-        // 🔒 Keep decryption, ✅ but use static test data
+        //  Keep decryption, but use static test data
         setFullTestData(testData);
         setTestName(testData.TestName || "Test");
       } catch (error) {
