@@ -1,47 +1,45 @@
-import React, { useState } from 'react';
-import styles from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css'; // Importing CSS module for styling
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import styles from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css';
 import headerImage from '../../../assets/EGTLogoExamHeaderCompressed.jpg';
 
 const AdminDashboardHeader = () => {
-  // State to track active button
-  const [activeButton, setActiveButton] = useState('admin');
+  const location = useLocation();
 
-  // Handle click on buttons and update activeButton state
-  const handleButtonClick = (buttonName) => {
-    setActiveButton(buttonName);
-  };
+  const isActive = (path) => location.pathname === path;
 
   return (
     <div className={styles.header}>
-      <div className="logo"></div>
+      {/* Logo/Header Image */}
+      <div className={styles.headerImg}>
+        <img src={headerImage} alt="Header Image" />
+      </div>
+
+      {/* Navigation Buttons */}
       <div className={styles.headerButtons}>
-        <button
-          className={activeButton === 'admin' ? styles.active : ''}
-          onClick={() => handleButtonClick('admin')}
-        >
-          OTS Course Admin
-          {activeButton === 'admin' && <span className={styles.activeDot}></span>}
-        </button>
-        <button
-          className={activeButton === 'profile' ? styles.active : ''}
-          onClick={() => handleButtonClick('profile')}
-        >
-          Profile
-          {activeButton === 'profile' && <span className={styles.activeDot}></span>}
-        </button>
-        <button
-          className={activeButton === 'student' ? styles.active : ''}
-          onClick={() => handleButtonClick('student')}
-        >
-          Student Info
-          {activeButton === 'student' && <span className={styles.activeDot}></span>}
-        </button>
-        <button
-          className={activeButton === 'logout' ? styles.active : ''}
-          onClick={() => handleButtonClick('logout')}
-        >
+        <Link to="/AdminDashboard">
+          <button className={isActive('/AdminDashboard') ? styles.active : ''}>
+            OTS Course Admin
+            {isActive('/AdminDashboard') && <span className={styles.activeDot}></span>}
+          </button>
+        </Link>
+
+        <Link to="/AdminProfiler">
+          <button className={isActive('/AdminProfiler') ? styles.active : ''}>
+            Profile
+            {isActive('/AdminProfiler') && <span className={styles.activeDot}></span>}
+          </button>
+        </Link>
+
+        <Link to="/StudentInfo">
+          <button className={isActive('/StudentInfo') ? styles.active : ''}>
+            Student Info
+            {isActive('/StudentInfo') && <span className={styles.activeDot}></span>}
+          </button>
+        </Link>
+
+        <button className={styles.logoutButton}>
           LogOut
-          {activeButton === 'logout' && <span className={styles.activeDot}></span>}
         </button>
       </div>
     </div>

@@ -332,6 +332,17 @@ nav ul li .active {
   justify-content: center;
   align-items: center;
 }
+.headerImg {
+  height: 70px; /* or whatever fits your layout */
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.headerImg img {
+  height: 100%; /* Make image fill the container */
+  object-fit: contain;
+}
 
 @media screen and (max-width: 768px) {
   .sidebar {

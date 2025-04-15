@@ -132,5 +132,29 @@ router.get("/QuestionPaper/:test_creation_table_id", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch question paper data" });
   }
 });
+router.post("/QusetionsSorting", async (req, res) => {
+  const { questions } = req.body;
+
+  if (!Array.isArray(questions)) {
+    return res.status(400).json({ error: "Invalid data format. 'questions' must be an array." });
+  }
+
+  try {
+    const queries = questions.map(({ question_id, sort_order }) =>
+      db.query(
+        "UPDATE iit_questions SET sort_id_text = ? WHERE question_id = ?",
+        [sort_order.toString(), question_id]
+      )
+    );
+
+    await Promise.all(queries);
+
+    res.status(200).json({ message: "Sort order updated successfully" });
+  } catch (error) {
+    console.error("Error updating sort order:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 
 module.exports = router;

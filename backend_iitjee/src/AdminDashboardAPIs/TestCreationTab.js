@@ -246,34 +246,55 @@ router.get('/TestCreationFormData', async (req, res) => {
 
   router.get('/FetchTestDataFortable', async (req, res) => {
     const sql = `
-       SELECT 
-        tct.test_creation_table_id,
-        tct.test_name,
-        cct.course_name,
-        tct.test_start_date,
-        tct.test_end_date,
-        tct.test_start_time,
-        tct.test_end_time,
-        tct.total_questions AS number_of_questions,
-        COUNT(q.question_id) AS uploaded_questions,
-        tct.status AS test_activation,
-        tct.total_marks,
-        tct.duration
-    FROM iit_test_creation_table tct
-    JOIN iit_course_creation_table cct ON tct.course_creation_id = cct.course_creation_id
-    LEFT JOIN iit_questions q ON tct.test_creation_table_id = q.test_creation_table_id
-    GROUP BY 
-        tct.test_creation_table_id, 
-        tct.test_name, 
-        cct.course_name, 
-        tct.test_start_date, 
-        tct.test_end_date, 
-        tct.test_start_time, 
-        tct.test_end_time, 
-        tct.total_questions, 
-        tct.status,
-        tct.total_marks,
-        tct.duration;
+     SELECT 
+  tct.test_creation_table_id,
+  tct.test_name,
+  tct.course_creation_id,
+  cct.course_name,
+  tct.course_type_of_test_id,
+  tct.instruction_id,
+  tct.options_pattern_id,
+  tct.test_start_date,
+  tct.test_end_date,
+  tct.test_start_time,
+  tct.test_end_time,
+  tct.total_questions AS number_of_questions,
+  COUNT(q.question_id) AS uploaded_questions,
+  tct.status AS test_activation,
+  tct.total_marks,
+  tct.duration,
+  JSON_ARRAYAGG(
+    JSON_OBJECT(
+      'section_id', s.section_id,
+      'section_name', s.section_name,
+      'no_of_questions', s.no_of_questions,
+      'subject_id', s.subject_id
+    )
+  ) AS sections
+FROM iit_db.iit_test_creation_table tct
+JOIN iit_db.iit_course_creation_table cct 
+  ON tct.course_creation_id = cct.course_creation_id
+LEFT JOIN iit_db.iit_questions q 
+  ON tct.test_creation_table_id = q.test_creation_table_id
+LEFT JOIN iit_db.iit_sections s
+  ON s.test_creation_table_id = tct.test_creation_table_id
+GROUP BY 
+  tct.test_creation_table_id, 
+  tct.test_name,
+  tct.course_creation_id,
+  cct.course_name, 
+  tct.course_type_of_test_id,
+  tct.instruction_id,
+  tct.options_pattern_id,
+  tct.test_start_date, 
+  tct.test_end_date, 
+  tct.test_start_time, 
+  tct.test_end_time, 
+  tct.total_questions, 
+  tct.status,
+  tct.total_marks,
+  tct.duration;
+
     `;
 
     try {
@@ -284,6 +305,23 @@ router.get('/TestCreationFormData', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+router.post('/toggleTestStatus', async (req, res) => {
+  const { testCreationTableId, newStatus } = req.body;
+
+  try {
+    await db.query(
+      'UPDATE iit_test_creation_table SET status = ? WHERE test_creation_table_id = ?',
+      [newStatus, testCreationTableId]
+    );
+
+    res.status(200).json({ message: `Test status updated to ${newStatus}` });
+  } catch (error) {
+    console.error('Error updating test status:', error);
+    res.status(500).json({ message: 'Failed to update test status' });
+  }
+});
+
+
 
   
 

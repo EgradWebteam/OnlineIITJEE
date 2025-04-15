@@ -24,9 +24,31 @@ const TestCreationTab = () => {
   };
 
   
-  const handleToggle = (row) => {
-    console.log("Toggle Activation", row);
+  const handleActivationToggle = async (row) => {
+    const { test_creation_table_id, test_activation } = row;
+  
+    const newStatus = test_activation === 'active' ? 'inactive' : 'active';
+  
+    try {
+      const response = await axios.post(`${BASE_URL}/TestCreation/toggleTestStatus`, {
+        testCreationTableId: test_creation_table_id,
+        newStatus, // Pass the new status to update
+      });
+
+      fetchTestTableData()
+      // Optionally update UI state after toggle
+      // Example: Refresh or update row status locally
+      // You can lift the `data` state to parent and update it there if needed
+  
+    } catch (error) {
+      console.error('Error toggling test status:', error);
+      alert('Failed to toggle test status.');
+    }
   };
+  
+  
+  
+  
   
   const handleAssign = (row) => {
     console.log("Assign to Test", row);
@@ -36,8 +58,9 @@ const TestCreationTab = () => {
     console.log("Download Paper", row);
   };
   const handleAddTestClick = () => {
-    setShowAddTestForm(true);
+    setSelectedTestData(null); 
     fetchFormData(); 
+    setShowAddTestForm(true);
   };
   const handleEdit = (testData) => {
     console.log("Selected Test Data for Edit:", testData); 
@@ -45,6 +68,7 @@ const TestCreationTab = () => {
     fetchFormData(); 
     setShowAddTestForm(true);
   };
+  
   
   const handleDelete = async (testData) => {
     const confirmDelete = window.confirm(
@@ -94,6 +118,7 @@ const TestCreationTab = () => {
       <div className={styles.pageHeading}>TEST CREATION</div>
 
       <button className={styles.addCourseBtn} onClick={handleAddTestClick}>
+        
         Add Test
       </button>
 
@@ -111,9 +136,9 @@ const TestCreationTab = () => {
       {/* Table for displaying test data */}
       <div  style={{padding:"3%"}} className={styles.tableWrapper}>
       <DynamicTable
-  type="testCreation" // this activates the dropdown with test-related actions
+  type="test"
   columns={[
-    { header: "S.No", accessor: "serial" },
+    { header: "sno", accessor: "test_creation_table_id" },
     { header: "Test Name", accessor: "test_name" },
     { header: "Selected Course", accessor: "course_name" },
     { header: "Test Started", accessor: "test_start_date" },
@@ -124,10 +149,11 @@ const TestCreationTab = () => {
     { header: "Questions Uploaded", accessor: "uploaded_questions" },
 
   ]}
+
   data={testTableData} // array of test data
   onEdit={handleEdit}
   onDelete={handleDelete}
-  onToggle={handleToggle}
+  onToggle={handleActivationToggle}
   onAssign={handleAssign}
   onDownload={handleDownload}
 />

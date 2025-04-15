@@ -9,6 +9,7 @@ export const StudentProvider = ({ children }) => {
 
   // 🔍 Log whenever studentData changes
   useEffect(() => {
+
     console.log('Updated studentData in context:', studentData);
   }, [studentData]);
 

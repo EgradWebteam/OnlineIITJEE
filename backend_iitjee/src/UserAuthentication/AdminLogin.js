@@ -158,5 +158,22 @@ router.post("/reset-passwordadmin", async (req, res) => {
         if (connection) connection.release();
       }
 });
+router.get('/fetchTotalData', async (req, res) => {
+  const sql = `
+    SELECT
+      (SELECT COUNT(*) FROM iit_db.iit_questions) AS total_questions,
+      (SELECT COUNT(*) FROM iit_db.iit_student_registration) AS total_users_registered, -- Correct table name here
+      (SELECT COUNT(*) FROM iit_db.iit_questions WHERE question_id IS NOT NULL) AS total_questions_uploaded,
+      (SELECT COUNT(*) FROM iit_db.iit_course_creation_table) AS total_courses,
+      (SELECT COUNT(*) FROM iit_db.iit_test_creation_table) AS total_tests;
+  `;
 
+  try {
+    const [rows] = await db.query(sql); // db.query is assumed to be a Promise-based query method
+    res.json(rows[0]); // Respond with the aggregated data
+  } catch (err) {
+    console.error('Error fetching totals:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 module.exports = router;

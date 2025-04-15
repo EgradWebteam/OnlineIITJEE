@@ -64,6 +64,7 @@ const StudentInfo = React.lazy(() => import('./Components/AdminDasboardPagesFold
 const GeneralInstructions = React.lazy(() => import('./Components/OTS/InstructionsFolder/GeneralInstructions.jsx'));
 const PageNotFound =   React.lazy(() => import('./Components/OTS/InstructionsFolder/PageNotFound.jsx'));
 const ExamInstrctions =  React.lazy(() => import( './Components/OTS/InstructionsFolder/ExamInstrctions.jsx'));
+const AdminProfiler=React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/AdminProfiler.jsx'));
 function App() {
   return (
    <Suspense>
@@ -85,6 +86,7 @@ function App() {
       <Route path='/GeneralInstructions/:testId/:studentId' element={<GeneralInstructions/>}/>
       <Route path='/Error' element={<PageNotFound/>}/>
       <Route path='/ExamInstructions/:testId/:studentId' element={<ExamInstrctions/>}/>
+      <Route path="/AdminProfiler" element={<AdminProfiler />} />
     </Routes>
     </BrowserRouter>
    </Suspense>

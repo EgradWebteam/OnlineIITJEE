@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate,Link } from 'react-router-dom';
 import styles from "../../../Styles/StudentDashboardCSS/Student.module.css"; 
 import stdLogo from '../../../assets/logoCap.jpeg';
-import MainHeader from '../../LandingPagesFolder/mainPageHeaderFooterFolder/MainHeader';
+import MainHeader from '../../LandingPagesFolder/MainPageHeaderFooterFolder/mainHeader.jsx';
 import MainFooter from '../../LandingPagesFolder/mainPageHeaderFooterFolder/MainFooter';
 import { BASE_URL } from "../../../config/apiConfig.js";
 import StudentLoginForm from './studentLoginForm';
@@ -90,7 +90,7 @@ debugger
       });
       const data = await response.json();
       if (response.ok) {
-        setIsForgotPassword(false);  // Go back to login form after success
+        setIsForgotPassword(true);  // Go back to login form after success
         setIsResetPassword(true);  // Show reset password form with reset code
         alert("Password reset instructions have been sent to your email.");
       } else {
@@ -103,6 +103,7 @@ debugger
 
   // Handle reset password form submission
   const handleResetPassword = async (e) => {
+    debugger
     e.preventDefault();
     if (!resetCode || !newPassword || !confirmPassword) {
       alert("Please enter reset code, new password, and confirm password.");

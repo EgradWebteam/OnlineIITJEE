@@ -401,5 +401,50 @@ GROUP BY c.course_creation_id;
     conn.release();
   }
 });
+router.post("/toggleCourseStatus", async (req, res) => {
+  const { courseCreationTableId } = req.body;  // Get the course ID from request body
+
+  if (!courseCreationTableId) {
+    return res.status(400).json({ success: false, message: "Course ID is required" });
+  }
+
+  const conn = await db.getConnection();
+  await conn.beginTransaction();
+
+  try {
+    // Get the current activation status of the course
+    const [currentCourse] = await conn.query(
+      "SELECT active_course FROM iit_course_creation_table WHERE course_creation_id = ?",
+      [courseCreationTableId]
+    );
+
+    if (currentCourse.length === 0) {
+      return res.status(404).json({ success: false, message: "Course not found" });
+    }
+
+    const currentStatus = currentCourse[0].active_course;
+    const newStatus = currentStatus === "active" ? "inactive" : "active";  // Toggle the status
+
+    // Update the course's activation status
+    await conn.query(
+      "UPDATE iit_course_creation_table SET active_course = ? WHERE course_creation_id = ?",
+      [newStatus, courseCreationTableId]
+    );
+
+    await conn.commit();
+
+    res.status(200).json({
+      success: true,
+      message: `Course status updated to ${newStatus}`,
+    });
+  } catch (err) {
+    await conn.rollback();
+    console.error("❌ Error toggling course status:", err);
+    res.status(500).json({ success: false, error: err.message });
+  } finally {
+    conn.release();
+  }
+});
+
 
 module.exports = router;

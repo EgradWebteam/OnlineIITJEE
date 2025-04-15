@@ -214,12 +214,12 @@ router.post("/forgot-password", async (req, res) => {
 
 // reset-password route to reset the password
 router.post("/reset-password", async (req, res) => {
-  const { email, resetCode, newPassword } = req.body;
+  const { email, newPassword } = req.body;
 
   try {
     // 1. Find the user by email
     const sql = `
-      SELECT student_registration_id, email_id, reset_code 
+      SELECT student_registration_id 
       FROM iit_student_registration 
       WHERE email_id = ?;
     `;
@@ -231,16 +231,10 @@ router.post("/reset-password", async (req, res) => {
 
     const user = userRows[0];
 
-    // 2. Verify if the reset code matches
-    if (user.reset_code !== resetCode) {
-      return res.status(400).json({ message: "Invalid reset code" });
-    }
-
-    // 3. Hash the new password
+    // 2. Hash the new password
     const hashedPassword = await bcrypt.hash(newPassword.trim(), 10);
-    console.log("New hashed password:", hashedPassword); // Optional: for debug
 
-    // 4. Update password in DB and clear reset code
+    // 3. Update password in DB and clear reset code (optional)
     const updatePasswordSql = `
       UPDATE iit_student_registration 
       SET password = ?, reset_code = NULL 
@@ -254,6 +248,7 @@ router.post("/reset-password", async (req, res) => {
     res.status(500).json({ message: "Error resetting password" });
   }
 });
+
 // Route: POST /api/studentLogin
 router.post("/studentLogin", async (req, res) => {
   let { email, password, sessionId } = req.body;

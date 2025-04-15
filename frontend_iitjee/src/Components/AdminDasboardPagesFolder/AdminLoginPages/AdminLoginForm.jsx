@@ -47,12 +47,15 @@ const AdminLoginForm = () => {
 
       const data = await response.json();
       setLoading(false);
-
-      if (response.ok) {
-        localStorage.setItem('jwt_token', data.token);
-        setMessage({ type: 'success', text: 'Login successful.' });
+ if (response.ok) {
+        const loginAuth={
+          token:data.token,
+          adminName:data.name,
+          adminEmail:data.email
+        }
+        localStorage.setItem("adminInfo", JSON.stringify(loginAuth));
         navigate('/AdminDashboard');
-      } else {
+      }else {
         setMessage({ type: 'error', text: data.message || 'Login failed. Please try again.' });
       }
     } catch (error) {

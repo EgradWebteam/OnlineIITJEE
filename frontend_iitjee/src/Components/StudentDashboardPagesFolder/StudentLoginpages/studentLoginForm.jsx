@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Importing React icons
 import styles from "../../../Styles/StudentDashboardCSS/Student.module.css"; 
 
@@ -17,7 +17,7 @@ export default function StudentLoginForm({
   setResetCode, 
   handleLogin, 
   handleForgotPassword, 
-  handleResetPassword 
+  handleResetPassword // This is the function that handles the reset password API call
 }) {
 
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
@@ -32,6 +32,26 @@ export default function StudentLoginForm({
 
   // Validation function for new password and confirm password
   const isPasswordValid = newPassword && confirmPassword && newPassword === confirmPassword;
+
+  // Function to handle button text change depending on mode
+  const getButtonText = () => {
+
+    if (isForgotPassword) {
+      return isResetPassword ? "Save Password" : "Send Reset Code";
+    } else {
+      return "Login";
+    }
+  };
+
+  // Determine if the button should be disabled
+  const isButtonDisabled = () => {
+    if (isForgotPassword) {
+      return isResetPassword ? !isPasswordValid : false;
+    } else {
+      return false;
+    }
+  };
+
 
   return (
     <form onSubmit={isForgotPassword ? (isResetPassword ? handleResetPassword : handleForgotPassword) : handleLogin}>
@@ -140,8 +160,8 @@ export default function StudentLoginForm({
 
       {/* Submit button */}
       <div className={styles.studentLoginFormSubmit}>
-        <button type="submit" disabled={isResetPassword && !isPasswordValid}> 
-          {isForgotPassword ? (isResetPassword ? "Submit New Password" : "Send Reset Code") : "Login"}
+        <button type="submit" disabled={isButtonDisabled()}> 
+          {getButtonText()} {/* Dynamic button text */}
         </button>
       </div>
     </form>
