@@ -13,7 +13,7 @@ const CourseCreationTab = () => {
   const [editCourseData, setEditCourseData] = useState(null); 
   // Fetch courses data from the new API
   const fetchCourses = () => {
-
+    debugger
     fetch(`${BASE_URL}/CourseCreation/GetAllCourses`)
       .then((res) => res.json())
       .then((data) => {
@@ -96,7 +96,7 @@ const CourseCreationTab = () => {
 
     ? Object.keys(courses[0])
 
-        .filter((key) => key !== "subject_ids" && key !== "exam_ids" && key !=="card_image") // Filter out 'subject_ids' and 'exam_ids'
+        .filter((key) => key !== "subject_ids" && key !== "exam_ids" && key !=="card_image" && key !=="course_type_ids") // Filter out 'subject_ids' and 'exam_ids'
         .map((key) => ({
           header: key.replace(/_/g, " ").toUpperCase(),
           accessor: key,
@@ -134,19 +134,15 @@ const CourseCreationTab = () => {
       {showForm && (
   <div className={Styles.modal}>
     <div className={Styles.modalContent}>
+      
+   
       <CourseForm
         onCourseCreated={handleCourseCreated}
-        courseData={editCourseData}             
+        courseData={editCourseData}    
+        setShowForm={setShowForm}  
+        setEditCourseData={setEditCourseData}       
       />
-      <button
-        className={Styles.closeBtn}
-        onClick={() => {
-          setShowForm(false);
-          setEditCourseData(null);              
-        }}
-      >
-        Close
-      </button>
+      
     </div>
   </div>
 )}

@@ -30,7 +30,7 @@ const  OrvlLeftNav = ({ onMenuClick, activeComponent }) => {
           onClick={() => onMenuClick('topic-creation')}
         >
           <DiGhostSmall className={styles.icon} />
-           orvl Test Creation
+           orvl Topic Creation
         </li>
       
       </ul>

@@ -17,26 +17,54 @@ function generatePassword(length = 6) {
   }
   return password;
 }
-// Get all registered students
+// ✅ GET all students (basic info only)
 router.get("/StudentInfo", async (req, res) => {
   try {
     const query = `
-      SELECT
-        student_registration_id AS id,
-        candidate_name AS name,
-        email_id AS email,
-        contact_no AS mobileNumber,
-        student_activation
+      SELECT student_registration_id AS id, candidate_name AS name,
+             email_id AS email, contact_no AS mobileNumber, student_activation
       FROM iit_student_registration
     `;
- 
     const [rows] = await db.query(query);
     res.status(200).json(rows);
   } catch (error) {
     console.error("Error fetching students:", error);
-    res.status(500).json({ message: "Error fetching students from database" });
+    res.status(500).json({ message: "Error fetching students" });
+  }
+});// Get all registered students
+// ✅ GET full student details including course info
+router.get("/StudentInfo/:id", async (req, res) => {
+  const studentId = req.params.id;
+  try {
+    const studentQuery = `
+      SELECT student_registration_id AS id, candidate_name AS name,
+             email_id AS email, contact_no AS mobileNumber, student_activation
+      FROM iit_student_registration
+      WHERE student_registration_id = ?
+    `;
+    const [studentRows] = await db.query(studentQuery, [studentId]);
+
+    if (studentRows.length === 0) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    const coursesQuery = `
+      SELECT course_creation_id AS courseId
+      FROM iit_student_buy_courses
+      WHERE student_registration_id = ?
+    `;
+    const [courseRows] = await db.query(coursesQuery, [studentId]);
+
+    const student = studentRows[0];
+    const courses = courseRows.map(row => row.courseId);
+
+    res.status(200).json({ ...student, courses });
+  } catch (error) {
+    console.error("Error fetching student details:", error);
+    res.status(500).json({ message: "Error fetching student details" });
   }
 });
+
 // ✅ 🔽 ADD THIS NEW ROUTE BELOW (or above) without replacing the above one
 router.get("/coursesName", async (req, res) => {
   try {
@@ -122,29 +150,54 @@ router.post("/StudentInfo", async (req, res) => {
  
 // Update student details
 router.put("/StudentInfo/:id", async (req, res) => {
+  const studentId = req.params.id;
+  const { name, email, mobileNumber, student_activation, courses = [] } = req.body;
+
+  const connection = await db.getConnection();
   try {
-    const studentId = req.params.id;
-    const { student_activation } = req.body;
- 
-    if (student_activation === undefined) {
-      return res.status(400).json({ message: "student_activation value is required" });
-    }
- 
-    const updateQuery = `
+    await connection.beginTransaction();
+
+    // Update student basic info
+    const updateStudentQuery = `
       UPDATE iit_student_registration
-      SET student_activation = ?
+      SET candidate_name = ?, email_id = ?, contact_no = ?, student_activation = ?
       WHERE student_registration_id = ?
     `;
-    await db.query(updateQuery, [student_activation, studentId]);
- 
-    res.status(200).json({
-      message: `Student has been ${student_activation === 1 ? 'deactivated' : 'activated'} successfully`,
-    });
+    await connection.query(updateStudentQuery, [
+      name,
+      email,
+      mobileNumber,
+      student_activation,
+      studentId,
+    ]);
+
+    // Remove old course mappings
+    const deleteCoursesQuery = `
+      DELETE FROM iit_student_buy_courses
+      WHERE student_registration_id = ?
+    `;
+    await connection.query(deleteCoursesQuery, [studentId]);
+
+    // Insert new course mappings
+    const insertCourseQuery = `
+      INSERT INTO iit_student_buy_courses (student_registration_id, course_creation_id, transaction_status, user_purchased_time)
+      VALUES (?, ?, 'paid', NOW())
+    `;
+    for (const courseId of courses) {
+      await connection.query(insertCourseQuery, [studentId, courseId]);
+    }
+
+    await connection.commit();
+    res.status(200).json({ message: "Student info and courses updated successfully." });
+
   } catch (error) {
-    console.error("Error updating student activation:", error);
-    res.status(500).json({ message: "Error updating student activation" });
+    await connection.rollback();
+    console.error("Error updating student and courses:", error);
+    res.status(500).json({ message: "Error updating student and courses." });
+  } finally {
+    connection.release();
   }
 });
- 
+
  
 module.exports = router;

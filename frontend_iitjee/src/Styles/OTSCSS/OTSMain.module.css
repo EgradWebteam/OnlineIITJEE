@@ -375,6 +375,7 @@ cursor: pointer;
     justify-content: center;
     border: none;
     color: black;
+    cursor: pointer;
   }
 
 /* QUESTIOPN NAVIGATION BTN CSS */
@@ -387,6 +388,7 @@ cursor: pointer;
 .markedForReviewNavigationBtn,.clearResponseBtn, .previousBtn,.saveandnextNavigationBtn,.submitNavigationBtn{
   border: 1px solid rgb(153, 151, 151);
   padding: 10px;
+  cursor: pointer;
 }
 .saveandnextNavigationBtn{
   background-color: rgb(69, 140, 207);
@@ -628,6 +630,7 @@ cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-top: 1px solid gainsboro;
 }
 .nextBtnDiv button, .previuosBtn{
   background-color: #04c7f8;
@@ -637,6 +640,7 @@ cursor: pointer;
   color: white;
   border: 1px solid #04c7f8;
   border-radius: 5px;
+  margin: 1rem;
 }
 .nextBtnArrow{
   font-size: 15px;
@@ -663,8 +667,14 @@ padding: 3rem;
   min-height: 80vh;
   overflow-y: auto;
 }
+.termandConditionsMainDiv{
+  border-top: 1px solid gainsboro;
+}
 .termsandConditionsDiv{
   margin: 1rem;
+}
+.termsandConditionsDiv input{
+  cursor: pointer;
 }
 .readytoBeginDiv{
   display: flex;
@@ -754,8 +764,270 @@ padding: 10px;
 border: 1px solid #ddd;
 border-radius: 10px;
 }
+/*STUDENT REPORT CSS */
+.StudentReportMainDiv{
+  background: #eef1fbff;
+  height: 100vh;
+  overflow: hidden;
+}
+.StudentReportSubDiv{
+  background: rgb(255, 255, 255);
+  width: 80vw;
+  margin: 0 auto;
+}
+.studentReportHeaderMain{
+  display: flex;
+  background: #eef1fb;
+  justify-content: space-between;
+  padding: 9px 0;
+}
+.studentReportHeaderDiv{
+  color: #00aff0;
+  font-family: "PT Serif", serif;
+  font-size: 35px;
+}
+.studentReportBackButton {
+  width: 100px;
+  height: 40px;
+  margin-right: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #198754;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  border: none;
+}
+.studentReportBackArrow{
+  font-size: 30px;
+}
+.studentReportTestDetailsContiner{
+  margin: 2rem;
+  padding: 10px 0px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;;
+}
+.testDetailsContainerSub{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+  gap: 3rem;
+}
+.testDetailsContainerSub li{
+ font-size: 20px;
+}
+.studentReportPerformanceBtns{
+ display: flex;
+ align-items: center;
+ gap: 1.5rem;
+ margin: 1rem;
+}
+.performanceButtonsInStudentReport{
+  color: #fff;
+  padding: 8px 15px;
+  background-color: #2cd1ee;
+  border-radius: 14px;
+  font-weight: bold;
+  font-size: 16px;
+  border: 0;
+  user-select: none;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+.performanceBtnActive{
+  background: #198754;
+}
+.studentPerformanceReportMain, .solutionContainerMain{
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 75vh;
+}
+.AIRholderDiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f1fe;
+  border: 1px solid white;
+}
+.airRankSubDiv{
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  flex: 1 1;
+}
+.timeSpentContainer{
+  width: 50%;
+  text-align: left;
+  padding-right: 16px;
+}
+.timeProgressPara{
+  font-size: 15px;
+  text-decoration: underline;
+  padding: 5px;
+  font-weight: 700;
+}
+.timeProgressContainer{
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  line-height: 2.1rem;
+}
+.timeLeftSpentPara{
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+.timeLeftIcon, .timeSpentIcon{
+  width: 18px;
+  height: 15px;
+  display: block;
+}
+.timeLeftIcon{
+  background: #6666e6;
+}
+.timeSpentIcon{
+  background:rgb(230 102 102);
+}
+.studentReportSubjectWiseConatiner{
+  margin: auto;
+  padding: 8px;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+.subjectWiseReportHeading{
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: underline;
+}
+.subjectwiseTableMainDiv{
+  width: 97%;
+  overflow: auto;
+}
+.tableMain{
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+.tableTh{
+  background-color: #f2f2ff;
+  font-weight: bold;
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+.tableTd{
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+.tableTrTotalMarks{
+  background-color: #198754 !important;
+  font-weight: bold;
+  color: white;
+}
+.subjectDropDownContainer{
+  margin: 1rem;
+  padding: 10px;
+}
+.subjectWiseDropDown{
+  width: 245px !important;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 3px;
+}
+.questionSolutionsDiv{
+  margin: 2rem 2rem 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  padding: 1rem;
+  gap: 7px;
+  position: relative;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.waterMark{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: waterMarkMoving 22s infinite;
+  color: rgba(192, 184, 184, 0.5);
+}
+.topWaterMark{
+  animation: waterMarkMoving 15s infinite;
+  position: absolute;
+  left: 62px;
+  z-index: 99;
+}
+.bottomWaterMark{
+  animation: waterMarkMoving 15s infinite;
+  position: absolute;
+  left: 500px;
+  z-index: 99;
+}
+.middleWaterMark{
+  animation: waterMarkMoving 15s infinite;
+  position: absolute;
+  left: 200px;
+  z-index: 99;
+}
+.rightWaterMark{
+  animation: waterMarkMoving 15s infinite;
+  position: absolute;
+  left: 800px;
+  z-index: 99;
+}
 
+@keyframes waterMarkMoving {
+  0% {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  25% {
+    top: 0;
+    left: 0;
+    transform: translate(0, 0);
+  }
+  50% {
+    top: 0;
+    left: 100%;
+    transform: translate(-100%, 0);
+  }
+  50% {
+    top: 100%;
+    left: 100%;
+    transform: translate(-100%, -100%);
+  }
+  100% {
+    top: 100%;
+    left: 0;
+    transform: translate(0, -100%);
+  }
+}
 
+/* TIMER CSS */
+.OtsTimerMainDiv{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgb(204, 204, 204);
+  padding: 10px;
+}
+.OtsTimerDiv{
+  font-size: 18px;
+  font-weight: 700;
+}
 
 @media (max-width:1280px) {
   .OTSMainFileMainContainer{

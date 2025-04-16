@@ -25,20 +25,22 @@ const TestCreationTab = () => {
 
   
   const handleActivationToggle = async (row) => {
-    const { test_creation_table_id, test_activation } = row;
+    const { test_creation_table_id, test_activation, number_of_questions, uploaded_questions } = row;
+  
+    if (number_of_questions !== uploaded_questions) {
+      alert("Cannot activate the test because the total questions do not match the uploaded questions.");
+      return; 
+    }
   
     const newStatus = test_activation === 'active' ? 'inactive' : 'active';
   
     try {
       const response = await axios.post(`${BASE_URL}/TestCreation/toggleTestStatus`, {
         testCreationTableId: test_creation_table_id,
-        newStatus, // Pass the new status to update
+        newStatus, 
       });
-
-      fetchTestTableData()
-      // Optionally update UI state after toggle
-      // Example: Refresh or update row status locally
-      // You can lift the `data` state to parent and update it there if needed
+  
+      fetchTestTableData();
   
     } catch (error) {
       console.error('Error toggling test status:', error);
@@ -48,11 +50,7 @@ const TestCreationTab = () => {
   
   
   
-  
-  
-  const handleAssign = (row) => {
-    console.log("Assign to Test", row);
-  };
+
   
   const handleDownload = (row) => {
     console.log("Download Paper", row);

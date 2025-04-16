@@ -66,6 +66,7 @@ const PageNotFound =   React.lazy(() => import('./Components/OTS/InstructionsFol
 const ExamInstrctions =  React.lazy(() => import( './Components/OTS/InstructionsFolder/ExamInstrctions.jsx'));
 const AdminProfiler=React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/AdminProfiler.jsx'));
 const OrvlDashboard=React.lazy(()=>import("./Components/AdminDasboardPagesFolder/OrvlAdminDashboard/OrvlAdminDashboard.jsx"))
+const StudentReportMain  = React.lazy(()=>import('./Components/OTS/ResultsFolderOTS/StudentReportMain.jsx'));
 function App() {
   return (
    <Suspense>
@@ -92,6 +93,7 @@ function App() {
       <Route path='/GeneralInstructions/:testId' element={<GeneralInstructions/>}/>
       <Route path='/ExamInstructions/:testId' element={<ExamInstrctions/>}/>
       <Route path='/OTSRootFile/:testId' element={<OTSRootFile/>}/>
+      <Route path='/StudentReport' element={<StudentReportMain/>} />
     </Routes>
     </BrowserRouter>
    </Suspense>
