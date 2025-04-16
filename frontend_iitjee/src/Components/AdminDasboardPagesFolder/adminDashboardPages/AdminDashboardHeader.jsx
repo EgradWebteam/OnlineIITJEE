@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styles from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css';
 import headerImage from '../../../assets/EGTLogoExamHeaderCompressed.jpg';
@@ -14,7 +14,7 @@ const navigate = useNavigate();
   };
   const handleLogoutClick = (buttonName) => {
     setActiveButton(buttonName);
-    localStorage.removeItem('admin_auth'); 
+    localStorage.removeItem('adminInfo'); 
     navigate("/")// Remove the token from local storage
   }
   return (
