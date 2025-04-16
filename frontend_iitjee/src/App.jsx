@@ -65,6 +65,8 @@ const GeneralInstructions = React.lazy(() => import('./Components/OTS/Instructio
 const PageNotFound =   React.lazy(() => import('./Components/OTS/InstructionsFolder/PageNotFound.jsx'));
 const ExamInstrctions =  React.lazy(() => import( './Components/OTS/InstructionsFolder/ExamInstrctions.jsx'));
 const AdminProfiler=React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/AdminProfiler.jsx'));
+const OrvlDashboard=React.lazy(()=>import("./Components/AdminDasboardPagesFolder/OrvlAdminDashboard/OrvlAdminDashboard.jsx"))
+const StudentReportMain  = React.lazy(()=>import('./Components/OTS/ResultsFolderOTS/StudentReportMain.jsx'));
 function App() {
   return (
    <Suspense>
@@ -87,6 +89,11 @@ function App() {
       <Route path='/Error' element={<PageNotFound/>}/>
       <Route path='/ExamInstructions/:testId/:studentId' element={<ExamInstrctions/>}/>
       <Route path="/AdminProfiler" element={<AdminProfiler />} />
+      <Route path="/OrvlDashboard" element={<OrvlDashboard />} />
+      <Route path='/GeneralInstructions/:testId' element={<GeneralInstructions/>}/>
+      <Route path='/ExamInstructions/:testId' element={<ExamInstrctions/>}/>
+      <Route path='/OTSRootFile/:testId' element={<OTSRootFile/>}/>
+      <Route path='/StudentReport' element={<StudentReportMain/>} />
     </Routes>
     </BrowserRouter>
    </Suspense>

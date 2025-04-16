@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import CourseForm from "./CourseForm"; // updated component name
-import DynamicTable from "./DynamicTable";
+import CourseForm from "./ORVLCourseForm.jsx"; // updated component name
+import DynamicTable from "./ORVLDynamicTable.jsx";
 import { BASE_URL } from "../../../../apiConfig";
 import Styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css";
 
@@ -13,7 +13,7 @@ const CourseCreationTab = () => {
   const [editCourseData, setEditCourseData] = useState(null); 
   // Fetch courses data from the new API
   const fetchCourses = () => {
-    debugger
+
     fetch(`${BASE_URL}/CourseCreation/GetAllCourses`)
       .then((res) => res.json())
       .then((data) => {
@@ -134,15 +134,19 @@ const CourseCreationTab = () => {
       {showForm && (
   <div className={Styles.modal}>
     <div className={Styles.modalContent}>
-      
-   
       <CourseForm
         onCourseCreated={handleCourseCreated}
-        courseData={editCourseData}    
-        setShowForm={setShowForm}  
-        setEditCourseData={setEditCourseData}       
+        courseData={editCourseData}             
       />
-      
+      <button
+        className={Styles.closeBtn}
+        onClick={() => {
+          setShowForm(false);
+          setEditCourseData(null);              
+        }}
+      >
+        Close
+      </button>
     </div>
   </div>
 )}

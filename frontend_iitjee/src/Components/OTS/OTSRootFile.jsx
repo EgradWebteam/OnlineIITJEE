@@ -18,6 +18,35 @@ export default function OTSRootFile() {
   // const [testName, setTestName] = useState('');
   const [fullTestData, setFullTestData] = useState({});
 
+  // useEffect(() => {
+  //   const token = sessionStorage.getItem("navigationToken");
+  //   if (!token) {
+  //     navigate("/Error");
+  //     return;
+  //   }
+
+  //   const decryptParams = async () => {
+  //     try {
+  //       const [decryptedTestId, decryptedStudentId] = await decryptBatch([
+  //         decodeURIComponent(testId),
+  //         decodeURIComponent(studentId),
+  //       ]);
+
+  //       setRealTestId(decryptedTestId);
+  //       setRealStudentId(decryptedStudentId);
+
+  //       //  Keep decryption, but use static test data
+  //       // setFullTestData(testData);
+  //       // setTestName(testData.TestName || "Test");
+  //     } catch (error) {
+  //       console.error("Decryption failed:", error);
+  //       navigate("/Error");
+  //     }
+  //   };
+
+  //   decryptParams();
+  // }, [testId, studentId, navigate]);
+
   useEffect(() => {
     const token = sessionStorage.getItem("navigationToken");
     if (!token) {
@@ -27,17 +56,19 @@ export default function OTSRootFile() {
 
     const decryptParams = async () => {
       try {
-        const [decryptedTestId, decryptedStudentId] = await decryptBatch([
-          decodeURIComponent(testId),
-          decodeURIComponent(studentId),
-        ]);
-
-        setRealTestId(decryptedTestId);
-        setRealStudentId(decryptedStudentId);
-
-        //  Keep decryption, but use static test data
-        // setFullTestData(testData);
-        // setTestName(testData.TestName || "Test");
+        if (studentId) {
+          const [decryptedTestId, decryptedStudentId] = await decryptBatch([
+            decodeURIComponent(testId),
+            decodeURIComponent(studentId),
+          ]);
+          setRealTestId(decryptedTestId);
+          setRealStudentId(decryptedStudentId);
+        } else {
+          const [decryptedTestId] = await decryptBatch([
+            decodeURIComponent(testId),
+          ]);
+          setRealTestId(decryptedTestId);
+        }
       } catch (error) {
         console.error("Decryption failed:", error);
         navigate("/Error");
@@ -46,8 +77,6 @@ export default function OTSRootFile() {
 
     decryptParams();
   }, [testId, studentId, navigate]);
-
-
   
   const [testPaperData, setTestPaperData] = useState([]);
  
@@ -69,8 +98,8 @@ const testName = testPaperData.TestName
   return (
     <div className={styles.OTSRootMainContainer}>
       <OTSHeader />
-      <OTSNavbar testName={testName} testData={testPaperData}/>
-      <OTSMain testData={testPaperData}  />
+      <OTSNavbar realTestId={realTestId} testName={testName} testData={testPaperData}/>
+      <OTSMain testData={testPaperData} realStudentId={realStudentId} realTestId={realTestId} />
     </div>
   );
 }

@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../../Styles/AdminDashboardCSS/AdminDashboard.module.css";
-import ArrangeQuestions from "./ArrangeQuestion";
-import ViewQuestions from "./ViewQuestions";
-import ViewResults from "./ViewResults"; // Assuming ViewResults is another component
-import { RxWidth } from "react-icons/rx";
-import { encryptBatch } from '../../../utils/cryptoUtils.jsx';
-import AssignToTest from "./AssignToTest";
 
 const DynamicTable = ({
   columns,
@@ -52,7 +46,7 @@ const DynamicTable = ({
         setPopupType("viewResults");
         break;
       case "takeTest":
-        handleTakeTest(row);
+        alert("Take Test clicked");
         break;
       case "assignTest":
         setSelectedRow(row);
@@ -66,33 +60,7 @@ const DynamicTable = ({
         break;
     }
   };
-  const handleTakeTest = async (row) => {
-    try {
-      const testId = row.test_creation_table_id;
-  
-      // Encrypt only the testId
-      const encryptedArray = await encryptBatch([testId]);
-      const encryptedTestId = encodeURIComponent(encryptedArray[0]);
-  
-      // Optional: Session token to protect route
-      sessionStorage.setItem("navigationToken", "valid");
-  
-      // Get full screen dimensions
-      const screenWidth = window.screen.availWidth;
-      const screenHeight = window.screen.availHeight;
-  
-      // Build URL with only test ID
-      const url = `/GeneralInstructions/${encryptedTestId}`;
-      const features = `width=${screenWidth},height=${screenHeight},top=0,left=0`;
-  
-      // Open in new tab
-      window.open(url, "_blank", features);
-    } catch (err) {
-      console.error("Encryption failed:", err);
-    }
-  };
-  
-  
+
   const handleClosePopup = () => {
     setPopupType("");
     setSelectedRow(null);
@@ -127,20 +95,8 @@ const DynamicTable = ({
                 ))}
                 <td className={styles.actions}>
                   {type === "test" ? (
-                    <div className={styles.dropdownWrapper}>
-                      <select
-                        className={styles.dropdownMenu}
-                        onChange={(e) => handleOptionSelect(e, row)}
-                      >
-                        <option value="Action">Actions ▼</option>
-                        <option value="edit">Edit Test</option>
-                        <option value="viewQuestions">View Questions</option>
-                        <option value="arrangeQuestions">⇅ Arrange Questions</option>
-                        <option value="viewResults">View Results</option> 
-                        <option value="takeTest" onClick={handleTakeTest}>Take Test</option>
-                        <option value="assignTest">📌 Assign to Test</option>
-                        <option value="deleteTest">🗑️ Delete Test</option>
-                      </select>
+                    <div >
+                
                     </div>
                   ) : (
                     <>

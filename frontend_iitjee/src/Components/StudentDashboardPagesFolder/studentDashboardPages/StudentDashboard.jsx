@@ -3,7 +3,7 @@ import StudentDashboardHeader from '../StudentDashboardPages/StudentDashboardHea
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import StudentDashboardLeftSideBar from '../StudentDashboardPages/StudentDashboardLeftSidebar.jsx';
 import { useLocation, useParams } from 'react-router-dom';
-import { useStudent } from '../../../context/StudentContext.jsx';
+import { useStudent } from '../../../ContextFolder/StudentContext.jsx';
 // Lazy loaded components
 const StudentDashboardHome = lazy(() => import("../StudentDashboardPages/StudentDashboardHome.jsx"));
 const StudentDashboard_MyCourses = lazy(() => import("../StudentDashboardPages/StudentDashboard_MyCourses.jsx"));

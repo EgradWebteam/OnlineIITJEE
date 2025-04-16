@@ -178,19 +178,23 @@ router.post("/QusetionsSorting", async (req, res) => {
 });
 
 
+
+
+
 // CHECK FUNCTION
 async function checkIfResponseExists(connection, identifiers) {
   const checkQuery = `
-    SELECT student_registration_id,test_creation_table_id,subject_id,section_id,question_id,question_type_id FROM iit_user_responses
+    SELECT student_registration_id, test_creation_table_id, subject_id, section_id, question_id, question_type_id
+    FROM iit_user_responses
     WHERE student_registration_id = ? AND test_creation_table_id = ? AND subject_id = ? AND section_id = ?
-    AND question_id = ? AND question_type_id = ?
+      AND question_id = ? AND question_type_id = ?
   `;
 
   const checkValues = [
-    parseInt(identifiers.studentId, 10),
-    parseInt(identifiers.test_creation_table_id, 10),
+    parseInt(identifiers.realStudentId, 10),
+    parseInt(identifiers.realTestId, 10),
     identifiers.subject_id ? parseInt(identifiers.subject_id, 10) : null,
-    identifiers.section_id ? parseInt(identifiers.secsection_idtionId, 10) : 0,
+    identifiers.section_id ? parseInt(identifiers.section_id, 10) : 0,
     parseInt(identifiers.question_id, 10),
     parseInt(identifiers.question_type_id, 10),
   ];
@@ -216,14 +220,14 @@ async function insertResponse(connection, data) {
   `;
 
   const insertValues = [
-    parseInt(data.studentId, 10),
-    parseInt(data.test_creation_table_id, 10),
+    parseInt(data.realStudentId, 10),
+    parseInt(data.realTestId, 10),
     data.subject_id ? parseInt(data.subject_id, 10) : null,
     data.section_id ? parseInt(data.section_id, 10) : 0,
     parseInt(data.question_id, 10),
     parseInt(data.question_type_id, 10),
-    data.userAnswer,
     data.optionIds,
+    data.userAnswer,
     data.answered,
   ];
 
@@ -236,15 +240,16 @@ async function updateResponse(connection, data) {
     UPDATE iit_user_responses
     SET user_answer = ?, option_id = ?, question_status = ?
     WHERE student_registration_id = ? AND test_creation_table_id = ? AND subject_id = ? AND section_id = ?
-    AND question_id = ? AND question_type_id = ?
+      AND question_id = ? AND question_type_id = ?
   `;
 
   const updateValues = [
-    data.userAnswer,
+ 
     data.optionIds,
+    data.userAnswer,
     data.answered,
-    parseInt(data.studentId, 10),
-    parseInt(data.test_creation_table_id, 10),
+    parseInt(data.realStudentId, 10),
+    parseInt(data.realTestId, 10),
     data.subject_id ? parseInt(data.subject_id, 10) : null,
     data.section_id ? parseInt(data.section_id, 10) : 0,
     parseInt(data.question_id, 10),
@@ -259,10 +264,10 @@ router.post("/SaveResponse", async (req, res) => {
   let connection;
   try {
     const {
-      studentId,
+      realStudentId,
       questionId,
       questionTypeId,
-      test_creation_table_id,
+      realTestId,
       subject_id,
       section_id,
       optionIndexes1 = "",
@@ -277,19 +282,20 @@ router.post("/SaveResponse", async (req, res) => {
 
     connection = await db.getConnection();
 
-    const commonAnswer = optionIndexes1CharCodes.join(",") + optionIndexes2CharCodes.join(",") + calculatorInputValue;
+    const commonAnswer =
+      optionIndexes1CharCodes.join(",") +
+      optionIndexes2CharCodes.join(",") +
+      calculatorInputValue;
     const commonOptions = optionIndexes1 + optionIndexes2;
 
     const identifiers = {
-      studentId,
-      questionId,
-      questionTypeId,
-      test_creation_table_id,
+      realStudentId,
+      question_id: questionId,
+      question_type_id: questionTypeId,
+      realTestId,
       subject_id,
       section_id,
     };
-
-    const exists = await checkIfResponseExists(connection, identifiers);
 
     const data = {
       ...identifiers,
@@ -297,6 +303,8 @@ router.post("/SaveResponse", async (req, res) => {
       optionIds: commonOptions,
       answered,
     };
+
+    const exists = await checkIfResponseExists(connection, identifiers);
 
     if (exists) {
       await updateResponse(connection, data);
@@ -307,7 +315,6 @@ router.post("/SaveResponse", async (req, res) => {
       console.log("Response inserted");
       return res.status(200).json({ success: true, message: "Response inserted successfully" });
     }
-
   } catch (error) {
     console.error("SaveResponse Error:", error);
     return res.status(500).json({ success: false, message: "Internal server error" });
@@ -315,6 +322,14 @@ router.post("/SaveResponse", async (req, res) => {
     if (connection) connection.release();
   }
 });
+
+
+
+
+
+
+
+
 
 //CLEAR RESPONSE API
 router.delete("/ClearResponse/:studentId/:testCreationTableId/:questionId", async (req, res) => {
