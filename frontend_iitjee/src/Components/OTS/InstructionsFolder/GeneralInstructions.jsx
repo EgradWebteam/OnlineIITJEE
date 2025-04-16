@@ -13,44 +13,82 @@ const GeneralInstructions = () => {
     const [realStudentId, setRealStudentId] = useState('');
     const [isDecrypting, setIsDecrypting] = useState(true);
 
+    // useEffect(() => {
+    //     const token = sessionStorage.getItem("navigationToken");
+
+    //     // If token missing (user directly opened via copy-paste), redirect to error
+    //     if (!token) {
+    //         navigate("/Error");
+    //         return;
+    //     }
+
+    //     const decryptParams = async () => {
+    //         try {
+    //             const encryptedParams = [
+    //                 decodeURIComponent(testId),
+    //                 decodeURIComponent(studentId),
+    //             ];
+
+    //             const decryptedValues = await decryptDataBatch(encryptedParams);
+
+    //             if (
+    //                 !decryptedValues ||
+    //                 decryptedValues.length !== 2 ||
+    //                 decryptedValues.some(val => !val || isNaN(parseInt(val)))
+    //             ) {
+    //                 navigate("/Error");
+    //                 return;
+    //             }
+
+    //             setRealTestId(decryptedValues[0]);
+    //             setRealStudentId(decryptedValues[1]);
+    //             setIsDecrypting(false);
+    //         } catch (error) {
+    //             console.error("Error decrypting data:", error);
+    //             navigate("/Error");
+    //         }
+    //     };
+
+    //     decryptParams();
+    // }, [testId, studentId, navigate]);
+
     useEffect(() => {
         const token = sessionStorage.getItem("navigationToken");
-
-        // If token missing (user directly opened via copy-paste), redirect to error
+    
         if (!token) {
-            navigate("/Error");
-            return;
+          navigate("/Error");
+          return;
         }
-
+    
         const decryptParams = async () => {
-            try {
-                const encryptedParams = [
-                    decodeURIComponent(testId),
-                    decodeURIComponent(studentId),
-                ];
-
-                const decryptedValues = await decryptDataBatch(encryptedParams);
-
-                if (
-                    !decryptedValues ||
-                    decryptedValues.length !== 2 ||
-                    decryptedValues.some(val => !val || isNaN(parseInt(val)))
-                ) {
-                    navigate("/Error");
-                    return;
-                }
-
-                setRealTestId(decryptedValues[0]);
-                setRealStudentId(decryptedValues[1]);
-                setIsDecrypting(false);
-            } catch (error) {
-                console.error("Error decrypting data:", error);
-                navigate("/Error");
+          try {
+            const encryptedParams = [decodeURIComponent(testId)];
+            if (studentId) {
+              encryptedParams.push(decodeURIComponent(studentId));
             }
+    
+            const decryptedValues = await decryptDataBatch(encryptedParams);
+    
+            if (!decryptedValues || decryptedValues.length === 0) {
+              navigate("/Error");
+              return;
+            }
+    
+            setRealTestId(decryptedValues[0]);
+            if (studentId) {
+              setRealStudentId(decryptedValues[1]); // set only if it's student flow
+            }
+    
+            setIsDecrypting(false);
+          } catch (error) {
+            console.error("Batch decryption error:", error);
+            navigate("/Error");
+          }
         };
-
+    
         decryptParams();
-    }, [testId, studentId, navigate]);
+      }, [testId, studentId, navigate]);
+
 
     if (isDecrypting) {
         return (
@@ -59,22 +97,41 @@ const GeneralInstructions = () => {
             </div>
         );
     }
-    const handleNextClick = async () => {
-        //  Store token before navigation
-        sessionStorage.setItem("navigationToken", "valid");
-        try {
-          const encryptedArray = await encryptBatch([realTestId, realStudentId]); // ⬅️ Await the result
-          const encryptedTestId = encodeURIComponent(encryptedArray[0]);
-          const encryptedStudentId = encodeURIComponent(encryptedArray[1]);
+    // const handleNextClick = async () => {
+    //     //  Store token before navigation
+    //     sessionStorage.setItem("navigationToken", "valid");
+    //     try {
+    //       const encryptedArray = await encryptBatch([realTestId, realStudentId]); // ⬅️ Await the result
+    //       const encryptedTestId = encodeURIComponent(encryptedArray[0]);
+    //       const encryptedStudentId = encodeURIComponent(encryptedArray[1]);
       
-          navigate(`/ExamInstructions/${encryptedTestId}/${encryptedStudentId}`);
+    //       navigate(`/ExamInstructions/${encryptedTestId}/${encryptedStudentId}`);
+    //     } catch (error) {
+    //       console.error("Encryption failed:", error);
+    //       navigate("/Error");
+    //     }
+    //   };
+      
+    const handleNextClick = async () => {
+        sessionStorage.setItem("navigationToken", "valid");
+    
+        try {
+          const payload = studentId ? [realTestId, realStudentId] : [realTestId];
+          const encryptedArray = await encryptBatch(payload);
+    
+          const encryptedTestId = encodeURIComponent(encryptedArray[0]);
+    
+          if (studentId) {
+            const encryptedStudentId = encodeURIComponent(encryptedArray[1]);
+            navigate(`/ExamInstructions/${encryptedTestId}/${encryptedStudentId}`);
+          } else {
+            navigate(`/ExamInstructions/${encryptedTestId}`);
+          }
         } catch (error) {
           console.error("Encryption failed:", error);
           navigate("/Error");
         }
       };
-      
-    
     return (
         <div className={styles.InstrcutionMainDiv}>
             <div>

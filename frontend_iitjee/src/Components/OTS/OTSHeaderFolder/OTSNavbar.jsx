@@ -4,7 +4,7 @@ import { FcDocument } from "react-icons/fc";
 import { IoIosAlert } from "react-icons/io";
 import OTSQuestionPaper from './OTSQuestionPaper';
 
-export default function OTSNavbar({testName, testData}) {
+export default function OTSNavbar({testName, testData,realTestId}) {
 
   const [showQuestions, setShowQuestions] = useState(false);
   const [showInstrutions, setShowInstrcutions] = useState(false);
@@ -40,6 +40,7 @@ export default function OTSNavbar({testName, testData}) {
         <OTSQuestionPaper
         testName ={testName}
         testData ={testData}
+        realTestId={realTestId}
         />
       )}
     </div>

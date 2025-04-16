@@ -6,7 +6,7 @@ import OTSRightSideBar from './OTSRightSideBar.jsx';
 import QuestionNavigationButtons from './QuestionNavigationButtons.jsx';
 
 
-export default function OTSMain({ testData }) {
+export default function OTSMain({ testData,realStudentId,realTestId }) {
   const [activeSubject, setActiveSubject] = useState(null);
   const [activeSection, setActiveSection] = useState(null);
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
@@ -92,6 +92,8 @@ export default function OTSMain({ testData }) {
       <div className={styles.QuestionNavigationBTns}>
         <QuestionNavigationButtons
           testData={testData}
+          realStudentId={realStudentId}
+          realTestId={realTestId}
           activeSubject={activeSubject}
           activeSection={activeSection}
           activeQuestionIndex={activeQuestionIndex}
