@@ -54,6 +54,7 @@ const ViewQuestions = ({ data, onClose }) => {
  
  
  
+  
  
   const handleDownloadQuestionPaper = async () => {
     setDownloading(true);
@@ -68,6 +69,31 @@ const ViewQuestions = ({ data, onClose }) => {
       doc.setFontSize(16);
       doc.text("Question Paper", 10, yPosition);
       yPosition += 10;
+  
+      // Helper function to load image and preserve aspect ratio
+      const addImageWithAspectRatio = async (doc, imageSrc, x, y, maxWidth, maxHeight) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = imageSrc;
+  
+          img.onload = () => {
+            let { width, height } = img;
+            const aspectRatio = width / height;
+  
+            if (width > maxWidth) {
+              width = maxWidth;
+              height = maxWidth / aspectRatio;
+            }
+            if (height > maxHeight) {
+              height = maxHeight;
+              width = maxHeight * aspectRatio;
+            }
+  
+            doc.addImage(imageSrc, "JPEG", x, y, width, height);
+            resolve(height);
+          };
+        });
+      };
   
       if (data?.subjects?.length > 0) {
         for (const subject of data.subjects) {
@@ -88,8 +114,8 @@ const ViewQuestions = ({ data, onClose }) => {
               if (question.questionImgName) {
                 const base64Img = await getBase64ImageFromURL(question.questionImgName);
                 if (base64Img) {
-                  doc.addImage(base64Img, "JPEG", 10, yPosition, 100, 50);
-                  yPosition += 60;
+                  const imgHeight = await addImageWithAspectRatio(doc, base64Img, 10, yPosition, 180, 80);
+                  yPosition += imgHeight + 10;
                 }
               }
   
@@ -101,14 +127,15 @@ const ViewQuestions = ({ data, onClose }) => {
                   if (option.optionImgName) {
                     const optBase64Img = await getBase64ImageFromURL(option.optionImgName);
                     if (optBase64Img) {
-                      doc.addImage(optBase64Img, "JPEG", 15, yPosition, 50, 20);
-                      yPosition += 30;
+                      const optImgHeight = await addImageWithAspectRatio(doc, optBase64Img, 15, yPosition, 30, 20);
+
+                      yPosition += optImgHeight + 10;
                     }
                   }
                 }
               }
   
-              // Page break if content is near the bottom
+              // Page break if needed
               if (yPosition > 250) {
                 doc.addPage();
                 yPosition = 20;
@@ -127,6 +154,7 @@ const ViewQuestions = ({ data, onClose }) => {
       setDownloading(false);
     }
   };
+  
   
   return (
     <div className={styles.popup_viewquestion}>
