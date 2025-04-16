@@ -153,7 +153,7 @@ const ExamInstructions = () => {
           ))}
         </ul>
       </div>
-
+      <div className={styles.termandConditionsMainDiv}>
       <div className={styles.termsandConditionsDiv}>
         <input
           type="checkbox"
@@ -174,6 +174,7 @@ const ExamInstructions = () => {
         >
           I am ready to begin <span className={styles.nextBtnArrow}>&rarr;</span>
         </button>
+      </div>
       </div>
     </div>
   );

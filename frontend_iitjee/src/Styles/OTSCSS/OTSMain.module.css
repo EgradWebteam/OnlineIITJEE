@@ -630,6 +630,7 @@ cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-top: 1px solid gainsboro;
 }
 .nextBtnDiv button, .previuosBtn{
   background-color: #04c7f8;
@@ -639,6 +640,7 @@ cursor: pointer;
   color: white;
   border: 1px solid #04c7f8;
   border-radius: 5px;
+  margin: 1rem;
 }
 .nextBtnArrow{
   font-size: 15px;
@@ -665,8 +667,14 @@ padding: 3rem;
   min-height: 80vh;
   overflow-y: auto;
 }
+.termandConditionsMainDiv{
+  border-top: 1px solid gainsboro;
+}
 .termsandConditionsDiv{
   margin: 1rem;
+}
+.termsandConditionsDiv input{
+  cursor: pointer;
 }
 .readytoBeginDiv{
   display: flex;
