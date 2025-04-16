@@ -77,7 +77,7 @@ const CourseForm = ({ onCourseCreated, courseData }) => {
         courseData.subject_ids?.split(",").map((id) => parseInt(id)) || []
       );
       setSelectedImage(courseData.card_image?.split("-")[1] || "");
-      setSelectedType(null); // Update this if you store type IDs as well
+      setSelectedType(courseData.course_type_ids); // Update this if you store type IDs as well
     }
   }, [isEditMode, courseData]);
  
@@ -91,11 +91,11 @@ const CourseForm = ({ onCourseCreated, courseData }) => {
     setTotalPrice(calculatedTotal);
   }, [cost, discount]);
  
-
   const handleTypeSelectChange = (e) => {
-    const typeId = parseInt(e.target.value);
-    setSelectedType(typeId);
+    const selectedValue = e.target.value; 
+    setSelectedType(selectedValue);
   };
+  
   
   const handleSubjectCheckboxChange = (e) => {
     const subjectId = parseInt(e.target.value);
@@ -147,7 +147,15 @@ const CourseForm = ({ onCourseCreated, courseData }) => {
   
     if (isEditMode && courseData.course_creation_id) {
       formData.append("course_creation_id", courseData.course_creation_id);
+    
+      // ✅ Add this block to send the old image name
+      const oldImageName = courseData.card_image?.split("/").pop().split("?")[0];
+      if (oldImageName) {
+        formData.append("oldImageName", oldImageName);
+        console.log("📤 Old image name added to FormData:", oldImageName);
+      }
     }
+    
   
     // ✅ Add this right here before the fetch call
     console.log("📝 Logging FormData content:");
@@ -279,7 +287,8 @@ const CourseForm = ({ onCourseCreated, courseData }) => {
         <h5>Exam Details:</h5>
         <div>
           <label>Type of Course:</label>
-          <select value={selectedType} onChange={handleTypeSelectChange}>
+         
+<select value={selectedType || ""} onChange={handleTypeSelectChange}>
   <option value="">Select a course type</option>
   {types.map((type) => (
     <option key={type.orvl_course_type_id} value={type.orvl_course_type_id}>
@@ -287,6 +296,8 @@ const CourseForm = ({ onCourseCreated, courseData }) => {
     </option>
   ))}
 </select>
+
+
 
         </div>
         <div>

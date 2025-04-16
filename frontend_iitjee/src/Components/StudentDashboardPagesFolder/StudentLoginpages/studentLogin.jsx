@@ -102,42 +102,46 @@ export default function StudentLogin() {
   };
 
   // Handle reset password form submission
-  const handleResetPassword = async (e) => {
-    debugger
-    e.preventDefault();
-    if (!resetCode || !newPassword || !confirmPassword) {
-      alert("Please enter reset code, new password, and confirm password.");
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      alert("Passwords do not match.");
-      return;
-    }
+// Handle reset password form submission
+const handleResetPassword = async (e) => {
+  e.preventDefault();
+  
+  if (!resetCode || !newPassword || !confirmPassword) {
+    alert("Please enter reset code, new password, and confirm password.");
+    return;
+  }
 
-    const resetPasswordData = {
-      email: username,
-      resetCode: resetCode,
-      newPassword: newPassword,
-    };
+  if (newPassword !== confirmPassword) {
+    alert("Passwords do not match.");
+    return;
+  }
 
-    try {
-      const response = await fetch(`${BASE_URL}/student/reset-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(resetPasswordData),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        alert("Password has been reset successfully. You can now log in.");
-        setIsResetPassword(false);  // Go back to login form after success
-      } else {
-        alert(data.message || "Something went wrong. Please try again.");
-      }
-    } catch (error) {
-      alert("Something went wrong. Please try again later.");
-    }
+  const resetPasswordData = {
+    email: username,
+    resetCode: resetCode,
+    newPassword: newPassword,
   };
+
+  try {
+    const response = await fetch(`${BASE_URL}/student/reset-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(resetPasswordData),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert("Password has been reset successfully. You can now log in.");
+      
+      setIsForgotPassword(false);   
+      setIsResetPassword(false);    
+    } else {
+      alert(data.message || "Something went wrong. Please try again.");
+    }
+  } catch (error) {
+    alert("Something went wrong. Please try again later.");
+  }
+};
 
   return (
     <div className={styles.studentLoginHomePage}>
@@ -176,11 +180,7 @@ export default function StudentLogin() {
             </div>
           )}
 
-          {isResetPassword && (
-            <div className={styles.backToLoginLink}>
-              <a href="#" onClick={() => setIsResetPassword(false)}>Back to Login</a>
-            </div>
-          )}
+      
         </div>
       </div>
       <MainFooter />

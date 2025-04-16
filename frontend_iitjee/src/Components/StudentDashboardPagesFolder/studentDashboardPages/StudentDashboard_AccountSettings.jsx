@@ -1,34 +1,88 @@
 import React, { useEffect, useState } from "react";
-import { FaCircleUser } from "react-icons/fa6";
 import { FaUser } from "react-icons/fa6";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard_AccountSettings.module.css";
-
-const StudentDashboard_AccountSettings = ({userData}) => {
+import { BASE_URL } from "../../../config/apiConfig";
+const StudentDashboard_AccountSettings = ({ userData }) => {
   const [activeSection, setActiveSection] = useState("profile");
   const [showPassword, setShowPassword] = useState({
     new: false,
     confirm: false,
   });
-   useEffect(() => {
-  console.log("mysettings")
-    },[])
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // Error message state
+  const [successMessage, setSuccessMessage] = useState(""); // Success message state
+
+  useEffect(() => {
+    console.log("mysettings");
+  }, []);
+
   const togglePasswordVisibility = (field) => {
     setShowPassword((prevState) => ({
       ...prevState,
       [field]: !prevState[field],
     }));
   };
-const studentName =userData?.candidate_name;
-const studentEmail = userData?.email_id;
-const studentContact = userData?.mobile_no;
+
+  const studentName = userData?.candidate_name;
+  const studentEmail = userData?.email_id;
+  const studentContact = userData?.mobile_no;
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+  
+    if (!newPassword || !confirmPassword) {
+      setErrorMessage("Please fill out both password fields.");
+      return;
+    }
+  
+    if (newPassword !== confirmPassword) {
+      setErrorMessage("Passwords do not match.");
+      return;
+    }
+  
+    const resetPasswordData = {
+      email: studentEmail,
+      newPassword: newPassword,
+    };
+  
+    try {
+      const response = await fetch(`${BASE_URL}/student/changePassword`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(resetPasswordData),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        setSuccessMessage("Password changed successfully.");
+        setErrorMessage("");
+  
+        // ✅ Clear input fields after successful password change
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        setErrorMessage(data.message || "Failed to reset password. Please try again.");
+        setSuccessMessage("");
+      }
+    } catch (error) {
+      setErrorMessage("Something went wrong. Please try again later.");
+      setSuccessMessage("");
+    }
+  };
+  
+
   return (
     <div className={styles.studetnDashboard_SettingsHomePage}>
       <div className={styles.StdAccountPwdContainer}>
-      <div className={styles.StudentAccountProfile}>
-        <div className={styles.StudentAccountProfile2}>
-        <FaUser />
-        </div>
+        <div className={styles.StudentAccountProfile}>
+          <div className={styles.StudentAccountProfile2}>
+            <FaUser />
+          </div>
         </div>
         <div className={styles.StudentAccountPwds}>
           <div
@@ -52,19 +106,20 @@ const studentContact = userData?.mobile_no;
         {activeSection === "profile" && (
           <div className={styles.StudentAccountDetails}>
             <div className={styles.StudentDetails}>Name: {studentName}</div>
-            <div className={styles.StudentDetails}>Email:{studentEmail}</div>
+            <div className={styles.StudentDetails}>Email: {studentEmail}</div>
             <div className={styles.StudentDetails}>Mobile Number: {studentContact}</div>
           </div>
         )}
+
         {activeSection === "password" && (
-          <form className={styles.StudentResetPassword}>
-            <label className={styles.PasswordCreation}>
-              Enter New Password
-            </label>
+          <form className={styles.StudentResetPassword} onSubmit={handlePasswordChange}>
+            <label className={styles.PasswordCreation}>Enter New Password</label>
             <div className={styles.passwordInputContainer}>
               <input
                 type={showPassword.new ? "text" : "password"}
                 className={styles.passwordInput}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
                 required
               />
               <span
@@ -82,11 +137,14 @@ const studentContact = userData?.mobile_no;
               <li>At least one number.</li>
               <li>At least one special character.</li>
             </ul>
+
             <label className={styles.PasswordCreation}>Confirm Password</label>
             <div className={styles.passwordInputContainer}>
               <input
                 type={showPassword.confirm ? "text" : "password"}
                 className={styles.passwordInput}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
               <span
@@ -96,7 +154,14 @@ const studentContact = userData?.mobile_no;
                 {showPassword.confirm ? <IoEyeOffOutline /> : <IoEyeOutline />}
               </span>
             </div>
-            <button className={styles.ChangewPwdButton}>Change Password</button>
+
+            {/* Display error or success message */}
+            {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
+            {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
+
+            <button type="submit" className={styles.ChangewPwdButton}>
+              Change Password
+            </button>
           </form>
         )}
       </div>

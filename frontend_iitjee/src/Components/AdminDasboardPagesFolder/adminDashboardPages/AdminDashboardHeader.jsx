@@ -1,13 +1,16 @@
 import React,{useState} from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation,useNavigate } from 'react-router-dom';
 import styles from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css';
 import headerImage from '../../../assets/EGTLogoExamHeaderCompressed.jpg';
  
 const AdminDashboardHeader = () => {
   const location = useLocation();
- 
+  const navigate = useNavigate();
   const isActive = (path) => location.pathname === path;
- 
+  const handleLogout = async () => {
+       localStorage.removeItem('token');
+      navigate('/AdminLoginPage');
+  }
   return (
     <div className={styles.header}>
       {/* Logo/Header Image */}
@@ -44,7 +47,7 @@ const AdminDashboardHeader = () => {
           </button>
         </Link>
  
-        <button className={styles.logoutButton}>
+        <button  onClick={handleLogout} className={styles.logoutButton}>
           LogOut
         </button>
       </div>
