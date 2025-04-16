@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import ExamSummaryComponent from './OTSExamSummary';
-
+import {BASE_URL} from '../../../../apiConfig.js'
+import { useQuestionStatus,QuestionStatusProvider } from '../../../ContextFolder/CountsContext.jsx';
 export default function QuestionNavigationButtons({
   testData,
   activeSubject,
@@ -17,9 +18,19 @@ export default function QuestionNavigationButtons({
   setActiveSection,
   setSelectedOptionsArray,
   setNatValue,
-  setSelectedOption
+  setSelectedOption,
+  realStudentId,
+  realTestId,
 }) {
-
+  const {
+    answeredCount,
+    answeredAndMarkedForReviewCount,
+    markedForReviewCount,
+    notAnsweredCount,
+    notVisitedCount,
+    visitedCount,
+    totalQuestionsInTest,
+  } = useQuestionStatus();
   const [showExamSummary, setShowExamSummary] = useState(false);
 
   useEffect(() => {
@@ -288,9 +299,47 @@ export default function QuestionNavigationButtons({
     }
   };
 
-  const handleSubmitClick = () => {
+  
+  const handleSubmitClick = async () => {
     setShowExamSummary(true);
-  }
+    const attemptedCount =  answeredAndMarkedForReviewCount+answeredCount;
+   const notAttemptedCount =  markedForReviewCount+notAnsweredCount;
+    const examSummaryData = {
+      studentId: realStudentId,
+      test_creation_table_id: realTestId,
+      totalQuestions: totalQuestionsInTest,
+      totalAnsweredQuestions: answeredCount,
+      totalAnsweredMarkForReviewQuestions: answeredAndMarkedForReviewCount,
+      totalMarkForReviewQuestions: markedForReviewCount,
+      totalNotAnsweredQuestions: notAnsweredCount,
+      totalVisitedQuestionQuestions: visitedCount,
+      totalNotVisitedQuestions: notVisitedCount,
+      totalAttemptedQuestions: attemptedCount,
+      totalNotAttemptedQuestions: notAttemptedCount,
+      TimeSpent: "01:15:30",
+    };
+  
+    try {
+      const response = await fetch(`${BASE_URL}/OTSExamSummary/SaveExamSummary`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(examSummaryData),
+      });
+  console.log("examSummaryData",examSummaryData)
+      const result = await response.json();
+  
+      if (response.ok) {
+        console.log("Success:", result.message);
+      } else {
+        console.error("Failed:", result.message);
+      }
+    } catch (error) {
+      console.error("Error posting exam summary:", error);
+    }
+  };
+  
   return (
     <div className={styles.QuestionNavigationButtonsMainContainer}>
       <div className={styles.btnsSubContainer}>
@@ -321,12 +370,20 @@ export default function QuestionNavigationButtons({
       {showExamSummary && (
           <div className={styles.ExamSummaryMainDiv}>
             <div className={styles.ExamSummarysubDiv}>
-              <ExamSummaryComponent
+                 <QuestionStatusProvider
+                        testData={testData}
+                        activeSubject={activeSubject}
+                        activeSection={activeSection}
+                        userAnswers={userAnswers}
+                      >
+                         <ExamSummaryComponent
                 testData={testData}
                 userAnswers={userAnswers}
                 onCancelSubmit={() => setShowExamSummary(false)}  // Close summary
                 setUserAnswers={setUserAnswers}
               />
+                      </QuestionStatusProvider>
+             
             </div>
           </div>
         )}
