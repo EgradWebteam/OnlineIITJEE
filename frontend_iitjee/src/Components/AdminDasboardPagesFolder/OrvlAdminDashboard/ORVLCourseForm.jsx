@@ -19,7 +19,7 @@ const CourseForm = ({ onCourseCreated, courseData }) => {
   const [courseName, setCourseName] = useState("");
   const [courseStartDate, setCourseStartDate] = useState("");
   const [courseEndDate, setCourseEndDate] = useState("");
-  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [selectedType, setSelectedType] = useState([]);
   const [selectedExamId, setSelectedExamId] = useState(null);
   const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [selectedImage, setSelectedImage] = useState("");
@@ -46,11 +46,22 @@ const CourseForm = ({ onCourseCreated, courseData }) => {
       fetch(`${BASE_URL}/CourseCreation/ExamSubjects/${selectedExamId}`)
         .then((response) => response.json())
         .then((data) => {
-          setSubjects(data.subjects || []);
+          const fetchedSubjects = data.subjects || [];
+          setSubjects(fetchedSubjects);
         })
         .catch((error) => console.error("Error fetching subjects:", error));
     }
-  }, [selectedExamId]);
+  }, [selectedExamId]); // ✅ only triggered by exam change
+  useEffect(() => {
+    if (selectedType === 1) {
+      const allSubjectIds = subjects.map(subject => subject.subject_id);
+      setSelectedSubjects(allSubjectIds);
+    } else {
+      setSelectedSubjects([]);
+    }
+  }, [selectedType, subjects]); // ✅ handles full/partial course logic
+  
+  
  
   // Prefill form if editing
   useEffect(() => {
@@ -66,7 +77,7 @@ const CourseForm = ({ onCourseCreated, courseData }) => {
         courseData.subject_ids?.split(",").map((id) => parseInt(id)) || []
       );
       setSelectedImage(courseData.card_image?.split("-")[1] || "");
-      setSelectedTypes([]); // Update this if you store type IDs as well
+      setSelectedType(null); // Update this if you store type IDs as well
     }
   }, [isEditMode, courseData]);
  
@@ -80,13 +91,12 @@ const CourseForm = ({ onCourseCreated, courseData }) => {
     setTotalPrice(calculatedTotal);
   }, [cost, discount]);
  
-  const handleTypeCheckboxChange = (e) => {
+
+  const handleTypeSelectChange = (e) => {
     const typeId = parseInt(e.target.value);
-    setSelectedTypes((prev) =>
-      e.target.checked ? [...prev, typeId] : prev.filter((id) => id !== typeId)
-    );
+    setSelectedType(typeId);
   };
- 
+  
   const handleSubjectCheckboxChange = (e) => {
     const subjectId = parseInt(e.target.value);
     setSelectedSubjects((prev) =>
@@ -126,7 +136,7 @@ const CourseForm = ({ onCourseCreated, courseData }) => {
     formData.append("totalPrice", totalPrice);
     formData.append("selectedExamId", selectedExamId);
     formData.append("selectedSubjects", JSON.stringify(selectedSubjects));
-    formData.append("selectedTypes", JSON.stringify(selectedTypes));
+    formData.append("selectedTypes", JSON.stringify(selectedType));
     // if (selectedImage) {
     //   formData.append("courseImageFile", `${ImagePath}/${selectedImage}`);
     // }
@@ -263,20 +273,16 @@ const CourseForm = ({ onCourseCreated, courseData }) => {
         {/* Exam Details */}
         <h5>Exam Details:</h5>
         <div>
-          <label>Type of Test:</label>
-          {types.map((type) => (
-            <div key={type.orvl_course_type_id}>
-              <label>
-                <input
-                  type="checkbox"
-                  value={type.orvl_course_type_id}
-                  checked={selectedTypes.includes(type.orvl_course_type_id)}
-                  onChange={handleTypeCheckboxChange}
-                />
-                {type.orvl_course_type_name}
-              </label>
-            </div>
-          ))}
+          <label>Type of Course:</label>
+          <select value={selectedType} onChange={handleTypeSelectChange}>
+  <option value="">Select a course type</option>
+  {types.map((type) => (
+    <option key={type.orvl_course_type_id} value={type.orvl_course_type_id}>
+      {type.orvl_course_type_name}
+    </option>
+  ))}
+</select>
+
         </div>
         <div>
           <label>
@@ -295,23 +301,23 @@ const CourseForm = ({ onCourseCreated, courseData }) => {
             </select>
           </label>
         </div>
- 
-        <div>
-          <label>Subjects:</label>
-          {subjects.map((subject) => (
-            <div key={subject.subject_id}>
-              <label>
-                <input
-                  type="checkbox"
-                  value={subject.subject_id}
-                  checked={selectedSubjects.includes(subject.subject_id)}
-                  onChange={handleSubjectCheckboxChange}
-                />
-                {subject.subject_name}
-              </label>
-            </div>
-          ))}
-        </div>
+        {selectedType && selectedExamId && selectedType !== 1 && (
+  <div>
+    <label>Subjects:</label>
+    <select
+      value={selectedSubjects[0] || ""}
+      onChange={(e) => setSelectedSubjects([e.target.value])}
+    >
+      <option value="">Select a subject</option>
+      {subjects.map((subject) => (
+        <option key={subject.subject_id} value={subject.subject_id}>
+          {subject.subject_name}
+        </option>
+      ))}
+    </select>
+  </div>
+)}
+
  
       
  
