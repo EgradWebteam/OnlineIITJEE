@@ -169,7 +169,84 @@ WHERE tct.course_creation_id = ?;
         if (connection) connection.release();
     }
 })
-
+router.post('/InsertOrUpdateTestAttemptStatus', async (req, res) => {
+    const {
+      studentregistrationId,
+      courseCreationId,
+      testCreationTableId,
+      studentTestStartTime,
+      testAttemptStatus,
+      testConnectionStatus,
+      testConnectionTime
+    } = req.body;
+  
+    let connection;
+  
+    try {
+      connection = await db.getConnection();
+      console.log("Student start test data", req.body);
+  
+      // Check if record already exists
+      const [existing] = await connection.query(
+        `SELECT student_registration_id,course_creation_id,test_creation_table_id FROM iit_test_status_details 
+         WHERE student_registration_id = ? 
+         AND course_creation_id = ? 
+         AND test_creation_table_id = ?`,
+        [studentregistrationId, courseCreationId, testCreationTableId]
+      );
+  
+      if (existing.length > 0) {
+        // Update existing record
+        const updateQuery = `
+          UPDATE iit_test_status_details 
+          SET student_test_start_date_time = ?, 
+              test_attempt_status = ?, 
+              test_connection_status = ?, 
+              student_test_end_date_time = ? 
+          WHERE student_registration_id = ? 
+            AND course_creation_id = ? 
+            AND test_creation_table_id = ?`;
+  
+        await connection.query(updateQuery, [
+          studentTestStartTime,
+          testAttemptStatus,
+          testConnectionStatus,
+          testConnectionTime,
+          studentregistrationId,
+          courseCreationId,
+          testCreationTableId
+        ]);
+  
+        res.status(200).json({ message: "Test status updated successfully." });
+  
+      } else {
+        // Insert new record
+        const insertQuery = `
+          INSERT INTO iit_test_status_details 
+          (student_registration_id, course_creation_id, test_creation_table_id, student_test_start_date_time, test_attempt_status, test_connection_status, student_test_end_date_time) 
+          VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  
+        await connection.query(insertQuery, [
+          studentregistrationId,
+          courseCreationId,
+          testCreationTableId,
+          studentTestStartTime,
+          testAttemptStatus,
+          testConnectionStatus,
+          testConnectionTime
+        ]);
+  
+        res.status(200).json({ message: "Test status inserted successfully." });
+      }
+  
+    } catch (error) {
+      console.error("Error in test_status_details API:", error);
+      res.status(500).json({ error: "Failed to process test status details." });
+    } finally {
+      if (connection) connection.release();
+    }
+  });
+  
 router.get("/instructions/:test_creation_table_id", async (req, res) => {
     const { test_creation_table_id } = req.params;
     console.log("Received request for instructions:", { test_creation_table_id });

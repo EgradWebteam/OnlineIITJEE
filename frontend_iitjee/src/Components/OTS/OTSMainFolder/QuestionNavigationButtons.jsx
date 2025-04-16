@@ -666,6 +666,8 @@ export default function QuestionNavigationButtons({
                 userAnswers={userAnswers}
                 onCancelSubmit={() => setShowExamSummary(false)}  // Close summary
                 setUserAnswers={setUserAnswers}
+                realTestId={realTestId}
+                realStudentId={realStudentId}
               />
                       </QuestionStatusProvider>
              

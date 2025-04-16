@@ -29,8 +29,8 @@ const transformTestData = (rows) => {
   const subjectMap = {};
 
   for (const row of rows) {
-    if (!row.subjectId || !row.section_id || !row.question_id) continue;
-
+    // if (!row.subjectId || !row.section_id || !row.question_id) continue;
+    if (!row.subjectId || !row.question_id) continue;
     // Subjects
     if (!subjectMap[row.subjectId]) {
       subjectMap[row.subjectId] = {
@@ -136,7 +136,7 @@ router.get('/QuestionPaper/:test_creation_table_id', async (req, res) => {
       INNER JOIN iit_ots_document d ON q.document_Id = d.document_Id
       INNER JOIN iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
       INNER JOIN iit_subjects s ON d.subject_id = s.subject_id
-      INNER JOIN iit_sections sec ON d.section_id = sec.section_id
+      LEFT JOIN iit_sections sec ON d.section_id = sec.section_id
       LEFT JOIN iit_options o ON q.question_id = o.question_id
       LEFT JOIN iit_question_type qts ON q.question_type_id = qts.question_type_id
       LEFT JOIN iit_solutions sol ON q.question_id = sol.question_id 
