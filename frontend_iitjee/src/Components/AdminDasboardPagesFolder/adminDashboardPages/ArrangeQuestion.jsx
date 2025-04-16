@@ -5,22 +5,51 @@ import styles from "../../../Styles/AdminDashboardCSS/TestCreation.module.css";
 import { BASE_URL } from "../../../../apiConfig";
 
 const ArrangeQuestions = ({ data, onClose }) => {
-  const [viewTestPaperData, setViewTestPaperData] = useState([]);
-
-  console.log("data", data);
+  const [questions, setQuestions] = useState([]);
   const testId = data.test_creation_table_id;
+
+  useEffect(() => {
+    const fetchTestPaper = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/TestCreation/ViewTestPaper/${testId}`);
+        const paper = response.data;
+
+        const allQuestions = [];
+
+        paper.subjects?.forEach((subject) => {
+          subject.sections?.forEach((section) => {
+            section.questions?.forEach((question) => {
+              allQuestions.push({
+                ...question,
+                SubjectName: subject.SubjectName,
+                SectionName: section.SectionName,
+                TestName: paper.TestName,
+              });
+            });
+          });
+        });
+
+        setQuestions(allQuestions);
+      } catch (err) {
+        console.error("Error fetching test paper:", err);
+      }
+    };
+
+    fetchTestPaper();
+  }, [testId]);
+
   const handleDragEnd = async (result) => {
     const { destination, source } = result;
     if (!destination) return;
 
-    const reorderedQuestions = Array.from(viewTestPaperData);
-    const [movedQuestion] = reorderedQuestions.splice(source.index, 1);
-    reorderedQuestions.splice(destination.index, 0, movedQuestion);
-    setViewTestPaperData(reorderedQuestions);
+    const reordered = [...questions];
+    const [moved] = reordered.splice(source.index, 1);
+    reordered.splice(destination.index, 0, moved);
+    setQuestions(reordered);
 
     try {
-      await axios.post(`${BASE_URL}/TestCreation/updateQuestionOrder`, {
-        questions: reorderedQuestions.map((q, index) => ({
+      await axios.post(`${BASE_URL}/OTS/QusetionsSorting`, {
+        questions: reordered.map((q, index) => ({
           question_id: q.question_id,
           sort_order: index + 1,
         })),
@@ -31,58 +60,20 @@ const ArrangeQuestions = ({ data, onClose }) => {
     }
   };
 
-  useEffect(() => {
-    const fetchTestPaper = async () => {
-      try {
-        const response = await axios.get(
-          `${BASE_URL}/TestCreation/ViewTestPaper/${testId}`
-        );
-        setViewTestPaperData(response.data);
-      } catch (err) {
-        console.error("Error fetching test paper:", err);
-      }
-    };
-
-    fetchTestPaper();
-  }, [testId]);
-  console.log("viewTestPaperData", viewTestPaperData);
   return (
-    <div className={styles.popupContainer}>
-      <div className={styles.popupContent}>
-        <button onClick={onClose} className={styles.closeButton}>
-          Close
-        </button>
-        <h2 className={styles.title}>
-          {viewTestPaperData?.TestName || "Arrange Questions"}
+    <div className={styles.popup_viewquestion}>
+      <div className={styles.popup_viewquestioncontent}>
+        <button onClick={onClose} className={styles.closebutton_viewquestion}>✖</button>
+        <h2 className={styles.viewquestion_title}>
+          {questions.length > 0 ? questions[0].TestName : "Arrange Questions"}
         </h2>
 
-        {/* Show paper info once */}
-        {viewTestPaperData?.subjects?.map((subject) => (
-          <div key={subject.subjectId}>
-            <h3>Subject: {subject.SubjectName}</h3>
-            {subject.sections.map((section) => (
-              <div key={section.sectionId}>
-                <h4>Section: {section.SectionName}</h4>
-                {/* Optional display here */}
-              </div>
-            ))}
-          </div>
-        ))}
-
-        {/* DRAGGABLE QUESTIONS */}
         <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="questions">
+          <Droppable droppableId="questions-list">
             {(provided) => (
-              <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
-                {viewTestPaperData.map((question, index) => (
-                  <Draggable
-                    key={question.question_id}
-                    draggableId={question.question_id.toString()}
-                    index={index}
-                  >
+              <div {...provided.droppableProps} ref={provided.innerRef}>
+                {questions.map((question, index) => (
+                  <Draggable key={question.question_id} draggableId={String(question.question_id)} index={index}>
                     {(provided) => (
                       <div
                         ref={provided.innerRef}
@@ -90,62 +81,24 @@ const ArrangeQuestions = ({ data, onClose }) => {
                         {...provided.dragHandleProps}
                         className={styles.questionblock_viewquestion}
                       >
-                        <div>
-                          <h2>{viewTestPaperData.TestName}</h2>
-
-                          {viewTestPaperData.subjects?.map((subject) => (
-                            <div key={subject.subjectId}>
-                              <h3>Subject: {subject.SubjectName}</h3>
-
-                              {subject.sections.map((section) => (
-                                <div key={section.sectionId}>
-                                  <h4>Section: {section.SectionName}</h4>
-
-                                  {section.questions.map((question) => (
-                                    <div
-                                      key={question.question_id}
-                                      style={{ marginBottom: "2rem" }}
-                                    >
-                                      <p>Question ID: {question.question_id}</p>
-                                      <img
-                                        src={question.questionImgName}
-                                        alt={`Question ${
-                                          (question.question_id,
-                                          question.questionImgName)
-                                        }`}
-                                        style={{
-                                          width: "300px",
-                                          height: "auto",
-                                        }}
-                                      />
-                                      <div style={{ marginTop: "1rem" }}>
-                                        {question.options.map((option) => (
-                                          <div
-                                            key={option.option_id}
-                                            style={{
-                                              display: "flex",
-                                              alignItems: "center",
-                                            }}
-                                          >
-                                            <strong>
-                                              {option.option_index}:
-                                            </strong>
-                                            <img
-                                              src={option.optionImgName}
-                                              alt={`Option ${option.option_index}`}
-                                              style={{
-                                                width: "150px",
-                                                height: "auto",
-                                                marginLeft: "10px",
-                                              }}
-                                            />
-                                          </div>
-                                        ))}
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              ))}
+                        <p>
+                          <strong>Subject:</strong> {question.SubjectName} | <strong>Section:</strong> {question.SectionName}
+                        </p>
+                        <p><strong>Question ID:</strong> {question.question_id}</p>
+                        <img
+                          src={question.questionImgName}
+                          alt="Question"
+                          style={{ width: "300px", height: "auto" }}
+                        />
+                        <div style={{ marginTop: "1rem" }}>
+                          {question.options?.map((option) => (
+                            <div key={option.option_id} style={{ display: "flex", alignItems: "center" }}>
+                              <strong>{option.option_index}:</strong>
+                              <img
+                                src={option.optionImgName}
+                                alt={`Option ${option.option_index}`}
+                                style={{ width: "150px", height: "auto", marginLeft: "10px" }}
+                              />
                             </div>
                           ))}
                         </div>

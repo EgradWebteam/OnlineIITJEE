@@ -33,6 +33,7 @@ router.get("/TestCreationFormData", async (req, res) => {
 
 // API route to get subject names by course_creation_id
 
+ 
 router.get("/CourseSubjects/:course_creation_id", async (req, res) => {
   const { course_creation_id } = req.params;
   console.log("Course Creation ID:", course_creation_id); // Log course_creation_id
