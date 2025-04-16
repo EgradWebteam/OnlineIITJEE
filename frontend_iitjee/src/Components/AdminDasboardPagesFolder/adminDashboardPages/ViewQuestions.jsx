@@ -3,7 +3,7 @@ import styles from "../../../Styles/AdminDashboardCSS/TestCreation.module.css";
 import axios from 'axios'
 import {BASE_URL} from '../../../../apiConfig'
 
-const ViewQuestions = ({ onClose }) => {
+const ViewQuestions = ({ onClose,data }) => {
   const [imagesLoaded, setImagesLoaded] = useState(true);
 
   if (!data) return null;
