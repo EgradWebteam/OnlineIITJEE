@@ -1,8 +1,28 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import egradLogo from "../../../assets/EGTLogoExamHeaderCompressed.jpg";
+import {BASE_URL} from '../../../../apiConfig'
+import axios from "axios"
 
-const OTSQuestionPaper = ({ testName, testData }) => {
+const OTSQuestionPaper = ({ testName,realTestId }) => {
+  const [questionData, setQuestionData] = useState([]);
+ 
+ 
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/OTS/QuestionPaper/${realTestId}`);
+        console.log("response",response.data)
+        setQuestionData(response.data);
+      } catch (err) {
+        console.error("Error fetching courses:", err);
+      }
+    };
+ 
+    fetchQuestions();
+  }, []);
+
+
   return (
     <div className={styles.OTSQuestionPaperMainDiv}>
       <div className={styles.OTSQuestionPaperSubDiv}>
@@ -20,45 +40,44 @@ const OTSQuestionPaper = ({ testName, testData }) => {
         </div>
 
         {/* Questions */}
-        <div className={styles.QuestionOptionsDIV}>
-          {testData?.subjects?.map((subject, subjectIndex) => (
-            <div key={subjectIndex}>
-              <h3>{subject.subjectName}</h3>
-
-              {subject.sections?.map((section, sectionIndex) => (
-                <div key={sectionIndex}>
-                  <h4>{section.sectionName}</h4>
-
-                  {section.questions?.map((question, questionIndex) => (
-                    <div key={questionIndex} className={styles.SingleQuestionBlock}>
-                      <div>
-                        <h5>Question - {questionIndex + 1}.</h5>
-                        <div className={styles.questionImages}>
-                          {question.questionImage && (
-                            <img src={question.questionImage} alt={`Question ${questionIndex + 1}`} />
-                          )}
-                        </div>
+        <div>
+      <h2>{questionData.TestName}</h2>
+ 
+      {questionData.subjects?.map((subject) => (
+        <div key={subject.subjectId}>
+          <h3>Subject: {subject.SubjectName}</h3>
+ 
+          {subject.sections.map((section) => (
+            <div key={section.sectionId}>
+              <h4>Section: {section.SectionName}</h4>
+ 
+              {section.questions.map((question) => (
+                <div key={question.question_id} style={{ marginBottom: "2rem" }}>
+                  <p>Question No: {question.question_id}</p>
+                  <img
+                    src={question.questionImgName}
+                    alt={`Question ${question.question_id,question.questionImgName}`}
+                    style={{ width: "300px", height: "auto" }}
+                  />
+                  <div style={{ marginTop: "1rem" }}>
+                    {question.options.map((option) => (
+                      <div key={option.option_id} style={{ display: "flex", alignItems: "center" }}>
+                        <strong>({option.option_index})</strong>
+                        <img
+                          src={option.optionImgName}
+                          alt={`Option ${option.option_index}`}
+                          style={{ width: "150px", height: "auto", marginLeft: "10px" }}
+                        />
                       </div>
-
-                      <div className={styles.OptionImages}>
-                        {question.options?.map((option, optionIndex) => (
-                          <div key={optionIndex}>
-                            <p>Option {option.optionId}</p>
-                            {option.optionImage && (
-                              <img src={option.optionImage} alt={`Option ${option.optionId}`} />
-                            )}
-                          </div>
-                        ))}
-                      </div>
-
-                      <hr />
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
           ))}
         </div>
+      ))}
+    </div>
       </div>
     </div>
   );

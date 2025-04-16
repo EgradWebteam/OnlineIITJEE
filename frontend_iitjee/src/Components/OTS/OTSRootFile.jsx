@@ -69,8 +69,8 @@ const testName = testPaperData.TestName
   return (
     <div className={styles.OTSRootMainContainer}>
       <OTSHeader />
-      <OTSNavbar testName={testName} testData={testPaperData}/>
-      <OTSMain testData={testPaperData}  />
+      <OTSNavbar realTestId={realTestId} testName={testName} testData={testPaperData}/>
+      <OTSMain testData={testPaperData} realStudentId={realStudentId} realTestId={realTestId} />
     </div>
   );
 }
