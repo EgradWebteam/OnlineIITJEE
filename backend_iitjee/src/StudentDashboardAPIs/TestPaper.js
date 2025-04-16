@@ -29,8 +29,8 @@ const transformTestData = (rows) => {
   const subjectMap = {};
 
   for (const row of rows) {
-    if (!row.subjectId || !row.section_id || !row.question_id) continue;
-
+    // if (!row.subjectId || !row.section_id || !row.question_id) continue;
+    if (!row.subjectId || !row.question_id) continue;
     // Subjects
     if (!subjectMap[row.subjectId]) {
       subjectMap[row.subjectId] = {
@@ -136,7 +136,7 @@ router.get('/QuestionPaper/:test_creation_table_id', async (req, res) => {
       INNER JOIN iit_ots_document d ON q.document_Id = d.document_Id
       INNER JOIN iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
       INNER JOIN iit_subjects s ON d.subject_id = s.subject_id
-      INNER JOIN iit_sections sec ON d.section_id = sec.section_id
+      LEFT JOIN iit_sections sec ON d.section_id = sec.section_id
       LEFT JOIN iit_options o ON q.question_id = o.question_id
       LEFT JOIN iit_question_type qts ON q.question_type_id = qts.question_type_id
       LEFT JOIN iit_solutions sol ON q.question_id = sol.question_id 
@@ -226,8 +226,8 @@ async function insertResponse(connection, data) {
     data.section_id ? parseInt(data.section_id, 10) : 0,
     parseInt(data.question_id, 10),
     parseInt(data.question_type_id, 10),
-    data.optionIds,
     data.userAnswer,
+    data.optionIds,
     data.answered,
   ];
 
@@ -244,9 +244,9 @@ async function updateResponse(connection, data) {
   `;
 
   const updateValues = [
- 
-    data.optionIds,
+
     data.userAnswer,
+    data.optionIds,
     data.answered,
     parseInt(data.realStudentId, 10),
     parseInt(data.realTestId, 10),
@@ -284,9 +284,8 @@ router.post("/SaveResponse", async (req, res) => {
 
     const commonAnswer =
       optionIndexes1CharCodes.join(",") +
-      optionIndexes2CharCodes.join(",") +
-      calculatorInputValue;
-    const commonOptions = optionIndexes1 + optionIndexes2;
+      optionIndexes2CharCodes.join(",");
+    const commonOptions = optionIndexes1 + optionIndexes2 + calculatorInputValue;
 
     const identifiers = {
       realStudentId,
@@ -299,8 +298,8 @@ router.post("/SaveResponse", async (req, res) => {
 
     const data = {
       ...identifiers,
-      userAnswer: commonAnswer,
-      optionIds: commonOptions,
+      userAnswer: commonOptions,
+      optionIds: commonAnswer,
       answered,
     };
 
@@ -308,10 +307,12 @@ router.post("/SaveResponse", async (req, res) => {
 
     if (exists) {
       await updateResponse(connection, data);
+      console.log("Data to be inserted/updated:", data);
       console.log("Response updated");
       return res.status(200).json({ success: true, message: "Response updated successfully" });
     } else {
       await insertResponse(connection, data);
+      console.log("Data to be inserted/updated:", data);
       console.log("Response inserted");
       return res.status(200).json({ success: true, message: "Response inserted successfully" });
     }

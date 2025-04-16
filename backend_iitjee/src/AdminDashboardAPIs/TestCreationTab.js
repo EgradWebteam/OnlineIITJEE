@@ -271,9 +271,6 @@ router.post('/toggleTestStatus', async (req, res) => {
     res.status(500).json({ message: 'Failed to update test status' });
   }
 });
-
-
-
 router.get("/FetchTestDataFortable", async (req, res) => {
   const sql = `
     SELECT 
@@ -345,8 +342,8 @@ const transformTestData = (rows) => {
   const subjectMap = {};
 
   for (const row of rows) {
-    if (!row.subjectId || !row.section_id || !row.question_id) continue;
-
+    // if (!row.subjectId || !row.section_id || !row.question_id) continue;
+    if (!row.subjectId || !row.question_id) continue;
     // Subjects
     if (!subjectMap[row.subjectId]) {
       subjectMap[row.subjectId] = {
@@ -436,40 +433,41 @@ router.get("/ViewTestPaper/:test_creation_table_id", async (req, res) => {
 
     const [rows] = await db.query(
       `
-      SELECT 
-        t.test_name AS TestName,
-        t.test_creation_table_id AS examId,
-        t.course_type_of_test_id AS courseTypeOfTestId,
-        t.duration AS TestDuration,
-        t.options_pattern_id AS opt_pattern_id,
-        s.subject_id AS subjectId,
-        s.subject_name AS SubjectName,
-        sec.section_id,
-        sec.section_name AS SectionName,
-        q.question_id,
-        q.question_img_name AS questionImgName,
-        d.document_name,
-        o.option_id,
-        o.option_index,
-        o.option_img_name,
-        q.answer_text AS answer,
-        q.marks_text,
-        q.nmarks_text,
-        q.question_type_id AS questionTypeId,
-        q.qtype_text,
-        sol.solution_id,
-        sol.solution_img_name,
-        sol.video_solution_link
-      FROM iit_questions q
-      INNER JOIN iit_ots_document d ON q.document_Id = d.document_Id
-      INNER JOIN iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
-      INNER JOIN iit_subjects s ON d.subject_id = s.subject_id
-      INNER JOIN iit_sections sec ON d.section_id = sec.section_id
-      LEFT JOIN iit_options o ON q.question_id = o.question_id
-      LEFT JOIN iit_question_type qts ON q.question_type_id = qts.question_type_id
-      LEFT JOIN iit_solutions sol ON q.question_id = sol.question_id 
-      WHERE d.test_creation_table_id = ?
-      ORDER BY s.subject_id, sec.section_id, q.question_id, o.option_index
+    SELECT 
+    t.test_name AS TestName,
+    t.test_creation_table_id AS examId,
+    t.course_type_of_test_id AS courseTypeOfTestId,
+    t.duration AS TestDuration,
+    t.options_pattern_id AS opt_pattern_id,
+    s.subject_id AS subjectId,
+    s.subject_name AS SubjectName,
+    sec.section_id,
+    sec.section_name AS SectionName,
+    q.question_id,
+    q.question_img_name AS questionImgName,
+    d.document_name,
+    o.option_id,
+    o.option_index,
+    o.option_img_name,
+    q.answer_text AS answer,
+    q.marks_text,
+    q.nmarks_text,
+    q.question_type_id AS questionTypeId,
+    q.qtype_text,
+    sol.solution_id,
+    sol.solution_img_name,
+    sol.video_solution_link
+FROM iit_questions q
+INNER JOIN iit_ots_document d ON q.document_Id = d.document_Id
+INNER JOIN iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
+INNER JOIN iit_subjects s ON d.subject_id = s.subject_id
+LEFT JOIN iit_sections sec ON d.section_id = sec.section_id 
+LEFT JOIN iit_options o ON q.question_id = o.question_id
+LEFT JOIN iit_question_type qts ON q.question_type_id = qts.question_type_id
+LEFT JOIN iit_solutions sol ON q.question_id = sol.question_id 
+WHERE d.test_creation_table_id = ?
+ORDER BY s.subject_id, sec.section_id, q.question_id, o.option_index;
+
       `,
       [test_creation_table_id]
     );
@@ -481,5 +479,103 @@ router.get("/ViewTestPaper/:test_creation_table_id", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+router.get("/getNotAssignedCourses/:testCreationTableId", async (req, res) => {
+  const { testCreationTableId } = req.params;
+  console.log("For the test creation table ID", testCreationTableId);
+
+  try {
+    // Query for courses not assigned to the test creation table
+    const sqlNA = `
+      SELECT cct.course_name, cct.course_creation_id
+      FROM iit_course_creation_table cct
+      WHERE cct.course_creation_id NOT IN (
+          SELECT crt.course_creation_id
+          FROM iit_course_reference_for_test crt
+          WHERE crt.test_creation_table_id = ?
+      );
+    `;
+    const [rowsNA] = await db.query(sqlNA, [testCreationTableId]);
+
+    // Query for courses already assigned to the test creation table
+    const sqlAssigned = `
+      SELECT cct.course_name, cct.course_creation_id
+      FROM iit_course_creation_table cct
+      WHERE cct.course_creation_id IN (
+          SELECT crt.course_creation_id
+          FROM iit_course_reference_for_test crt
+          WHERE crt.test_creation_table_id = ?
+      );
+    `;
+    const [rowsAssigned] = await db.query(sqlAssigned, [testCreationTableId]);
+
+    // Return both sets of courses in the response
+    res.status(200).json({
+      rowsNotAssigned: rowsNA,  // Not assigned courses
+      rowsAssigned: rowsAssigned // Assigned courses
+    });
+  } catch (error) {
+    console.error("Error while getting courses:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+router.post("/assignToTest/:testCreationTableId", async (req, res) => {
+  const { coursesToBeAssigned } = req.body;
+  const { testCreationTableId } = req.params;
+
+  console.log(testCreationTableId, "testCreationTableId");
+  console.log(coursesToBeAssigned);
+
+  try {
+    const sql = `
+      INSERT INTO iit_course_reference_for_test
+      (course_creation_id, test_creation_table_id, testName)
+      VALUES (?, ?, ?)
+    `;
+
+    for (const course of coursesToBeAssigned) {
+      const { course_creation_id, course_name } = course;
+
+      const [rows] = await db.query(sql, [
+        course_creation_id,
+        testCreationTableId,
+        course_name // assuming testName is same as course name for now
+      ]);
+
+      console.log(rows, "Inserted Row");
+    }
+
+    res.status(200).json({ message: "Courses assigned successfully" });
+  } catch (error) {
+    console.error("Error while assigning courses to test:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+router.delete("/assignedTestDel/:courseCreationId/:testCreationTableId", async (req, res) => {
+  const { courseCreationId, testCreationTableId } = req.params;
+
+  console.log("Unassigning course:", courseCreationId, "from test creation table ID:", testCreationTableId);
+
+  try {
+    // SQL query to delete the association between the course and the test creation table
+    const sql = `
+      DELETE FROM iit_course_reference_for_test
+      WHERE course_creation_id = ? AND test_creation_table_id = ?
+    `;
+
+    const [rows] = await db.query(sql, [courseCreationId, testCreationTableId]);
+
+    if (rows.affectedRows === 0) {
+      return res.status(404).json({ message: "Course not found for the specified test creation table" });
+    }
+
+    res.status(200).json({ message: "Course unassigned successfully" });
+  } catch (error) {
+    console.error("Error while unassigning course:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+
 
 module.exports = router;

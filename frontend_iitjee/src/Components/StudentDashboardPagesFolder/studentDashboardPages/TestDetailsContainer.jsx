@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import { BASE_URL } from '../../../../apiConfig';
-import { useNavigate } from 'react-router-dom';
 import { encryptBatch } from '../../../utils/cryptoUtils.jsx';
 
 export default function TestDetailsContainer({ course, onBack, studentId }) {
@@ -11,7 +10,7 @@ export default function TestDetailsContainer({ course, onBack, studentId }) {
   const [encryptedStudentId, setEncryptedStudentId] = useState('');
 
   const course_creation_id = course?.course_creation_id;
-  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchCourseTests = async () => {
@@ -24,7 +23,7 @@ export default function TestDetailsContainer({ course, onBack, studentId }) {
 
         const testIds = tests.map(test => test.test_creation_table_id);
         const combinedToEncrypt = [...testIds, studentId]; // Single encryption call
-
+      
         const encryptedArray = await encryptBatch(combinedToEncrypt);
         const encryptedTestIds = encryptedArray.slice(0, testIds.length);
         const encryptedStudent = encryptedArray[testIds.length];
@@ -54,15 +53,60 @@ export default function TestDetailsContainer({ course, onBack, studentId }) {
 
   const allTestTypes = ['Select Type Of Test', ...Object.keys(groupedTests)];
 
-  const handleStartTestClick = (encryptedTestId) => {
-    //  Store token before navigation
-    sessionStorage.setItem("navigationToken", "valid");
+  function getCurrentLocalMySQLTime() {
+    const now = new Date();
+    const offset = now.getTimezoneOffset() * 60000; // offset in ms
+    const localTime = new Date(now - offset).toISOString().slice(0, 19).replace('T', ' ');
+    return localTime;
+  }
   
-    const screenWidth = window.screen.availWidth;
-    const screenHeight = window.screen.availHeight;
-    const url = `/GeneralInstructions/${encodeURIComponent(encryptedTestId)}/${encodeURIComponent(encryptedStudentId)}`;
-    const features = `width=${screenWidth},height=${screenHeight},top=0,left=0`;
-    window.open(url, '_blank', features);
+  const formattedTime = getCurrentLocalMySQLTime(); // "2025-04-16 13:33:00"
+  
+  const handleStartTestClick = async (encryptedTestId) => {
+    // Prepare the data to send to the backend
+    const testStatusData = {
+      studentregistrationId: studentId,  
+      courseCreationId: course_creation_id, 
+      testCreationTableId: 1, 
+      studentTestStartTime: formattedTime, 
+      testAttemptStatus: 'started', 
+      testConnectionStatus: 'active', 
+      testConnectionTime: formattedTime
+    };
+  
+    try {
+      // Make an API call to insert or update the test status
+      const response = await fetch(`${BASE_URL}/studentmycourses/InsertOrUpdateTestAttemptStatus`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(testStatusData),
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        console.log(result.message); // Success message from backend
+  
+        // Store token before navigation
+        sessionStorage.setItem('navigationToken', 'valid');
+  
+        const screenWidth = window.screen.availWidth;
+        const screenHeight = window.screen.availHeight;
+        const url = `/GeneralInstructions/${encodeURIComponent(encryptedTestId)}/${encodeURIComponent(encryptedStudentId)}`;
+        const features = `width=${screenWidth},height=${screenHeight},top=0,left=0`;
+  
+        // Open the window with the given URL
+        window.open(url, '_blank', features);
+      } else {
+        console.error('Failed to insert/update test status:', result.error);
+        // Handle error appropriately (e.g., show an alert or a notification)
+      }
+    } catch (error) {
+      console.error('Error during test status insertion/update:', error);
+      // Handle error (e.g., show an alert or a notification)
+    }
   };
   
 

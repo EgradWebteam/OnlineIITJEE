@@ -375,6 +375,7 @@ cursor: pointer;
     justify-content: center;
     border: none;
     color: black;
+    cursor: pointer;
   }
 
 /* QUESTIOPN NAVIGATION BTN CSS */
@@ -387,6 +388,7 @@ cursor: pointer;
 .markedForReviewNavigationBtn,.clearResponseBtn, .previousBtn,.saveandnextNavigationBtn,.submitNavigationBtn{
   border: 1px solid rgb(153, 151, 151);
   padding: 10px;
+  cursor: pointer;
 }
 .saveandnextNavigationBtn{
   background-color: rgb(69, 140, 207);
@@ -628,6 +630,7 @@ cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-top: 1px solid gainsboro;
 }
 .nextBtnDiv button, .previuosBtn{
   background-color: #04c7f8;
@@ -637,6 +640,7 @@ cursor: pointer;
   color: white;
   border: 1px solid #04c7f8;
   border-radius: 5px;
+  margin: 1rem;
 }
 .nextBtnArrow{
   font-size: 15px;
@@ -663,8 +667,14 @@ padding: 3rem;
   min-height: 80vh;
   overflow-y: auto;
 }
+.termandConditionsMainDiv{
+  border-top: 1px solid gainsboro;
+}
 .termsandConditionsDiv{
   margin: 1rem;
+}
+.termsandConditionsDiv input{
+  cursor: pointer;
 }
 .readytoBeginDiv{
   display: flex;
@@ -1006,6 +1016,18 @@ border-radius: 10px;
   }
 }
 
+/* TIMER CSS */
+.OtsTimerMainDiv{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgb(204, 204, 204);
+  padding: 10px;
+}
+.OtsTimerDiv{
+  font-size: 18px;
+  font-weight: 700;
+}
 
 @media (max-width:1280px) {
   .OTSMainFileMainContainer{
