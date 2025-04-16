@@ -174,13 +174,23 @@ const StudentInfo = () => {
     setShowStudentsButton(true);
   };
  
-  const handleEditStudent = (student) => {
-    setEditingStudent({
-      ...student,
-      courses: student.courses || [],
-    });
+  // ✅ PLACE IT HERE
+  const handleEditStudent = async (student) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/students/StudentInfo/${student.id}`); // ✅ fetch by ID
+      const fullStudentData = response.data;
+  
+      setEditingStudent({
+        ...student,
+        ...fullStudentData, // includes course list
+      });
+    } catch (error) {
+      console.error("Error fetching student details:", error);
+      alert("Failed to fetch full student data.");
+    }
   };
- 
+  
+  
   const handleToggleActivation = async (studentId, currentStatus) => {
     try {
       // Toggle activation status (0 -> 1, 1 -> 0)
@@ -495,26 +505,25 @@ const StudentInfo = () => {
             courses.map((course) => (
               <div key={course.id} className={styles.CoursesInput}>
                 <input
-                  type="checkbox"
-                  className={styles.customCheckbox}
-                  checked={
-                    editingStudent.courses &&
-                    editingStudent.courses.includes(course.id)
-                  }
-                  onChange={() => {
-                    const isSelected =
-                      editingStudent.courses &&
-                      editingStudent.courses.includes(course.id);
-                    const updatedCourses = isSelected
-                      ? editingStudent.courses.filter((id) => id !== course.id)
-                      : [...(editingStudent.courses || []), course.id];
- 
-                    setEditingStudent({
-                      ...editingStudent,
-                      courses: updatedCourses,
-                    });
-                  }}
-                />
+  type="checkbox"
+  className={styles.customCheckbox}
+  checked={
+    editingStudent.courses &&
+    editingStudent.courses.includes(course.id)
+  }
+  onChange={() => {
+    const isSelected = editingStudent.courses.includes(course.id);
+    const updatedCourses = isSelected
+      ? editingStudent.courses.filter((id) => id !== course.id)
+      : [...editingStudent.courses, course.id];
+
+    setEditingStudent({
+      ...editingStudent,
+      courses: updatedCourses,
+    });
+  }}
+/>
+
                 <label>{course.course_name}</label>
               </div>
             ))
