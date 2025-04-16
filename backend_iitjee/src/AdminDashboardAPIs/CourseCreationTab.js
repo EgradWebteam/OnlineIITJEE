@@ -245,15 +245,22 @@ async function uploadToAzureWithSAS(fileBuffer, OriginalFileName) {
   return blockBlobClient.url;
 }
 async function deleteFromAzure(imageName) {
-  if (!imageName) return;
+  if (!imageName) {
+    console.log("⚠️ No image name provided to deleteFromAzure()");
+    return;
+  }
+
+  console.log("🧹 Calling deleteFromAzure() with:", imageName);
+
   const blobServiceClient = new BlobServiceClient(
     `https://${accountName}.blob.core.windows.net?${sasToken}`
   );
   const containerClient = blobServiceClient.getContainerClient(containerName);
   const blobClient = containerClient.getBlobClient(`${STUDENT_PHOTO_FOLDER}/${imageName}`);
-  await blobClient.deleteIfExists();
+  
+  const response = await blobClient.deleteIfExists();
+  console.log("🗑️ deleteIfExists response:", response);
 }
-
 router.post(
   "/CreateCourse",
   upload.single("courseImageFile"),
@@ -407,7 +414,6 @@ router.put("/UpdateCourse/:courseId", upload.single("courseImageFile"), async (r
       selectedExamId,
     } = req.body;
 
-    // Utility to parse incoming arrays (handles JSON or comma-separated)
     const parseInputArray = (input) => {
       if (!input) return [];
       if (Array.isArray(input)) return input.map(Number);
@@ -422,7 +428,8 @@ router.put("/UpdateCourse/:courseId", upload.single("courseImageFile"), async (r
     const selectedSubjects = parseInputArray(req.body.selectedSubjects);
     const selectedTypes = parseInputArray(req.body.selectedTypes);
 
-    console.log("📥 Updating Course:", {
+    console.log("📥 Incoming Update Data:", {
+      courseId,
       courseName,
       selectedYear,
       courseStartDate,
@@ -433,26 +440,35 @@ router.put("/UpdateCourse/:courseId", upload.single("courseImageFile"), async (r
       selectedExamId,
       selectedSubjects,
       selectedTypes,
+      hasNewImage: !!req.file,
     });
 
-    // 🗑️ Delete old image from Azure if a new one is uploaded
     let newAzureFileName = null;
+
+    // ✅ If a new image was uploaded, delete the old one and upload the new one
     if (req.file) {
+      console.log("🖼️ New image uploaded. Preparing to delete old image...");
+
       const [oldImageResult] = await conn.query(
         "SELECT card_image FROM iit_course_creation_table WHERE course_creation_id = ?",
         [courseId]
       );
+
       const oldImageName = oldImageResult[0]?.card_image;
+      console.log("🔍 Found old image in DB:", oldImageName);
+
       if (oldImageName) {
-        await deleteFromAzure(oldImageName); // 👈 make sure this util is implemented
+        await deleteFromAzure(oldImageName);
+        console.log("🗑️ Deleted old image from Azure:", oldImageName);
       }
 
-      // Upload new image
-      const uploaded = await uploadToAzureWithSAS(req.file.buffer, req.file.originalname); // 👈 upload util
-      newAzureFileName = uploaded.name;
+      const azureUrl = await uploadToAzureWithSAS(req.file, req.file.originalname);
+      newAzureFileName = azureUrl.split("/").pop().split("?")[0];
+      console.log("📤 Uploaded new image to Azure:", newAzureFileName);
     }
 
-    // 📝 Update course details
+    // 🔄 Update course details in DB
+    console.log("🛠️ Updating course details in DB...");
     const updateQuery = `
       UPDATE iit_course_creation_table SET
         course_name = ?, 
@@ -481,88 +497,100 @@ router.put("/UpdateCourse/:courseId", upload.single("courseImageFile"), async (r
     values.push(courseId);
 
     await conn.query(updateQuery, values);
+    console.log("✅ Course updated successfully.");
 
-    // 🧹 Clear previous entries
+    // 🧹 Remove old subject and type mappings
+    console.log("🧹 Cleaning up old subject and type mappings...");
     await conn.query("DELETE FROM iit_course_subjects WHERE course_creation_id = ?", [courseId]);
     await conn.query("DELETE FROM iit_course_type_of_tests WHERE course_creation_id = ?", [courseId]);
     await conn.query("DELETE FROM iit_orvl_course_type_for_course WHERE course_creation_id = ?", [courseId]);
 
-    // ➕ Re-insert subject relations
+    // ➕ Re-insert new subject mappings
+    console.log("➕ Inserting new subject mappings...");
     for (const subjectId of selectedSubjects) {
       await conn.query(
         "INSERT INTO iit_course_subjects (course_creation_id, subject_id) VALUES (?, ?)",
         [courseId, subjectId]
       );
+      console.log(`   ✅ Subject ${subjectId} linked to course`);
     }
 
-    // ➕ Re-insert both regular and ORVL test types
+    // ➕ Re-insert new test types (both normal and ORVL)
+    console.log("➕ Inserting new test types...");
     for (const typeId of selectedTypes) {
       await conn.query(
         "INSERT INTO iit_course_type_of_tests (course_creation_id, type_of_test_id) VALUES (?, ?)",
         [courseId, typeId]
       );
+      console.log(`   ✅ Test Type ${typeId} (normal) linked to course`);
 
       await conn.query(
         "INSERT INTO iit_orvl_course_type_for_course (course_creation_id, orvl_course_type_id) VALUES (?, ?)",
         [courseId, typeId]
       );
+      console.log(`   ✅ Test Type ${typeId} (ORVL) linked to course`);
     }
 
     await conn.commit();
+    console.log("🎉 Course update committed successfully.");
     res.status(200).json({ success: true, message: "✅ Course updated successfully." });
 
   } catch (err) {
-    console.error("❌ Error in course update:", err.message);
+    console.error("❌ Error during course update:", err.message);
     await conn.rollback();
     res.status(500).json({ success: false, error: err.message });
   } finally {
     conn.release();
   }
 });
+
 router.delete("/delete/:courseId", async (req, res) => {
   const { courseId } = req.params;
   const conn = await db.getConnection();
   await conn.beginTransaction();
 
   try {
-    console.log(`Attempting to delete course with ID: ${courseId}`);
+    console.log(`🔄 Attempting to delete course with ID: ${courseId}`);
 
-    // 🧹 Delete related subjects
-    await conn.query(
-      "DELETE FROM iit_course_subjects WHERE course_creation_id = ?",
-      [courseId]
-    );
-
-    // 🧹 Delete related test types
-    await conn.query(
-      "DELETE FROM iit_course_type_of_tests WHERE course_creation_id = ?",
-      [courseId]
-    );
-
-    // 🧹 Delete related ORVL test types
-    await conn.query(
-      "DELETE FROM iit_orvl_course_type_for_course WHERE course_creation_id = ?",
-      [courseId]
-    );
-
-    // 🧹 Optionally delete associated image from Azure
+    // Step 1: Get course image before deleting
     const [imageResult] = await conn.query(
       "SELECT card_image FROM iit_course_creation_table WHERE course_creation_id = ?",
       [courseId]
     );
-    const oldImageName = imageResult[0]?.card_image;
-    if (oldImageName) {
-      await deleteFromAzure(oldImageName); // 🔁 Make sure this utility is implemented
+    const oldImageUrl = imageResult[0]?.card_image;
+
+    // Step 2: Delete child data
+    console.log("🧹 Deleting related subjects...");
+    await conn.query("DELETE FROM iit_course_subjects WHERE course_creation_id = ?", [courseId]);
+
+    console.log("🧹 Deleting related test types...");
+    await conn.query("DELETE FROM iit_course_type_of_tests WHERE course_creation_id = ?", [courseId]);
+
+    console.log("🧹 Deleting related ORVL test types...");
+    await conn.query("DELETE FROM iit_orvl_course_type_for_course WHERE course_creation_id = ?", [courseId]);
+
+    // Step 3: Delete the image from Azure
+    if (oldImageUrl) {
+      const imageName = oldImageUrl.split("/").pop().split("?")[0]; // Extract name from URL
+      console.log(`🧽 Attempting to delete image from Azure: ${imageName}`);
+
+      try {
+        await deleteFromAzure(imageName);
+        console.log("✅ Image deleted from Azure successfully.");
+      } catch (azureErr) {
+        console.warn("⚠️ Failed to delete image from Azure:", azureErr.message);
+      }
+    } else {
+      console.log("ℹ️ No image found for course, skipping Azure deletion.");
     }
 
-    // 🗑️ Delete the course itself
-    await conn.query(
-      "DELETE FROM iit_course_creation_table WHERE course_creation_id = ?",
-      [courseId]
-    );
+    // Step 4: Delete course record
+    console.log("🗑️ Deleting main course entry...");
+    await conn.query("DELETE FROM iit_course_creation_table WHERE course_creation_id = ?", [courseId]);
 
     await conn.commit();
-    console.log("🗑️ Course and all related data deleted successfully.");
+    console.log("✅ Course and all related data deleted successfully.");
+
     res.status(200).json({ success: true, message: "Course deleted successfully." });
   } catch (error) {
     console.error("❌ Error deleting course:", error.message);
@@ -572,6 +600,7 @@ router.delete("/delete/:courseId", async (req, res) => {
     conn.release();
   }
 });
+
 router.get("/GetAllCourses", async (req, res) => {
   const conn = await db.getConnection();
   
@@ -581,7 +610,7 @@ router.get("/GetAllCourses", async (req, res) => {
 
     // Query to get all courses with related subjects and test types
     const query = `
-    SELECT 
+   SELECT 
     c.course_creation_id,
     c.course_name,
     c.course_year,
@@ -595,11 +624,14 @@ router.get("/GetAllCourses", async (req, res) => {
     c.active_course,
     c.card_image,
     GROUP_CONCAT(DISTINCT s.subject_id) AS subject_ids, 
-    GROUP_CONCAT(DISTINCT c.exam_id) AS exam_ids
+    GROUP_CONCAT(DISTINCT c.exam_id) AS exam_ids,
+    GROUP_CONCAT(DISTINCT t.orvl_course_type_id) AS course_type_ids -- Corrected join and column
 FROM iit_db.iit_course_creation_table c
 LEFT JOIN iit_db.iit_course_subjects cs ON cs.course_creation_id = c.course_creation_id
 LEFT JOIN iit_db.iit_subjects s ON s.subject_id = cs.subject_id
+LEFT JOIN iit_db.iit_orvl_course_type_for_course t ON t.course_creation_id = c.course_creation_id
 GROUP BY c.course_creation_id;
+
     `;
 
     // Run the query

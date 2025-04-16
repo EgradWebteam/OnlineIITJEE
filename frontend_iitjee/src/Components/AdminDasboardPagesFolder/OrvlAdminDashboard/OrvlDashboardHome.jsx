@@ -4,9 +4,9 @@ import OrvlLeftNav from './OrvlLeftNav';
 import AdminDashboardHeader from '../adminDashboardPages/AdminDashboardHeader';
 import OrvlCourseCreation from './orvlCourseCreation';
 import OrvlTopicCreation from './orvlTopicCreation';
-import OrvlDashborad from './orvlDashborad';
+
 import styles  from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css'; 
-import OrvlDashboard from './OrvlAdminDashboard';
+import OrvlDashborad from './orvlDashborad';
 
 
 export default function  OrvlDashboardHome() {

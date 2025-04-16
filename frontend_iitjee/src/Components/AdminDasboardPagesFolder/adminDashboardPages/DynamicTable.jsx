@@ -180,11 +180,11 @@ const DynamicTable = ({
                       {type === "test"
                         ? row.test_activation
                         === "active"
-                          ? "Deactivate Test"
-                          : "Activate Test"
+                          ? "Activate Test"
+                          : "Deactivate Test"
                         : row.active_course === "active"
-                        ? "Deactivate Course"
-                        : "Activate Course"
+                        ? "Activate Course"
+                        : "Deactivate Course"
                       }
                     </button>
                   </td>
@@ -219,7 +219,7 @@ const DynamicTable = ({
       )}
  {popupType === "assignTest" && selectedRow && (
         <div className={styles.popupWrapper}>
-          <AssignToTest data={selectedRow} onClose={handleClosePopup} />
+          <AssignToTest      testCreationTableId={selectedRow.test_creation_table_id} data={selectedRow} onClose={handleClosePopup} />
         </div>
       )}
     </div>
