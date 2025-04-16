@@ -5,6 +5,8 @@ import QuestionsMainContainer from "./QuestionsMainContainer.jsx";
 import OTSRightSideBar from "./OTSRightSideBar.jsx";
 import QuestionNavigationButtons from "./QuestionNavigationButtons.jsx";
 import { QuestionStatusProvider } from "../../../ContextFolder/CountsContext.jsx";
+import { TimerProvider } from "../../../ContextFolder/TimerContext.jsx";
+import OtsTimer from "./OTSTimer.jsx";
 
 export default function OTSMain({ testData, realStudentId, realTestId }) {
   const [activeSubject, setActiveSubject] = useState(null);
@@ -56,6 +58,9 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
     <div>
       <div className={styles.OTSMainFileMainContainer}>
         <div className={styles.OTSMainFileSubContainer}>
+          <TimerProvider testData={testData}>
+            <OtsTimer testData={testData}/>
+          </TimerProvider>
           <SubjectsAndSectionsConatiner
             testData={testData}
             activeSubject={activeSubject}

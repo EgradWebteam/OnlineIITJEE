@@ -133,7 +133,7 @@ const ExamInstructions = () => {
 
       const route = studentId
         ? `/OTSRootFile/${encryptedTestId}/${encryptedStudentId}`
-        : `/OTSRootFile       /${encryptedTestId}`; // <-- Use a route for admin preview
+        : `/OTSRootFile/${encryptedTestId}`; // <-- Use a route for admin preview
 
       navigate(route);
     } catch (error) {
