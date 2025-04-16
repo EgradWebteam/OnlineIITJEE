@@ -464,7 +464,7 @@ FROM iit_questions q
 INNER JOIN iit_ots_document d ON q.document_Id = d.document_Id
 INNER JOIN iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
 INNER JOIN iit_subjects s ON d.subject_id = s.subject_id
-LEFT JOIN iit_sections sec ON d.section_id = sec.section_id  -- changed from INNER JOIN to LEFT JOIN
+LEFT JOIN iit_sections sec ON d.section_id = sec.section_id 
 LEFT JOIN iit_options o ON q.question_id = o.question_id
 LEFT JOIN iit_question_type qts ON q.question_type_id = qts.question_type_id
 LEFT JOIN iit_solutions sol ON q.question_id = sol.question_id 
