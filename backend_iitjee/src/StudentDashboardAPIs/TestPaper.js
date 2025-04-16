@@ -244,9 +244,9 @@ async function updateResponse(connection, data) {
   `;
 
   const updateValues = [
- 
-    data.optionIds,
+
     data.userAnswer,
+    data.optionIds,
     data.answered,
     parseInt(data.realStudentId, 10),
     parseInt(data.realTestId, 10),
@@ -308,10 +308,12 @@ router.post("/SaveResponse", async (req, res) => {
 
     if (exists) {
       await updateResponse(connection, data);
+      console.log("Data to be inserted/updated:", data);
       console.log("Response updated");
       return res.status(200).json({ success: true, message: "Response updated successfully" });
     } else {
       await insertResponse(connection, data);
+      console.log("Data to be inserted/updated:", data);
       console.log("Response inserted");
       return res.status(200).json({ success: true, message: "Response inserted successfully" });
     }
