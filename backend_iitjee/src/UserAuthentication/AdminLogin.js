@@ -26,7 +26,7 @@ router.post("/adminLogin", async (req, res) => {
       connection = await db.getConnection();
   
       const [rows] = await connection.query(
-        "SELECT admin_id,password, role FROM iit_admin_data WHERE admin_email_id = ?",
+        "SELECT admin_id,password,admin_name,admin_email_id, role FROM iit_admin_data WHERE admin_email_id = ?",
         [email]
       );
   
@@ -55,7 +55,9 @@ router.post("/adminLogin", async (req, res) => {
       res.status(200).json({
         message: "Login successful",
         token,
-        admin_id: user.admin_id, // Send admin_id in the response
+        admin_id: user.admin_id, 
+        name:user.admin_name,
+        email:user.admin_email_id// Send admin_id in the response
       });
     } catch (error) {
       console.error("Error in login:", error);

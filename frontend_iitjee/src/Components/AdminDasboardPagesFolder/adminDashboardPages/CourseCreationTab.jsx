@@ -13,7 +13,7 @@ const CourseCreationTab = () => {
   const [editCourseData, setEditCourseData] = useState(null); 
   // Fetch courses data from the new API
   const fetchCourses = () => {
-    debugger
+
     fetch(`${BASE_URL}/CourseCreation/GetAllCourses`)
       .then((res) => res.json())
       .then((data) => {

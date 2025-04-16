@@ -46,20 +46,19 @@ const AdminLoginForm = () => {
       });
 
       const data = await response.json();
-      const loginauth = {
-        token: data.token, // Assuming the token is in the response
-        admin_id: data.admin_id, // Assuming the admin_id is in the response
-      }// Assuming the token is in the response
       setLoading(false);
- if (response.ok) {
+
+      if (response.ok) {
         const loginAuth={
           token:data.token,
           adminName:data.name,
+          admin_id: data.admin_id,
           adminEmail:data.email
-        }
-        localStorage.setItem("adminInfo", JSON.stringify(loginAuth));
+        }       
+         localStorage.setItem('adminInfo',JSON.stringify(loginAuth));
+        setMessage({ type: 'success', text: 'Login successful.' });
         navigate('/AdminDashboard');
-      }else {
+      } else {
         setMessage({ type: 'error', text: data.message || 'Login failed. Please try again.' });
       }
     } catch (error) {

@@ -28,7 +28,27 @@ router.get("/CourseCreationFormData", async (req, res) => {
     if (connection) connection.release(); 
   }
 });
+router.get("/OrvlExamsTypesofCourses", async (req, res) => {
+  let connection;
+  try {
+    connection = await db.getConnection();
 
+    const [examsResult, coursetypesResult] = await Promise.all([
+      connection.query("SELECT exam_id, exam_name FROM iit_exams"),
+      connection.query("SELECT orvl_course_type_id, orvl_course_type_name FROM iit_orvl_course_types"),
+    ]);
+
+    const [exams] = examsResult;
+    const [coursetypes] = coursetypesResult;
+
+    res.json({ exams, coursetypes });
+  } catch (err) {
+    console.error("Error fetching IIT data:", err);
+    res.status(500).json({ error: "Failed to fetch IIT data" });
+  } finally{
+    if (connection) connection.release(); 
+  }
+})
 
 // GET subjects by exam_id
 router.get("/ExamSubjects/:examId", async (req, res) => {
@@ -54,7 +74,141 @@ let connection;
     if (connection) connection.release(); 
   }
 });
+router.post(
+  "/CreateOrvlCourse",
+  upload.single("courseImageFile"),
+  async (req, res) => {
+    const conn = await db.getConnection();
+    await conn.beginTransaction();
 
+    try {
+      const {
+        courseName,
+        selectedYear,
+        courseStartDate,
+        courseEndDate,
+        cost,
+        discount,
+        totalPrice,
+        selectedExamId,
+        courseImageFile,
+      } = req.body;
+
+      const parseInputArray = (input) => {
+        if (!input) return [];
+        if (Array.isArray(input)) return input.map(Number);
+        try {
+          const parsed = JSON.parse(input);
+          return Array.isArray(parsed) ? parsed.map(Number) : [Number(parsed)];
+        } catch {
+          return String(input).split(",").map(Number);
+        }
+      };
+
+      const selectedSubjects = parseInputArray(req.body.selectedSubjects);
+      const selectedTypes = parseInputArray(req.body.selectedTypes);
+
+      console.log("📥 Received Form Data:", {
+        courseName,
+        selectedYear,
+        courseStartDate,
+        courseEndDate,
+        cost,
+        discount,
+        totalPrice,
+        selectedExamId,
+        selectedSubjects,
+        selectedTypes,
+        courseImageFile,
+      });
+
+
+
+
+const OriginalFileName = req.file.originalname;
+      // Ensure that we have a valid file uploaded before proceeding
+      let imageUrl = "";
+      if (req.file) {
+        // Construct image URL after upload, using the Azure file URL
+        const frontendBaseURL = "http://localhost:5173"; // or your actual domain
+        imageUrl = `${frontendBaseURL}/OtsCourseCardImages/${req.file.originalname}`; // Assuming the file is saved with filename
+        console.log("imageUrl", imageUrl); // Log the constructed URL
+      }
+
+      // Azure upload logic (ensure that file is correctly uploaded)
+      let azureUrl = "";
+      let azureFileName = "";
+      if (req.file) {
+        azureUrl = await uploadToAzureWithSAS(req.file,OriginalFileName); // Function for uploading to Azure
+        azureFileName = azureUrl.split("/").pop().split("?")[0]; // Extract file name from Azure URL
+        console.log("File name for Azure URL:", azureFileName); // Log file name for Azure
+      }
+
+
+
+      console.log("azureFileName", azureFileName);
+
+      const portal_id = 1;
+      const activeCourseStatus = "inactive";
+
+      const insertCourseQuery = `
+        INSERT INTO iit_course_creation_table 
+        (course_name, course_year, exam_id, course_start_date, course_end_date, cost, discount, total_price, portal_id, active_course, card_image) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+
+      const courseValues = [
+        courseName,
+        selectedYear,
+        selectedExamId,
+        courseStartDate,
+        courseEndDate,
+        cost,
+        discount,
+        totalPrice,
+        portal_id,
+        activeCourseStatus,
+        azureFileName, // Save the Azure URL in the database
+      ];
+
+      const [courseResult] = await conn.query(insertCourseQuery, courseValues);
+      const courseCreationId = courseResult.insertId;
+
+      console.log("✅ Course inserted with ID:", courseCreationId);
+
+      // Insert into iit_course_subjects
+      for (const subjectId of selectedSubjects) {
+        await conn.query(
+          `INSERT INTO iit_course_subjects (course_creation_id, subject_id) VALUES (?, ?)`,
+          [courseCreationId, subjectId]
+        );
+        console.log(`📘 Added subject ${subjectId}`);
+      }
+
+      // Insert into iit_course_type_of_tests
+      for (const typeId of selectedTypes) {
+        await conn.query(
+          `INSERT INTO iit_orvl_course_type_for_course (course_creation_id, orvl_course_type_id) VALUES (?, ?)`,
+          [courseCreationId, typeId]
+        );
+        console.log(`🧪 Added test type ${typeId}`);
+      }
+
+      await conn.commit();
+
+      console.log("🎉 Course created successfully with all related data!");
+      res
+        .status(200)
+        .json({ success: true, message: "Course Created Successfully" });
+    } catch (err) {
+      await conn.rollback();
+      console.error("❌ Error in submitForm:", err);
+      res.status(500).json({ success: false, error: err.message });
+    } finally {
+      conn.release();
+    }
+  }
+);
 // ENV VARIABLES (can also use dotenv)
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const sasToken = process.env.AZURE_SAS_TOKEN;
