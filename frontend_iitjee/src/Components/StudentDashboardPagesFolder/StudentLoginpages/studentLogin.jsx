@@ -6,7 +6,7 @@ import MainHeader from '../../LandingPagesFolder/MainPageHeaderFooterFolder/main
 import MainFooter from '../../LandingPagesFolder/mainPageHeaderFooterFolder/MainFooter';
 import { BASE_URL } from "../../../config/apiConfig.js";
 import StudentLoginForm from './studentLoginForm';
-import { useStudent } from '../../../context/StudentContext.jsx';
+import { useStudent } from '../../../ContextFolder/StudentContext.jsx';
 import { v4 as uuidv4 } from 'uuid';
 export default function StudentLogin() {
   const [username, setUsername] = useState(""); 
