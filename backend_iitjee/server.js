@@ -40,6 +40,9 @@ app.use("/DocumentUpload", TestPaperDocumentUpload);
 const TestPaper = require("./src/StudentDashboardAPIs/TestPaper");
 app.use("/OTS", TestPaper);
 
+const ExamSummary = require("./src/StudentDashboardAPIs/ExamSummary");
+app.use("/OTSExamSummary", ExamSummary);
+
 const EncryptDecrypt = require("./src/EncryptDecryptAPIs/encryptDecryptController.js");
 app.use("/EncryptDecrypt", EncryptDecrypt)
 

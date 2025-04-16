@@ -342,8 +342,8 @@ const transformTestData = (rows) => {
   const subjectMap = {};
 
   for (const row of rows) {
-    if (!row.subjectId || !row.section_id || !row.question_id) continue;
-
+    // if (!row.subjectId || !row.section_id || !row.question_id) continue;
+    if (!row.subjectId || !row.question_id) continue;
     // Subjects
     if (!subjectMap[row.subjectId]) {
       subjectMap[row.subjectId] = {
@@ -433,40 +433,41 @@ router.get("/ViewTestPaper/:test_creation_table_id", async (req, res) => {
 
     const [rows] = await db.query(
       `
-      SELECT 
-        t.test_name AS TestName,
-        t.test_creation_table_id AS examId,
-        t.course_type_of_test_id AS courseTypeOfTestId,
-        t.duration AS TestDuration,
-        t.options_pattern_id AS opt_pattern_id,
-        s.subject_id AS subjectId,
-        s.subject_name AS SubjectName,
-        sec.section_id,
-        sec.section_name AS SectionName,
-        q.question_id,
-        q.question_img_name AS questionImgName,
-        d.document_name,
-        o.option_id,
-        o.option_index,
-        o.option_img_name,
-        q.answer_text AS answer,
-        q.marks_text,
-        q.nmarks_text,
-        q.question_type_id AS questionTypeId,
-        q.qtype_text,
-        sol.solution_id,
-        sol.solution_img_name,
-        sol.video_solution_link
-      FROM iit_questions q
-      INNER JOIN iit_ots_document d ON q.document_Id = d.document_Id
-      INNER JOIN iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
-      INNER JOIN iit_subjects s ON d.subject_id = s.subject_id
-      INNER JOIN iit_sections sec ON d.section_id = sec.section_id
-      LEFT JOIN iit_options o ON q.question_id = o.question_id
-      LEFT JOIN iit_question_type qts ON q.question_type_id = qts.question_type_id
-      LEFT JOIN iit_solutions sol ON q.question_id = sol.question_id 
-      WHERE d.test_creation_table_id = ?
-      ORDER BY s.subject_id, sec.section_id, q.question_id, o.option_index
+    SELECT 
+    t.test_name AS TestName,
+    t.test_creation_table_id AS examId,
+    t.course_type_of_test_id AS courseTypeOfTestId,
+    t.duration AS TestDuration,
+    t.options_pattern_id AS opt_pattern_id,
+    s.subject_id AS subjectId,
+    s.subject_name AS SubjectName,
+    sec.section_id,
+    sec.section_name AS SectionName,
+    q.question_id,
+    q.question_img_name AS questionImgName,
+    d.document_name,
+    o.option_id,
+    o.option_index,
+    o.option_img_name,
+    q.answer_text AS answer,
+    q.marks_text,
+    q.nmarks_text,
+    q.question_type_id AS questionTypeId,
+    q.qtype_text,
+    sol.solution_id,
+    sol.solution_img_name,
+    sol.video_solution_link
+FROM iit_questions q
+INNER JOIN iit_ots_document d ON q.document_Id = d.document_Id
+INNER JOIN iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
+INNER JOIN iit_subjects s ON d.subject_id = s.subject_id
+LEFT JOIN iit_sections sec ON d.section_id = sec.section_id 
+LEFT JOIN iit_options o ON q.question_id = o.question_id
+LEFT JOIN iit_question_type qts ON q.question_type_id = qts.question_type_id
+LEFT JOIN iit_solutions sol ON q.question_id = sol.question_id 
+WHERE d.test_creation_table_id = ?
+ORDER BY s.subject_id, sec.section_id, q.question_id, o.option_index;
+
       `,
       [test_creation_table_id]
     );
