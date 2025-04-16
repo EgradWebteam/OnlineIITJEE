@@ -14,6 +14,47 @@ const ExamInstructions = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [acceptedTerms, setAcceptedTerms] = useState(false); // 👈 Track checkbox
 
+  // useEffect(() => {
+  //   const token = sessionStorage.getItem("navigationToken");
+  //   if (!token) {
+  //     navigate("/Error");
+  //     return;
+  //   }
+
+  //   const decryptAndFetch = async () => {
+  //     try {
+  //       const [decryptedTestId, decryptedStudentId] = await decryptDataBatch([
+  //         decodeURIComponent(testId),
+  //         decodeURIComponent(studentId)
+  //       ]);
+
+  //       if (!decryptedTestId || !decryptedStudentId) {
+  //         throw new Error("Decryption failed");
+  //       }
+
+  //       setRealTestId(decryptedTestId);
+  //       setRealStudentId(decryptedStudentId);
+
+  //       const response = await fetch(
+  //         `${BASE_URL}/studentmycourses/instructions/${decryptedTestId}`
+  //       );
+
+  //       if (!response.ok) {
+  //         throw new Error("Failed to fetch instructions");
+  //       }
+
+  //       const data = await response.json();
+  //       setInstructionsData(data);
+  //       setIsLoading(false);
+  //     } catch (err) {
+  //       console.error("Error:", err);
+  //       navigate("/Error");
+  //     }
+  //   };
+
+  //   decryptAndFetch();
+  // }, [testId, studentId, navigate]);
+
   useEffect(() => {
     const token = sessionStorage.getItem("navigationToken");
     if (!token) {
@@ -23,25 +64,25 @@ const ExamInstructions = () => {
 
     const decryptAndFetch = async () => {
       try {
-        const [decryptedTestId, decryptedStudentId] = await decryptDataBatch([
-          decodeURIComponent(testId),
-          decodeURIComponent(studentId)
-        ]);
+        let decryptedTestId = '';
+        let decryptedStudentId = '';
 
-        if (!decryptedTestId || !decryptedStudentId) {
-          throw new Error("Decryption failed");
+        if (studentId) {
+          const [testIdDecrypted, studentIdDecrypted] = await decryptDataBatch([
+            decodeURIComponent(testId),
+            decodeURIComponent(studentId),
+          ]);
+          decryptedTestId = testIdDecrypted;
+          decryptedStudentId = studentIdDecrypted;
+        } else {
+          [decryptedTestId] = await decryptDataBatch([decodeURIComponent(testId)]);
         }
 
         setRealTestId(decryptedTestId);
-        setRealStudentId(decryptedStudentId);
+        setRealStudentId(decryptedStudentId); // empty string if admin
 
-        const response = await fetch(
-          `${BASE_URL}/studentmycourses/instructions/${decryptedTestId}`
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch instructions");
-        }
+        const response = await fetch(`${BASE_URL}/studentmycourses/instructions/${decryptedTestId}`);
+        if (!response.ok) throw new Error("Failed to fetch instructions");
 
         const data = await response.json();
         setInstructionsData(data);
@@ -63,22 +104,43 @@ const ExamInstructions = () => {
   const examName = instructionsData[0]?.exam_name || "Exam";
   const instructionPoints = instructionsData[0]?.instruction_points || [];
 
-  const handleBeginTest = async () => {
-    //  Store token before navigation
-    sessionStorage.setItem("navigationToken", "valid");
-    try {
-      const encrypted = await encryptBatch([realTestId, realStudentId]);
-      const encryptedTestId = encodeURIComponent(encrypted[0]);
-      const encryptedStudentId = encodeURIComponent(encrypted[1]);
+  // const handleBeginTest = async () => {
+  //   //  Store token before navigation
+  //   sessionStorage.setItem("navigationToken", "valid");
+  //   try {
+  //     const encrypted = await encryptBatch([realTestId, realStudentId]);
+  //     const encryptedTestId = encodeURIComponent(encrypted[0]);
+  //     const encryptedStudentId = encodeURIComponent(encrypted[1]);
   
-      sessionStorage.setItem("navigationToken", "valid"); // Add session token
-      navigate(`/OTSRootFile/${encryptedTestId}/${encryptedStudentId}`);
+  //     sessionStorage.setItem("navigationToken", "valid"); // Add session token
+  //     navigate(`/OTSRootFile/${encryptedTestId}/${encryptedStudentId}`);
+  //   } catch (error) {
+  //     console.error("Encryption failed:", error);
+  //     navigate("/Error");
+  //   }
+  // };
+  
+  const handleBeginTest = async () => {
+    sessionStorage.setItem("navigationToken", "valid");
+
+    try {
+      const encrypted = studentId
+        ? await encryptBatch([realTestId, realStudentId])
+        : await encryptBatch([realTestId]);
+
+      const encryptedTestId = encodeURIComponent(encrypted[0]);
+      const encryptedStudentId = studentId ? encodeURIComponent(encrypted[1]) : null;
+
+      const route = studentId
+        ? `/OTSRootFile/${encryptedTestId}/${encryptedStudentId}`
+        : `/OTSRootFile       /${encryptedTestId}`; // <-- Use a route for admin preview
+
+      navigate(route);
     } catch (error) {
       console.error("Encryption failed:", error);
       navigate("/Error");
     }
   };
-  
   return (
     <div className={styles.examInstructionsContainer}>
       <div className={styles.examinstructionSubdiv}>
