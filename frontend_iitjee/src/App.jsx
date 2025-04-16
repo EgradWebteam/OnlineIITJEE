@@ -89,6 +89,9 @@ function App() {
       <Route path='/ExamInstructions/:testId/:studentId' element={<ExamInstrctions/>}/>
       <Route path="/AdminProfiler" element={<AdminProfiler />} />
       <Route path="/OrvlDashboard" element={<OrvlDashboard />} />
+      <Route path='/GeneralInstructions/:testId' element={<GeneralInstructions/>}/>
+      <Route path='/ExamInstructions/:testId' element={<ExamInstrctions/>}/>
+      <Route path='/OTSRootFile/:testId' element={<OTSRootFile/>}/>
     </Routes>
     </BrowserRouter>
    </Suspense>
