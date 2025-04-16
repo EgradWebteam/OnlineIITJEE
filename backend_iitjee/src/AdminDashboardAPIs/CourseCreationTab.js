@@ -148,7 +148,7 @@ const OriginalFileName = req.file.originalname;
 
       console.log("azureFileName", azureFileName);
 
-      const portal_id = 1;
+      const portal_id = 3;
       const activeCourseStatus = "inactive";
 
       const insertCourseQuery = `
@@ -186,13 +186,13 @@ const OriginalFileName = req.file.originalname;
       }
 
       // Insert into iit_course_type_of_tests
-      for (const typeId of selectedTypes) {
+      
         await conn.query(
           `INSERT INTO iit_orvl_course_type_for_course (course_creation_id, orvl_course_type_id) VALUES (?, ?)`,
-          [courseCreationId, typeId]
+          [courseCreationId, selectedTypes]
         );
-        console.log(`🧪 Added test type ${typeId}`);
-      }
+        console.log(`🧪 Added test type ${selectedTypes}`);
+    
 
       await conn.commit();
 
