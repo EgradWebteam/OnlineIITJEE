@@ -114,7 +114,7 @@ const CourseForm = ({ onCourseCreated, courseData }) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
- 
+  
     const formData = new FormData();
     formData.append("courseName", courseName);
     formData.append("selectedYear", selectedYear);
@@ -127,31 +127,33 @@ const CourseForm = ({ onCourseCreated, courseData }) => {
     formData.append("selectedExamId", selectedExamId);
     formData.append("selectedSubjects", JSON.stringify(selectedSubjects));
     formData.append("selectedTypes", JSON.stringify(selectedTypes));
-    // if (selectedImage) {
-    //   formData.append("courseImageFile", `${ImagePath}/${selectedImage}`);
-    // }
+  
     if (selectedImage) {
       const imageFile = await getImageFile(selectedImage);
       formData.append("courseImageFile", imageFile);
     }
- 
+  
     if (isEditMode && courseData.course_creation_id) {
       formData.append("course_creation_id", courseData.course_creation_id);
     }
- 
+  
+    // ✅ Add this right here before the fetch call
+    console.log("📝 Logging FormData content:");
+    for (let pair of formData.entries()) {
+      console.log(`${pair[0]}:`, pair[1]);
+    }
+  
     try {
       const response = await fetch(
         `${BASE_URL}/CourseCreation/${isEditMode ? `UpdateCourse/${courseData.course_creation_id}` : "CreateOrvlCourse"}`,
         {
-          method: isEditMode ? "PUT" : "POST", 
+          method: isEditMode ? "PUT" : "POST",
           body: formData,
         }
       );
-      
-      
- 
+  
       const result = await response.json();
- 
+  
       if (result.success) {
         alert(isEditMode ? "✅ Course Updated Successfully!" : "✅ Course Created Successfully!");
         if (onCourseCreated) onCourseCreated();
@@ -162,6 +164,7 @@ const CourseForm = ({ onCourseCreated, courseData }) => {
       console.error("Submission Error:", error);
     }
   };
+  
  
   return (
     <div>
