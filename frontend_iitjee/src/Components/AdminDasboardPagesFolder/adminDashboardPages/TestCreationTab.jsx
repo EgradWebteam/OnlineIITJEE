@@ -154,7 +154,6 @@ const TestCreationTab = () => {
   onEdit={handleEdit}
   onDelete={handleDelete}
   onToggle={handleActivationToggle}
-  onAssign={handleAssign}
   onDownload={handleDownload}
 />
 

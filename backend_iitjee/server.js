@@ -19,6 +19,8 @@ app.use("/student", studentRegistration);
 
 const CourseCreationTab = require("./src/AdminDashboardAPIs/CourseCreationTab");
 app.use("/CourseCreation", CourseCreationTab); // ✅ route mount point
+const OrvlTopicCreationTab = require("./src/AdminDashboardAPIs/OrvlTopicCreation.js");
+app.use("/OrvlTopicCreation", OrvlTopicCreationTab);
 const studentbuycourses = require("./src/StudentDashboardAPIs/BuyCourses.js");
 app.use("/studentbuycourses", studentbuycourses); // ✅ route mount point
 const studentMycourses = require("./src/StudentDashboardAPIs/MyCourses.js");

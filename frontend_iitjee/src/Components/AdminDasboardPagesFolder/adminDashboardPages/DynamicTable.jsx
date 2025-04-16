@@ -3,7 +3,7 @@ import styles from "../../../Styles/AdminDashboardCSS/AdminDashboard.module.css"
 import ArrangeQuestions from "./ArrangeQuestion";
 import ViewQuestions from "./ViewQuestions";
 import ViewResults from "./ViewResults"; // Assuming ViewResults is another component
-
+import AssignToTest from "./AssignToTest";
 
 const DynamicTable = ({
   columns,
@@ -53,11 +53,10 @@ const DynamicTable = ({
         alert("Take Test clicked");
         break;
       case "assignTest":
-        onAssign?.(row);
+        setSelectedRow(row);
+        setPopupType("assignTest");
         break;
-      case "downloadPaper":
-        setSelectedRow(row); // Set the selected row when download is triggered
-        break;
+     
       case "deleteTest":
         onDelete?.(row);
         break;
@@ -112,7 +111,6 @@ const DynamicTable = ({
                         <option value="viewResults">View Results</option> 
                         <option value="takeTest">Take Test</option>
                         <option value="assignTest">📌 Assign to Test</option>
-                        <option value="downloadPaper">Download Question Paper</option>
                         <option value="deleteTest">🗑️ Delete Test</option>
                       </select>
                     </div>
@@ -139,7 +137,7 @@ const DynamicTable = ({
                     <button
                       className={`${styles.toggleBtn} ${
                         type === "test"
-                          ? row.test_creation_status === "active"
+                          ? row.test_activation === "active"
                             ? styles.deactivate
                             : styles.activate
                           : row.active_course === "active"
@@ -152,7 +150,8 @@ const DynamicTable = ({
                       }}
                     >
                       {type === "test"
-                        ? row.test_creation_status === "active"
+                        ? row.test_activation
+                        === "active"
                           ? "Deactivate Test"
                           : "Activate Test"
                         : row.active_course === "active"
@@ -190,7 +189,11 @@ const DynamicTable = ({
           />
         </div>
       )}
-
+ {popupType === "assignTest" && selectedRow && (
+        <div className={styles.popupWrapper}>
+          <AssignToTest data={selectedRow} onClose={handleClosePopup} />
+        </div>
+      )}
     </div>
   );
 };
