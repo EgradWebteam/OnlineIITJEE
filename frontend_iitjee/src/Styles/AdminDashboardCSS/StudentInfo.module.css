@@ -1,6 +1,14 @@
+*{
+  box-sizing: border-box;
+list-style: none;
+margin: 0;
+padding: 0;
+text-decoration: none;
+
+}
 .Addedstudent {
   color: white;
-    background-color: rgb(77, 98, 221);
+  background-color: #0d2a44;
     position: relative;
     left: 80%;
     padding: 10px;
@@ -22,6 +30,9 @@
   box-shadow: 0px 0px 3px 3px rgb(219, 219, 219);
   border-radius: 10px;
 }
+.SubHEadingForStd{
+  color: rgb(68, 112, 148);
+}
 .PopUPContainer {
   position: fixed;
   top: 0;
@@ -34,6 +45,7 @@
   align-items: center;
 }
 .PopUP {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -51,6 +63,7 @@
 .PopUPForm {
   display: flex;
   flex-direction: column;
+  padding: 1rem;
 }
 .HedaingForAddStudents {
   text-align: center;
@@ -90,20 +103,35 @@
   border: 1px solid #ff0019;
   font-weight: 600;
 }
- 
+ .CoursesInputContainer{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+ gap: 10px;
+ }
 .InboxesForForm > input {
   padding: 0.5rem;
   border-radius: 5px;
   border: 1px solid rgb(209, 202, 202);
 }
-.SubmitBtnsForPopUpfor {
+.SubmitBtnsForPopUpfor button {
   background-color: rgb(10 77 117);
-  color: white;
-  justify-self: center;
+    color: white;
+    padding: 10px 15px;
+    font-size: 15px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+}
+.SubmitBtnsForPopUpfor{
+  text-align: center;
 }
 .BtnsForPopUp {
   background-color: rgb(10 77 117);
-  color: white;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
 }
 .ButtonsForPopupDetails {
   display: flex;
@@ -157,7 +185,8 @@
 .StudentItem {
   display: flex;
   flex-direction: column;
-  margin:0 1rem;
+  margin: 1rem;
+  gap: 1rem;
 }
 .ProfileForStdDetails {
   display: flex;
@@ -174,7 +203,8 @@
 .HeadingForDetails {
   text-align: center;
   color: rgb(72, 88, 83);
-  padding: 0.5rem;
+  padding: 10px;
+  font-weight: 600;
 }
 .StudentInfoDetails {
   display: grid;
@@ -232,19 +262,31 @@
 .ButtonsForEdit {
   display: flex;
   flex-direction: row;
-  gap: 3rem;
+  justify-content: space-around;
 }
 .ButtonsForEdit button {
   color: white;
   background-color: rgb(107, 128, 247);
+  padding: 10px 30px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 5px;
 }
-.CoursesInputContainer {
-  display: flex;
-  flex-direction: row;
-  gap: 2rem;
-}
+
 .CoursesInputContainer input {
   margin: 0 10px;
+}
+.closeBtn {
+  position: absolute;
+  top: 1rem;       /* distance from the top */
+  right: 1rem;     /* distance from the right */
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+  z-index: 10;
 }
  
  

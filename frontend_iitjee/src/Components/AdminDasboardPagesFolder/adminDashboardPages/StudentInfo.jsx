@@ -277,6 +277,15 @@ const StudentInfo = () => {
         {isPopUp && (
           <div className={styles.PopUPContainer}>
             <div className={styles.PopUP}>
+               <button
+                            className={styles.closeBtn}
+                            onClick={() => {
+                              setIsPopUp(false);
+                            }}
+                          >
+                          ❌
+              
+                          </button>
               <h3 className={styles.HedaingForAddStudents}>Added Student</h3>
               <form className={styles.PopUPForm} onSubmit={handleAddStudent}>
                 <h4 className={styles.SubHEadingForStd}>Student Information</h4>
@@ -315,7 +324,7 @@ const StudentInfo = () => {
                 {errors.mobileNumber && (
                   <p className={styles.errorText}>{errors.mobileNumber}</p>
                 )}
-                <h4 className={styles.subHeadingForStd}>Selected Courses</h4>
+                <h4 className={styles.SubHEadingForStd}>Selected Courses</h4>
                 <div className={styles.CoursesInputContainer}>
                 {courses.length > 0 ? (
           courses.map(course => (
@@ -333,9 +342,11 @@ const StudentInfo = () => {
           <p>No courses available</p>
         )}
         </div>
-                <button className={styles.SubmitBtnsForPopUpfor} type="submit">
+        <div className={styles.SubmitBtnsForPopUpfor}>
+                <button  type="submit">
                   Submit
                 </button>
+                </div>
               </form>
             </div>
           </div>
@@ -404,9 +415,9 @@ const StudentInfo = () => {
                       <FaUser />
                     </div>
  
-                    <h4 className={styles.HeadingForDetails}>
+                    <div className={styles.HeadingForDetails}>
                       Added Student Information:
-                    </h4>
+                    </div>
  
                     <div key={index} className={styles.StudentItem}>
                       <p className={styles.StudentInfoDetails}>
@@ -431,8 +442,8 @@ const StudentInfo = () => {
                         }
                       >
                         {student.student_activation === 1
-                          ? "Dectivate"
-                          : "Activate"}
+                          ? "Activate"
+                          : "Deactivate"}
                       </button>
                       <div className={styles.EditBtnIcon}>
                         <button
@@ -453,7 +464,7 @@ const StudentInfo = () => {
         {editingStudent && (
           <div className={styles.PopUPContainer}>
             <div className={styles.PopUP}>
-              <h3>Edit Student</h3>
+            <h3 className={styles.HedaingForAddStudents}>Edit Student</h3>
               <form
                 className={styles.PopUPForm}
                 onSubmit={(e) => {
@@ -461,6 +472,7 @@ const StudentInfo = () => {
                   handleSaveEditedStudent(editingStudent);
                 }}
               >
+                 <h4 className={styles.SubHEadingForStd}>Student Information</h4>
                 <div className={styles.InboxesForForm}>
                   <label>Name:</label>
                   <input
@@ -500,6 +512,7 @@ const StudentInfo = () => {
                     }
                   />
                 </div>
+                  <h4 className={styles.SubHEadingForStd}>Selected Courses</h4>
                 <div className={styles.CoursesInputContainer}>
           {courses.length > 0 ? (
             courses.map((course) => (
