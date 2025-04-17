@@ -515,8 +515,8 @@ const StudentInfo = () => {
                   <h4 className={styles.SubHEadingForStd}>Selected Courses</h4>
                 <div className={styles.CoursesInputContainer}>
           {courses.length > 0 ? (
-            courses.map((course) => (
-              <div key={course.id} className={styles.CoursesInput}>
+            courses.map((course,index) => (
+              <div key={index} className={styles.CoursesInput}>
                 <input
   type="checkbox"
   className={styles.customCheckbox}
