@@ -2,71 +2,94 @@ import React, { useEffect, useState } from 'react';
 import globalCSS from "../../../Styles/Global.module.css";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
-import StudentReportMain from '../../OTS/ResultsFolderOTS/StudentReportMain';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../../../config/apiConfig';
-export default function StudentDashboard_MyResults({studentId}) {
 
-     const [showStudentReport, setShowStudentReport] = useState(false);
-     const navigate = useNavigate();
-     useEffect(() => {
-    console.log("myresults")
-      },[])
+export default function StudentDashboard_MyResults({ studentId }) {
+  const [testData, setTestData] = useState([]);
+  const [selectedExam, setSelectedExam] = useState(null);
+  const navigate = useNavigate();
 
-      const handleViewReportClick = () => {
-          let url = `/StudentReport`
-          navigate(url);
+  const handleViewReportClick = (testId) => {
+    navigate(`/StudentReport/${testId}`);
+  };
+
+  useEffect(() => {
+    if (!studentId) return;
+
+    const fetchResultTestData = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/MyResults/FetchResultTestdata/${studentId}`);
+        if (response.data.success) {
+          setTestData(response.data.data);
+        } else {
+          console.error('Failed to fetch data');
+        }
+      } catch (error) {
+        console.error('Error fetching test result data:', error);
       }
+    };
 
-      // if(showStudentReport){
-      //   return(
-      //     <StudentReportMain/>
-      //   )
-      // }
+    fetchResultTestData();
+  }, [studentId]);
+
+  // Set first exam active once test data is loaded
+  useEffect(() => {
+    if (testData.length > 0 && !selectedExam) {
+      const firstExam = testData[0].exam_name;
+      setSelectedExam(firstExam);
+    }
+  }, [testData, selectedExam]);
 
 
+  // Group by exam name
+  const groupedByExam = {};
+  if (Array.isArray(testData)) {
+    testData.forEach(test => {
+      if (!groupedByExam[test.exam_name]) {
+        groupedByExam[test.exam_name] = [];
+      }
+      groupedByExam[test.exam_name].push(test);
+    });
+  }
 
-      const [testData, setTestData] = useState([]);
-  
-    
-      useEffect(() => {
-        if (!studentId) return;
-    
-        const fetchResultTestData = async () => {
-          try {
-            const response = await axios.get(`${BASE_URL}/MyResults/FetchResultTestdata/${studentId}`);
-            if (response.data.success) {
-              setTestData(response.data);
-            } else {
-              console.error('Failed to fetch data');
-            }
-          } catch (error) {
-            console.error('Error fetching test result data:', error);
-          }
-        };
-    
-        fetchResultTestData();
-      }, [studentId]);
-    
-console.log("testData",testData)
-
+  const examNames = Object.keys(groupedByExam);
 
   return (
     <div className={styles.StudentDashboardMyCoursesMainDiv}>
       <div className={globalCSS.stuentDashboardGlobalHeading}>
         <h3>My Results</h3>
       </div>
+
+      {/* Exam Buttons */}
+      <div className={globalCSS.examButtonsDiv}>
+        {examNames.map((exam, idx) => (
+          <button
+            key={idx}
+            className={`${globalCSS.examButtons} ${selectedExam === exam ? globalCSS.examActiveBtn : ""}`}
+            onClick={() => setSelectedExam(exam)}
+          >
+            {exam}
+          </button>
+        ))}
+      </div>
+
+      {/* Tests for Selected Exam */}
       <div className={styles.myResultsSubContainer}>
-        <div className={styles.resultsMainDiv}>
-          <div className={styles.resultsSubDiv}>
-            <p className={styles.testNameInResults}>TEST</p>
-            <div className={styles.resultsViewReportBtn}>
-              <button onClick={handleViewReportClick}>VIEW REPORT <span className={styles.resultsBtnIcon}><MdKeyboardDoubleArrowRight /></span> </button>
+        {selectedExam && groupedByExam[selectedExam]?.map((test, idx) => (
+          <div key={idx} className={styles.resultsMainDiv}>
+            <div className={styles.resultsSubDiv}>
+              <p className={styles.testNameInResults}>{test.test_name}</p>
+              <div className={styles.resultsViewReportBtn}>
+                <button onClick={() => handleViewReportClick(test.test_creation_table_id)}>
+                  VIEW REPORT <span className={styles.resultsBtnIcon}><MdKeyboardDoubleArrowRight /></span>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        ))}
       </div>
     </div>
-  )
+  );
 }
