@@ -103,8 +103,8 @@ router.get("/Purchasedcourses/:studentregisterationid", async (req, res) => {
         if (connection) connection.release();
     }
 });
-router.get("/coursetestdetails/:course_creation_id", async (req, res) => {
-    const { course_creation_id } = req.params;
+router.get("/coursetestdetails/:course_creation_id/:student_registration_id", async (req, res) => {
+    const { course_creation_id,student_registration_id } = req.params;
     console.log("Received request for course test details:", { course_creation_id });
  if(!course_creation_id) {
         return res.status(400).json({ message: "Course creation ID is required" });
@@ -116,21 +116,35 @@ router.get("/coursetestdetails/:course_creation_id", async (req, res) => {
  
         const [rows] = await connection.query(
             `SELECT
-    tct.test_creation_table_id,
-    tct.test_name,
-    tct.course_type_of_test_id,
-    tct.total_marks,
-    tct.duration,
-    tct.course_creation_id,
-    cct.course_name,
-    tot.type_of_test_name
-FROM iit_test_creation_table tct
-LEFT JOIN iit_course_creation_table cct ON tct.course_creation_id = cct.course_creation_id
-LEFT JOIN iit_type_of_test tot ON tct.course_type_of_test_id = tot.type_of_test_id
-WHERE tct.course_creation_id = ?;
-`, // Ensure the query is properly formatted here.
-            [course_creation_id] // Pass the parameter as an array to the query function
+                tct.test_creation_table_id,
+                tct.test_name,
+                tct.course_type_of_test_id,
+                tct.total_marks,
+                tct.duration,
+                tct.course_creation_id,
+                tsd.test_attempt_status,
+                cct.course_name,
+                tot.type_of_test_name
+            FROM iit_test_creation_table tct
+            LEFT JOIN iit_course_creation_table cct ON tct.course_creation_id = cct.course_creation_id
+            LEFT JOIN iit_type_of_test tot ON tct.course_type_of_test_id = tot.type_of_test_id
+            JOIN iit_student_buy_courses sbc ON sbc.course_creation_id = cct.course_creation_id
+            LEFT JOIN iit_test_status_details tsd 
+                ON tsd.test_creation_table_id = tct.test_creation_table_id 
+                AND tsd.student_registration_id = sbc.student_registration_id
+            WHERE tct.course_creation_id = ?
+            AND tct.test_creation_table_id IN (
+                SELECT test_creation_table_id 
+                FROM iit_test_creation_table 
+                WHERE course_creation_id = cct.course_creation_id 
+                AND course_type_of_test_id = tot.type_of_test_id
+            )
+            AND sbc.student_registration_id = ?
+            ORDER BY tct.test_creation_table_id ASC;
+            `,
+            [course_creation_id, student_registration_id] // Pass both parameters here
         );
+        
  
         if (rows.length === 0) {
             console.log("No test details found for this course.");
@@ -153,6 +167,7 @@ WHERE tct.course_creation_id = ?;
                 type_of_test_name: rows[0].type_of_test_name, // Assuming all tests have the same type_of_test_name
                 tests: rows.map(row => ({
                     test_creation_table_id: row.test_creation_table_id,
+                    test_attempt_status: row.test_attempt_status,
                     test_name: row.test_name,
                     total_marks: row.total_marks,
                     duration: row.duration

@@ -46,6 +46,8 @@ router.get('/FetchResultTestdata/:studentId', async (req, res) => {
         cc.exam_id, 
         e.exam_name,
         tc.test_name,
+        tc.total_marks,
+        tc.duration,
         tsd.test_attempt_status
     FROM 
         iit_test_status_details tsd
