@@ -142,8 +142,11 @@ const handleSelectRow = (documentId) => {
       : [...prev, documentId]
   );
 };
+const handleOpen = (row) => {
+  console.log("Open clicked for:", row);
+  // Add logic to open your modal or do whatever you need with the `row`
+};
 
-// Select/Deselect all rows
 const handleSelectAll = (isChecked) => {
   if (isChecked) {
     const allDocumentIds = documentList.map((doc) => doc.document_id);
@@ -368,6 +371,7 @@ const handleSelectAll = (isChecked) => {
         onSelectRow={handleSelectRow}
         onSelectAll={handleSelectAll}
         onEdit={false}
+        onOpen={handleOpen}
         isOpen={true}
         type="document"
       />
