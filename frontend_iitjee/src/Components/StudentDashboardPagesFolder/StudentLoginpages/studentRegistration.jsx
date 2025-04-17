@@ -63,6 +63,47 @@ const StudentRegistration = () => {
 
     fetchCourseData();
   }, []);
+  const validateForm = () => {
+    const validationErrors = {};
+  
+    // Check required fields
+    const requiredFields = [
+      "candidateName",
+      "dateOfBirth",
+      "gender",
+      "category",
+      "emailId",
+      "confirmEmailId",
+      "contactNo",
+      "fatherName",
+      "occupation",
+      "mobileNo",
+      "line1",
+      "state",
+      "districts",
+      "pincode",
+      "qualifications",
+      "nameOfCollege",
+      "passingYear",
+      "marks",
+      "uploadedPhoto",
+    ];
+  
+    requiredFields.forEach((field) => {
+      if (!formData[field]) {
+        validationErrors[field] = `${field} is required.`;
+      }
+    });
+  
+    // Check if email and confirm email match
+    if (formData.emailId !== formData.confirmEmailId) {
+      validationErrors.confirmEmailId = "Email and Confirm Email must match.";
+    }
+  
+    // Additional validations can be added here as needed
+  
+    return validationErrors;
+  };
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     let error = "";

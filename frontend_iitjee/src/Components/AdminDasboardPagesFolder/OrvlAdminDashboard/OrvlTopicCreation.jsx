@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import OrvlTopicForm from "./OrvlTopicForm.jsx";
+import OrvlTopicForm from "./orvlTopicForm.jsx";
 import ORVLDynamicTable from "./ORVLDynamicTable.jsx";
 import styles from "../../../Styles/AdminDashboardCSS/AdminDashboard.module.css";
 import { BASE_URL } from "../../../config/apiConfig.js";
@@ -40,8 +40,8 @@ const OrvlTopicCreation = () => {
   };
 
   const handleDelete = async (row) => {
-    try {
-      await axios.delete(`/deleteTopic/${row.orvl_topic_id}`);
+    try {  const response = await axios.delete(`${BASE_URL}/OrvlTopicCreation/deleteTopic/${row.orvl_topic_id}`);
+
       fetchTopics(); // Refresh after delete
     } catch (err) {
       console.error("❌ Error deleting topic:", err);

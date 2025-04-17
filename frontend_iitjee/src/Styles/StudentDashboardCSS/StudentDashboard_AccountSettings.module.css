@@ -100,6 +100,8 @@ font-weight: 500;
     cursor: pointer;
     width: 50%;
     margin: auto;
+    padding: 0.5rem;
+    margin-top: 10px;
 }
 .passwordInputContainer {
     position: relative;
@@ -120,6 +122,9 @@ font-weight: 500;
     cursor: pointer;
     color: black;
     transition: color 0.3s ease;
+  }
+  .listofMandatory li.valid {
+    color: green;
   }
   
   

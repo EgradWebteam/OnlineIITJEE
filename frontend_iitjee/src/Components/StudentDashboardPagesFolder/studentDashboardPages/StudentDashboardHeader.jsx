@@ -5,7 +5,7 @@ import logostudent from '../../../assets/OtsCourseCardImages/iit_jee1.png';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate to handle redirection
 import { BASE_URL } from "../../../config/apiConfig.js";// Import your API base URL
 
-const  StudentDashboardHeader = ({userData})  => {
+const  StudentDashboardHeader = ({userData, setActiveSection})  => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const navigate = useNavigate(); // Initialize navigate hook for redirection
  useEffect(() => {
@@ -76,8 +76,8 @@ console.log("headetstudentdashboard")
 
           {showProfileMenu && (
             <div className={styles.onHoverOFstudent}>
-              <div>Profile</div>
-              <div>Change Password</div>
+              <div onClick={() => setActiveSection("account")}>Profile</div>
+              <div onClick={() => setActiveSection("account")}>Change Password</div>
               <div className={styles.LogoutBtnDivStudent}>
                 <button onClick={handleLogout}>Log Out</button> {/* Trigger logout on click */}
               </div>
