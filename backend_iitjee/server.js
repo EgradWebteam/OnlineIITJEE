@@ -39,7 +39,7 @@ const studentbuycourses = require("./src/StudentDashboardAPIs/BuyCourses.js");
 app.use("/studentbuycourses", studentbuycourses); 
 const studentMycourses = require("./src/StudentDashboardAPIs/MyCourses.js");
 app.use("/studentmycourses", studentMycourses);
-app.use("/CourseCreation", CourseCreationTab); 
+
 const MyResults = require("./src/StudentDashboardAPIs/MyResults.js");
 app.use("/MyResults", MyResults);
 const TestPaper = require("./src/StudentDashboardAPIs/TestPaper.js");

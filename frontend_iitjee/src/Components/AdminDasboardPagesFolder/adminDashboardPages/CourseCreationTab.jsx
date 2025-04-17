@@ -11,7 +11,7 @@ const CourseCreationTab = () => {
   const [editCourseData, setEditCourseData] = useState(null); 
   // Fetch courses data from the new API
   const fetchCourses = () => {
-    debugger
+
     fetch(`${BASE_URL}/CourseCreation/GetAllCourses`)
       .then((res) => res.json())
       .then((data) => {
@@ -147,19 +147,21 @@ const CourseCreationTab = () => {
 
 
       {/* Display courses in a dynamic table */}
-      <div style={{padding:"2%"}}>
-      <DynamicTable
-        columns={columns}
-        data={currentCourses} // Show paginated courses
-        onEdit={handleEdit}
-        onOpen={handleOpen}
-        onDelete={handleDelete}
-        onToggle={handleToggle}
-        type="course" 
-      />
-      </div>
-      
-
+      <div style={{ padding: "2%" }}>
+  {courses.length === 0 ? (
+    <div>No courses available. Please add some courses.</div>
+  ) : (
+    <DynamicTable
+      columns={columns}
+      data={currentCourses} // Show paginated courses
+      onEdit={handleEdit}
+      onOpen={handleOpen}
+      onDelete={handleDelete}
+      onToggle={handleToggle}
+      type="course"
+    />
+  )}
+</div>
       {/* Pagination controls */}
       <div className={Styles.pagination}>
         {pageNumbers.map((number) => (
