@@ -1,6 +1,6 @@
 import React from 'react'
 
-import OrvlDashboardHome from './OrvlDashboardHome'
+import OrvlDashboardHome from './OrvlDashboardHome.jsx'
 const OrvlDashboard = () => {
   return (
     <div>

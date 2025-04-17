@@ -343,6 +343,46 @@ nav ul li .active {
   height: 100%; /* Make image fill the container */
   object-fit: contain;
 }
+/* Modal styles */
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Grey background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Make sure it's on top */
+}
+
+.modalContent {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  width: 60%;
+  max-width: 800px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+}
+
+.closeModalBtn {
+  background-color: #ff4c4c;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1rem;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.closeModalBtn:hover {
+  background-color: #ff2a2a;
+}
 
 @media screen and (max-width: 768px) {
   .sidebar {

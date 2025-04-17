@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
+import { useParams } from 'react-router-dom';
 
 const StudentReport = () => {
+  const { testCreationId } = useParams();
+
+  useEffect(() => {
+    console.log("testCreationId from URL:", testCreationId);
+    // Fetch report based on testCreationId
+  }, [testCreationId]);
   return (
     <div className={styles.studentPerformanceReportMain}>
       <div className={styles.AIRholderDiv}>

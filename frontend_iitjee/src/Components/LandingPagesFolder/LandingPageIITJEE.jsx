@@ -3,8 +3,8 @@ import styles from "../../Styles/LandingPageCSS/LandingPageIITJEE.module.css";
 import LandingPageNavbar from './LandingPageNavbar.jsx';
 import portalImage from "../../assets/HomePageBanner.png"
 const MainPageCourseCards = lazy(() => import("./MainPageCourseCards.jsx"));
-import MainHeader from "../LandingPagesFolder/MainPageHeaderFooterFolder/mainHeader.jsx";
-import MainFooter from "../LandingPagesFolder/MainPageHeaderFooterFolder/mainFooter.jsx";
+import MainHeader from './mainPageHeaderFooterFolder/mainHeader.jsx';
+import MainFooter from './mainPageHeaderFooterFolder/MainFooter.jsx';
 export default function LandingPageIITJEE() {
   return (
     <div className={styles.homePageMainContainer}>

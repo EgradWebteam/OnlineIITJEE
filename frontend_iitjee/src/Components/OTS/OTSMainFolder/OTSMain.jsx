@@ -105,6 +105,7 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
           activeSection={activeSection}
           userAnswers={userAnswers}
         >
+          <TimerProvider testData={testData}>
           <QuestionNavigationButtons
             testData={testData}
             realStudentId={realStudentId}
@@ -124,6 +125,7 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
             setNatValue={setNatValue}
             setSelectedOption={setSelectedOption}
           />
+          </TimerProvider>
         </QuestionStatusProvider>
       </div>
     </div>

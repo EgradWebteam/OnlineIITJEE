@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { decryptBatch as decryptDataBatch, encryptBatch } from '../../../utils/cryptoUtils.jsx';
-import { BASE_URL } from '../../../../apiConfig';
+import { BASE_URL } from '../../../config/apiConfig';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
+import {useStudent} from "../../../ContextFolder/StudentContext.jsx";
 
 const ExamInstructions = () => {
   const { testId, studentId } = useParams();
@@ -13,7 +14,11 @@ const ExamInstructions = () => {
   const [instructionsData, setInstructionsData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [acceptedTerms, setAcceptedTerms] = useState(false); // 👈 Track checkbox
+  const { studentData} = useStudent();
 
+  const userData = studentData?.userDetails;
+  const studentProfile = userData?.uploaded_photo;
+  const studentName = userData?.candidate_name;
   // useEffect(() => {
   //   const token = sessionStorage.getItem("navigationToken");
   //   if (!token) {
@@ -143,6 +148,7 @@ const ExamInstructions = () => {
   };
   return (
     <div className={styles.examInstructionsContainer}>
+      <div className={styles.instrcutionstudentProfileDiv}>
       <div className={styles.examinstructionSubdiv}>
         <h2 className={styles.instrctionMianHeading}>{examName}</h2>
         <ul className={styles.instructionList}>
@@ -152,6 +158,16 @@ const ExamInstructions = () => {
             </li>
           ))}
         </ul>
+      </div>
+
+      <div className={styles.userImageDivInst}>
+        <div className={styles.userDetailsHolder}>
+          <div className={styles.userImageSubDiv}>
+            <img src={studentProfile} alt='studentProfile' />
+          </div>
+          <p>{studentName}</p>
+        </div>
+      </div>
       </div>
       <div className={styles.termandConditionsMainDiv}>
       <div className={styles.termsandConditionsDiv}>

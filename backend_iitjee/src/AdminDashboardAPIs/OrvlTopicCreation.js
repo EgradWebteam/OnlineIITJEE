@@ -346,5 +346,21 @@ router.get("/getexams", async (req, res) => {
     if (connection) connection.release();
   }
 });
+router.get("/getTopics", async (req, res) => {
+  let connection;
+  try {
+    connection = await db.getConnection();
+    const [rows] = await connection.query(
+      `SELECT orvl_topic_id, orvl_topic_name, exam_id, subject_id, orvl_topic_pdf 
+       FROM iit_orvl_topic_creation`
+    );
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error("❌ Error fetching topics:", error);
+    res.status(500).json({ message: "Internal server error" });
+  } finally {
+    if (connection) connection.release();
+  }
+});
 
 module.exports = router;

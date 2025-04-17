@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { BASE_URL } from "../../../../apiConfig";
+import { BASE_URL } from '../../../config/apiConfig';
 import html2canvas from "html2canvas";
 import { FaUser } from "react-icons/fa6";
 import { MdModeEditOutline } from "react-icons/md";
@@ -39,7 +39,7 @@ const StudentInfo = () => {
    useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/students/coursesName`); // Fetch courses from backend
+        const response = await axios.get(`${BASE_URL}/studentInfo/coursesName`); // Fetch courses from backend
         setCourses(response.data); // Set courses to state
       } catch (error) {
         console.error('Error fetching courses:', error);
@@ -76,7 +76,7 @@ const StudentInfo = () => {
  
     try {
       const response = await axios.post(
-        `${BASE_URL}/students/StudentInfo`,
+        `${BASE_URL}/studentInfo/StudentInfo`,
         stdData
       );
       alert(response.data.message); // Show success alert
@@ -114,7 +114,7 @@ const StudentInfo = () => {
  
   const fetchStudents = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/students/StudentInfo`);
+      const response = await axios.get(`${BASE_URL}/studentInfo/StudentInfo`);
       if (response.status === 200 && Array.isArray(response.data)) {
         setStudentsList(response.data);
         setShowStudentsList(true);
@@ -177,7 +177,7 @@ const StudentInfo = () => {
   // ✅ PLACE IT HERE
   const handleEditStudent = async (student) => {
     try {
-      const response = await axios.get(`${BASE_URL}/students/StudentInfo/${student.id}`); // ✅ fetch by ID
+      const response = await axios.get(`${BASE_URL}/studentInfo/StudentInfo/${student.id}`); // ✅ fetch by ID
       const fullStudentData = response.data;
   
       setEditingStudent({
@@ -195,7 +195,7 @@ const StudentInfo = () => {
     try {
       // Toggle activation status (0 -> 1, 1 -> 0)
       const response = await axios.put(
-        `${BASE_URL}/students/StudentInfo/${studentId}`,
+        `${BASE_URL}/studentInfo/StudentInfo/${studentId}`,
         { student_activation: currentStatus === 1 ? 0 : 1 } // Toggle status
       );
  
@@ -224,7 +224,7 @@ const StudentInfo = () => {
   const handleSaveEditedStudent = async (stdData) => {
     try {
       const response = await axios.put(
-        `${BASE_URL}/students/StudentInfo/${stdData.id}`,
+        `${BASE_URL}/studentInfo/StudentInfo/${stdData.id}`,
         {
           name: stdData.name,
           email: stdData.email,
@@ -277,6 +277,15 @@ const StudentInfo = () => {
         {isPopUp && (
           <div className={styles.PopUPContainer}>
             <div className={styles.PopUP}>
+               <button
+                            className={styles.closeBtn}
+                            onClick={() => {
+                              setIsPopUp(false);
+                            }}
+                          >
+                          ❌
+              
+                          </button>
               <h3 className={styles.HedaingForAddStudents}>Added Student</h3>
               <form className={styles.PopUPForm} onSubmit={handleAddStudent}>
                 <h4 className={styles.SubHEadingForStd}>Student Information</h4>
@@ -315,7 +324,7 @@ const StudentInfo = () => {
                 {errors.mobileNumber && (
                   <p className={styles.errorText}>{errors.mobileNumber}</p>
                 )}
-                <h4 className={styles.subHeadingForStd}>Selected Courses</h4>
+                <h4 className={styles.SubHEadingForStd}>Selected Courses</h4>
                 <div className={styles.CoursesInputContainer}>
                 {courses.length > 0 ? (
           courses.map(course => (
@@ -333,9 +342,11 @@ const StudentInfo = () => {
           <p>No courses available</p>
         )}
         </div>
-                <button className={styles.SubmitBtnsForPopUpfor} type="submit">
+        <div className={styles.SubmitBtnsForPopUpfor}>
+                <button  type="submit">
                   Submit
                 </button>
+                </div>
               </form>
             </div>
           </div>
@@ -404,9 +415,9 @@ const StudentInfo = () => {
                       <FaUser />
                     </div>
  
-                    <h4 className={styles.HeadingForDetails}>
+                    <div className={styles.HeadingForDetails}>
                       Added Student Information:
-                    </h4>
+                    </div>
  
                     <div key={index} className={styles.StudentItem}>
                       <p className={styles.StudentInfoDetails}>
@@ -431,8 +442,8 @@ const StudentInfo = () => {
                         }
                       >
                         {student.student_activation === 1
-                          ? "Dectivate"
-                          : "Activate"}
+                          ? "Activate"
+                          : "Deactivate"}
                       </button>
                       <div className={styles.EditBtnIcon}>
                         <button
@@ -453,7 +464,7 @@ const StudentInfo = () => {
         {editingStudent && (
           <div className={styles.PopUPContainer}>
             <div className={styles.PopUP}>
-              <h3>Edit Student</h3>
+            <h3 className={styles.HedaingForAddStudents}>Edit Student</h3>
               <form
                 className={styles.PopUPForm}
                 onSubmit={(e) => {
@@ -461,6 +472,7 @@ const StudentInfo = () => {
                   handleSaveEditedStudent(editingStudent);
                 }}
               >
+                 <h4 className={styles.SubHEadingForStd}>Student Information</h4>
                 <div className={styles.InboxesForForm}>
                   <label>Name:</label>
                   <input
@@ -500,10 +512,11 @@ const StudentInfo = () => {
                     }
                   />
                 </div>
+                  <h4 className={styles.SubHEadingForStd}>Selected Courses</h4>
                 <div className={styles.CoursesInputContainer}>
           {courses.length > 0 ? (
-            courses.map((course) => (
-              <div key={course.id} className={styles.CoursesInput}>
+            courses.map((course,index) => (
+              <div key={index} className={styles.CoursesInput}>
                 <input
   type="checkbox"
   className={styles.customCheckbox}

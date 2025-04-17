@@ -58,10 +58,12 @@ cursor: pointer;
 .OTSSubjectButton {
     padding: 10px 15px;
     background-color: unset;
-    font-size: 1.046rem;
+    font-size: 1.2rem;
     border: 1px solid gainsboro;
     cursor: pointer;
     margin-right: 10px;
+    border-radius: 10px;
+    font-weight: 600;
   }
   
   .activeSubjectAndSectionBtn {
@@ -562,13 +564,16 @@ cursor: pointer;
   color: #3d3636;
   padding: 6px;
   padding-left: 3rem;
+  margin: 1rem;
 }
 
 .instructionHeading {
   text-decoration: underline;
   margin-bottom: 5px;
 }
-
+.instrcutionstudentProfileDiv{
+  display: flex;
+}
 .instructionSubdiv{
   display: flex;
   flex-direction: column;
@@ -652,6 +657,25 @@ cursor: pointer;
   padding: 0.7rem;
   word-wrap: break-word;
   border-left: 1px solid gray;
+  width: 190px;
+}
+.userImageSubDiv img{
+width: 100%;
+height: 100%;
+}
+.userImageSubDiv{
+  width: 140px;
+}
+.userDetailsHolder{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  margin: 10px;
+}
+.userDetailsHolder p{
+  font-size: 18px;
+  font-weight: 700;
 }
 .instructionList{
 padding: 3rem;
@@ -666,6 +690,7 @@ padding: 3rem;
   overflow: auto;
   min-height: 80vh;
   overflow-y: auto;
+  width: 100%;
 }
 .termandConditionsMainDiv{
   border-top: 1px solid gainsboro;

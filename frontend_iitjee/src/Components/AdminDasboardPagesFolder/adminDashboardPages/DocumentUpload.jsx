@@ -1,9 +1,9 @@
 import React, { useState, useEffect,useMemo } from "react";
 import styles from "../../../Styles/AdminDashboardCSS/AdminDashboard.module.css";
-import { BASE_URL } from "../../../../apiConfig";
+import { BASE_URL } from '../../../config/apiConfig';
 import JSZip from "jszip";
 import mammoth from "mammoth";
-import DynamicTable from "./DynamicTable";
+import DynamicTable from "./DynamicTable.jsx";
 
 const DocumentUpload = () => {
   const [showForm, setShowForm] = useState(false);
@@ -142,8 +142,11 @@ const handleSelectRow = (documentId) => {
       : [...prev, documentId]
   );
 };
+const handleOpen = (row) => {
+  console.log("Open clicked for:", row);
+  // Add logic to open your modal or do whatever you need with the `row`
+};
 
-// Select/Deselect all rows
 const handleSelectAll = (isChecked) => {
   if (isChecked) {
     const allDocumentIds = documentList.map((doc) => doc.document_id);
@@ -368,6 +371,7 @@ const handleSelectAll = (isChecked) => {
         onSelectRow={handleSelectRow}
         onSelectAll={handleSelectAll}
         onEdit={false}
+        onOpen={handleOpen}
         isOpen={true}
         type="document"
       />

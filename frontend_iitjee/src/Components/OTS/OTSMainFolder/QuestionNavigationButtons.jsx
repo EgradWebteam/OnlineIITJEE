@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import ExamSummaryComponent from './OTSExamSummary';
-import {BASE_URL} from '../../../../apiConfig.js'
+import { BASE_URL } from '../../../config/apiConfig';
 import { useQuestionStatus,QuestionStatusProvider } from '../../../ContextFolder/CountsContext.jsx';
+import { useTimer } from '../../../ContextFolder/TimerContext.jsx'; 
 export default function QuestionNavigationButtons({
   testData,
   activeSubject,
@@ -32,6 +33,8 @@ export default function QuestionNavigationButtons({
     totalQuestionsInTest,
   } = useQuestionStatus();
   const [showExamSummary, setShowExamSummary] = useState(false);
+  const { timeSpent } = useTimer();  // Get timeSpent in seconds
+  console.log("Time Spent (seconds):", timeSpent);
 
   useEffect(() => {
     if (!testData || !testData.subjects) return;
@@ -544,10 +547,46 @@ export default function QuestionNavigationButtons({
 
   
   
-  const handleClearResponse = () => {
+  // const handleClearResponse = () => {
+  //   const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
+  //   const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
+  //   const question = section?.questions?.[activeQuestionIndex];
+  //   if (!question) return;
+  
+  //   const qid = question.question_id;
+  
+  //   // Reset selections
+  //   setSelectedOption(null);
+  //   setSelectedOptionsArray([]);
+  //   setNatValue("");
+  
+  //   // Instead of deleting, mark as Not Answered
+  //   setUserAnswers(prev => {
+  //     const updated = {
+  //       ...prev,
+  //       [qid]: {
+  //         subjectId: subject.subjectId,
+  //         sectionId: section.sectionId,
+  //         questionId: qid,
+  //         type: "",
+  //         buttonClass: styles.NotAnsweredBtnCls,
+  //       }
+  //     };
+  //     console.log("Cleared and updated Answer:", updated[qid]);
+  //     return updated;
+  //   });
+  // };
+  
+
+
+
+
+
+  const handleClearResponse = async () => {
     const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
     const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
     const question = section?.questions?.[activeQuestionIndex];
+  
     if (!question) return;
   
     const qid = question.question_id;
@@ -557,7 +596,7 @@ export default function QuestionNavigationButtons({
     setSelectedOptionsArray([]);
     setNatValue("");
   
-    // Instead of deleting, mark as Not Answered
+    // Mark as Not Answered in state
     setUserAnswers(prev => {
       const updated = {
         ...prev,
@@ -567,12 +606,43 @@ export default function QuestionNavigationButtons({
           questionId: qid,
           type: "",
           buttonClass: styles.NotAnsweredBtnCls,
-        }
+        },
       };
       console.log("Cleared and updated Answer:", updated[qid]);
       return updated;
     });
+  
+    try {
+      // Call DELETE API without a body
+      const response = await fetch(`${BASE_URL}/OTS/ClearResponse/${realStudentId}/${realTestId}/${qid}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      const data = await response.json();
+  
+      if (!data.success) {
+        console.warn('Delete API response:', data.message);
+      } else {
+        console.log('Response deleted from DB');
+      }
+    } catch (err) {
+      console.error('Error deleting user response:', err);
+    }
   };
+
+
+
+
+
+
+
+
+
+
+
   
   const handlePrevious = () => {
     if (activeQuestionIndex > 0) {
@@ -583,8 +653,16 @@ export default function QuestionNavigationButtons({
     }
   };
 
+  const formatTime = (seconds) => {
+    const h = String(Math.floor(seconds / 3600)).padStart(2, "0");
+    const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
+    const s = String(seconds % 60).padStart(2, "0");
+    return `${h}:${m}:${s}`;
+  };
   
   const handleSubmitClick = async () => {
+    const formattedTimeSpent = formatTime(timeSpent);  // Format it into HH:MM:SS
+    console.log("timespenthours:", formattedTimeSpent)
     setShowExamSummary(true);
     const attemptedCount =  answeredAndMarkedForReviewCount+answeredCount;
    const notAttemptedCount =  markedForReviewCount+notAnsweredCount;
@@ -600,7 +678,7 @@ export default function QuestionNavigationButtons({
       totalNotVisitedQuestions: notVisitedCount,
       totalAttemptedQuestions: attemptedCount,
       totalNotAttemptedQuestions: notAttemptedCount,
-      TimeSpent: "01:15:30",
+      TimeSpent: formattedTimeSpent,
     };
   
     try {

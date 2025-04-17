@@ -71,7 +71,7 @@ export default function SubjectsAndSectionsContainer(
       </div>
 
       {/* Section Buttons */}
-      {sections.length > 0 && (
+      {/* {sections.length > 0 && (
         <div className={styles.OTSSubjectandSectionButtonsGroup}>
           {sections.map((section, secIndex) => (
             <button
@@ -79,6 +79,20 @@ export default function SubjectsAndSectionsContainer(
               className={`${styles.OTSSubjectButton} ${
                 activeSection === section.SectionName ? styles.activeSubjectAndSectionBtn : ''
               }`}
+              onClick={() => handleSectionClick(section.SectionName)}
+            >
+              {section.SectionName}
+            </button>
+          ))}
+        </div>
+      )} */}
+      {Array.isArray(sections) && sections.length > 0 && (
+        <div className={styles.OTSSubjectandSectionButtonsGroup}>
+          {sections.map((section, secIndex) => (
+            <button
+              key={secIndex}
+              className={`${styles.OTSSubjectButton} ${activeSection === section.SectionName ? styles.activeSubjectAndSectionBtn : ''
+                }`}
               onClick={() => handleSectionClick(section.SectionName)}
             >
               {section.SectionName}

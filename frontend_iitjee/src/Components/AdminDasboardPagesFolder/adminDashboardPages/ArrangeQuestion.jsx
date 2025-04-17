@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import axios from "axios";
 import styles from "../../../Styles/AdminDashboardCSS/TestCreation.module.css";
-import { BASE_URL } from "../../../../apiConfig";
+import { BASE_URL } from '../../../config/apiConfig';
 
 const ArrangeQuestions = ({ data, onClose }) => {
   const [questions, setQuestions] = useState([]);

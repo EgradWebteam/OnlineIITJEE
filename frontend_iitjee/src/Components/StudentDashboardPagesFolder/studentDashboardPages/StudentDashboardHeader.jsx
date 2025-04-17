@@ -5,7 +5,7 @@ import logostudent from '../../../assets/OtsCourseCardImages/iit_jee1.png';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate to handle redirection
 import { BASE_URL } from "../../../config/apiConfig.js";// Import your API base URL
 
-const  StudentDashboardHeader = ()  => {
+const  StudentDashboardHeader = ({userData})  => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const navigate = useNavigate(); // Initialize navigate hook for redirection
  useEffect(() => {
@@ -55,6 +55,7 @@ console.log("headetstudentdashboard")
     }
   };
   
+  const studentProfile = userData?.uploaded_photo;
 
   return (
     <div className={styles.MainDivStudentDasboard}>
@@ -70,7 +71,7 @@ console.log("headetstudentdashboard")
           onMouseLeave={handleMouseLeave}
         >
           <div className={styles.studentLogo}>
-            <img src={logostudent} alt="studentlogo" />
+            <img src={studentProfile} alt="studentProfile" />
           </div>
 
           {showProfileMenu && (

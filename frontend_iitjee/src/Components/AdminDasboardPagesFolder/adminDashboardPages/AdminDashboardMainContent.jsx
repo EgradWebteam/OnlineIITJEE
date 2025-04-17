@@ -1,10 +1,10 @@
 // AdminDashboardMainContent.jsx
 import React from 'react';
 import DashBoard from './DashBoard';
-import CourseCreation from './CourseCreation';
-import TestCreationTab from './TestCreationTab';
-import DocumentUpload from './DocumentUpload';
-import InstructionsTab from './InstructionsTab';
+import CourseCreation from './CourseCreation.jsx';
+import TestCreationTab from './TestCreationTab.jsx';
+import DocumentUpload from './DocumentUpload.jsx';
+import InstructionsTab from './InstructionsTab.jsx';
 
 const AdminDashboardMainContent = ({ activeComponent }) => {
   console.log("AdminDashboardMainContent")
