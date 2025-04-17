@@ -62,12 +62,12 @@ export default function TestDetailsContainer({ course, onBack, studentId }) {
   
   const formattedTime = getCurrentLocalMySQLTime(); // "2025-04-16 13:33:00"
   
-  const handleStartTestClick = async (encryptedTestId) => {
+  const handleStartTestClick = async (testCreationTableId,encryptedTestId) => {
     // Prepare the data to send to the backend
     const testStatusData = {
       studentregistrationId: studentId,  
       courseCreationId: course_creation_id, 
-      testCreationTableId: 1, 
+      testCreationTableId: testCreationTableId, 
       studentTestStartTime: formattedTime, 
       testAttemptStatus: 'started', 
       testConnectionStatus: 'active', 
@@ -149,7 +149,7 @@ export default function TestDetailsContainer({ course, onBack, studentId }) {
                   </div>
                   <button
                     className={styles.startTestBtn}
-                    onClick={() => handleStartTestClick(test.encryptedTestId)}
+                    onClick={() => handleStartTestClick(test.test_creation_table_id,test.encryptedTestId)}
                   >
                     Start Test &gt;&gt;
                   </button>
