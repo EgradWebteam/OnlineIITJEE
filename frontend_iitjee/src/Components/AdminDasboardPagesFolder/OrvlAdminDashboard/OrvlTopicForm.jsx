@@ -9,7 +9,7 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
   const [selectedExamId, setSelectedExamId] = useState(topic ? topic.exam_id : '');
   const [selectedSubjectId, setSelectedSubjectId] = useState(topic ? topic.subject_id : '');
   const [topicName, setTopicName] = useState(topic ? topic.orvl_topic_name : '');
-  const [topicPdf, setTopicPdf] = useState(topic ? topic.orvl_topic_pdf : '');
+  const [topicPdf, setTopicPdf] = useState(null); // now stores file instead of just name
   const [topicDoc, setTopicDoc] = useState(null);
 
   useEffect(() => {
@@ -48,8 +48,8 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
     formData.append("exam_id", selectedExamId);
     formData.append("subject_id", selectedSubjectId);
 
-    if (topicPdf) formData.append("topic_pdf", topicPdf);
-    if (topicDoc) formData.append("topic_doc", topicDoc);
+    if (topicPdf) formData.append("topic_pdf", topicPdf); // ✅ binary
+    if (topicDoc) formData.append("topic_doc", topicDoc); // ✅ binary
 
     try {
       const response = topic
@@ -65,8 +65,8 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
           });
 
       console.log("Topic submitted successfully:", response.data);
-      onSuccess(); 
-      onClose();  
+      onSuccess();
+      onClose();
     } catch (error) {
       console.error("Error submitting topic:", error.response?.data || error.message);
     }
@@ -117,19 +117,16 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
 
           <div className={styles.flex}>
             <label>Upload Topic PDF:</label>
-            {/* If editing, show the file name instead of input field */}
-            {topicPdf ? (
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={(e) => setTopicPdf(e.target.files[0])}
+              className={styles.inputFile}
+            />
+            {topic?.orvl_topic_pdf && !topicPdf && (
               <div className={styles.fileInfo}>
-                <span>{topicPdf}</span>
-                <button type="button" onClick={() => setTopicPdf('')} className={styles.removeFileBtn}>Remove</button>
+                <span>{topic.orvl_topic_pdf}</span>
               </div>
-            ) : (
-              <input
-                type="file"
-                accept="application/pdf"
-                onChange={(e) => setTopicPdf(e.target.files[0].name)} // Store the file name
-                className={styles.inputFile}
-              />
             )}
           </div>
 
