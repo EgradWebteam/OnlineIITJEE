@@ -7,6 +7,8 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
   const [testPaperData, setTestPaperData] = useState([]);
   const [selectedSubjectSection, setSelectedSubjectSection] = useState(null);
   const studentContact = userData?.mobile_no;
+  const [visibleSolutions, setVisibleSolutions] = useState({});
+
 
   // useEffect(() => {
   //   const fetchTestPaper = async () => {
@@ -77,7 +79,14 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
       questions: section?.questions || [],
     });
   };
-
+  const toggleSolutionVisibility = (questionId) => {
+    setVisibleSolutions((prev) => ({
+      ...prev,
+      [questionId]: !prev[questionId],
+    }));
+  };
+  
+  
   return (
     <div className={styles.solutionContainerMain}>
       <div className={styles.subjectDropDownContainer}>
@@ -122,7 +131,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
           )}
         </select>
 
-        <div className={styles.questionSolutionsDiv}>
+        <div >
           {selectedSubjectSection && (
             <div>
               {/* <h3>Subject: {selectedSubjectSection.SubjectName}</h3> */}
@@ -130,7 +139,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                 <h4>Section: {selectedSubjectSection.SectionName}</h4>
               )} */}
               {selectedSubjectSection.questions.map((question) => (
-                <div key={question.question_id} style={{ marginBottom: "2rem" }}>
+                <div key={question.question_id} className={styles.questionSolutionsDiv}>
                   <p>Question No: {question.question_id}</p>
                   <div className={styles.questionImageInSolutionTab}>
                     <img
@@ -140,7 +149,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                     />
                   </div>
                   <div style={{ marginTop: "1rem" }}>
-                    {question.options.map((option) => (
+                    {/* {question.options.map((option) => (
                       <div
                         key={option.option_id}
                         style={{ display: "flex", alignItems: "center" }}
@@ -159,7 +168,128 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                         </div>
                         
                       </div>
-                    ))}
+                    ))} */}
+
+                    {(() => {
+                      const qTypeId = question.questionType?.quesionTypeId;
+
+                      // NAT: Just show text answers
+                      if (qTypeId === 5 || qTypeId === 6) {
+                        return (
+                          <div style={{ marginTop: "1rem", color: "black" }}>
+                            <p><b>Your Answer: </b>{question.userAnswer?.user_answer || "Not Attempted"}</p>
+                            <p><b>Correct Answer: </b>{question.answer}</p>
+                          </div>
+                        );
+                      }
+
+                      // MSQ: Multiple select with icons
+                      if (qTypeId === 3 || qTypeId === 4) {
+                        const correctAnswers = question.answer?.split(",") || [];
+                        const userAnswers = question.userAnswer?.user_answer?.split(",") || [];
+
+                        return question.options.map((option) => {
+                          const isCorrect = correctAnswers.includes(option.option_index);
+                          const isUserSelected = userAnswers.includes(option.option_index);
+
+                          let icon = null;
+                          let color = "black";
+
+                          if (isCorrect && isUserSelected) {
+                            icon = "✅";
+                          } else if (!isCorrect && isUserSelected) {
+                            icon = "❌";
+                          } else if (isCorrect) {
+                            icon = "✅";
+                          }
+
+                          return (
+                            <div
+                              key={option.option_id}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                marginBottom: "0.5rem",
+                                color,
+                              }}
+                            >
+                              <strong className={styles.correctWrongIcon}>{icon}</strong>
+                              <strong>({option.option_index})</strong>
+                              <div className={styles.optionImageInSolutionTab}>
+                              <img
+                                src={option.optionImgName}
+                                alt={`Option ${option.option_index}`}
+                              />
+                              </div>
+                            </div>
+                          );
+                        });
+                      }
+
+                      // MCQ (1 or 2)
+                      return question.options.map((option) => {
+                        const isCorrect = option.option_index === question.answer;
+                        const isUserAnswer = option.option_index === question.userAnswer?.user_answer;
+
+                        let icon = null;
+                        let color = "black";
+
+                        if (isCorrect && isUserAnswer) {
+                          icon = "✅";
+                        } else if (isUserAnswer && !isCorrect) {
+                          icon = "❌";
+                        } else if (isCorrect) {
+                          icon = "✅";
+                        }
+
+                        return (
+                          <div
+                            key={option.option_id}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              marginBottom: "0.5rem",
+                              color,
+                            }}
+                          >
+                            <strong className={styles.correctWrongIcon}>{icon}</strong>
+                            <strong>({option.option_index})</strong>
+                            <div className={styles.optionImageInSolutionTab}>
+                            <img
+                              src={option.optionImgName}
+                              alt={`Option ${option.option_index}`}
+                            />
+                            </div>
+                          </div>
+                        );
+                      });
+                    })()}
+
+                    <button
+                      onClick={() => toggleSolutionVisibility(question.question_id)}
+                      className={styles.showSolutionButton}
+                    >
+                      {visibleSolutions[question.question_id] ? "Hide Solution" : "Show Solution"}
+                    </button>
+
+                    {visibleSolutions[question.question_id] && question.solution?.solutionImgName && (
+                      <div
+                        className={styles.solutionImageInSolutionTab}
+                      > 
+                      <p className={styles.solutionTag}>Answer: {question.answer}</p>
+                      
+                      <span className={styles.solutionTag}>Solution: </span>
+                      <div className={styles.solutionImageDivInSolutionTab}>
+
+                        <img
+                          src={question.solution.solutionImgName}
+                          alt={`Solution for question ${question.question_id}`}
+                        />
+                        </div>
+                      </div>
+                    )}
+
+
                   </div>
                 </div>
               ))}
@@ -168,7 +298,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
         </div>
 
         {/* Watermarks */}
-        <span className={`${styles.waterMark} ${styles.topWaterMark}`}>
+        {/* <span className={`${styles.waterMark} ${styles.topWaterMark}`}>
           {studentContact}
         </span>
         <span className={`${styles.waterMark} ${styles.bottomWaterMark}`}>
@@ -179,7 +309,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
         </span>
         <span className={`${styles.waterMark} ${styles.rightWaterMark}`}>
           {studentContact}
-        </span>
+        </span> */}
       </div>
     </div>
   );
