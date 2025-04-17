@@ -45,7 +45,7 @@ export default function StudentDashboard() {
         case "buyCourses":
           return <StudentDashboard_BuyCourses setActiveSection = {setActiveSection} studentId = {studentId}/>;
         case "results":
-          return <StudentDashboard_MyResults  studentId = {studentId}/>;
+          return <StudentDashboard_MyResults userData ={studentData?.userDetails}  studentId = {studentId}/>;
         case "account":
           return <StudentDashboard_AccountSettings userData ={studentData?.userDetails}/>;
         default:
@@ -62,7 +62,7 @@ export default function StudentDashboard() {
   
   return (
     <div>
-      <StudentDashboardHeader  userData ={studentData?.userDetails}/>
+      <StudentDashboardHeader  userData ={studentData?.userDetails} setActiveSection={setActiveSection}/>
       <div className={styles.StudentDashboardContentHolder}>
         <div className={styles.studentDashboardLeftNavHolder}>
           <StudentDashboardLeftSideBar

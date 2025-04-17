@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation, useParams } from 'react-router-dom';
 import { FaLongArrowAltLeft } from "react-icons/fa";
 import StudentReport from "./StudentReport";
 import SolutionsTab from "./SolutionsTab";
@@ -12,6 +12,13 @@ const StudentReportMain = () => {
     // This will run when the component unmounts, and we can clear localStorage
     localStorage.removeItem("activeButton");
   };
+  const { testId } = useParams();
+  const location = useLocation();
+  const { studentId,userData, test_name, total_marks, duration } = location.state || {};
+
+
+
+  
 
   return (
     <div className={styles.StudentReportMainDiv}>
@@ -30,13 +37,13 @@ const StudentReportMain = () => {
         <div className={styles.studentReportTestDetailsContiner}>
           <ul className={styles.testDetailsContainerSub}>
             <li>
-              Test Name: <b>..</b>
+              Test Name: <b>{test_name}</b>
             </li>
             <li>
-              TotalMatks: <b>..</b>
+              TotalMarks: <b>{total_marks}</b>
             </li>
             <li>
-              Duration: <b>..</b>
+              Duration: <b>{duration}</b>
             </li>
           </ul>
         </div>
@@ -64,12 +71,12 @@ const StudentReportMain = () => {
         <div className={styles.studentReportTabContent}>
           {activeTab === "Your Performance" && (
             <div>
-              <StudentReport />
+              <StudentReport testId={testId} studentId={studentId}/>
             </div>
           )}
           {activeTab === "Solutions" && (
             <div>
-              <SolutionsTab />
+              <SolutionsTab testId={testId} studentId={studentId} userData={userData}/>
             </div>
           )}
         </div>

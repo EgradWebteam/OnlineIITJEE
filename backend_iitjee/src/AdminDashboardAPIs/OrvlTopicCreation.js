@@ -29,6 +29,15 @@ async function uploadToAzure(fileBuffer, blobName) {
     throw error;
   }
 }
+async function deleteFromAzure(blobName) {
+  try {
+    const blobClient = containerClient.getBlockBlobClient(blobName);
+    await blobClient.deleteIfExists();
+    console.log(`🗑️ Deleted blob: ${blobName}`);
+  } catch (err) {
+    console.error("❌ Error deleting blob:", blobName, err.message);
+  }
+}
 
 async function uploadPDFToBlob(buffer, blobName) {
   try {
@@ -151,26 +160,33 @@ router.post(
         let questionIndex = 1;
         let imageIndex = 0;
         let questionType = {};
-  
+        let lectures = []; // Ensure this is an array
+        let solutions = []; // Ensure this is an array
         for (let section of textSections) {
           section = section.trim();
   
           if (section.startsWith("[LN]")) {
-            [lectureId] = await insertBulk(connection, "iit_orvl_lecture_names", [
-              {
-                orvl_lecture_name: section.replace("[LN]", "").trim(),
-                orvl_topic_id: topicId,
-              },
-            ]);
+            const lectureName = section.replace("[LN]", "").trim();
+            if (!lectureName) {
+              console.error("Lecture name is empty, skipping...");
+              continue;
+            }
+  
+            lectures.push({
+              orvl_lecture_name: lectureName,
+              orvl_topic_id: topicId,
+              lecture_video_link: "",
+            });
           } else if (section.startsWith("[LVL]")) {
-            await updateBulk(connection, "iit_orvl_lecture_names", [
-              {
-                lecture_video_link: section.replace("[LVL]", "").trim(),
-                orvl_lecture_name_id: lectureId,
-              },
-            ], "orvl_lecture_name_id");
+            const lectureVideoLink = section.replace("[LVL]", "").trim();
+            if (lectures.length > 0) {
+              const lastLecture = lectures[lectures.length - 1];
+              lastLecture.lecture_video_link = lectureVideoLink;
+              // Store the lecture record after setting the video link
+              [lectureId] = await storeRecordsInBulk(connection, "iit_orvl_lecture_names", [lastLecture]);
+            }
           } else if (section.startsWith("[EN]")) {
-            [exerciseId] = await insertBulk(connection, "iit_orvl_exercise_names", [
+            [exerciseId] = await storeRecordsInBulk(connection, "iit_orvl_exercise_names", [
               {
                 exercise_name: section.replace("[EN]", "").trim(),
                 orvl_lecture_name_id: lectureId,
@@ -221,21 +237,10 @@ router.post(
                 exercise_question_id: questionId,
               },
             ]);
-          } else if (section.startsWith("[ESOLN]") && imageIndex < images.length) {
-            const solutionImgUrl = await uploadToAzure(images[imageIndex++], `${solutionFolder}/solution_${questionIndex}.png`);
-            const LINK= (section.includes("[ESOL]")) ? section.replace("[ESOL]", "").trim():null; 
-           
-            await insertBulk(connection, "iit_orvl_exercise_solutions", [
-              {
-                exercise_solution_img: solutionImgUrl,
-                exercise_question_id: questionId,
-                exercise_solution_video_link: LINK
-              },
-
-            ]);
+          
           } else if (section.startsWith("[EQT]")) {
             questionType = {
-                exercise_question_type: section.replace("[EQT]", "").trim(),
+              exercise_question_type: section.replace("[EQT]", "").trim(),
             };
             await updateBulk(connection, "iit_orvl_exercise_questions", [
               {
@@ -247,7 +252,7 @@ router.post(
             const answerRaw = section.replace("[EANS]", "").trim();
             let answer = "", unit = "";
   
-            if (["NAT", "NATD", "NATI"].includes(questionType.orvl_question_type)) {
+            if (["NAT", "NATD", "NATI"].includes(questionType.exercise_question_type)) {
               [answer, unit] = answerRaw.split(",").map(a => a.trim());
             } else {
               answer = answerRaw;
@@ -262,15 +267,27 @@ router.post(
             ], "exercise_question_id");
           } else if (section.startsWith("[ESOL]")) {
          
-                // INSERT if not exists
-                await insertBulk(connection, "iit_orvl_exercise_solutions", [
-                  {
-                    exercise_solution_video_link: section.replace("[ESOL]", "").trim(),
-                    exercise_question_id: questionId,
-                  },
-                ]);
-              
-          } else if (section.startsWith("[EQSID]")) {
+            // INSERT if not exists
+            await insertBulk(connection, "iit_orvl_exercise_solutions", [
+              {
+                exercise_solution_video_link: section.replace("[ESOL]", "").trim(),
+                exercise_question_id: questionId,
+              },
+            ]);
+          
+      } else if (section.startsWith("[ESOLN]") && imageIndex < images.length) {
+        const solutionImgUrl = await uploadToAzure(images[imageIndex++], `${solutionFolder}/solution_${questionIndex}.png`);
+        const LINK= (section.includes("[ESOL]")) ? section.replace("[ESOL]", "").trim():null; 
+       
+        await insertBulk(connection, "iit_orvl_exercise_solutions", [
+          {
+            exercise_solution_img: solutionImgUrl,
+            exercise_question_id: questionId,
+            exercise_solution_video_link: LINK
+          },
+
+        ]);
+      } else if (section.startsWith("[EQSID]")) {
             await updateBulk(connection, "iit_orvl_exercise_questions", [
               {
                 exercise_question_sort_id: section.replace("[EQSID]", "").trim(),
@@ -350,6 +367,145 @@ router.get("/getTopics", async (req, res) => {
   } catch (error) {
     console.error("❌ Error fetching topics:", error);
     res.status(500).json({ message: "Internal server error" });
+  } finally {
+    if (connection) connection.release();
+  }
+});
+router.post(
+  "/updateTopic/:id",
+  upload.fields([
+    { name: "topic_doc", maxCount: 1 },
+    { name: "topic_pdf", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    const topicId = req.params.id;
+    const connection = await db.getConnection();
+    await connection.beginTransaction();
+
+    try {
+      const { topic_name, exam_id, subject_id } = req.body;
+
+      // Fetch existing topic
+      const [existingRows] = await connection.query(
+        "SELECT orvl_topic_pdf FROM iit_orvl_topic_creation WHERE orvl_topic_id = ?",
+        [topicId]
+      );
+      const existingTopic = existingRows[0];
+
+      let pdfFileName = existingTopic?.orvl_topic_pdf || null;
+// Check if a new PDF was uploaded
+if (req.files["topic_pdf"]) {
+  const newPdf = req.files["topic_pdf"][0];
+  if (newPdf.mimetype === "application/pdf") {
+
+    // Delete old PDF blob if it exists
+    if (pdfFileName) {
+      console.log(`🗑️ Deleting old PDF from Azure: ${pdfFileName}`);
+      await deleteFromAzure(pdfFileName);
+    }
+
+    // Upload new PDF
+    pdfFileName = `${Date.now()}_${newPdf.originalname}`;
+    console.log(`📤 Uploading new PDF to Azure: ${pdfFileName}`);
+    await uploadPDFToBlob(newPdf.buffer, pdfFileName);
+  }
+}
+// Handle DOC upload (optional)
+if (req.files["topic_doc"]) {
+  const docFile = req.files["topic_doc"][0];
+  const docBlobName = `exam-resources-orvl/${Date.now()}_${docFile.originalname}`;
+  
+  console.log(`📄 New DOC file detected: ${docFile.originalname}`);
+  console.log(`📤 Uploading DOC to Azure at path: ${docBlobName}`);
+  
+  await uploadToAzure(docFile.buffer, docBlobName);
+  
+  console.log(`✅ Document uploaded to Azure: ${docBlobName}`);
+}
+
+
+      const updateFields = [];
+      const values = [];
+
+      if (topic_name) {
+        updateFields.push("orvl_topic_name = ?");
+        values.push(topic_name);
+      }
+
+      if (exam_id) {
+        updateFields.push("exam_id = ?");
+        values.push(parseInt(exam_id));
+      }
+
+      if (subject_id) {
+        updateFields.push("subject_id = ?");
+        values.push(parseInt(subject_id));
+      }
+
+      if (pdfFileName !== existingTopic.orvl_topic_pdf) {
+        updateFields.push("orvl_topic_pdf = ?");
+        values.push(pdfFileName);
+      }
+
+      if (updateFields.length === 0) {
+        return res.status(400).send("No data to update.");
+      }
+
+      const sql = `UPDATE iit_orvl_topic_creation SET ${updateFields.join(", ")} WHERE orvl_topic_id = ?`;
+      values.push(topicId);
+      await connection.execute(sql, values);
+
+      await connection.commit();
+      res.status(200).send("Topic updated successfully.");
+    } catch (err) {
+      console.error("❌ Error updating topic:", err.message);
+      await connection.rollback();
+      res.status(500).send("Failed to update topic.");
+    } finally {
+      if (connection) connection.release();
+    }
+  }
+);
+router.delete("/deleteTopic/:id", async (req, res) => {
+  const topicId = req.params.id;
+  const connection = await db.getConnection();
+  await connection.beginTransaction();
+
+  try {
+    // 1. Get PDF and Document info
+    const [[topic]] = await connection.query(
+      `SELECT orvl_topic_pdf FROM iit_orvl_topic_creation WHERE orvl_topic_id = ?`,
+      [topicId]
+    );
+
+    const [docs] = await connection.query(
+      `SELECT orvl_document_name FROM iit_orvl_documents WHERE orvl_topic_id = ?`,
+      [topicId]
+    );
+
+    // 2. Delete Azure blobs
+    if (topic?.orvl_topic_pdf) await deleteFromAzure(topic.orvl_topic_pdf);
+
+    for (let doc of docs) {
+      const blobPrefix = `exam-resources-orvl/${doc.orvl_document_name}`;
+      // Delete all folder blobs by listing them (optional, can keep basic delete)
+      const blobs = containerClient.listBlobsFlat({ prefix: blobPrefix });
+      for await (const blob of blobs) {
+        await deleteFromAzure(blob.name);
+      }
+    }
+
+    // 3. Delete MySQL records
+    await connection.query("DELETE FROM iit_orvl_documents WHERE orvl_topic_id = ?", [topicId]);
+    await connection.query("DELETE FROM iit_orvl_lecture_names WHERE orvl_topic_id = ?", [topicId]);
+    await connection.query("DELETE FROM iit_orvl_topic_creation WHERE orvl_topic_id = ?", [topicId]);
+
+    await connection.commit();
+    res.status(200).send("Topic and associated files deleted.");
+  } catch (err) {
+    console.error("❌ Failed to delete topic:", err.message);
+    await connection.rollback();
+    res.status(500).send("Error deleting topic and files.");
   } finally {
     if (connection) connection.release();
   }
