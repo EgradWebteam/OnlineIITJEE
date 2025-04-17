@@ -47,7 +47,8 @@ app.use("/OTS", TestPaper);
 const ExamSummary = require("./src/StudentDashboardAPIs/ExamSummary.js");
 app.use("/OTSExamSummary", ExamSummary);
 /**StudentDashborad API's */
-
+const OrvlTopics = require("./src/StudentDashboardAPIs/OrvlTopics.js");
+app.use("/OrvlTopics", OrvlTopics);
 
 /**EncrptDecryptAPIs */
 const EncryptDecrypt = require("./src/EncryptDecryptAPIs/encryptDecryptController.js");
