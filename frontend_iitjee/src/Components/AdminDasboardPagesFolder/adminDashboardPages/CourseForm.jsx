@@ -175,8 +175,9 @@ const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,on
 
   return (
     <div className={styles.CourseCreationFormPage}>
-      <button
-              className={styles.closeBtn}
+ 
+      <button className={styles.closeBtn}
+            
               onClick={() => {
                 setShowForm(false);
                 setEditCourseData(null);              
@@ -185,6 +186,7 @@ const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,on
             ❌
 
             </button>
+          
       <h2 className={styles.HeadingForEditMode}>
         {isEditMode ? "✏️ Edit Course" : "📝 Create Course"}
       </h2>

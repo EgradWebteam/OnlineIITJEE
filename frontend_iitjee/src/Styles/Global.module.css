@@ -32,6 +32,11 @@
     text-align: center;
     text-transform: uppercase;
   }
+  .toggleTypeButtons{
+    display: flex;
+    gap: 1rem;
+    padding: 0 10px;
+  }
   .noCoursesContainer{
     background-color: #09bffc;
     color: white;

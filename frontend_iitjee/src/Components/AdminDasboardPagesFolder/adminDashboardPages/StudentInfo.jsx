@@ -39,15 +39,24 @@ const StudentInfo = () => {
    useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/studentInfo/coursesName`); // Fetch courses from backend
-        setCourses(response.data); // Set courses to state
+        const response = await axios.get(`${BASE_URL}/studentInfo/coursesName`);
+        console.log("Fetched courses:", response.data);
+  
+        if (Array.isArray(response.data)) {
+          setCourses(response.data);
+        } else {
+          console.warn("Courses API did not return an array:", response.data);
+          setCourses([]); // fallback
+        }
       } catch (error) {
-        console.error('Error fetching courses:', error);
+        console.error("Error fetching courses:", error);
+        setCourses([]); // fallback
       }
     };
- 
+  
     fetchCourses();
   }, []);
+  
  
   const handleAddStudent = async (e) => {
     e.preventDefault();
@@ -326,21 +335,21 @@ const StudentInfo = () => {
                 )}
                 <h4 className={styles.SubHEadingForStd}>Selected Courses</h4>
                 <div className={styles.CoursesInputContainer}>
-                {courses.length > 0 ? (
-          courses.map(course => (
-            <div key={course.id} className={styles.CoursesInput}>
-              <input
-                type="checkbox"
-                className={styles.customCheckbox}
-                checked={selectedCourses.includes(course.id)} // Check if course is selected
-                onChange={() => handleCourseChange(course.id)} // Handle checkbox change
-              />
-              <label>{course.course_name}</label>
-            </div>
-          ))
-        ) : (
-          <p>No courses available</p>
-        )}
+                {Array.isArray(courses) && courses.length > 0 ? (
+  courses.map((course) => (
+    <div key={course.id}>
+      <input
+        type="checkbox"
+        checked={selectedCourses.includes(course.id)}
+        onChange={() => handleCourseChange(course.id)}
+      />
+      <label>{course.course_name}</label>
+    </div>
+  ))
+) : (
+  <p>No courses available</p>
+)}
+
         </div>
         <div className={styles.SubmitBtnsForPopUpfor}>
                 <button  type="submit">
@@ -514,7 +523,7 @@ const StudentInfo = () => {
                 </div>
                   <h4 className={styles.SubHEadingForStd}>Selected Courses</h4>
                 <div className={styles.CoursesInputContainer}>
-          {courses.length > 0 ? (
+                {courses && courses.length > 0 ? (
             courses.map((course,index) => (
               <div key={index} className={styles.CoursesInput}>
                 <input
