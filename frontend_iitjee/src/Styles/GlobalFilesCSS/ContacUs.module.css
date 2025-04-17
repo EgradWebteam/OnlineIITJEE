@@ -26,15 +26,15 @@
        width: 350px;
       }
       .ContactAddress{
+        height: 423px;
         width: 350px;
-       
         box-shadow: 0px 0px 6px 6px rgb(230, 227, 227);
       }
       .headingForAddress{
         font-size: 23px;
         text-align: center;
         color: #279eff;
-        padding: .5rem;
+        padding: .7rem;
     }
     .listForAddress li{
         list-style-type: none;
