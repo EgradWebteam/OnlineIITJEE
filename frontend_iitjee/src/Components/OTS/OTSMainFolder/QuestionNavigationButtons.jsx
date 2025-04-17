@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import ExamSummaryComponent from './OTSExamSummary';
-import {BASE_URL} from '../../../../apiConfig.js'
+import { BASE_URL } from '../../../config/apiConfig';
 import { useQuestionStatus,QuestionStatusProvider } from '../../../ContextFolder/CountsContext.jsx';
 export default function QuestionNavigationButtons({
   testData,

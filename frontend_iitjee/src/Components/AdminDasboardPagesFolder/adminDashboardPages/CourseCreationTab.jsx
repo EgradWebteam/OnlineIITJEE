@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CourseForm from "./CourseForm.jsx"; // updated component name
 import DynamicTable from "./DynamicTable.jsx";
-import { BASE_URL } from "../../../../apiConfig";
+import { BASE_URL } from '../../../config/apiConfig';
 import Styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css";
 const CourseCreationTab = () => {
   const [courses, setCourses] = useState([]);

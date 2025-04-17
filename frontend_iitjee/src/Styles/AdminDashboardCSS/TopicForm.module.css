@@ -41,7 +41,7 @@
     border-radius: 0.25rem; /* Adjusted with rem */
   }
   
-  button {
+  .button {
     padding: 0.625rem; /* Adjusted with rem */
     background-color: #007BFF;
     color: white;
@@ -51,7 +51,7 @@
     border: none;
   }
   
-  button:hover {
+  .button:hover {
     background-color: #0056b3;
   }
   

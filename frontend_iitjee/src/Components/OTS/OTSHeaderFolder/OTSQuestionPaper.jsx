@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import egradLogo from "../../../assets/EGTLogoExamHeaderCompressed.jpg";
-import {BASE_URL} from '../../../../apiConfig'
+import { BASE_URL } from '../../../config/apiConfig';
 import axios from "axios"
 
 const OTSQuestionPaper = ({ testName,realTestId }) => {

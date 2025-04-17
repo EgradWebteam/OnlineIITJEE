@@ -233,7 +233,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import globalCSS from "../../../Styles/Global.module.css";
 import CourseCard from '../../LandingPagesFolder/CourseCards.jsx';
-import { BASE_URL } from '../../../../apiConfig';
+import { BASE_URL } from '../../../config/apiConfig';
 
 export default function StudentDashboard_BuyCourses({setActiveSection,studentId}) {
   useEffect(() => {

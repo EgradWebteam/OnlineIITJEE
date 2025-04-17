@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { BASE_URL } from "../../../../apiConfig";
+import { BASE_URL } from '../../../config/apiConfig';
 import { jsPDF } from "jspdf"; // Ensure jsPDF is imported
 import styles from "../../../Styles/AdminDashboardCSS/TestCreation.module.css";
 
