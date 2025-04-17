@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from "react";
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import { useQuestionStatus } from "../../../ContextFolder/CountsContext.jsx";
+
 const ExamSummaryComponent = ({
   // userAnswers,
   // testData,
@@ -184,7 +185,8 @@ console.log("courseCreationId",courseCreationId)
       if (!updateResponse.ok) {
         const errorMessage = await updateResponse.text();
         console.error("Error details:", errorMessage);
-        throw new Error('Status update failed:' `${errorMessage}`);
+        throw new Error('Status update failed: ' + errorMessage);
+
       }
 
       const updateResult = await updateResponse.json();
