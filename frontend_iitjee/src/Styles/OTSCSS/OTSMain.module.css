@@ -1,0 +1,1071 @@
+/* OTS HEADER CSS */
+
+.OTSMainHeader{
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+.OTSlogoHolder img{
+ width: 100%;
+ height: 100%;
+}
+.OTSlogoHolder{
+    width: 250px;
+}
+/* OTS NAVBAR CSS */
+.OTSNavbarMainContainer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: black;
+    padding: 10px;
+}
+.OTSTestNameHolder p{
+color: #dddd64; 
+font-size: 17px; 
+font-weight: 600;
+text-transform: uppercase;
+}
+.OTSInstrctionsDivHolder{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.OTSInstrctionsDivHolder button{
+ color: white;
+margin-right: 6px;
+font-size: 18px;
+background-color:black;
+border: none;
+cursor: pointer;
+}
+.InstIcon{
+    color: rgb(33, 150, 243);
+    /* margin-right: 4px; */
+    font-size: 20px;
+    margin: -4px 5px;
+}
+/* OTS SUBJECTS AND SECTIONS CONTAINER CSS */
+.SubjectsAndSectionsConatinerMainDiv{
+    /* border: 1px solid gray; */
+}
+.OTSSubjectandSectionButtonsGroup,.QuestionTypeHolderContainer,.QuestionNumberHolderContainer{
+    border: 1px solid gainsboro;
+    padding: 0px 10px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 8px;
+}
+.OTSSubjectButton {
+    padding: 10px 15px;
+    background-color: unset;
+    font-size: 1.2rem;
+    border: 1px solid gainsboro;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  
+  .activeSubjectAndSectionBtn {
+    background-color: #587dbd;
+    color: white;
+    border-color: #587dbd;
+  }
+  
+  .OTSSubjectButtonsGroup {
+    margin-bottom: 10px;
+  }
+  
+  .OTSSectionButtonsGroup {
+    margin-top: 10px;
+  }
+  /* QUESTIONS DISPLAYING CSS */
+  .QuestionTypeHolderContainer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .marksContainer{
+    display: flex;
+    align-items: center;
+  }
+  .marksSeparator{
+    margin: 0px 10px;
+    font-size: 20px;
+  }
+  .QuestionTypeHolderContainer,.QuestionNumberHolderContainer{
+    font-weight: 600;
+    font-size: 18px;
+  }
+  .crctMarksSpan, .negtMarksSpan{
+    font-weight: 700;
+  }
+  .crctMarksSpan{
+    color: green;
+  }
+  .negtMarksSpan{
+    color: red;
+  }
+  .QuestionParaNow{
+    margin: 1rem;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  /* QUESTION OPTIONS CONTAINER CSS */
+.QuestionLabel{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+.QuestionOptionsMainContainer{
+    margin: 1rem;
+}
+.NATInputHolder {
+    width: 250px;
+    background-color: #fff;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    gap: 4px;
+    border: 2px solid #c5c0c0;
+    box-shadow: rgba(0, 0, 0, 0.2) 1.95px 1.95px 2.6
+  }
+  
+  .NATLabel {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  .NATInput {
+    width: 98%;
+    height: 40px;
+    border: 2px solid #ccc;
+    border-radius: 1.5rem;
+    padding: 5px;
+    text-align: right;
+    font-size: large;
+    font-weight: bold;
+    /* margin-top: 1rem; */
+  }
+  
+  .CalculatorBox {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(3, 50px);
+    justify-content: center;
+    padding: 10px;
+  }
+  
+  .CalcButton {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #aaa;
+    border-radius: 8px;
+    font-size: larger;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.2) 1.95px 1.95px 2.6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e4e4e4;
+    color: black;
+  }
+  
+  .CalcButton:hover {
+    background-color: #c4c2c2;
+  }
+  .backSpaceBtn{
+    display: flex;
+    justify-content: center;
+    width: 85%;
+    margin: auto;
+    margin: 10px;
+  }
+  .backSpaceBtn button{
+    width: 100%;
+    padding: 10px;
+    font-size: larger;
+    background-color: #d9d9d9;
+    border-radius: 20px;
+    font-weight: bold;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    border: 1px solid darkgray;
+    text-transform: uppercase;
+    color: black;
+  }
+  .backSpaceBtn button:hover{
+    background-color: #c4c2c2;
+  }
+  .arrowBtns{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    gap: 1rem;
+  }
+  .arrowBtns button{
+    width: 45px;
+    height: 45px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    background-color: #e0e0e0;
+    font-size: x-large;
+    font-weight: bolder;
+    cursor: pointer;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+  }
+  .arrowBtns button:hover {
+    background-color: #c4c2c2;
+  }
+  /* OTS RIGHT SIDE BAR CSS */
+  .OTSRightSideBarMainContainer{
+    position: absolute;
+    right: 0;
+    border: 1px solid gainsboro;
+    background-color: white;
+    width: 282px;
+    top: 0;
+  }
+  .StudentProfileHolderOTS{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    background: #e5f6fb;
+    gap: 10px;
+  }
+  .profileImage {
+    width: 100px;
+    height: 100px;
+  }
+  .profileImage img{
+     width: 100%;
+     height: 100%;
+  }
+  .OTSRightSideBarSubContainer{
+    background-color: #e5f6fb;
+   border: 2px solid;
+  }
+  .OTSBehaviourCountBtnsContainer{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 8px;
+    background-color: white;
+  }
+  .OTSBehaviourBtnsClass{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 5px;
+    margin-bottom: 10px;
+    width: 50%;
+  }
+  .behaviorBtnImg{
+    display: flex;
+    justify-content: center;
+    height: 45px;
+    width: 45px;
+  }
+  .AnsweredBehaviourBtns{
+    background-image: url(../../assets//OTSTestInterfaceImages/Answered.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: white;
+    line-height: 34px;
+  }
+  .NotAnsweredBehaviourBtns{
+    background-image: url(../../assets//OTSTestInterfaceImages/NotAnswered.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: white;
+    line-height: 34px;
+  }
+  .NotVisitedBehaviourBtns{
+    background-image: url(../../assets//OTSTestInterfaceImages/Visited.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: black;
+    line-height: 34px;
+  }
+  .MarkedforReviewBehaviourBtns{
+    background-image: url(../../assets/OTSTestInterfaceImages/MarkedForReview.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: white;
+    line-height: 43px;
+    width: 50%;
+  }
+  .AnsMarkedforReviewBehaviourBtns{
+    background-image: url(/src/assets/OTSTestInterfaceImages/AnsMarkedForReview.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: white;
+    width: 20%;
+    height: 60px;
+    line-height: 38px;
+  }
+  .SectionsAndSubjectDiv{
+    background-color: #587dbd;
+    color: white;
+    padding: 6px;
+    display: flex;
+    font-weight: 500;
+    font-size: 18px;
+  }
+  .symbolGap{
+    margin: 0px 4px;
+  }
+  .fntSize{
+    font-size: 15px;
+  }
+  .behaviorBtnImgMarkedForReiew{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 5px;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  .OTSMainFileMainContainer{
+    width: 100%;
+    position: relative;
+    height: 75vh;
+  }
+  .OTSMainFileSubContainer{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    width: calc(100vw - 300px);;
+  }
+  .AllQuestionRenderBox{
+    padding: 10px;
+  }
+  .QuestionsBtnsConatiner{
+    margin-top: 5px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(45px, 40px));
+    grid-auto-rows: 50px;
+    padding: 0;
+    align-items: start;
+    justify-content: start;
+    gap: 6px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-top: 10px;
+    padding-left: 4px;
+  }
+  .OTSQuestionBtn{
+    height: 45px;
+    width: 45px;
+    background-color: unset;
+    background-image: url(../../assets//OTSTestInterfaceImages/Visited.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    color: black;
+    cursor: pointer;
+  }
+
+/* QUESTIOPN NAVIGATION BTN CSS */
+.QuestionNavigationButtonsMainContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.markedForReviewNavigationBtn,.clearResponseBtn, .previousBtn,.saveandnextNavigationBtn,.submitNavigationBtn{
+  border: 1px solid rgb(153, 151, 151);
+  padding: 10px;
+  cursor: pointer;
+}
+.saveandnextNavigationBtn{
+  background-color: rgb(69, 140, 207);
+  color: white;
+  border: none;
+}
+.QuestionNavigationBTns{
+  border: 1px solid rgb(204, 204, 204);
+  padding: 10px;
+  position: sticky;
+  width: 100%;
+  margin-top: 30px;
+  height: 3.5vh;
+}
+.navigationBtnHolderSubContainer{
+  display: flex;
+  gap: 10px;
+}
+.AnswerdBtnCls, .NotAnsweredBtnCls, .MarkedForReview, .AnsMarkedForReview{
+  height: 45px;
+  width: 45px;
+  background-color: unset;
+  background-repeat: no-repeat;
+  background-size: contain;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  color: white;
+}
+.AnswerdBtnCls{
+  background-image: url(../../assets//OTSTestInterfaceImages/Answered.png);
+}
+.NotAnsweredBtnCls{
+  background-image: url(../../assets//OTSTestInterfaceImages/NotAnswered.png);
+}
+.MarkedForReview{
+  background-image: url(../../assets//OTSTestInterfaceImages/MarkedForReview.png);
+}
+.AnsMarkedForReview{
+  background-image: url(../../assets//OTSTestInterfaceImages/AnsMarkedForReview.png);
+}
+.btnsSubContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 85%;
+}
+/* .submitBtnCls{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  background-color: rgb(94, 135, 163);
+} */
+
+/* OTS EXAM SUMMARY CSS */
+.examSummaryContainer {
+  padding: 24px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.summaryTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.summaryTable th,
+.summaryTable td {
+  border: 1px solid #ccc;
+  padding: 12px;
+}
+
+.confirmationText {
+  margin-top: 24px;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.buttonGroup {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.noBtn {
+  margin-right: 20px;
+  padding: 10px 24px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.yesBtn {
+  padding: 10px 24px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.submissionPopup {
+  text-align: center;
+  padding: 2rem;
+  background-color: #f0fff0;
+  border: 2px solid #22bb33;
+  border-radius: 10px;
+}
+
+.viewReportBtn {
+  background-color: #22bb33;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.ExamSummaryMainDiv{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+/* page not found css */
+.pageNotFoundMaindiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+}
+.pagenotFoundImage img{
+  width: 100%;
+  height:100%
+}
+/* .pagenotFoundImage{
+  width: 400px;
+  height: 300px;
+} */
+.errorMSGPAGE{
+  font-size: 2rem;
+  font-weight: 600;
+}
+.pagenotfoundPARA{
+  display:flex;
+  align-items: center;
+  margin-top: 1rem;
+  flex-direction: column;
+}
+/*instrction page css */
+.instrctionMianHeading {
+  background-color: lightblue;
+  color: #3d3636;
+  padding: 6px;
+  padding-left: 3rem;
+  margin: 1rem;
+}
+
+.instructionHeading {
+  text-decoration: underline;
+  margin-bottom: 5px;
+}
+.instrcutionstudentProfileDiv{
+  display: flex;
+}
+.instructionSubdiv{
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  overflow: auto;
+  min-height: 60vh;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 1rem 1rem 1rem 3rem;
+}
+
+.instructionSection ul {
+  list-style-type: none;
+  padding-left: 10px;
+}
+
+.instructionSection ul li {
+  line-height:34px;
+}
+
+.tableOFbtns {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid;
+  width: 60%;
+  margin: 10px 0;
+}
+
+.rowTableClass, .displayIcon{
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  gap: 5px;
+  border-top: none;
+
+}
+.rowTableClass div{
+  border: 1px solid black;
+}
+.forTotalWidth{
+  border: 1px solid black;
+  padding: 10px;
+  width: 100%;
+}
+.displayIcon{
+  width: 7%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+.functionimageCls{
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  justify-content: center;
+}
+.nextBtnDiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid gainsboro;
+}
+.nextBtnDiv button, .previuosBtn{
+  background-color: #04c7f8;
+  padding: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+  border: 1px solid #04c7f8;
+  border-radius: 5px;
+  margin: 1rem;
+}
+.nextBtnArrow{
+  font-size: 15px;
+}
+.userImageDivInst{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.7rem;
+  word-wrap: break-word;
+  border-left: 1px solid gray;
+  width: 190px;
+}
+.userImageSubDiv img{
+width: 100%;
+height: 100%;
+}
+.userImageSubDiv{
+  width: 140px;
+}
+.userDetailsHolder{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  margin: 10px;
+}
+.userDetailsHolder p{
+  font-size: 18px;
+  font-weight: 700;
+}
+.instructionList{
+padding: 3rem;
+}
+.instructionList li{
+  list-style: disc;
+}
+.examinstructionSubdiv{
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  overflow: auto;
+  min-height: 80vh;
+  overflow-y: auto;
+  width: 100%;
+}
+.termandConditionsMainDiv{
+  border-top: 1px solid gainsboro;
+}
+.termsandConditionsDiv{
+  margin: 1rem;
+}
+.termsandConditionsDiv input{
+  cursor: pointer;
+}
+.readytoBeginDiv{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1.5rem;
+}
+.readyBeginBtn{
+  padding: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+background-color: #04c7f8;
+}
+.spanAccept{
+  margin-left: 5px;
+}
+.previosBtnArrow{
+  margin-right: 4px;
+}
+.disabledBtn {
+  background-color: #5aa1b3 !important;
+  color: white !important;
+  cursor: not-allowed !important;
+}
+.rightChevronBtn{
+  position: absolute;
+    top: 26rem;
+    left: -7%;
+}
+.rightChevronBtn button{
+  padding: 12px 3px;
+    background: black;
+    color: white;
+    border-radius: 5px;
+    border-radius: 4px;
+}
+
+.hiddenSidebar {
+  display: none; /* Or visibility: hidden; */
+}
+.OTSQuestionContainerMainDiv{
+  width: 100%;
+}
+.fullWidth {
+  width: 100vw;
+}
+/*Questionpaper css */
+.OTSQuestionPaperMainDiv{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 10px;
+}
+.logoDiv img {
+  width: 100%;
+  height: 100%;
+}
+.logoDiv{
+  width: 250px;
+}
+.navDivForQuestionPaper{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.OTSQuestionPaperSubDiv{
+  background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 1200px;
+    max-height: 90%;
+    overflow-y: auto;
+    position: relative;
+}
+.QuestionOptionsDIV{
+  margin: 20px 0;
+padding: 10px;
+border: 1px solid #ddd;
+border-radius: 10px;
+}
+/*STUDENT REPORT CSS */
+.StudentReportMainDiv{
+  background: #eef1fbff;
+  height: 100vh;
+  overflow: hidden;
+}
+.StudentReportSubDiv{
+  background: rgb(255, 255, 255);
+  width: 80vw;
+  margin: 0 auto;
+}
+.studentReportHeaderMain{
+  display: flex;
+  background: #eef1fb;
+  justify-content: space-between;
+  padding: 9px 0;
+}
+.studentReportHeaderDiv{
+  color: #00aff0;
+  font-family: "PT Serif", serif;
+  font-size: 35px;
+}
+.studentReportBackButton {
+  width: 100px;
+  height: 40px;
+  margin-right: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #198754;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  border: none;
+}
+.studentReportBackArrow{
+  font-size: 30px;
+}
+.studentReportTestDetailsContiner{
+  margin: 2rem;
+  padding: 10px 0px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;;
+}
+.testDetailsContainerSub{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+  gap: 3rem;
+}
+.testDetailsContainerSub li{
+ font-size: 20px;
+}
+.studentReportPerformanceBtns{
+ display: flex;
+ align-items: center;
+ gap: 1.5rem;
+ margin: 1rem;
+}
+.performanceButtonsInStudentReport{
+  color: #fff;
+  padding: 8px 15px;
+  background-color: #2cd1ee;
+  border-radius: 14px;
+  font-weight: bold;
+  font-size: 16px;
+  border: 0;
+  user-select: none;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+.performanceBtnActive{
+  background: #198754;
+}
+.studentPerformanceReportMain, .solutionContainerMain{
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 75vh;
+}
+.AIRholderDiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f1fe;
+  border: 1px solid white;
+}
+.airRankSubDiv{
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  flex: 1 1;
+}
+.timeSpentContainer{
+  width: 50%;
+  text-align: left;
+  padding-right: 16px;
+}
+.timeProgressPara{
+  font-size: 15px;
+  text-decoration: underline;
+  padding: 5px;
+  font-weight: 700;
+}
+.timeProgressContainer{
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  line-height: 2.1rem;
+}
+.timeLeftSpentPara{
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+.timeLeftIcon, .timeSpentIcon{
+  width: 18px;
+  height: 15px;
+  display: block;
+}
+.timeLeftIcon{
+  background: #6666e6;
+}
+.timeSpentIcon{
+  background:rgb(230 102 102);
+}
+.studentReportSubjectWiseConatiner{
+  margin: auto;
+  padding: 8px;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+.subjectWiseReportHeading{
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: underline;
+}
+.subjectwiseTableMainDiv{
+  width: 97%;
+  overflow: auto;
+}
+.tableMain{
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+.tableTh{
+  background-color: #f2f2ff;
+  font-weight: bold;
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+.tableTd{
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+.tableTrTotalMarks{
+  background-color: #198754 !important;
+  font-weight: bold;
+  color: white;
+}
+.subjectDropDownContainer{
+  margin: 1rem;
+  padding: 10px;
+}
+.subjectWiseDropDown{
+  width: 245px !important;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 3px;
+}
+.questionSolutionsDiv{
+  margin: 2rem 2rem 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  padding: 1rem;
+  gap: 7px;
+  position: relative;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.waterMark{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: waterMarkMoving 22s infinite;
+  color: rgba(192, 184, 184, 0.5);
+}
+.topWaterMark{
+  animation: waterMarkMoving 15s infinite;
+  position: absolute;
+  left: 62px;
+  z-index: 99;
+}
+.bottomWaterMark{
+  animation: waterMarkMoving 15s infinite;
+  position: absolute;
+  left: 500px;
+  z-index: 99;
+}
+.middleWaterMark{
+  animation: waterMarkMoving 15s infinite;
+  position: absolute;
+  left: 200px;
+  z-index: 99;
+}
+.rightWaterMark{
+  animation: waterMarkMoving 15s infinite;
+  position: absolute;
+  left: 800px;
+  z-index: 99;
+}
+
+@keyframes waterMarkMoving {
+  0% {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  25% {
+    top: 0;
+    left: 0;
+    transform: translate(0, 0);
+  }
+  50% {
+    top: 0;
+    left: 100%;
+    transform: translate(-100%, 0);
+  }
+  50% {
+    top: 100%;
+    left: 100%;
+    transform: translate(-100%, -100%);
+  }
+  100% {
+    top: 100%;
+    left: 0;
+    transform: translate(0, -100%);
+  }
+}
+
+/* TIMER CSS */
+.OtsTimerMainDiv{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgb(204, 204, 204);
+  padding: 10px;
+}
+.OtsTimerDiv{
+  font-size: 18px;
+  font-weight: 700;
+}
+
+@media (max-width:1280px) {
+  .OTSMainFileMainContainer{
+    width: 100%;
+    position: relative;
+    height: 72vh;
+}
+.QuestionNavigationBTns{
+  border: 1px solid rgb(204, 204, 204);
+  padding: 7px;
+  position: sticky;
+  width: 100%;
+  margin-top: 30px;
+  height: 8vh;
+}
+}

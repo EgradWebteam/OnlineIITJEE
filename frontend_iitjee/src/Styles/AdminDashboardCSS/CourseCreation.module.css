@@ -1,0 +1,236 @@
+.courseContainer {
+  padding: 1.5rem;
+  background: #f9fafc; /* Light background for the main content */
+}
+
+.pageHeading {
+font-size: 28px;
+font-weight: 600;
+text-align: center;
+background-color: #1f1f22ed;
+color: white;
+padding: 5px;
+margin: 1rem;
+}
+
+.topRow {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.flex{
+  display: flex;
+  justify-content: end;
+}
+.leftOptionBtn {
+  background-color: #0a1f33; /* Dark blue background for the test option */
+  color: white;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.searchBarContainer {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 25px;
+  padding: 6px 12px;
+  box-shadow: 0 0 8px rgba(0, 120, 255, 0.2);
+  width: 100%;
+  margin: 1rem 0;
+  max-width: 100%;
+}
+
+.searchBarContainer input {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.searchIcon {
+  color: #999;
+  margin-right: 6px;
+}
+
+.subHeading {
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 1rem;
+  color: #1a1a1a;
+}
+
+.tableWrapper {
+  margin-top: 1.5rem;
+}
+
+/* Style for the Online Test Series option that appears when "Add Course" is clicked */
+.onlineTestDiv {
+  background-color: antiquewhite; /* Background color for the div */
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 1rem;
+  display: inline-block;
+}
+.dashboardContent {
+  padding: 2rem;
+  background-color: #f9fafc;
+}
+
+.dashboardTitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.addCourseBtn{
+  background-color: #00b94a;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  margin: 0 16px;
+
+}
+
+.addCourseBtn:hover {
+  background-color: #00a23f;
+}
+
+/* Modal/Popup Form Container */
+.formContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5); /* Overlay */
+  z-index: 1000;
+}
+
+.formWrapper {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 6px;
+  width: 400px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.formTitle {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.formGroup label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.formGroup input,
+.formGroup textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.formActions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.submitButton,
+.cancelButton {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.submitButton {
+  background-color: #00b94a;
+  color: white;
+}
+
+.submitButton:hover {
+  background-color: #00a23f;
+}
+
+.cancelButton {
+  background-color: #f44336;
+  color: white;
+}
+
+.cancelButton:hover {
+  background-color: #d32f2f;
+}
+/* Modal background */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it overlays content */
+}
+
+/* Modal content */
+.modal-content {
+  background-color: white;
+  padding: 2rem; /* Using rem for better scalability */
+  border-radius: 0.5rem; /* Rounded corners */
+  box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.2);
+  width: 90%; /* Using percentage for fluid width */
+  max-width: 30rem; /* Maximum width with rem for responsiveness */
+}
+
+/* Pagination controls */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.pagination button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 0.3rem;
+  padding: 0.5rem 1rem; /* Using rem for padding */
+  margin: 0 0.5rem; /* Margin between buttons */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+  background-color: #0056b3;
+}

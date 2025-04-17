@@ -1,0 +1,103 @@
+.Footer_MainPage{
+    background-color: black;
+    color: white;
+}
+.FooterContainer{
+    display: flex;
+   flex-wrap: wrap;
+   gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 2rem;
+}
+.Footer_TermsPolicy li{
+list-style-type: none;
+padding: 10px;
+}
+.Footer_TermsPolicy a{
+color: whitesmoke;
+font-size: 18px;
+cursor: pointer;
+text-decoration: underline;
+}
+.list_headingforfooter{
+    color: rgb(39 158 255);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+.list_headingforfooter svg{
+    font-size: 20px;
+}
+.list_heading{
+    font-size: 1.2rem;
+}
+.Footer_AddressInfo li{
+list-style-type: none;
+padding: 5px;
+
+}
+.Footer_contactDetails{
+    padding: 2rem 0;
+}
+.Footer_contactInfo{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.Footer_contactInfo svg{
+    font-size: 20px;
+    font-weight:bold;
+}
+.Footer_LastSection{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-top: 1px solid white;
+    padding: .5rem;
+}
+.Footer_icons{
+    display: flex;
+    gap: 20px;
+    padding: 0 2.5rem;
+    width: 30%;
+}
+.Footer_icons svg{
+    font-size: 22px;
+    cursor: pointer;
+}
+.FooterCopyRights{
+    width: 60%;
+}
+@media(max-width:600px){
+    .FooterContainer{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        padding: 0;
+    }
+    .Footer_LastSection{
+    flex-direction: column;
+    }
+    .Footer_icons{
+        display: flex;
+       flex-direction: row;
+       padding: 0;
+    }
+    .list_headingforfooter {
+        font-size: 1.2rem;
+    }
+    .list_headingforfooter li{
+        font-size: .8rem;
+    }
+    .list_heading{
+        font-size: 1rem;
+    }
+  
+    .Footer_contactDetails{
+        padding: 8px;
+    }
+}

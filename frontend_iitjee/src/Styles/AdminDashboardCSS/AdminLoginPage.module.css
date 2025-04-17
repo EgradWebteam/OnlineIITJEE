@@ -1,0 +1,121 @@
+.AdminLoginPageContainer {
+  min-height: 61vh;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  background-image: url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+    url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png);
+  background-position: 50% center, center 10%, center 30%, 75% center,
+    100% center, 75% 30%, 75% 70%, 25% 30%, 75% 10%, 0px 30%, 0px 70%, 0px 10%,
+    25% 10%, 0px 90%, 25% 70%, 25% 90%, center 70%, center 90%, 75% 90%,
+    100% 10%, 100% 30%, 100% 70%, 100% 90%, 0px center, 25% center;
+  background-repeat: no-repeat;
+  background-size: 10%;
+}
+
+.AdminLoginPage {
+  width: 400px;
+  height: auto;
+  box-shadow: 0px 0px 3px 3px rgb(223, 219, 219);
+  margin: 100px auto;
+  border-radius: 10px;
+  background-color: white;
+}
+
+.AdminLogin {
+  text-align: center;
+  padding: 1rem 0;
+  color: rgb(51 51 51);
+}
+
+.AdminLoginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0 1rem;
+}
+
+.AdminLableName {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding: 0 .3rem;
+}
+
+.AdminLableName label {
+  padding: .5rem 0;
+}
+
+.AdminLableName input {
+  width: 92%;
+  padding: 10px;
+  border-radius: 5px;
+  outline: none;
+  border: 1px solid #d5cdcd;
+}
+
+.AdminLableName input:focus {
+  border-color: rgb(55, 129, 240);
+}
+
+.AdminLoginButton button {
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  background-color: rgb(0 123 255);
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 1rem 0;
+}
+
+.AdminForgotPassword {
+  text-align: center;
+  padding: 1rem;
+  font-size: 20px;
+  color: #646cff;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+}
+
+.errorMessage {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+}
+
+.successMessage {
+  color: green;
+  font-size: 14px;
+  text-align: center;
+}
+
+.BackToLoginLink a {
+  color: #646cff;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+}

@@ -1,0 +1,365 @@
+.appLayout {
+  display: flex;
+  height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.sidebar {
+  width: 220px;
+  background-color: #f9f9f9;
+  padding-top: 20px;
+  flex-shrink: 0;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  border-right: 2px solid #837777;
+}
+
+nav ul li .active {
+  color: #ff0000;
+  font-weight: bold;
+}
+
+.sidebarMenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebarMenu li {
+  padding: 15px 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.sidebarMenu li:hover {
+  background-color: #e0e0e0;
+}
+
+.mainContent {
+  flex-grow: 1;
+  background: #f0f7ff;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-bottom: 2px solid #837777;
+}
+
+.headerButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.headerButtons button {
+  position: relative;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  background-color: #dadfe7;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.headerButtons button:hover {
+  background-color: #e0e0e0;
+}
+
+.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.activeDot {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: red;
+}
+
+.dashboardContent {
+  padding: 2rem;
+}
+
+.dashboardTitle {
+  /* font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: bold;
+  border-bottom: 41px solid #1f1f22ed;
+  padding-bottom: -0.5rem;
+  width: 100%;
+  line-height: 181%;
+  color: white; */
+}
+
+.statGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.statCard {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 200px;
+  transition: transform 0.3s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+}
+
+.icon {
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.active {
+  background-color: #f1f1f1;
+  color: #007bff;
+}
+
+.sidebarMenu li {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  padding: 20px;
+}
+
+.sidebarMenu li:hover {
+  background-color: #f7f7f7;
+}
+
+.iconBox {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #007bff;
+}
+
+.label {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+
+.value {
+  font-size: 1.3rem;
+  color: #007bff;
+}
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 1rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.flex{
+  display: flex;
+  justify-content:end
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.table thead {
+  background-color: #002147;
+  color: #ffffff;
+}
+
+.table th,
+.table td {
+  padding: 12px 16px;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+}
+
+.table tbody tr:hover {
+  background-color: #f1f5f9;
+}
+
+.noData {
+  text-align: center;
+  padding: 1rem;
+  color: #888;
+}
+
+.actions {
+  margin: 0 4px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+}
+
+.editBtn {
+  background-color: #00bcd4;
+  color: white;
+}
+
+.deleteBtn {
+  background-color: #f44336;
+  color: white;
+}
+
+.toggleBtn {
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.activate {
+  background-color: #4caf50;
+  color: white;
+}
+
+.deactivate {
+  background-color: #ff2222e0;
+  color: white;
+}
+.DocumentUploadForm {
+  display: flex;
+  /* flex-direction: column; */
+  gap: 1.5rem;
+  padding: 2rem;
+  background-color: #fdfdfd;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  /* max-width: 600px; */
+  /* margin: 0 auto; */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+.uploadButton{
+  background-color: #28a745;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+.DocumentContentDiv {
+  padding: 2rem;
+  margin: 2rem auto;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+
+  background-color: #f9f9f9;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* .DocumentContentDiv h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #333;
+  text-align: center;
+  font-weight: 600;
+} */
+
+.TestPaperContent {
+  background-color: #fff;
+  padding: 1.5rem;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  max-height: 500px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: 'Segoe UI', sans-serif;
+  line-height: 1.5;
+}
+.formHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.closeButton {
+  background-color: #ff4d4f;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  background-color: #d9363e;
+}
+
+.popupWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.headerImg {
+  height: 70px; /* or whatever fits your layout */
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.headerImg img {
+  height: 100%; /* Make image fill the container */
+  object-fit: contain;
+}
+
+@media screen and (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .headerButtons button {
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+
+  .stat-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .dashboard-title {
+    font-size: 1.2rem;
+  }
+}

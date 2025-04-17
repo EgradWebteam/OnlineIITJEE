@@ -1,0 +1,194 @@
+/* General reset for padding and margin */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+    text-decoration: none;
+  }
+  
+  html {
+    font-size: 16px; /* 1rem = 16px */
+  }
+  
+  body, html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background-color: white;
+  }
+  .studentLoginHomePage{
+    width: 80%;
+    margin: 0 auto;
+    box-shadow: 0px 0px 3px 3px rgb(201, 198, 198);
+  }
+  /* Centering the login page */
+  .studentLoginPage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem;
+    min-height: fit-content !important;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    background-image: url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png),
+      url(https://onlineug.egradtutor.in/static/media/waterMarkLogo.6942db60e54a9861b3cb.png);
+    background-position: 50% center, center 10%, center 30%, 75% center,
+      100% center, 75% 30%, 75% 70%, 25% 30%, 75% 10%, 0px 30%, 0px 70%, 0px 10%,
+      25% 10%, 0px 90%, 25% 70%, 25% 90%, center 70%, center 90%, 75% 90%,
+      100% 10%, 100% 30%, 100% 70%, 100% 90%, 0px center, 25% center;
+    background-repeat: no-repeat;
+    background-size: 10%;
+  }
+  
+  /* Styling the login container */
+  .studentLoginContainer {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 0px 6px 6px;
+    max-width: 450px;
+    text-align: center;
+    width: 100%;
+  }
+  .studentLogo{
+    width: 100px;
+    height:auto;
+    margin: auto;
+  }
+  .studentLogo img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    box-shadow: 0px 0px 3px 3px rgb(240, 238, 238);
+    
+  }
+  /* Header style */
+  .studentLoginContainer h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+    padding: 1rem 0;
+  }
+  
+  /* Form style */
+  .studentLoginFormInput {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    text-align: left;
+    margin-bottom: 8%;
+  }
+  
+  .studentLoginFormInput label {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .studentLoginFormInput input {
+    padding: 0.75rem;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  
+  .studentLoginFormInput input:focus {
+    border-color: #007bff;
+  }
+  
+  /* Submit button */
+  .studentLoginFormSubmit {
+    margin-top: 1rem;
+  }
+  
+  .studentLoginFormSubmit button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .studentLoginFormSubmit button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Links */
+  .studentLoginLinks p {
+    font-size: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .studentLoginLinks a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .studentLoginLinks a:hover {
+    text-decoration: underline;
+  }
+  .backToLoginLink{
+    margin-top: 10%;
+  }
+  .passwordInputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .passwordToggle {
+    position: absolute;
+    right: 10px; 
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #aaa;  /* Icon color */
+  }
+  
+  input {
+    padding-right: 30px; 
+  }
+  
+  .passwordError {
+    color: red;
+    font-size: 0.9rem;
+  }
+  
+  @media(max-width:1150px){
+    .studentLoginHomePage{
+      width: 100%;
+    }
+  }
