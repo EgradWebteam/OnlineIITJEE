@@ -226,8 +226,8 @@ async function insertResponse(connection, data) {
     data.section_id ? parseInt(data.section_id, 10) : 0,
     parseInt(data.question_id, 10),
     parseInt(data.question_type_id, 10),
-    data.optionIds,
     data.userAnswer,
+    data.optionIds,
     data.answered,
   ];
 
@@ -284,9 +284,8 @@ router.post("/SaveResponse", async (req, res) => {
 
     const commonAnswer =
       optionIndexes1CharCodes.join(",") +
-      optionIndexes2CharCodes.join(",") +
-      calculatorInputValue;
-    const commonOptions = optionIndexes1 + optionIndexes2;
+      optionIndexes2CharCodes.join(",");
+    const commonOptions = optionIndexes1 + optionIndexes2 + calculatorInputValue;
 
     const identifiers = {
       realStudentId,
@@ -299,8 +298,8 @@ router.post("/SaveResponse", async (req, res) => {
 
     const data = {
       ...identifiers,
-      userAnswer: commonAnswer,
-      optionIds: commonOptions,
+      userAnswer: commonOptions,
+      optionIds: commonAnswer,
       answered,
     };
 

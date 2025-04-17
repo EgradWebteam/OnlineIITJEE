@@ -380,17 +380,17 @@ export default function QuestionNavigationButtons({
         buttonClass: styles.AnswerdBtnCls,
         type: "MCQ"
       };
-    } else if ([3, 4].includes(qTypeId) && selectedOptionsArray?.length > 0) {
-      optionIndexesStr = selectedOptionsArray.map(opt => opt.option_index).join(",");
-  
-      optionCharCodes = selectedOptionsArray.map(opt => {
-        const match = question.options.find(qOpt => qOpt.option_index === opt.option_index);
+    } else if ([3, 4].includes(qTypeId) && Array.isArray(selectedOptionsArray) && selectedOptionsArray.length > 0) {
+      optionIndexesStr = selectedOptionsArray.join(",");
+    
+      optionCharCodes = selectedOptionsArray.map(optIndex => {
+        const match = question.options.find(qOpt => qOpt.option_index === optIndex);
         return match?.option_id;
-      }).filter(Boolean); // removes undefined/null values
-  
+      }).filter(Boolean);
+    
       savedData = {
         ...savedData,
-        selectedOptions: selectedOptionsArray,
+        selectedOptions: selectedOptionsArray, // or rename to selectedOptionIndexes for clarity
         buttonClass: styles.AnswerdBtnCls,
         type: "MSQ"
       };
@@ -478,19 +478,18 @@ export default function QuestionNavigationButtons({
         buttonClass,
         type: "MCQ"
       };
-    } else if ([3, 4].includes(qTypeId) && selectedOptionsArray?.length > 0) {
-      optionIndexesStr = selectedOptionsArray.map(opt => opt.option_index).join(",");
-  
-      optionCharCodes = selectedOptionsArray.map(opt => {
-        const match = question.options.find(qOpt => qOpt.option_index === opt.option_index);
+    } else if ([3, 4].includes(qTypeId) && Array.isArray(selectedOptionsArray) && selectedOptionsArray.length > 0) {
+      optionIndexesStr = selectedOptionsArray.join(",");
+    
+      optionCharCodes = selectedOptionsArray.map(optIndex => {
+        const match = question.options.find(qOpt => qOpt.option_index === optIndex);
         return match?.option_id;
-      }).filter(Boolean); // remove null/undefined values
-  
-      buttonClass = styles.AnsMarkedForReview;
+      }).filter(Boolean);
+    
       savedData = {
         ...savedData,
-        selectedOptions: selectedOptionsArray,
-        buttonClass,
+        selectedOptions: selectedOptionsArray, // or rename to selectedOptionIndexes for clarity
+        buttonClass: styles.AnsMarkedForReview,
         type: "MSQ"
       };
     } else if ([5, 6].includes(qTypeId) && natValue?.trim() !== "") {

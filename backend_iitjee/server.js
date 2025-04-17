@@ -26,13 +26,16 @@ app.use("/studentbuycourses", studentbuycourses); // ✅ route mount point
 const studentMycourses = require("./src/StudentDashboardAPIs/MyCourses.js");
 app.use("/studentmycourses", studentMycourses);
 app.use("/CourseCreation", CourseCreationTab); 
-
+const MyResults = require("./src/StudentDashboardAPIs/MyResults.js");
+app.use("/MyResults", MyResults);
 
 const InstructionsTab = require("./src/AdminDashboardAPIs/InstructionsTab");
 app.use("/Instructions", InstructionsTab); 
 
 const TestCreationTab = require("./src/AdminDashboardAPIs/TestCreationTab");
 app.use("/TestCreation", TestCreationTab);
+
+
 
 const TestPaperDocumentUpload = require("./src/AdminDashboardAPIs/TestPaperDocumentUpload");
 app.use("/DocumentUpload", TestPaperDocumentUpload);

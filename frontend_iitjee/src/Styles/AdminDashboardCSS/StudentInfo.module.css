@@ -1,9 +1,13 @@
 .Addedstudent {
   color: white;
-  background-color: rgb(77, 98, 221);
-  position: relative;
-  left: 80%;
-  margin: 1rem;
+    background-color: rgb(77, 98, 221);
+    position: relative;
+    left: 80%;
+    padding: 10px;
+    margin: 1rem;
+    font-size: 17px;
+    border: none;
+    border-radius: 7px;
 }
 .StudentInfoHeader {
   text-align: center;
@@ -53,7 +57,7 @@
   color: rgb(68, 112, 148);
   font-size: 25px;
   font-weight: 600;
-  padding: 1rem;
+
 }
 .PopUPForm > div {
   padding: 1rem;
@@ -129,7 +133,7 @@
   flex-direction: column;
   align-items: center;
   border: 1px solid rgb(185, 185, 185);
-  padding: 1rem;
+  padding: 10px;
   margin: 1rem;
   border-radius: 10px;
   justify-content: center;
@@ -153,7 +157,7 @@
 .StudentItem {
   display: flex;
   flex-direction: column;
-  margin: 1rem;
+  margin:0 1rem;
 }
 .ProfileForStdDetails {
   display: flex;
@@ -185,27 +189,45 @@
 .FilterDropdown select {
   padding: 8px 12px;
   border-radius: 5px;
-  background-color: #47d0fa;
+  background-color: #5dd8fd;
   color: white;
   border: none;
   cursor: pointer;
+  font-size: 16px;
+  border: none;
 }
- 
+
 .EditBtnIcon {
   display: flex;
   align-items: center;
+  justify-content: center;
+}
+.EditBtnIcon svg{
+  font-size: 18px;
 }
 .ButtonsForStdEdit {
   color: white;
   background-color: rgb(47, 150, 247);
+  padding: 8px 15px;
+  font-size: 15px;
+  border: none;
+  font-weight: 600;
+  border-radius: 5px;
 }
 .ButtonsForStdEditDetails {
   display: flex;
-  gap: 3rem;
+      gap: 6rem;
+      align-items: center;
+      justify-content: space-between;
 }
 .ButtonsForDeactive {
   color: white;
-  background-color: rgb(250, 108, 89);
+    background-color: rgb(250, 108, 89);
+    padding: 8px 15px;
+    font-size: 15px;
+    border: none;
+    font-weight: 600;
+    border-radius: 5px;
 }
 .ButtonsForEdit {
   display: flex;
