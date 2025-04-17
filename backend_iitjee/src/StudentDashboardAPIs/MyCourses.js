@@ -36,7 +36,6 @@ router.get("/Purchasedcourses/:studentregisterationid", async (req, res) => {
                 e.exam_name,
                 p.portal_id,
                 p.portal_name,
-             
                 cct.portal_id,
                 cct.card_image
             FROM

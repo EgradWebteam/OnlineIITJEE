@@ -19,7 +19,11 @@ console.log("headetstudentdashboard")
   const handleMouseLeave = () => {
     setShowProfileMenu(false);
   };
-
+  const AZURE_STORAGE_BASE_URL = `https://${import.meta.env.VITE_AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/${import.meta.env.VITE_AZURE_CONTAINER_NAME}`;
+  const SAS_TOKEN = `?${import.meta.env.VITE_AZURE_SAS_TOKEN}`
+  const studentProfile = userData?.uploaded_photo
+  ? `${AZURE_STORAGE_BASE_URL}/${import.meta.env.VITE_AZURE_DOCUMENT_FOLDER}/${userData.uploaded_photo}${SAS_TOKEN}`
+  : logostudent;
   // Handle logout functionality
   const handleLogout = async () => {
     const sessionId = localStorage.getItem('sessionId'); // Retrieve sessionId from localStorage
@@ -55,7 +59,6 @@ console.log("headetstudentdashboard")
     }
   };
   
-  const studentProfile = userData?.uploaded_photo;
 
   return (
     <div className={styles.MainDivStudentDasboard}>
