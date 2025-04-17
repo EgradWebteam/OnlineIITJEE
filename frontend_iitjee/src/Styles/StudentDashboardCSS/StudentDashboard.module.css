@@ -35,7 +35,29 @@ border: 1px solid rgba(0, 0, 0, 0.1);
     height: 100%;
 
   }
-  
+  .toggleTypeButtons{
+    display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0 15px;
+        justify-content: center;
+     
+  }
+  .toggleTypeButtons button{
+    padding:10px 15px;
+    font-size: 15px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(7, 174, 240);
+    cursor: pointer;
+  }
+  .toggleTypeButtons button.active {
+    background-color: #28a745; /* Green when active */
+    color: white;
+    border-color: #28a745;
+  }
   .onHoverOFstudent {
     position: absolute;
     top: 64px;

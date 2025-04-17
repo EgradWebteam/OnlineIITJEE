@@ -87,7 +87,278 @@ router.get('/OrvlTopicForCourse/:student_registration_id/:course_creation_id', a
     if (connection) connection.release();
   }
 });
+router.get('/CourseTopic/:orvl_topic_id', async (req, res) => {
+  const { orvl_topic_id } = req.params;
+  let connection;
 
+  try {
+    connection = await db.getConnection();
+
+    const [rows] = await connection.query(
+      `SELECT 
+         otc.orvl_topic_id,
+         otc.orvl_topic_name,
+         otc.orvl_topic_pdf,
+         od.orvl_document_name,
+         l.orvl_lecture_name_id,
+         l.orvl_lecture_name,
+         l.lecture_video_link,
+         u.exercise_name_id,
+         u.exercise_name,
+         eq.exercise_question_id,
+         eq.exercise_question_img,
+         eq.exercise_question_type,
+         eq.exercise_answer_unit,
+         eq.exercise_answer,
+         eq.exercise_question_sort_id,
+         eop.exercise_option_index,
+         eop.exercise_option_img,
+         eop.exercise_option_id
+       FROM iit_orvl_topic_creation AS otc 
+       LEFT JOIN iit_orvl_documents AS od ON od.orvl_topic_id = otc.orvl_topic_id
+       LEFT JOIN iit_orvl_lecture_names l ON l.orvl_topic_id = otc.orvl_topic_id
+       LEFT JOIN iit_orvl_exercise_names u ON u.orvl_lecture_name_id = l.orvl_lecture_name_id
+       LEFT JOIN iit_orvl_exercise_questions eq ON eq.exercise_name_id = u.exercise_name_id
+       LEFT JOIN iit_orvl_exercise_options eop ON eop.exercise_question_id = eq.exercise_question_id
+       WHERE otc.orvl_topic_id = ?
+       ORDER BY l.orvl_lecture_name_id, u.exercise_name_id, eq.exercise_question_sort_id, eop.exercise_option_index`,
+      [orvl_topic_id]
+    );
+
+    if (!rows.length) {
+      return res.status(404).json({ message: "No data found" });
+    }
+
+    const result = {
+      orvl_topic_id: rows[0].orvl_topic_id,
+      orvl_topic_name: rows[0].orvl_topic_name,
+      orvl_topic_pdf: rows[0].orvl_topic_pdf,
+      orvl_document_name: rows[0].orvl_document_name,
+      lectures: []
+    };
+
+    const lectureMap = {};
+
+    rows.forEach(row => {
+      if (!lectureMap[row.orvl_lecture_name_id] && row.orvl_lecture_name_id) {
+        lectureMap[row.orvl_lecture_name_id] = {
+          orvl_lecture_name_id: row.orvl_lecture_name_id,
+          orvl_lecture_name: row.orvl_lecture_name,
+          lecture_video_link: row.lecture_video_link,
+          exercises: []
+        };
+        result.lectures.push(lectureMap[row.orvl_lecture_name_id]);
+      }
+
+      if (row.exercise_name_id && lectureMap[row.orvl_lecture_name_id]) {
+        let exercise = lectureMap[row.orvl_lecture_name_id].exercises.find(
+          ex => ex.exercise_name_id === row.exercise_name_id
+        );
+
+        if (!exercise) {
+          exercise = {
+            exercise_name_id: row.exercise_name_id,
+            exercise_name: row.exercise_name,
+            questions: []
+          };
+          lectureMap[row.orvl_lecture_name_id].exercises.push(exercise);
+        }
+
+        if (row.exercise_question_id) {
+          let question = exercise.questions.find(
+            q => q.exercise_question_id === row.exercise_question_id
+          );
+
+          if (!question) {
+            question = {
+              exercise_question_id: row.exercise_question_id,
+              exercise_question_img: row.exercise_question_img,
+              exercise_question_type: row.exercise_question_type,
+              exercise_answer_unit: row.exercise_answer_unit,
+              exercise_answer: row.exercise_answer,
+              exercise_question_sort_id: row.exercise_question_sort_id,
+              options: []
+            };
+            exercise.questions.push(question);
+          }
+
+          if (row.exercise_option_id) {
+            question.options.push({
+              exercise_option_index: row.exercise_option_index,
+              exercise_option_img: row.exercise_option_img,
+              exercise_option_id: row.exercise_option_id
+            });
+          }
+        }
+      }
+    });
+
+    res.status(200).json(result);
+
+  } catch (error) {
+    console.error("Error fetching ORVL topic details:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (connection) connection.release();
+  }
+});
+function calculateWeightage(totalVideos, totalExercises) {
+  const total = totalVideos + totalExercises;
+  // If neither videos nor exercises exist, return equal weights
+  if (total === 0) {
+    return { videoWeight: 0, exerciseWeight: 0 };
+  }
+  return {
+    videoWeight: totalVideos / total,
+    exerciseWeight: totalExercises / total,
+  };
+}
+router.get("/UserResponseStatus/:student_registration_id/:course_creation_id/:orvl_topic_id", async (req, res) => {
+
+
+  const { student_registration_id, course_creation_id, orvl_topic_id } = req.params;
+
+  // Check if necessary parameters are provided
+  if (!student_registration_id || !course_creation_id || !orvl_topic_id) {
+    return res.status(400).send("Missing parameters");
+  }
+
+  let connection;
+  try {
+    connection = await db.getConnection();
+
+    const [rows] = await connection.query(
+      `SELECT
+        ivl.orvl_lecture_name_id,
+        COALESCE(MAX(vc.video_count), 0) AS videoCount,
+        COALESCE(MAX(vc.progress_time), 0) AS progressTime,
+        COALESCE(MAX(vc.total_video_time), 0) AS totalVideoTime,
+        e.exercise_name_id,
+        COALESCE(COUNT(DISTINCT eq.exercise_question_id), 0) AS totalQuestions,
+        COALESCE(COUNT(DISTINCT CASE WHEN eur.question_status = 1 THEN eur.exercise_question_id END), 0) AS answeredQuestions
+      FROM
+        iit_orvl_lecture_names ivl
+      LEFT JOIN iit_orvl_video_count vc
+        ON ivl.orvl_lecture_name_id = vc.orvl_lecture_name_id
+        AND vc.student_registration_id = ? AND vc.orvl_topic_id = ? AND vc.course_creation_id = ?
+      LEFT JOIN iit_orvl_exercise_names e
+        ON ivl.orvl_lecture_name_id = e.orvl_lecture_name_id
+      LEFT JOIN iit_orvl_exercise_questions eq
+        ON eq.exercise_name_id = e.exercise_name_id
+      LEFT JOIN iit_orvl_exercise_userresponses eur
+        ON eq.exercise_question_id = eur.exercise_question_id
+        AND eur.student_registration_id = ? AND eur.orvl_topic_id = ? AND eur.course_creation_id = ?
+      WHERE
+        ivl.orvl_topic_id = ?
+      GROUP BY
+        ivl.orvl_lecture_name_id, e.exercise_name_id`,
+      [
+        student_registration_id,
+        orvl_topic_id,
+        course_creation_id,
+        student_registration_id,
+        orvl_topic_id,
+        course_creation_id,
+        orvl_topic_id,
+      ]
+    );
+
+    // Calculate total videos and total exercises
+    const totalVideos = new Set(rows.filter((row) => row.orvl_lecture_name_id).map((row) => row.orvl_lecture_name_id)).size;
+    const totalExercises = new Set(rows.filter((row) => row.exercise_name_id).map((row) => row.exercise_name_id)).size;
+    const { videoWeight, exerciseWeight } = calculateWeightage(totalVideos, totalExercises);
+
+    // Calculate visited videos and their details
+    const visitedVideos = [
+      ...new Set(rows.filter((row) => row.videoCount > 0).map((row) => row.orvl_lecture_name_id)),
+    ];
+
+    // Video details (unique records for each lectureId)
+    const videoCountDetails = Array.from(
+      rows.reduce((map, row) => {
+        if (row.orvl_lecture_name_id && !map.has(row.orvl_lecture_name_id)) {
+          map.set(row.orvl_lecture_name_id, {
+            lectureId: row.orvl_lecture_name_id,
+            videoCount: row.videoCount,
+            progress_time: row.progressTime,
+            totalVideoTime: row.totalVideoTime,
+          });
+        }
+        return map;
+      }, new Map()).values()
+    );
+
+    // Exercise details (unique records for each exerciseId)
+    const exerciseDetails = Array.from(
+      rows
+        .filter((row) => row.exercise_name_id)
+        .reduce((map, row) => {
+          if (!map.has(row.exercise_name_id)) {
+            map.set(row.exercise_name_id, {
+              lectureId: row.orvl_lecture_name_id,
+              exerciseId: row.exercise_name_id,
+              totalQuestions: row.totalQuestions,
+              answeredQuestions: row.answeredQuestions,
+              exerciseCompletionPercentage:
+                row.totalQuestions > 0
+                  ? (row.answeredQuestions / row.totalQuestions) * 100
+                  : 0,
+            });
+          }
+          return map;
+        }, new Map()).values()
+    );
+
+    // Calculate exercise completion percentage
+    const exerciseCompletionPercentage =
+      exerciseDetails.length > 0
+        ? exerciseDetails.reduce((sum, exercise) => sum + exercise.exerciseCompletionPercentage, 0) / exerciseDetails.length
+        : 100;
+
+    // Calculate video progress percentages
+    const videoProgressPercentages = videoCountDetails.map((video) => {
+      if (video.videoCount > 0) return 100;
+      if (video.totalVideoTime > 0) {
+        const percentage = (video.progress_time / video.totalVideoTime) * 100;
+        return Math.min(percentage, 100);
+      }
+      return 0;
+    });
+
+    // Compute overall video completion percentage
+    const videoCompletionPercentage =
+      videoProgressPercentages.length > 0
+        ? videoProgressPercentages.reduce((sum, perc) => sum + perc, 0) / videoProgressPercentages.length
+        : 100;
+
+    // Compute total completion percentage
+    const totalCompletionPercentage = (videoWeight * videoCompletionPercentage) + (exerciseWeight * exerciseCompletionPercentage);
+
+    // Determine access granted (if all videos visited and exercises answered)
+    const allVideosVisited = visitedVideos.length === totalVideos;
+    const allExercisesAnswered = exerciseDetails.every(
+      (exercise) => exercise.totalQuestions === exercise.answeredQuestions
+    );
+
+    const accessGranted = allVideosVisited && allExercisesAnswered;
+
+    // Return the response
+    res.json({
+      videoCompletionPercentage: videoCompletionPercentage.toFixed(2),
+      exerciseCompletionPercentage: exerciseCompletionPercentage.toFixed(2),
+      totalCompletionPercentage: totalCompletionPercentage.toFixed(2),
+      visitedVideos,
+      videoCount: videoCountDetails,
+      exerciseDetails,
+      access: accessGranted,
+    });
+  } catch (error) {
+    console.error("Error during access status check:", error);
+    res.status(500).send("Internal Server Error");
+  } finally {
+    if (connection) connection.release();
+  }
+});
 
 
       

@@ -16,6 +16,10 @@ const StudentReportMain = () => {
   const location = useLocation();
   const { studentId,userData, test_name, total_marks, duration } = location.state || {};
 
+
+
+  
+
   return (
     <div className={styles.StudentReportMainDiv}>
       <div className={styles.StudentReportSubDiv}>
@@ -36,7 +40,7 @@ const StudentReportMain = () => {
               Test Name: <b>{test_name}</b>
             </li>
             <li>
-              TotalMatks: <b>{total_marks}.</b>
+              TotalMarks: <b>{total_marks}</b>
             </li>
             <li>
               Duration: <b>{duration}</b>
@@ -67,7 +71,7 @@ const StudentReportMain = () => {
         <div className={styles.studentReportTabContent}>
           {activeTab === "Your Performance" && (
             <div>
-              <StudentReport />
+              <StudentReport testId={testId} studentId={studentId}/>
             </div>
           )}
           {activeTab === "Solutions" && (
