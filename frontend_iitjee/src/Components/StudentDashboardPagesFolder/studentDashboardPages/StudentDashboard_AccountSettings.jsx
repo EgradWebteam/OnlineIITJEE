@@ -78,6 +78,19 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
     }
   };
   
+  const checkPasswordCriteria = (password) => {
+    return {
+      length: password.length >= 8,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /\d/.test(password),
+      specialChar: /[^A-Za-z0-9]/.test(password),
+    };
+  };
+
+  const passwordCriteria = checkPasswordCriteria(newPassword);
+
+  
 
   return (
     <div className={styles.studetnDashboard_SettingsHomePage}>
@@ -134,12 +147,30 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
               </span>
             </div>
 
-            <ul className={styles.listofMandatory}>
+            {/* <ul className={styles.listofMandatory}>
               <li>At least 8 characters.</li>
               <li>At least one uppercase letter.</li>
               <li>At least one lowercase letter.</li>
               <li>At least one number.</li>
               <li>At least one special character.</li>
+            </ul> */}
+
+            <ul className={styles.listofMandatory}>
+              <li className={passwordCriteria.length ? styles.valid : ""}>
+                At least 8 characters.
+              </li>
+              <li className={passwordCriteria.uppercase ? styles.valid : ""}>
+                At least one uppercase letter.
+              </li>
+              <li className={passwordCriteria.lowercase ? styles.valid : ""}>
+                At least one lowercase letter.
+              </li>
+              <li className={passwordCriteria.number ? styles.valid : ""}>
+                At least one number.
+              </li>
+              <li className={passwordCriteria.specialChar ? styles.valid : ""}>
+                At least one special character.
+              </li>
             </ul>
 
             <label className={styles.PasswordCreation}>Confirm Password</label>
