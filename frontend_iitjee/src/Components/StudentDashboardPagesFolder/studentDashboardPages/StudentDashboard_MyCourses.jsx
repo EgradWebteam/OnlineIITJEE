@@ -58,21 +58,27 @@ export default function StudentDashboard_MyCourses({ studentId }) {
 
   const filteredCourses = useMemo(() => {
     if (!portalData || !selectedExam) return null; // null means "not ready yet"
+  
     const exam = Object.values(portalData.exams).find(e => e.exam_name === selectedExam);
     if (!exam) return [];
-    return exam.courses.map(course => ({
+  
+    const courses = exam.courses.map(course => ({
       ...course,
       exam_name: exam.exam_name,
       portal_name: portalData.portal_name,
+      portal_id: portalData.portal_id  // ⬅️ Add portal_id here
     }));
+  
+    console.log("📘 Filtered Courses Returned from useMemo:", courses);
+    return courses;
   }, [portalData, selectedExam]);
-
+  
   const handleGoToTest = (course) => {
     setSelectedTestCourse(course);
   };
-
+ 
   if (selectedTestCourse) {
-    if (structuredCourses[0]?.portal_id === 3) {
+    if (selectedTestCourse.portal_id === 3) {
       return (
         <OrvlTopicCards
           key={selectedTestCourse.course_creation_id}
@@ -92,6 +98,7 @@ export default function StudentDashboard_MyCourses({ studentId }) {
       );
     }
   }
+  
   
   return (
     <div className={styles.studentDashboardMyCoursesMainDiv}>
@@ -148,7 +155,7 @@ export default function StudentDashboard_MyCourses({ studentId }) {
       title={course.course_name}
       cardImage={course.card_image}
       context="myCourses"
-      portalId={structuredCourses[0].portal_id}
+      portalId={course.portal_id}
       onGoToTest={() => handleGoToTest(course)}
     />
   );
