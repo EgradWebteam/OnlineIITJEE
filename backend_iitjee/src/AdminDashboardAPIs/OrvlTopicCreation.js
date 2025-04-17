@@ -112,19 +112,212 @@ const extractImagesFromHTML = (html) => {
   Both solution images ([ESOLN]) and solution links ([ESOL]) are saved in the same table.
 */
 router.post(
-  "/addTopic",
-  upload.fields([
-    { name: "topic_doc", maxCount: 1 },
-    { name: "topic_pdf", maxCount: 1 },
-  ]),
-  async (req, res) => {
-    const connection = await db.getConnection();
-    await connection.beginTransaction();
+    "/addTopic",
+    upload.fields([
+      { name: "topic_doc", maxCount: 1 },
+      { name: "topic_pdf", maxCount: 1 },
+    ]),
+    async (req, res) => {
+      const connection = await db.getConnection();
+      await connection.beginTransaction();
+  
+      try {
+        const documentFile = req.files["topic_doc"]?.[0];
+        if (!documentFile) {
+          return res.status(400).send("No topic_doc file uploaded.");
+        }
+  
+        const { buffer, originalname } = documentFile;
+        const blobFolder = path.basename(originalname, path.extname(originalname));
+        const baseFolder = `exam-resources-orvl/${blobFolder}`;
+        const questionFolder = `${baseFolder}/exercisequestions`;
+        const optionFolder = `${baseFolder}/exerciseoptions`;
+        const solutionFolder = `${baseFolder}/exercisesolutions`;
+        const documentBlobName = `${baseFolder}/${Date.now()}_${originalname}`;
+  
+        const blobUrl = await uploadToAzure(buffer, documentBlobName);
+  
+        let pdfFileName = null;
+        if (req.files["topic_pdf"]) {
+          const pdfFile = req.files["topic_pdf"][0];
+          if (pdfFile.mimetype === "application/pdf") {
+            pdfFileName = `${Date.now()}_${pdfFile.originalname}`;
+            await uploadPDFToBlob(pdfFile.buffer, pdfFileName);
+          }
+        }
+  
+        const topicData = [
+          {
+            orvl_topic_name: req.body.topic_name,
+            exam_id: req.body.exam_id ? parseInt(req.body.exam_id) : null,
+            subject_id: req.body.subject_id ? parseInt(req.body.subject_id) : null,
+            orvl_topic_pdf: pdfFileName || null,
+          },
+        ];
+        const topicIds = await storeRecordsInBulk(connection, "iit_orvl_topic_creation", topicData);
+        const topicId = topicIds[0];
+  
+        const docData = [
+          {
+            orvl_document_name: blobFolder,
+            orvl_topic_id: topicId,
+          },
+        ];
+        const docIds = await storeRecordsInBulk(connection, "iit_orvl_documents", docData);
+        const documentId = docIds[0];
+  
+        const result = await mammoth.convertToHtml({ buffer });
+        const rawText = (await mammoth.extractRawText({ buffer })).value;
+        const textSections = rawText.split("\n\n");
+        const images = extractImagesFromHTML(result.value);
+  
+        let lectureId, exerciseId, questionId;
+        let questionIndex = 1;
+        let imageIndex = 0;
+        let questionType = {};
+        let lectures = []; // Ensure this is an array
+        let solutions = []; // Ensure this is an array
+        for (let section of textSections) {
+          section = section.trim();
+  
+          if (section.startsWith("[LN]")) {
+            const lectureName = section.replace("[LN]", "").trim();
+            if (!lectureName) {
+              console.error("Lecture name is empty, skipping...");
+              continue;
+            }
+  
+            lectures.push({
+              orvl_lecture_name: lectureName,
+              orvl_topic_id: topicId,
+              lecture_video_link: "",
+            });
+          } else if (section.startsWith("[LVL]")) {
+            const lectureVideoLink = section.replace("[LVL]", "").trim();
+            if (lectures.length > 0) {
+              const lastLecture = lectures[lectures.length - 1];
+              lastLecture.lecture_video_link = lectureVideoLink;
+              // Store the lecture record after setting the video link
+              [lectureId] = await storeRecordsInBulk(connection, "iit_orvl_lecture_names", [lastLecture]);
+            }
+          } else if (section.startsWith("[EN]")) {
+            [exerciseId] = await storeRecordsInBulk(connection, "iit_orvl_exercise_names", [
+              {
+                exercise_name: section.replace("[EN]", "").trim(),
+                orvl_lecture_name_id: lectureId,
+              },
+            ]);
+          } else if (section.startsWith("[EQ]") && imageIndex < images.length) {
+            const imgUrl = await uploadToAzure(images[imageIndex++], `${questionFolder}/question_${questionIndex}.png`);
+            [questionId] = await insertBulk(connection, "iit_orvl_exercise_questions", [
+              {
+                exercise_question_img: imgUrl,
+                exercise_name_id: exerciseId,
+              },
+            ]);
+            questionIndex++;
+          } else if (/^\(a\)/i.test(section) && imageIndex < images.length) {
+            const img = await uploadToAzure(images[imageIndex++], `${optionFolder}/opt_a_${questionIndex}.png`);
+            await insertBulk(connection, "iit_orvl_exercise_options", [
+              {
+                exercise_option_img: img,
+                exercise_option_index: "a",
+                exercise_question_id: questionId,
+              },
+            ]);
+          } else if (/^\(b\)/i.test(section) && imageIndex < images.length) {
+            const img = await uploadToAzure(images[imageIndex++], `${optionFolder}/opt_b_${questionIndex}.png`);
+            await insertBulk(connection, "iit_orvl_exercise_options", [
+              {
+                exercise_option_img: img,
+                exercise_option_index: "b",
+                exercise_question_id: questionId,
+              },
+            ]);
+          } else if (/^\(c\)/i.test(section) && imageIndex < images.length) {
+            const img = await uploadToAzure(images[imageIndex++], `${optionFolder}/opt_c_${questionIndex}.png`);
+            await insertBulk(connection, "iit_orvl_exercise_options", [
+              {
+                exercise_option_img: img,
+                exercise_option_index: "c",
+                exercise_question_id: questionId,
+              },
+            ]);
+          } else if (/^\(d\)/i.test(section) && imageIndex < images.length) {
+            const img = await uploadToAzure(images[imageIndex++], `${optionFolder}/opt_d_${questionIndex}.png`);
+            await insertBulk(connection, "iit_orvl_exercise_options", [
+              {
+                exercise_option_img: img,
+                exercise_option_index: "d",
+                exercise_question_id: questionId,
+              },
+            ]);
+          
+          } else if (section.startsWith("[EQT]")) {
+            questionType = {
+              exercise_question_type: section.replace("[EQT]", "").trim(),
+            };
+            await updateBulk(connection, "iit_orvl_exercise_questions", [
+              {
+                ...questionType,
+                exercise_question_id: questionId,
+              },
+            ], "exercise_question_id");
+          } else if (section.startsWith("[EANS]")) {
+            const answerRaw = section.replace("[EANS]", "").trim();
+            let answer = "", unit = "";
+  
+            if (["NAT", "NATD", "NATI"].includes(questionType.exercise_question_type)) {
+              [answer, unit] = answerRaw.split(",").map(a => a.trim());
+            } else {
+              answer = answerRaw;
+            }
+  
+            await updateBulk(connection, "iit_orvl_exercise_questions", [
+              {
+                exercise_answer: answer,
+                exercise_answer_unit: unit,
+                exercise_question_id: questionId,
+              },
+            ], "exercise_question_id");
+          } else if (section.startsWith("[ESOL]")) {
+         
+            // INSERT if not exists
+            await insertBulk(connection, "iit_orvl_exercise_solutions", [
+              {
+                exercise_solution_video_link: section.replace("[ESOL]", "").trim(),
+                exercise_question_id: questionId,
+              },
+            ]);
+          
+      } else if (section.startsWith("[ESOLN]") && imageIndex < images.length) {
+        const solutionImgUrl = await uploadToAzure(images[imageIndex++], `${solutionFolder}/solution_${questionIndex}.png`);
+        const LINK= (section.includes("[ESOL]")) ? section.replace("[ESOL]", "").trim():null; 
+       
+        await insertBulk(connection, "iit_orvl_exercise_solutions", [
+          {
+            exercise_solution_img: solutionImgUrl,
+            exercise_question_id: questionId,
+            exercise_solution_video_link: LINK
+          },
 
-    try {
-      const documentFile = req.files["topic_doc"]?.[0];
-      if (!documentFile) {
-        return res.status(400).send("No topic_doc file uploaded.");
+        ]);
+      } else if (section.startsWith("[EQSID]")) {
+            await updateBulk(connection, "iit_orvl_exercise_questions", [
+              {
+                exercise_question_sort_id: section.replace("[EQSID]", "").trim(),
+                exercise_question_id: questionId,
+              },
+            ], "exercise_question_id");
+          }
+        }
+  
+        await connection.commit();
+        res.status(200).send("Topic and exercises inserted successfully.");
+      } catch (err) {
+        console.error("Error inserting records:", err);
+        await connection.rollback();
+        res.status(500).send("Error inserting or updating records.");
       }
 
       const { buffer, originalname } = documentFile;

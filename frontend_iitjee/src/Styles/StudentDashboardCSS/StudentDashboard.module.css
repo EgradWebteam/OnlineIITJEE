@@ -239,15 +239,19 @@ flex-direction: row;
     margin-bottom: 0.5rem;
     font-size: 20px;
   }
-  
-  .startTestBtn {
-    background-color: #06b6d4;
+  .startTestBtn, .viewReportBtn{
     color: white;
     font-weight: bold;
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 6px;
     cursor: pointer;
+  }
+  .startTestBtn {
+    background-color: #06b6d4;
+  }
+  .viewReportBtn{
+    background-color: green;
   }
   .durationHolderdiv{
     display: flex;

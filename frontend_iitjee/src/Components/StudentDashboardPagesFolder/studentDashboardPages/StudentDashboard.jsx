@@ -45,7 +45,7 @@ export default function StudentDashboard() {
         case "buyCourses":
           return <StudentDashboard_BuyCourses setActiveSection = {setActiveSection} studentId = {studentId}/>;
         case "results":
-          return <StudentDashboard_MyResults  studentId = {studentId}/>;
+          return <StudentDashboard_MyResults userData ={studentData?.userDetails}  studentId = {studentId}/>;
         case "account":
           return <StudentDashboard_AccountSettings userData ={studentData?.userDetails}/>;
         default:

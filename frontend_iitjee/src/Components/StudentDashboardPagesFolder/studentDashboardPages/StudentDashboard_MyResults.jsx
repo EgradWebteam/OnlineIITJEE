@@ -6,13 +6,22 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../../../config/apiConfig';
 
-export default function StudentDashboard_MyResults({ studentId }) {
+export default function StudentDashboard_MyResults({ studentId,userData }) {
   const [testData, setTestData] = useState([]);
   const [selectedExam, setSelectedExam] = useState(null);
   const navigate = useNavigate();
-
-  const handleViewReportClick = (testId) => {
-    navigate(`/StudentReport/${testId}`);
+console.log("userData",userData)
+  const handleViewReportClick = (testId,test) => {
+    navigate(`/StudentReport/${testId}`, {
+      state: {
+        studentId: studentId,
+        test_name: test.test_name,
+        total_marks: test.total_marks,
+        duration: test.duration,
+        userData:userData
+      }
+      
+    });
   };
 
   useEffect(() => {
@@ -82,7 +91,7 @@ export default function StudentDashboard_MyResults({ studentId }) {
             <div className={styles.resultsSubDiv}>
               <p className={styles.testNameInResults}>{test.test_name}</p>
               <div className={styles.resultsViewReportBtn}>
-                <button onClick={() => handleViewReportClick(test.test_creation_table_id)}>
+                <button onClick={() => handleViewReportClick(test.test_creation_table_id,test)}>
                   VIEW REPORT <span className={styles.resultsBtnIcon}><MdKeyboardDoubleArrowRight /></span>
                 </button>
               </div>

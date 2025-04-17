@@ -1,14 +1,16 @@
 import React,{useState,useEffect} from "react";
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
+import axios from 'axios'
+import {BASE_URL} from '../../../config/apiConfig'
 
-const SolutionsTab = () => {
+const SolutionsTab = ({testId,userData,studentId}) => {
   const [testPaperData, setTestPaperData] = useState([]);
-
+  const studentContact = userData?.mobile_no;
   useEffect(() => {
     const fetchTestPaper = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/OTS/QuestionPaper/${realTestId}`
+          `${BASE_URL}/MyResults/StudentReportQuestionPaper/${testId}/${studentId}`
         );
         setTestPaperData(response.data);
       } catch (err) {
@@ -17,7 +19,8 @@ const SolutionsTab = () => {
     };
 
     fetchTestPaper();
-  }, [realTestId]);
+  }, [testId]);
+
   return (
     <div className={styles.solutionContainerMain}>
       <div className={styles.subjectDropDownContainer}>
@@ -41,7 +44,7 @@ const SolutionsTab = () => {
                         key={question.question_id}
                         style={{ marginBottom: "2rem" }}
                       >
-                        <p>Question ID: {question.question_id}</p>
+                        <p>Question No: {question.question_id}</p>
                         <img
                           src={question.questionImgName}
                           alt={`Question ${
@@ -55,7 +58,7 @@ const SolutionsTab = () => {
                               key={option.option_id}
                               style={{ display: "flex", alignItems: "center" }}
                             >
-                              <strong>{option.option_index}:</strong>
+                              <strong>({option.option_index})</strong>
                               <img
                                 src={option.optionImgName}
                                 alt={`Option ${option.option_index}`}
@@ -76,16 +79,16 @@ const SolutionsTab = () => {
             ))}
           </div>
           <span className={`${styles.waterMark} ${styles.topWaterMark}`}>
-            ..
+         {studentContact}
           </span>
           <span className={`${styles.waterMark} ${styles.bottomWaterMark}`}>
-            ..
+           {studentContact}
           </span>
           <span className={`${styles.waterMark} ${styles.middleWaterMark}`}>
-            ..
+         {studentContact}
           </span>
           <span className={`${styles.waterMark} ${styles.rightWaterMark}`}>
-            ..
+           {studentContact}
           </span>
           <div className={styles.QuestionImgDiv}>
             <img />
