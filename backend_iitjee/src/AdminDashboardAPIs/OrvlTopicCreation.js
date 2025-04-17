@@ -151,26 +151,33 @@ router.post(
         let questionIndex = 1;
         let imageIndex = 0;
         let questionType = {};
-  
+        let lectures = []; // Ensure this is an array
+        let solutions = []; // Ensure this is an array
         for (let section of textSections) {
           section = section.trim();
   
           if (section.startsWith("[LN]")) {
-            [lectureId] = await insertBulk(connection, "iit_orvl_lecture_names", [
-              {
-                orvl_lecture_name: section.replace("[LN]", "").trim(),
-                orvl_topic_id: topicId,
-              },
-            ]);
+            const lectureName = section.replace("[LN]", "").trim();
+            if (!lectureName) {
+              console.error("Lecture name is empty, skipping...");
+              continue;
+            }
+  
+            lectures.push({
+              orvl_lecture_name: lectureName,
+              orvl_topic_id: topicId,
+              lecture_video_link: "",
+            });
           } else if (section.startsWith("[LVL]")) {
-            await updateBulk(connection, "iit_orvl_lecture_names", [
-              {
-                lecture_video_link: section.replace("[LVL]", "").trim(),
-                orvl_lecture_name_id: lectureId,
-              },
-            ], "orvl_lecture_name_id");
+            const lectureVideoLink = section.replace("[LVL]", "").trim();
+            if (lectures.length > 0) {
+              const lastLecture = lectures[lectures.length - 1];
+              lastLecture.lecture_video_link = lectureVideoLink;
+              // Store the lecture record after setting the video link
+              [lectureId] = await storeRecordsInBulk(connection, "iit_orvl_lecture_names", [lastLecture]);
+            }
           } else if (section.startsWith("[EN]")) {
-            [exerciseId] = await insertBulk(connection, "iit_orvl_exercise_names", [
+            [exerciseId] = await storeRecordsInBulk(connection, "iit_orvl_exercise_names", [
               {
                 exercise_name: section.replace("[EN]", "").trim(),
                 orvl_lecture_name_id: lectureId,
@@ -221,21 +228,10 @@ router.post(
                 exercise_question_id: questionId,
               },
             ]);
-          } else if (section.startsWith("[ESOLN]") && imageIndex < images.length) {
-            const solutionImgUrl = await uploadToAzure(images[imageIndex++], `${solutionFolder}/solution_${questionIndex}.png`);
-            const LINK= (section.includes("[ESOL]")) ? section.replace("[ESOL]", "").trim():null; 
-           
-            await insertBulk(connection, "iit_orvl_exercise_solutions", [
-              {
-                exercise_solution_img: solutionImgUrl,
-                exercise_question_id: questionId,
-                exercise_solution_video_link: LINK
-              },
-
-            ]);
+          
           } else if (section.startsWith("[EQT]")) {
             questionType = {
-                exercise_question_type: section.replace("[EQT]", "").trim(),
+              exercise_question_type: section.replace("[EQT]", "").trim(),
             };
             await updateBulk(connection, "iit_orvl_exercise_questions", [
               {
@@ -247,7 +243,7 @@ router.post(
             const answerRaw = section.replace("[EANS]", "").trim();
             let answer = "", unit = "";
   
-            if (["NAT", "NATD", "NATI"].includes(questionType.orvl_question_type)) {
+            if (["NAT", "NATD", "NATI"].includes(questionType.exercise_question_type)) {
               [answer, unit] = answerRaw.split(",").map(a => a.trim());
             } else {
               answer = answerRaw;
@@ -262,15 +258,27 @@ router.post(
             ], "exercise_question_id");
           } else if (section.startsWith("[ESOL]")) {
          
-                // INSERT if not exists
-                await insertBulk(connection, "iit_orvl_exercise_solutions", [
-                  {
-                    exercise_solution_video_link: section.replace("[ESOL]", "").trim(),
-                    exercise_question_id: questionId,
-                  },
-                ]);
-              
-          } else if (section.startsWith("[EQSID]")) {
+            // INSERT if not exists
+            await insertBulk(connection, "iit_orvl_exercise_solutions", [
+              {
+                exercise_solution_video_link: section.replace("[ESOL]", "").trim(),
+                exercise_question_id: questionId,
+              },
+            ]);
+          
+      } else if (section.startsWith("[ESOLN]") && imageIndex < images.length) {
+        const solutionImgUrl = await uploadToAzure(images[imageIndex++], `${solutionFolder}/solution_${questionIndex}.png`);
+        const LINK= (section.includes("[ESOL]")) ? section.replace("[ESOL]", "").trim():null; 
+       
+        await insertBulk(connection, "iit_orvl_exercise_solutions", [
+          {
+            exercise_solution_img: solutionImgUrl,
+            exercise_question_id: questionId,
+            exercise_solution_video_link: LINK
+          },
+
+        ]);
+      } else if (section.startsWith("[EQSID]")) {
             await updateBulk(connection, "iit_orvl_exercise_questions", [
               {
                 exercise_question_sort_id: section.replace("[EQSID]", "").trim(),
