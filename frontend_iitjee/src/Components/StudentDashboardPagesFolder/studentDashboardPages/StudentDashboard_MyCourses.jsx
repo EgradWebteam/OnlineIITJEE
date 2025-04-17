@@ -4,9 +4,10 @@ import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.
 import CourseCard from '../../LandingPagesFolder/CourseCards.jsx';
 import { BASE_URL } from '../../../config/apiConfig';
 import TestDetailsContainer from './TestDetailsContainer';
+import OrvlTopicCards from "./OrvlTopicCards"; 
 
-export default function StudentDashboard_MyCourses({studentId}) {
- 
+export default function StudentDashboard_MyCourses({ studentId }) {
+
   const [structuredCourses, setStructuredCourses] = useState([]);
   const [selectedPortal, setSelectedPortal] = useState(null);
   const [selectedExam, setSelectedExam] = useState(null);
@@ -16,8 +17,10 @@ export default function StudentDashboard_MyCourses({studentId}) {
 
   useEffect(() => {
     const fetchPurchasedCourses = async () => {
+
       try {
         setLoading(true);
+
         const res = await fetch(`${BASE_URL}/studentmycourses/Purchasedcourses/${studentId}`);
         const data = await res.json();
         console.log("API Response:", data); // Log the response to inspect it
@@ -44,6 +47,7 @@ export default function StudentDashboard_MyCourses({studentId}) {
     fetchPurchasedCourses();
   }, [studentId]);
 
+
   const portalData = useMemo(() => {
     return structuredCourses.find(p => p.portal_name === selectedPortal);
   }, [structuredCourses, selectedPortal]);
@@ -66,16 +70,29 @@ export default function StudentDashboard_MyCourses({studentId}) {
   const handleGoToTest = (course) => {
     setSelectedTestCourse(course);
   };
-  
+
   if (selectedTestCourse) {
-    return (
-      <TestDetailsContainer
-        course={selectedTestCourse}
-        onBack={() => setSelectedTestCourse(null)} 
-        studentId={studentId}
-      />
-    );
+    if (structuredCourses[0]?.portal_id === 3) {
+      return (
+        <OrvlTopicCards
+          key={selectedTestCourse.course_creation_id}
+          studentId={studentId}
+          courseCreationId={selectedTestCourse.course_creation_id}
+          context="myCourses"
+          onBack={() => setSelectedTestCourse(null)}
+        />
+      );
+    } else {
+      return (
+        <TestDetailsContainer
+          course={selectedTestCourse}
+          onBack={() => setSelectedTestCourse(null)}
+          studentId={studentId}
+        />
+      );
+    }
   }
+  
   return (
     <div className={styles.studentDashboardMyCoursesMainDiv}>
       <div className={globalCSS.stuentDashboardGlobalHeading}>
@@ -106,9 +123,8 @@ export default function StudentDashboard_MyCourses({studentId}) {
         {examsForSelectedPortal.map((exam, idx) => (
           <button
             key={idx}
-            className={`${globalCSS.examButtons} ${
-              selectedExam === exam.exam_name ? globalCSS.examActiveBtn : ""
-            }`}
+            className={`${globalCSS.examButtons} ${selectedExam === exam.exam_name ? globalCSS.examActiveBtn : ""
+              }`}
             onClick={() => setSelectedExam(exam.exam_name)}
           >
             {exam.exam_name}
@@ -123,15 +139,24 @@ export default function StudentDashboard_MyCourses({studentId}) {
         </div>
       ) : (
         <div className={globalCSS.cardHolderOTSORVLHome}>
-          {filteredCourses.map((course) => (
-            <CourseCard
-              key={course.course_creation_id}
-              title={course.course_name}
-              cardImage={course.card_image}
-              context="myCourses"
-              onGoToTest={() => handleGoToTest(course)}
-            />
-          ))}
+          {filteredCourses.map((course) => {
+        
+  console.log("Rendering CourseCard for:", course.course_name, "Portal ID:", structuredCourses[0].portal_id);
+  return (
+    <CourseCard
+      key={course.course_creation_id}
+      title={course.course_name}
+      cardImage={course.card_image}
+      context="myCourses"
+      portalId={structuredCourses[0].portal_id}
+      onGoToTest={() => handleGoToTest(course)}
+    />
+  );
+})}
+
+
+
+
         </div>
       )}
     </div>
