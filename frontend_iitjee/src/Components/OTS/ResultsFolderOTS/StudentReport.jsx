@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
-
+import axios from "axios";
 import { BASE_URL } from "../../../config/apiConfig";
 import {
   PieChart,
@@ -23,6 +23,28 @@ const StudentReport = ({ testId, studentId }) => {
       .catch((err) => console.error("Error fetching data:", err));
   }, []);
 
+  const [subjectMarks, setSubjectMarks] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchSubjectMarks = async () => {
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/MyResults/TestSubjectWiseStudentMarks/${studentId}/${testId}`
+        );
+        setSubjectMarks(response.data.subjects);
+      } catch (err) {
+        setError("Error fetching data. Please try again later.");
+        console.error("Error fetching data:", err);
+      }
+    };
+
+    fetchSubjectMarks();
+  }, [studentId, testId]);
+
+  if (error) {
+    return <div>{error}</div>;
+  }
   // Convert HH:MM:SS to seconds
   const parseTimeToSeconds = (timeStr) => {
     const [hours, minutes, seconds] = timeStr.split(":").map(Number);
@@ -170,7 +192,6 @@ const StudentReport = ({ testId, studentId }) => {
             <thead>
               <tr className={styles.tableTr}>
                 <th className={styles.tableTh}>Subject Name</th>
-                <th className={styles.tableTh}>Section-Type</th>
                 <th className={styles.tableTh}>Total Questions</th>
                 <th className={styles.tableTh}>Correct</th>
                 <th className={styles.tableTh}>Incorrect</th>
@@ -180,26 +201,62 @@ const StudentReport = ({ testId, studentId }) => {
               </tr>
             </thead>
             <tbody>
-              <tr className={styles.tableTr}>
-                <td className={styles.tableTd}></td>
-                <td className={styles.tableTd}></td>
-                <td className={styles.tableTd}></td>
-                <td className={styles.tableTd}></td>
-                <td className={styles.tableTd}></td>
-                <td className={styles.tableTd}></td>
-                <td className={styles.tableTd}></td>
-                <td className={styles.tableTd}></td>
-              </tr>
+           
+    {subjectMarks.map((subject) => (
+            <tr key={subject.subject_id}  className={styles.tableTr}>
+              <td className={styles.tableTd}>{subject.subject_name}</td>
+              <td className={styles.tableTd}>{subject.total_questions}</td>
+              <td className={styles.tableTd}>{subject.total_correct}</td>
+              <td className={styles.tableTd}>{subject.total_incorrect}</td>
+              <td className={styles.tableTd}>{subject.positive_marks}</td>
+              <td className={styles.tableTd}>{subject.negative_marks}</td>
+              <td className={styles.tableTd}>{subject.total_marks}</td>
+            </tr>
+          ))}
               <tr className={styles.tableTrTotalMarks}>
-                <td colSpan="2">
+                <td>
                   <strong>Total</strong>
                 </td>
-                <td className={styles.tableTd}></td>
-                <td className={styles.tableTd}></td>
-                <td className={styles.tableTd}></td>
-                <td className={styles.tableTd}></td>
-                <td className={styles.tableTd}></td>
-                <td className={styles.tableTd}></td>
+                <td className={styles.tableTd}>
+                  {" "}
+                  {subjectMarks.reduce(
+                    (sum, item) => sum + item.total_questions,
+                    0
+                  )}
+                </td>
+                <td className={styles.tableTd}>
+                  {" "}
+                  {subjectMarks.reduce(
+                    (sum, item) => sum + Number(item.total_correct),
+                    0
+                  )}
+                </td>
+                <td className={styles.tableTd}>
+                  {subjectMarks.reduce(
+                    (sum, item) => sum + Number(item.total_incorrect),
+                    0
+                  )}
+                </td>
+                <td className={styles.tableTd}>
+                  {subjectMarks.reduce(
+                    (sum, item) => sum + item.positive_marks,
+                    0
+                  )}
+                </td>
+                <td className={styles.tableTd}>
+                  {" "}
+                  {subjectMarks.reduce(
+                    (sum, item) => sum + item.negative_marks,
+                    0
+                  )}
+                </td>
+                <td className={styles.tableTd}>
+                  {" "}
+                  {subjectMarks.reduce(
+                    (sum, item) => sum + item.total_marks,
+                    0
+                  )}
+                </td>
               </tr>
             </tbody>
           </table>
