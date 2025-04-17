@@ -29,6 +29,15 @@ async function uploadToAzure(fileBuffer, blobName) {
     throw error;
   }
 }
+async function deleteFromAzure(blobName) {
+  try {
+    const blobClient = containerClient.getBlockBlobClient(blobName);
+    await blobClient.deleteIfExists();
+    console.log(`🗑️ Deleted blob: ${blobName}`);
+  } catch (err) {
+    console.error("❌ Error deleting blob:", blobName, err.message);
+  }
+}
 
 async function uploadPDFToBlob(buffer, blobName) {
   try {
@@ -358,6 +367,145 @@ router.get("/getTopics", async (req, res) => {
   } catch (error) {
     console.error("❌ Error fetching topics:", error);
     res.status(500).json({ message: "Internal server error" });
+  } finally {
+    if (connection) connection.release();
+  }
+});
+router.post(
+  "/updateTopic/:id",
+  upload.fields([
+    { name: "topic_doc", maxCount: 1 },
+    { name: "topic_pdf", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    const topicId = req.params.id;
+    const connection = await db.getConnection();
+    await connection.beginTransaction();
+
+    try {
+      const { topic_name, exam_id, subject_id } = req.body;
+
+      // Fetch existing topic
+      const [existingRows] = await connection.query(
+        "SELECT orvl_topic_pdf FROM iit_orvl_topic_creation WHERE orvl_topic_id = ?",
+        [topicId]
+      );
+      const existingTopic = existingRows[0];
+
+      let pdfFileName = existingTopic?.orvl_topic_pdf || null;
+// Check if a new PDF was uploaded
+if (req.files["topic_pdf"]) {
+  const newPdf = req.files["topic_pdf"][0];
+  if (newPdf.mimetype === "application/pdf") {
+
+    // Delete old PDF blob if it exists
+    if (pdfFileName) {
+      console.log(`🗑️ Deleting old PDF from Azure: ${pdfFileName}`);
+      await deleteFromAzure(pdfFileName);
+    }
+
+    // Upload new PDF
+    pdfFileName = `${Date.now()}_${newPdf.originalname}`;
+    console.log(`📤 Uploading new PDF to Azure: ${pdfFileName}`);
+    await uploadPDFToBlob(newPdf.buffer, pdfFileName);
+  }
+}
+// Handle DOC upload (optional)
+if (req.files["topic_doc"]) {
+  const docFile = req.files["topic_doc"][0];
+  const docBlobName = `exam-resources-orvl/${Date.now()}_${docFile.originalname}`;
+  
+  console.log(`📄 New DOC file detected: ${docFile.originalname}`);
+  console.log(`📤 Uploading DOC to Azure at path: ${docBlobName}`);
+  
+  await uploadToAzure(docFile.buffer, docBlobName);
+  
+  console.log(`✅ Document uploaded to Azure: ${docBlobName}`);
+}
+
+
+      const updateFields = [];
+      const values = [];
+
+      if (topic_name) {
+        updateFields.push("orvl_topic_name = ?");
+        values.push(topic_name);
+      }
+
+      if (exam_id) {
+        updateFields.push("exam_id = ?");
+        values.push(parseInt(exam_id));
+      }
+
+      if (subject_id) {
+        updateFields.push("subject_id = ?");
+        values.push(parseInt(subject_id));
+      }
+
+      if (pdfFileName !== existingTopic.orvl_topic_pdf) {
+        updateFields.push("orvl_topic_pdf = ?");
+        values.push(pdfFileName);
+      }
+
+      if (updateFields.length === 0) {
+        return res.status(400).send("No data to update.");
+      }
+
+      const sql = `UPDATE iit_orvl_topic_creation SET ${updateFields.join(", ")} WHERE orvl_topic_id = ?`;
+      values.push(topicId);
+      await connection.execute(sql, values);
+
+      await connection.commit();
+      res.status(200).send("Topic updated successfully.");
+    } catch (err) {
+      console.error("❌ Error updating topic:", err.message);
+      await connection.rollback();
+      res.status(500).send("Failed to update topic.");
+    } finally {
+      if (connection) connection.release();
+    }
+  }
+);
+router.delete("/deleteTopic/:id", async (req, res) => {
+  const topicId = req.params.id;
+  const connection = await db.getConnection();
+  await connection.beginTransaction();
+
+  try {
+    // 1. Get PDF and Document info
+    const [[topic]] = await connection.query(
+      `SELECT orvl_topic_pdf FROM iit_orvl_topic_creation WHERE orvl_topic_id = ?`,
+      [topicId]
+    );
+
+    const [docs] = await connection.query(
+      `SELECT orvl_document_name FROM iit_orvl_documents WHERE orvl_topic_id = ?`,
+      [topicId]
+    );
+
+    // 2. Delete Azure blobs
+    if (topic?.orvl_topic_pdf) await deleteFromAzure(topic.orvl_topic_pdf);
+
+    for (let doc of docs) {
+      const blobPrefix = `exam-resources-orvl/${doc.orvl_document_name}`;
+      // Delete all folder blobs by listing them (optional, can keep basic delete)
+      const blobs = containerClient.listBlobsFlat({ prefix: blobPrefix });
+      for await (const blob of blobs) {
+        await deleteFromAzure(blob.name);
+      }
+    }
+
+    // 3. Delete MySQL records
+    await connection.query("DELETE FROM iit_orvl_documents WHERE orvl_topic_id = ?", [topicId]);
+    await connection.query("DELETE FROM iit_orvl_lecture_names WHERE orvl_topic_id = ?", [topicId]);
+    await connection.query("DELETE FROM iit_orvl_topic_creation WHERE orvl_topic_id = ?", [topicId]);
+
+    await connection.commit();
+    res.status(200).send("Topic and associated files deleted.");
+  } catch (err) {
+    console.error("❌ Failed to delete topic:", err.message);
+    await connection.rollback();
+    res.status(500).send("Error deleting topic and files.");
   } finally {
     if (connection) connection.release();
   }
