@@ -704,32 +704,32 @@ router.get("/FetchExamSummaryCounts/:testCreationTableId/:user_Id", async (req, 
       [attemptResults]
     ] = await Promise.all([
       connection.query(
-      `  SELECT COUNT(*) AS total_incorrect_answers
-                FROM iit_user_responses ur
-                JOIN iit_questions q ON ur.question_id = q.question_id
-                WHERE TRIM(ur.user_answer) != TRIM(q.answer_text)
-                AND ur.student_registration_id = ? AND ur.test_creation_table_id = ?,`
+        `SELECT COUNT(*) AS total_incorrect_answers
+         FROM iit_user_responses ur
+         JOIN iit_questions q ON ur.question_id = q.question_id
+         WHERE TRIM(ur.user_answer) != TRIM(q.answer_text)
+         AND ur.student_registration_id = ? AND ur.test_creation_table_id = ?`,
         [user_Id, testCreationTableId]
       ),
       connection.query(
-      `  SELECT COUNT(*) AS total_correct_answers
-                FROM iit_user_responses ur
-                JOIN iit_questions q ON ur.question_id = q.question_id
-                WHERE TRIM(ur.user_answer) = TRIM(q.answer_text)
-                AND ur.student_registration_id = ? AND ur.test_creation_table_id = ?,`
+        `SELECT COUNT(*) AS total_correct_answers
+         FROM iit_user_responses ur
+         JOIN iit_questions q ON ur.question_id = q.question_id
+         WHERE TRIM(ur.user_answer) = TRIM(q.answer_text)
+         AND ur.student_registration_id = ? AND ur.test_creation_table_id = ?`,
         [user_Id, testCreationTableId]
       ),
       connection.query(
-     `   SELECT COUNT(q.question_id) AS total_question_count
-                FROM iit_test_creation_table t
-                LEFT JOIN iit_questions q ON t.test_creation_table_id = q.test_creation_table_id
-                WHERE t.test_creation_table_id = ?,`
+        `SELECT COUNT(q.question_id) AS total_question_count
+         FROM iit_test_creation_table t
+         LEFT JOIN iit_questions q ON t.test_creation_table_id = q.test_creation_table_id
+         WHERE t.test_creation_table_id = ?`,
         [testCreationTableId]
       ),
       connection.query(
-       ` SELECT COUNT(*) AS total_attempted_questions
-                FROM iit_user_responses
-                WHERE student_registration_id = ? AND test_creation_table_id = ?,`
+        `SELECT COUNT(*) AS total_attempted_questions
+         FROM iit_user_responses
+         WHERE student_registration_id = ? AND test_creation_table_id = ?`,
         [user_Id, testCreationTableId]
       )
     ]);
@@ -738,8 +738,6 @@ router.get("/FetchExamSummaryCounts/:testCreationTableId/:user_Id", async (req, 
     const totalCorrect = correctResults[0]?.total_correct_answers || 0;
     const totalQuestions = questionCountResults[0]?.total_question_count || 0;
     const totalAttempted = attemptResults[0]?.total_attempted_questions || 0;
-
-
 
     const responseObj = {
       totalIncorrect,
@@ -761,6 +759,152 @@ router.get("/FetchExamSummaryCounts/:testCreationTableId/:user_Id", async (req, 
 
 
 
+
+// router.get("/FetchStudentMarks/:testCreationTableId/:studentregistrationId", async (req, res) => {
+//   let connection;
+
+//   try {
+//     connection = await db.getConnection();
+
+//     const { testCreationTableId, studentregistrationId } = req.params;
+//     console.log("⏳ Request Params:", { testCreationTableId, studentregistrationId });
+
+//     // Step 1: Fetch exam_id using testCreationTableId
+//     const [testInfoRows] = await connection.query(
+//      ` SELECT
+//           t.test_creation_table_id,
+//           t.test_name,
+//           c.exam_id
+//         FROM iit_test_creation_table t
+//         JOIN iit_course_creation_table c ON t.course_creation_id = c.course_creation_id
+//         WHERE t.test_creation_table_id = ?,`
+//       [testCreationTableId]
+//     );
+//     console.log("📄 testInfoRows:", testInfoRows);
+
+//     if (!testInfoRows || testInfoRows.length === 0) {
+//       console.warn("⚠️ Test not found for ID:", testCreationTableId);
+//       return res.status(404).json({ error: "Test not found or invalid test ID" });
+//     }
+
+//     const examId = testInfoRows[0].exam_id;
+//     console.log("🎯 examId:", examId);
+
+//     // Step 2: Fetch user responses
+//     const [userResponseRows] = await connection.query(
+//       `SELECT
+//           ur.student_registration_id,
+//           ur.test_creation_table_id,
+//           ur.subject_id,
+//           ur.section_id,
+//           ur.question_id,
+//           ur.user_answer,
+//           ur.question_type_id,
+//           q.answer_text,
+//           q.marks_text,
+//           q.nmarks_text
+//         FROM iit_user_responses ur
+//         JOIN iit_questions q ON ur.question_id = q.question_id
+//         WHERE ur.test_creation_table_id = ? 
+//           AND ur.student_registration_id = ?
+//           AND ur.question_status IN (1, 2),`
+//       [testCreationTableId, studentregistrationId]
+//     );
+//     console.log("📦 userResponseRows:", userResponseRows);
+
+//     const marks = userResponseRows.map(row => {
+//       const userAnswer = (row.user_answer || "").trim().toLowerCase();
+//       const correctAnswer = (row.answer_text || "").trim().toLowerCase();
+//       let marksAwarded = 0;
+//       let status = 0;
+//       console.log("userAnswer", userAnswer);
+//       console.log("correctAnswer", correctAnswer);
+//       console.log("examId", examId);
+//       console.log("examId === 1", examId === 1)
+//       if (examId === 1) { // JEE Main
+//         console.log("examId", examId)
+//         console.log("row.qtype_text", row.question_type_id)
+//         if (row.question_type_id === 1) {
+//           console.log("MCQ4")
+//           console.log("!userAnswer", !userAnswer);
+//           console.log("userAnswer === correctAnswer", userAnswer === correctAnswer);
+
+//           if (!userAnswer) {
+//             marksAwarded = 0;
+//           } else if (userAnswer === correctAnswer) {
+//             marksAwarded = 4;
+//             status = 1;
+//           } else {
+//             marksAwarded = -1;
+//           }
+//         } else if (row.question_type_id === 5) {
+//           if (!userAnswer) {
+//             marksAwarded = 0;
+//           } else if (userAnswer === correctAnswer) {
+//             marksAwarded = 4;
+//             status = 1;
+//           }
+//         }
+//       } else if (examId === 2) { // JEE Advanced
+//         if (row.question_type_id === 1 || row.question_type_id === 5) {
+//           if (!userAnswer) {
+//             marksAwarded = 0;
+//           } else if (userAnswer === correctAnswer) {
+//             marksAwarded = parseFloat(row.marks_text) || 0;
+//             status = 1;
+//           }
+//         }
+//       }
+
+//       const result = {
+//         studentregistrationId: row.student_registration_id,
+//         testCreationTableId: row.test_creation_table_id,
+//         subjectId: row.subject_id,
+//         sectionId: row.section_id,
+//         question_id: row.question_id,
+//         marksAwarded,
+//         status,
+//       };
+//       console.log("📊 Calculated Result:", result);
+//       return result;
+//     });
+
+//     console.log("marks", marks);
+
+//     // Step 3: Insert into student_marks table
+//     const insertQueries = marks.map(mark => {
+//       console.log("📥 Inserting into student_marks:", mark);
+//       return connection.query(
+//         `INSERT INTO iit_student_marks 
+//           (student_registration_id, test_creation_table_id, subject_id, section_id, question_id, student_marks, status) 
+//          VALUES (?, ?, ?, ?, ?, ?, ?)`,
+//         [
+//           mark.studentregistrationId,
+//           mark.testCreationTableId,
+//           mark.subjectId,
+//           mark.sectionId,
+//           mark.question_id,
+//           mark.marksAwarded,
+//           mark.status
+//         ]
+//       );
+//     });
+
+//     console.log("insertQueries", insertQueries);
+//     await Promise.all(insertQueries);
+//     console.log("✅ All marks inserted successfully");
+
+//     res.json(marks);
+
+//   } catch (error) {
+//     console.error("❌ Error in fetching student marks:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+
+//   } finally {
+//     if (connection) connection.release();
+//   }
+// });
+
 router.get("/FetchStudentMarks/:testCreationTableId/:studentregistrationId", async (req, res) => {
   let connection;
 
@@ -772,14 +916,14 @@ router.get("/FetchStudentMarks/:testCreationTableId/:studentregistrationId", asy
 
     // Step 1: Fetch exam_id using testCreationTableId
     const [testInfoRows] = await connection.query(
-     ` SELECT
-          t.test_creation_table_id,
-          t.test_name,
-          c.exam_id
-        FROM iit_test_creation_table t
-        JOIN iit_course_creation_table c ON t.course_creation_id = c.course_creation_id
-        WHERE t.test_creation_table_id = ?,`
-      [testCreationTableId]
+      `SELECT
+        t.test_creation_table_id,
+        t.test_name,
+        c.exam_id
+      FROM iit_test_creation_table t
+      JOIN iit_course_creation_table c ON t.course_creation_id = c.course_creation_id
+      WHERE t.test_creation_table_id = ?`,
+      [testCreationTableId] // ✅ Removed trailing comma
     );
     console.log("📄 testInfoRows:", testInfoRows);
 
@@ -794,21 +938,21 @@ router.get("/FetchStudentMarks/:testCreationTableId/:studentregistrationId", asy
     // Step 2: Fetch user responses
     const [userResponseRows] = await connection.query(
       `SELECT
-          ur.student_registration_id,
-          ur.test_creation_table_id,
-          ur.subject_id,
-          ur.section_id,
-          ur.question_id,
-          ur.user_answer,
-          ur.question_type_id,
-          q.answer_text,
-          q.marks_text,
-          q.nmarks_text
-        FROM iit_user_responses ur
-        JOIN iit_questions q ON ur.question_id = q.question_id
-        WHERE ur.test_creation_table_id = ? 
-          AND ur.student_registration_id = ?
-          AND ur.question_status IN (1, 2),`
+        ur.student_registration_id,
+        ur.test_creation_table_id,
+        ur.subject_id,
+        ur.section_id,
+        ur.question_id,
+        ur.user_answer,
+        ur.question_type_id,
+        q.answer_text,
+        q.marks_text,
+        q.nmarks_text
+      FROM iit_user_responses ur
+      JOIN iit_questions q ON ur.question_id = q.question_id
+      WHERE ur.test_creation_table_id = ? 
+        AND ur.student_registration_id = ?
+        AND ur.question_status IN (1, 2)`, // ✅ Removed trailing comma
       [testCreationTableId, studentregistrationId]
     );
     console.log("📦 userResponseRows:", userResponseRows);
@@ -818,36 +962,22 @@ router.get("/FetchStudentMarks/:testCreationTableId/:studentregistrationId", asy
       const correctAnswer = (row.answer_text || "").trim().toLowerCase();
       let marksAwarded = 0;
       let status = 0;
-      console.log("userAnswer", userAnswer);
-      console.log("correctAnswer", correctAnswer);
-      console.log("examId", examId);
-      console.log("examId === 1", examId === 1)
-      if (examId === 1) { // JEE Main
-        console.log("examId", examId)
-        console.log("row.qtype_text", row.question_type_id)
-        if (row.question_type_id === 1) {
-          console.log("MCQ4")
-          console.log("!userAnswer", !userAnswer);
-          console.log("userAnswer === correctAnswer", userAnswer === correctAnswer);
 
+      if (examId === 1) { // JEE Main
+        if (row.question_type_id === 1 || row.question_type_id === 2 || row.question_type_id === 5) {
           if (!userAnswer) {
             marksAwarded = 0;
           } else if (userAnswer === correctAnswer) {
             marksAwarded = 4;
             status = 1;
           } else {
-            marksAwarded = -1;
-          }
-        } else if (row.question_type_id === 5) {
-          if (!userAnswer) {
-            marksAwarded = 0;
-          } else if (userAnswer === correctAnswer) {
-            marksAwarded = 4;
-            status = 1;
+            if (row.question_type_id === 1) {
+              marksAwarded = -1;
+            }
           }
         }
       } else if (examId === 2) { // JEE Advanced
-        if (row.question_type_id === 1 || row.question_type_id === 5) {
+        if (row.question_type_id === 1 || row.question_type_id === 2 || row.question_type_id === 5) {
           if (!userAnswer) {
             marksAwarded = 0;
           } else if (userAnswer === correctAnswer) {
@@ -857,7 +987,7 @@ router.get("/FetchStudentMarks/:testCreationTableId/:studentregistrationId", asy
         }
       }
 
-      const result = {
+      return {
         studentregistrationId: row.student_registration_id,
         testCreationTableId: row.test_creation_table_id,
         subjectId: row.subject_id,
@@ -866,15 +996,10 @@ router.get("/FetchStudentMarks/:testCreationTableId/:studentregistrationId", asy
         marksAwarded,
         status,
       };
-      console.log("📊 Calculated Result:", result);
-      return result;
     });
-
-    console.log("marks", marks);
 
     // Step 3: Insert into student_marks table
     const insertQueries = marks.map(mark => {
-      console.log("📥 Inserting into student_marks:", mark);
       return connection.query(
         `INSERT INTO iit_student_marks 
           (student_registration_id, test_creation_table_id, subject_id, section_id, question_id, student_marks, status) 
@@ -891,7 +1016,6 @@ router.get("/FetchStudentMarks/:testCreationTableId/:studentregistrationId", asy
       );
     });
 
-    console.log("insertQueries", insertQueries);
     await Promise.all(insertQueries);
     console.log("✅ All marks inserted successfully");
 
@@ -908,55 +1032,54 @@ router.get("/FetchStudentMarks/:testCreationTableId/:studentregistrationId", asy
 
 
 
+// router.delete("/DeleteStudentDataWindowClose/:studentId/:testCreationTableId", async (req, res) => {
+//   try {
+//     const { studentId, testCreationTableId } = req.params; // Correcting to extract parameters from req.params
 
-router.delete("/DeleteStudentDataWindowClose/:studentId/:testCreationTableId", async (req, res) => {
-  try {
-    const { studentId, testCreationTableId } = req.params; // Correcting to extract parameters from req.params
+//     if (!studentId || !testCreationTableId) {
+//       return res.status(400).json({ message: "Missing parameters" });
+//     }
 
-    if (!studentId || !testCreationTableId) {
-      return res.status(400).json({ message: "Missing parameters" });
-    }
+//     const testStatus = await db.query(
+//       `SELECT test_attempt_status FROM iit_test_status_details WHERE student_registration_id = ? AND test_creation_table_id = ?`,
+//       [studentId, testCreationTableId]
+//     );
 
-    const testStatus = await db.query(
-      `SELECT test_attempt_status FROM iit_test_status_details WHERE student_registration_id = ? AND test_creation_table_id = ?`,
-      [studentId, testCreationTableId]
-    );
+//     console.log("Test Status:", testStatus);
 
-    console.log("Test Status:", testStatus);
+//     if (!testStatus || testStatus.length === 0) {
+//       console.log("No test record found, skipping deletion.");
+//       return res.status(404).json({ message: "No test record found." });
+//     }
 
-    if (!testStatus || testStatus.length === 0) {
-      console.log("No test record found, skipping deletion.");
-      return res.status(404).json({ message: "No test record found." });
-    }
+//     // Flatten the testStatus array and check if any status is 'completed'
+//     const isCompleted = testStatus.flat().some(status => status.testAttemptStatus && status.testAttemptStatus.toLowerCase() === "completed");
 
-    // Flatten the testStatus array and check if any status is 'completed'
-    const isCompleted = testStatus.flat().some(status => status.testAttemptStatus && status.testAttemptStatus.toLowerCase() === "completed");
+//     if (isCompleted) {
+//       console.log("Test was completed. Data not deleted.");
+//       return res.status(200).json({ message: "Test completed, data not deleted." });
+//     }
 
-    if (isCompleted) {
-      console.log("Test was completed. Data not deleted.");
-      return res.status(200).json({ message: "Test completed, data not deleted." });
-    }
+//     // Proceed with deletion if testAttemptStatus is not "completed"
+//     const deleteQueries = [
+//       { query: `DELETE FROM iit_user_responses WHERE student_registration_id = ? AND test_creation_table_id = ?`, values: [studentId, testCreationTableId] },
+//       { query: `DELETE FROM iit_student_exam_summary WHERE student_registration_id = ? AND test_creation_table_id = ?`, values: [studentId, testCreationTableId] },
+//       { query: `DELETE FROM iit_test_status_details WHERE student_registration_id = ? AND test_creation_table_id = ?`, values: [studentId, testCreationTableId] },
+//       { query: `DELETE FROM iit_student_marks WHERE student_registration_id = ? AND test_creation_table_id = ?`, values: [studentId, testCreationTableId] },
+//     ];
 
-    // Proceed with deletion if testAttemptStatus is not "completed"
-    const deleteQueries = [
-      { query: `DELETE FROM iit_user_responses WHERE student_registration_id = ? AND test_creation_table_id = ?`, values: [studentId, testCreationTableId] },
-      { query: `DELETE FROM iit_student_exam_summary WHERE student_registration_id = ? AND test_creation_table_id = ?`, values: [studentId, testCreationTableId] },
-      { query: `DELETE FROM iit_test_status_details WHERE student_registration_id = ? AND test_creation_table_id = ?`, values: [studentId, testCreationTableId] },
-      { query: `DELETE FROM iit_student_marks WHERE student_registration_id = ? AND test_creation_table_id = ?`, values: [studentId, testCreationTableId] },
-    ];
+//     for (const { query, values } of deleteQueries) {
+//       await db.query(query, values);
+//     }
 
-    for (const { query, values } of deleteQueries) {
-      await db.query(query, values);
-    }
+//     console.log(`Test data deleted for student ${studentId} (Test ID: ${testCreationTableId})`);
+//     return res.status(200).json({ message: "Test data deleted successfully." });
 
-    console.log(`Test data deleted for student ${studentId} (Test ID: ${testCreationTableId})`);
-    return res.status(200).json({ message: "Test data deleted successfully." });
-
-  } catch (error) {
-    console.error("Error deleting user data:", error);
-    return res.status(500).json({ message: "Internal server error", error: error.message });
-  }
-});
+//   } catch (error) {
+//     console.error("Error deleting user data:", error);
+//     return res.status(500).json({ message: "Internal server error", error: error.message });
+//   }
+// });
 
 
   module.exports = router;
