@@ -4,26 +4,30 @@ import OrvlTopicForm from "./OrvlTopicForm.jsx";
 import ORVLDynamicTable from "./ORVLDynamicTable.jsx";
 import styles from "../../../Styles/AdminDashboardCSS/AdminDashboard.module.css";
 import { BASE_URL } from "../../../config/apiConfig.js";
+
 const OrvlTopicCreation = () => {
   const [showForm, setShowForm] = useState(false);
   const [topics, setTopics] = useState([]);
+  const [selectedTopic, setSelectedTopic] = useState(null);  // State to store the selected topic for editing
 
   const handleAddTopicClick = () => {
     setShowForm(prev => !prev);
+    setSelectedTopic(null); // Clear the selected topic when adding a new topic
   };
+
   const handleClose = () => {
     setShowForm(false);
+    setSelectedTopic(null); // Clear the selected topic on close
   };
+
   const fetchTopics = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/OrvlTopicCreation/getTopics`);
-      console.log("Fetched Topics:", response.data);  // Verify data here
-      setTopics(response.data); 
+      setTopics(response.data);
     } catch (err) {
       console.error("❌ Error fetching topics:", err);
     }
   };
-  
 
   useEffect(() => {
     fetchTopics();
@@ -31,7 +35,8 @@ const OrvlTopicCreation = () => {
 
   const handleEdit = (row) => {
     console.log("✏️ Edit clicked for:", row);
-    // You can pass this row to a form or open modal to update topic
+    setSelectedTopic(row);  // Set the selected topic for editing
+    setShowForm(true);  // Show the form to edit
   };
 
   const handleDelete = async (row) => {
@@ -44,13 +49,13 @@ const OrvlTopicCreation = () => {
   };
 
   const columns = topics.length
-  ? Object.keys(topics[0]) 
-      .filter((key) => key !== "exam_id") 
-      .map((key) => ({
-        header: key.replace(/_/g, " ").toUpperCase(), 
-        accessor: key, 
-      }))
-  : [];
+    ? Object.keys(topics[0])
+        .filter((key) => key !== "exam_id") // Exclude 'exam_id' or other unwanted fields
+        .map((key) => ({
+          header: key.replace(/_/g, " ").toUpperCase(),
+          accessor: key,
+        }))
+    : [];
 
   return (
     <div>
@@ -58,20 +63,26 @@ const OrvlTopicCreation = () => {
       <button onClick={handleAddTopicClick} className={styles.addBtn}>
         {showForm ? "Close Form" : "Add Topic"}
       </button>
-      {showForm && <OrvlTopicForm onSuccess={fetchTopics} onClose={handleClose} />}
+      {showForm && (
+        <OrvlTopicForm
+          topic={selectedTopic}  // Pass selected topic to form for pre-filling
+          onSuccess={fetchTopics}
+          onClose={handleClose}
+        />
+      )}
 
       {/* 🔥 Table section */}
-      < div style={{padding:"2%"}}>
-      <ORVLDynamicTable
-        columns={columns}
-        data={topics}
-        type="orvltopic"
-        showEdit={true}
-        showToggle={false}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
-</div>
+      <div style={{ padding: "2%" }}>
+        <ORVLDynamicTable
+          columns={columns}
+          data={topics}
+          type="orvltopic"
+          showEdit={true}
+          showToggle={false}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      </div>
     </div>
   );
 };

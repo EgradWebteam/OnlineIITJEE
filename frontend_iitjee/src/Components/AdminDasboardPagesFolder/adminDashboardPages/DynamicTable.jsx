@@ -161,34 +161,43 @@ const DynamicTable = ({
                   )}
                 </td>
                 {showToggle && type !== "document" && (
-                  <td>
-                    <button
-                      className={`${styles.toggleBtn} ${
-                        type === "test"
-                          ? row.test_activation === "active"
-                            ? styles.deactivate
-                            : styles.activate
-                          : row.active_course === "active"
-                          ? styles.deactivate
-                          : styles.activate
-                      }`}
-                      onClick={() => {
-                        console.log("Toggle clicked for row:", row);
-                        onToggle(row);
-                      }}
-                    >
-                      {type === "test"
-                        ? row.test_activation
-                        === "active"
-                          ? "Deactivate Test"
-                          : "Activate Test"
-                        : row.active_course === "active"
-                        ? "Deactivate Course"
-                        : "Activate Course"
-                      }
-                    </button>
-                  </td>
-                )}
+  <td>
+    <button
+      className={`${styles.toggleBtn} ${
+        type === "test"
+          ? row.test_activation === "active"
+            ? styles.activate
+            : styles.deactivate
+          : row.active_course === "active"
+          ? styles.activate
+          : styles.deactivate
+      }`}
+      onClick={() => {
+        console.log("Toggle clicked for row:", row);
+        onToggle(row);
+      }}
+      title={
+        type === "test"
+          ? row.test_activation === "active"
+            ? "Deactivate the test"
+            : "Activate the test"
+          : row.active_course === "active"
+          ? "Deactivate the course"
+          : "Activate the course"
+      }
+    >
+      {type === "test"
+        ? row.test_activation === "active"
+          ? "Deactivate Test"
+          : "Activate Test"
+        : row.active_course === "active"
+        ? "Deactivate Course"
+        : "Activate Course"
+      }
+    </button>
+  </td>
+)}
+
               </tr>
             ))
           )}

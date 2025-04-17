@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import globalCSS from "../../../Styles/global.module.css";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import CourseCard from '../../LandingPagesFolder/CourseCards.jsx';
-import { BASE_URL } from '../../../../apiConfig';
+import { BASE_URL } from '../../../config/apiConfig';
 import TestDetailsContainer from './TestDetailsContainer';
 
 export default function StudentDashboard_MyCourses({studentId}) {
