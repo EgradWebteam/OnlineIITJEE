@@ -20,21 +20,26 @@ export default function StudentDashboard_MyCourses({studentId}) {
         setLoading(true);
         const res = await fetch(`${BASE_URL}/studentmycourses/Purchasedcourses/${studentId}`);
         const data = await res.json();
-
+        console.log("API Response:", data); // Log the response to inspect it
+    
         if (Array.isArray(data) && data.length > 0) {
           const defaultPortal = data[0];
           const firstExam = Object.values(defaultPortal.exams)?.[0];
-
+    
           setStructuredCourses(data);
           setSelectedPortal(defaultPortal.portal_name);
           setSelectedExam(firstExam?.exam_name || null);
+        } else {
+          setStructuredCourses([]); // No courses found, set empty state
         }
       } catch (err) {
         console.error("Error fetching purchased courses", err);
+        setStructuredCourses([]); // In case of error, reset the state
       } finally {
         setLoading(false);
       }
     };
+    
 
     fetchPurchasedCourses();
   }, [studentId]);
@@ -78,12 +83,12 @@ export default function StudentDashboard_MyCourses({studentId}) {
       </div>
 
       {/* Portal Buttons */}
-      <div className={globalCSS.portalButtonsDiv}>
+      <div className={styles.toggleTypeButtons}>
         {structuredCourses.map((portal, index) => (
           <button
             key={index}
-            className={`${globalCSS.portalButtons} ${
-              selectedPortal === portal.portal_name ? globalCSS.portalActiveBtn : ""
+            className={`${styles.toggleBtn} ${
+              selectedPortal === portal.portal_name ?  styles.active  : ""
             }`}
             onClick={() => {
               setSelectedPortal(portal.portal_name);
@@ -111,12 +116,8 @@ export default function StudentDashboard_MyCourses({studentId}) {
         ))}
       </div>
 
-      {/* Loading or Not Ready */}
-      {(!structuredCourses.length || !selectedPortal || !selectedExam || filteredCourses === null) ? (
-        <div className={globalCSS.noCoursesContainer}>
-          <p className={globalCSS.noCoursesMsg}>YOU HAVE NO ACTIVE COURSES</p>
-        </div>
-      ) : filteredCourses.length === 0 ? (
+       {/* Loading or Not Ready */}
+      {(!structuredCourses.length || !selectedPortal || !selectedExam || filteredCourses.length === 0) ? (
         <div className={globalCSS.noCoursesContainer}>
           <p className={globalCSS.noCoursesMsg}>YOU HAVE NO ACTIVE COURSES</p>
         </div>
