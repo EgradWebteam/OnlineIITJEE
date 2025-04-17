@@ -1,5 +1,5 @@
 import React from 'react'
-import styles  from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css'; // Importing CSS module for styling
+import styles  from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css'; 
 
 const AdminCards = ({ icon, label, value }) => {
   console.log("AdminCards called")

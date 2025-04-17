@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboardHome.module.css";
-import MainPageCourseCards from '../../LandingPagesFolder/MainPageCourseCards';
+import MainPageCourseCards from '../../LandingPagesFolder/MainPageCourseCards.jsx';
 
 export default function StudentDashboardHome({handleSectionChange, studentName}) {
 
