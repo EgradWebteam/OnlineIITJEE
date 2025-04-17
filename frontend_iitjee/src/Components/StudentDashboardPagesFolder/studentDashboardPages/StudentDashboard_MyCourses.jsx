@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import globalCSS from "../../../Styles/global.module.css";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
-import CourseCard from '../../LandingPagesFolder/CourseCards';
+import CourseCard from '../../LandingPagesFolder/CourseCards.jsx';
 import { BASE_URL } from '../../../../apiConfig';
 import TestDetailsContainer from './TestDetailsContainer';
 
@@ -114,11 +114,11 @@ export default function StudentDashboard_MyCourses({studentId}) {
       {/* Loading or Not Ready */}
       {(!structuredCourses.length || !selectedPortal || !selectedExam || filteredCourses === null) ? (
         <div className={globalCSS.noCoursesContainer}>
-          <p className={globalCSS.noCoursesMsg}>No courses available for this exam in the selected portal.</p>
+          <p className={globalCSS.noCoursesMsg}>YOU HAVE NO ACTIVE COURSES</p>
         </div>
       ) : filteredCourses.length === 0 ? (
         <div className={globalCSS.noCoursesContainer}>
-          <p className={globalCSS.noCoursesMsg}>No courses available for this exam in the selected portal.</p>
+          <p className={globalCSS.noCoursesMsg}>YOU HAVE NO ACTIVE COURSES</p>
         </div>
       ) : (
         <div className={globalCSS.cardHolderOTSORVLHome}>

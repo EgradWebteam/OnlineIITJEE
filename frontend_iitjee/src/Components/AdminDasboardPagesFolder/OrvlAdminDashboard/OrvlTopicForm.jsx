@@ -1,14 +1,142 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { BASE_URL } from "../../../../apiConfig";
+import axios from 'axios';
+import styles from '../../../Styles/AdminDashboardCSS/TopicForm.module.css'
 
-const TopicForm = () => {
+const TopicForm = ({ onClose }) => {  // Added onClose prop for handling close action
+  const [exams, setExams] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const [selectedExamId, setSelectedExamId] = useState('');
+  const [selectedSubjectId, setSelectedSubjectId] = useState('');
+  const [topicName, setTopicName] = useState('');
+  const [topicPdf, setTopicPdf] = useState(null);
+  const [topicDoc, setTopicDoc] = useState(null);
+
+  useEffect(() => {
+    const fetchExams = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/OrvlTopicCreation/getexams`);
+        setExams(response.data);
+      } catch (error) {
+        console.error('Error fetching exams:', error);
+      }
+    };
+
+    fetchExams();
+  }, []);
+
+  useEffect(() => {
+    if (!selectedExamId) return;
+
+    const fetchSubjects = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/CourseCreation/ExamSubjects/${selectedExamId}`);
+        setSubjects(response.data.subjects);
+      } catch (error) {
+        console.error('Error fetching subjects:', error);
+      }
+    };
+
+    fetchSubjects();
+  }, [selectedExamId]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("topic_name", topicName);
+    formData.append("exam_id", selectedExamId);
+    formData.append("subject_id", selectedSubjectId);
+
+    if (topicPdf) formData.append("topic_pdf", topicPdf);
+    if (topicDoc) formData.append("topic_doc", topicDoc);
+
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/OrvlTopicCreation/addTopic`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Topic submitted successfully:", response.data);
+    } catch (error) {
+      console.error("Error submitting topic:", error.response?.data || error.message);
+    }
+  };
+
   return (
     <div>
-      <h3>Create a New Topic</h3>
-      <form>
-        <input type="text" placeholder="Enter topic name" />
-        
-        <button type="submit">Submit</button>
-      </form>
+      <div className={styles.backdrop}>
+        <div className={styles.popup}>
+          <h3 className={styles.heading}>Create a New Topic</h3>
+          <form onSubmit={handleSubmit} className={styles.topicForm}>
+            <div  className={styles.flex}>
+              <label>TopicName:</label>
+              <input
+                type="text"
+                placeholder="Enter topic name"
+                value={topicName}
+                onChange={(e) => setTopicName(e.target.value)}
+                required
+                className={styles.inputField}
+              />
+            </div>
+
+            {/* Exams Dropdown */}
+            <div  className={styles.flex}>
+              <label>Select Exam:</label>
+              <select value={selectedExamId} onChange={(e) => setSelectedExamId(e.target.value)} required className={styles.selectField}>
+                <option value="">--Select Exam--</option>
+                {exams.map((exam) => (
+                  <option key={exam.exam_id} value={exam.exam_id}>
+                    {exam.exam_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Subjects Dropdown */}
+            {subjects.length > 0 && (
+              <div>
+                <label>Select Subject:</label>
+                <select value={selectedSubjectId} onChange={(e) => setSelectedSubjectId(e.target.value)} required className={styles.selectField}>
+                  <option value="">--Select Subject--</option>
+                  {subjects.map((subject) => (
+                    <option key={subject.subject_id} value={subject.subject_id}>
+                      {subject.subject_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* PDF Upload */}
+            <div className={styles.flex}>
+              <label>Upload Topic PDF:</label>
+              <input type="file" accept="application/pdf" onChange={(e) => setTopicPdf(e.target.files[0])} className={styles.inputFile} />
+            </div>
+
+            {/* Documentation Upload */}
+            <div  className={styles.flex}>
+              <label>Upload Topic Documentation:</label>
+              <input
+                type="file"
+                accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                onChange={(e) => setTopicDoc(e.target.files[0])}
+                className={styles.inputFile}
+              />
+            </div>
+
+            <div className={styles.buttonContainer}>
+              <button type="submit" className={styles.submitBtn}>Submit</button>
+              <button type="button" className={styles.closeBtn} onClick={onClose}>Close</button> {/* Close Button */}
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };

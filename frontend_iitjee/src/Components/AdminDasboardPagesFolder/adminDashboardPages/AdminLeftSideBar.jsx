@@ -1,10 +1,10 @@
 import React from 'react';
-import styles from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css'; // Importing CSS module for styling
-import { TbDeviceDesktopAnalytics } from 'react-icons/tb';  // Dashboard Icon
-import { FaTableList } from 'react-icons/fa6'; // Course Creation Icon
-import { PiBookOpenTextFill } from 'react-icons/pi'; // Instruction Icon
-import { DiGhostSmall } from 'react-icons/di'; // Test Creation Icon
-import { GrDocumentStore } from 'react-icons/gr'; // Document Upload Icon
+import styles from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css'; 
+import { TbDeviceDesktopAnalytics } from 'react-icons/tb'; 
+import { FaTableList } from 'react-icons/fa6'; 
+import { PiBookOpenTextFill } from 'react-icons/pi'; 
+import { DiGhostSmall } from 'react-icons/di'; 
+import { GrDocumentStore } from 'react-icons/gr'; 
 
 
 const AdminLeftSideBar = ({ onMenuClick, activeComponent }) => {

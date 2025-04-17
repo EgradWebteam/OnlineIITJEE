@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import AdminLogo from '../../../assets/logoCap.jpeg'
  import style from './../../../Styles/AdminDashboardCSS/AdminProfier.module.css'
-import AdminDashboardHeader from './AdminDashboardHeader'
+import AdminDashboardHeader from './AdminDashboardHeader.jsx'
  
 const AdminProfile = () => {
   const [adminInfo, setAdminInfo] = useState({});

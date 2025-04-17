@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import DynamicTable from "./DynamicTable"; // Ensure you have this component
+import DynamicTable from "./DynamicTable.jsx"; 
 import styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css";
-// import { FaSearch } from 'react-icons/fa';
-import TestCreationForm from "./TestCreationForm"; // Import TestCreationForm component
+import TestCreationForm from "./TestCreationForm.jsx"; 
 import axios from "axios";
 import { BASE_URL } from "../../../../apiConfig";
 
@@ -10,8 +9,6 @@ const TestCreationTab = () => {
   const [showAddTestForm, setShowAddTestForm] = useState(false);
   const [selectedTestData, setSelectedTestData] = useState(null);
   const [testCreationFormData, setTestCreationFormData] = useState(null);
-
-  // API fetch function
   const fetchFormData = async () => {
     try {
       const response = await axios.get(
@@ -148,7 +145,7 @@ const TestCreationTab = () => {
 
   ]}
 
-  data={testTableData} // array of test data
+  data={testTableData} 
   onEdit={handleEdit}
   onDelete={handleDelete}
   onToggle={handleActivationToggle}

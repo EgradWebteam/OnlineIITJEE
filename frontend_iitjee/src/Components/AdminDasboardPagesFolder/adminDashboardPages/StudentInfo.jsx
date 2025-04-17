@@ -39,7 +39,7 @@ const StudentInfo = () => {
    useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/students/coursesName`); // Fetch courses from backend
+        const response = await axios.get(`${BASE_URL}/studentInfo/coursesName`); // Fetch courses from backend
         setCourses(response.data); // Set courses to state
       } catch (error) {
         console.error('Error fetching courses:', error);
@@ -76,7 +76,7 @@ const StudentInfo = () => {
  
     try {
       const response = await axios.post(
-        `${BASE_URL}/students/StudentInfo`,
+        `${BASE_URL}/studentInfo/StudentInfo`,
         stdData
       );
       alert(response.data.message); // Show success alert
@@ -114,7 +114,7 @@ const StudentInfo = () => {
  
   const fetchStudents = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/students/StudentInfo`);
+      const response = await axios.get(`${BASE_URL}/studentInfo/StudentInfo`);
       if (response.status === 200 && Array.isArray(response.data)) {
         setStudentsList(response.data);
         setShowStudentsList(true);
@@ -177,7 +177,7 @@ const StudentInfo = () => {
   // ✅ PLACE IT HERE
   const handleEditStudent = async (student) => {
     try {
-      const response = await axios.get(`${BASE_URL}/students/StudentInfo/${student.id}`); // ✅ fetch by ID
+      const response = await axios.get(`${BASE_URL}/studentInfo/StudentInfo/${student.id}`); // ✅ fetch by ID
       const fullStudentData = response.data;
   
       setEditingStudent({
@@ -195,7 +195,7 @@ const StudentInfo = () => {
     try {
       // Toggle activation status (0 -> 1, 1 -> 0)
       const response = await axios.put(
-        `${BASE_URL}/students/StudentInfo/${studentId}`,
+        `${BASE_URL}/studentInfo/StudentInfo/${studentId}`,
         { student_activation: currentStatus === 1 ? 0 : 1 } // Toggle status
       );
  
@@ -224,7 +224,7 @@ const StudentInfo = () => {
   const handleSaveEditedStudent = async (stdData) => {
     try {
       const response = await axios.put(
-        `${BASE_URL}/students/StudentInfo/${stdData.id}`,
+        `${BASE_URL}/studentInfo/StudentInfo/${stdData.id}`,
         {
           name: stdData.name,
           email: stdData.email,

@@ -28,7 +28,10 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
   const studentName = userData?.candidate_name;
   const studentEmail = userData?.email_id;
   const studentContact = userData?.mobile_no;
+  const studentProfile = userData?.uploaded_photo;
 
+  console.log("stuenttProfile:", studentProfile);
+  
   const handlePasswordChange = async (e) => {
     e.preventDefault();
   
@@ -81,7 +84,8 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
       <div className={styles.StdAccountPwdContainer}>
         <div className={styles.StudentAccountProfile}>
           <div className={styles.StudentAccountProfile2}>
-            <FaUser />
+            {/* <FaUser /> */}
+            <img src={studentProfile} alt="studentProfile"/>
           </div>
         </div>
         <div className={styles.StudentAccountPwds}>
