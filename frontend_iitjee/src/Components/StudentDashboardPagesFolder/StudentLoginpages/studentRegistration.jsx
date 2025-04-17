@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Styles from "../../../Styles/StudentDashboardCSS/StudentRegistration.module.css";
 import SRFormImage from "../../../assets/SRFormImage.jpg";
-import MainHeader from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainHeader";
-import MainFooter from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainFooter";
+import MainHeader from "../../LandingPagesFolder/mainPageHeaderFooterFolder/mainHeader.jsx";
+import MainFooter from "../../LandingPagesFolder/mainPageHeaderFooterFolder/MainFooter.jsx";
 import { BASE_URL } from "../../../config/apiConfig.js";
 import TermsAndConditions from "../../GlobalFiles/TermsAndConditions.jsx";
 import { useLocation, Link, useNavigate } from "react-router-dom";
