@@ -10,11 +10,16 @@ const LogoHomeHeader = () => {
         <div className={style.LogoForHeader}>
         <img src={LogoForHeader} alt="imgsrc" />
         </div>
+            <div className={style.Header_logins_icons}>
+                  <Link to="/LoginPage">
+                    <div className={style.Header_Login}>Login</div>
+                  </Link>
         <Link to="/">
         <div className={style.HomeIcon}>
               <IoMdHome />
             </div>
           </Link>
+          </div>
         </div>
      
   )
