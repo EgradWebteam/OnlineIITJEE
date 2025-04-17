@@ -6,7 +6,7 @@ import OTSHeader from "./OTSHeaderFolder/OTSHeader.jsx";
 import OTSNavbar from "./OTSHeaderFolder/OTSNavbar.jsx";
 import OTSMain from "./OTSMainFolder/OTSMain.jsx";
 import axios from "axios";
-import { BASE_URL } from '../../../config/apiConfig';
+import { BASE_URL } from '../../config/apiConfig.js';
 
 export default function OTSRootFile() {
   const { testId, studentId } = useParams();

@@ -584,47 +584,31 @@ router.post("/SaveExamSummary", async (req, res) => {
 
 
 
-
-
 router.post("/UpdateTestAttemptStatus", async (req, res) => {
+  const {
+    studentId,
+    courseCreationId,
+    test_creation_table_id,
+    test_status,
+    connection_status,
+  } = req.body;
+
+  const currentDateTime = new Date().toISOString().slice(0, 19).replace("T", " ");
+
+  const sql = `
+    UPDATE iit_test_status_details
+    SET
+      test_attempt_status = ?,
+      test_connection_status = ?,
+      student_test_end_date_time = ?
+    WHERE
+      student_registration_id = ? AND
+      course_creation_id = ? AND
+      test_creation_table_id = ?
+  `;
+
   try {
-    const {
-      studentId,
-      courseCreationId,
-      test_creation_table_id,
-      test_status,
-      connection_status,
-    } = req.body;
-
-    const missingParams = [];
-    if (!studentId) missingParams.push("studentId");
-    if (!courseCreationId) missingParams.push("courseCreationId");
-    if (!test_creation_table_id) missingParams.push("test_creation_table_id");
-    if (!test_status) missingParams.push("test_status");
-    if (!connection_status) missingParams.push("connection_status");
-
-    if (missingParams.length > 0) {
-      return res.status(400).json({
-        message: "Missing required parameters",
-        missingParams,
-      });
-    }
-
-    const currentDateTime = new Date().toISOString().slice(0, 19).replace("T", " ");
-
-    const updateQuery = 
-     ` UPDATE iit_test_status_details
-      SET
-        test_attempt_status = ?,
-        test_connection_status = ?,
-        student_test_end_date_time = ?
-      WHERE 
-        student_registration_id = ? AND
-        course_creation_id = ? AND
-        test_creation_table_id = ?
-    ;`
-
-    const [result] = await db.query(updateQuery, [
+    const [result] = await db.query(sql, [
       test_status,
       connection_status,
       currentDateTime,
@@ -633,16 +617,73 @@ router.post("/UpdateTestAttemptStatus", async (req, res) => {
       test_creation_table_id,
     ]);
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "No matching test status found to update" });
-    }
-
-    res.status(200).json({ message: "Test status updated successfully" });
+    res.json({ message: "Updated successfully" });
   } catch (error) {
-    console.error("Error updating test status:", error);
-    res.status(500).json({ message: "Internal server error", error: error.message });
+    res.status(500).json({ message: "Update failed", error: error.message });
   }
 });
+
+
+
+
+
+// router.post("/UpdateTestAttemptStatus", async (req, res) => {
+//   try {
+//     const {
+//       studentId,
+//       courseCreationId,
+//       test_creation_table_id,
+//       test_status,
+//       connection_status,
+//     } = req.body;
+// console.log("req.body",req.body)
+//     const missingParams = [];
+//     if (!studentId) missingParams.push("studentId");
+//     if (!courseCreationId) missingParams.push("courseCreationId");
+//     if (!test_creation_table_id) missingParams.push("test_creation_table_id");
+//     if (!test_status) missingParams.push("test_status");
+//     if (!connection_status) missingParams.push("connection_status");
+
+//     if (missingParams.length > 0) {
+//       return res.status(400).json({
+//         message: "Missing required parameters",
+//         missingParams,
+//       });
+//     }
+
+//     const currentDateTime = new Date().toISOString().slice(0, 19).replace("T", " ");
+
+//     const updateQuery = 
+//      ` UPDATE iit_test_status_details
+//       SET
+//         test_attempt_status = ?,
+//         test_connection_status = ?,
+//         student_test_end_date_time = ?
+//       WHERE 
+//         student_registration_id = ? AND
+//         course_creation_id = ? AND
+//         test_creation_table_id = ?
+//     ;`
+
+//     const [result] = await db.query(updateQuery, [
+//       test_status,
+//       connection_status,
+//       currentDateTime,
+//       studentId,
+//       courseCreationId,
+//       test_creation_table_id,
+//     ]);
+
+//     if (result.affectedRows === 0) {
+//       return res.status(404).json({ message: "No matching test status found to update" });
+//     }
+
+//     res.status(200).json({ message: "Test status updated successfully" });
+//   } catch (error) {
+//     console.error("Error updating test status:", error);
+//     res.status(500).json({ message: "Internal server error", error: error.message });
+//   }
+// });
 
 router.get("/FetchExamSummaryCounts/:testCreationTableId/:user_Id", async (req, res) => {
   let connection;
