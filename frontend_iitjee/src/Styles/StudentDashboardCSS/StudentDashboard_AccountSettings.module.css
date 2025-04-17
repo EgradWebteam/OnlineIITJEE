@@ -24,6 +24,12 @@
     padding: 10px;
     margin: 0 auto;
     text-align: center;
+    width: 100px;
+    height: 100px;
+}
+.StudentAccountProfile2 img{
+width: 100%;
+height: 100%;
 }
 .StudentAccountProfile svg{
  font-size: 40px;

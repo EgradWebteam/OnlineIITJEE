@@ -2,19 +2,18 @@ import React, { lazy, useEffect, useState,Suspense, useCallback } from 'react'
 import StudentDashboardHeader from '../StudentDashboardPages/StudentDashboardHeader.jsx';
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import StudentDashboardLeftSideBar from '../StudentDashboardPages/StudentDashboardLeftSidebar.jsx';
-import { useLocation, useParams } from 'react-router-dom';
-import { useStudent } from '../../../ContextFolder/StudentContext.jsx';
+import { useLocation, } from 'react-router-dom';
+// import { useStudent } from '../../../ContextFolder/StudentContext.jsx';
 // Lazy loaded components
-const StudentDashboardHome = lazy(() => import("../StudentDashboardPages/StudentDashboardHome.jsx"));
-const StudentDashboard_MyCourses = lazy(() => import("../StudentDashboardPages/StudentDashboard_MyCourses.jsx"));
-const StudentDashboard_BuyCourses = lazy(() => import("../StudentDashboardPages/StudentDashboard_BuyCourses.jsx"));
-const StudentDashboard_MyResults = lazy(() => import("../StudentDashboardPages/StudentDashboard_MyResults.jsx"));
-const StudentDashboard_AccountSettings = lazy(() => import("../StudentDashboardPages/StudentDashboard_AccountSettings.jsx"));
+const StudentDashboardHome = lazy(() => import("./studentDashboardHome.jsx"));
+const StudentDashboard_MyCourses = lazy(() => import("./StudentDashboard_MyCourses.jsx"));
+const StudentDashboard_BuyCourses = lazy(() => import("./StudentDashboard_BuyCourses.jsx"));
+const StudentDashboard_MyResults = lazy(() => import("./StudentDashboard_MyResults.jsx"));
+const StudentDashboard_AccountSettings = lazy(() => import("./StudentDashboard_AccountSettings.jsx"));
 export default function StudentDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [isLoading, setIsLoading] = useState(true);
   const studentData = JSON.parse(localStorage.getItem('studentData'));
-  console.log("studentData:", studentData);
   const studentName = studentData?.userDetails?.candidate_name;
   const studentId = localStorage.getItem('decryptedId');
     useEffect(() => {
@@ -46,7 +45,7 @@ export default function StudentDashboard() {
         case "buyCourses":
           return <StudentDashboard_BuyCourses setActiveSection = {setActiveSection} studentId = {studentId}/>;
         case "results":
-          return <StudentDashboard_MyResults />;
+          return <StudentDashboard_MyResults  studentId = {studentId}/>;
         case "account":
           return <StudentDashboard_AccountSettings userData ={studentData?.userDetails}/>;
         default:
@@ -63,7 +62,7 @@ export default function StudentDashboard() {
   
   return (
     <div>
-      <StudentDashboardHeader />
+      <StudentDashboardHeader  userData ={studentData?.userDetails}/>
       <div className={styles.StudentDashboardContentHolder}>
         <div className={styles.studentDashboardLeftNavHolder}>
           <StudentDashboardLeftSideBar
