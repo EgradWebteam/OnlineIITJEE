@@ -358,6 +358,36 @@ router.get('/TestSubjectWiseStudentMarks/:studentId/:testId', async (req, res) =
   }
 });
 
+// POST: Toggle Bookmark
+router.post('/bookmark/:question_id/:test_creation_table_id/:student_registration_id', async (req, res) => {
+  const { question_id, test_creation_table_id, student_registration_id } = req.body;
 
+  try {
+    // Check if it already exists
+    const [existing] = await db.query(
+      'SELECT * FROM iit_bookmark_questions WHERE question_id = ? AND test_creation_table_id = ? AND student_registration_id = ?',
+      [question_id, test_creation_table_id, student_registration_id]
+    );
+
+    if (existing.length > 0) {
+      // If exists, remove (unbookmark)
+      await db.query(
+        'DELETE FROM iit_bookmark_questions WHERE question_id = ? AND test_creation_table_id = ? AND student_registration_id = ?',
+        [question_id, test_creation_table_id, student_registration_id]
+      );
+      return res.status(200).json({ message: 'Bookmark removed' });
+    } else {
+      // If not, insert (bookmark)
+      await db.query(
+        'INSERT INTO iit_bookmark_questions (question_id, test_creation_table_id, student_registration_id) VALUES (?, ?, ?)',
+        [question_id, test_creation_table_id, student_registration_id]
+      );
+      return res.status(201).json({ message: 'Bookmarked successfully' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server Error' });
+  }
+});
 
 module.exports = router;

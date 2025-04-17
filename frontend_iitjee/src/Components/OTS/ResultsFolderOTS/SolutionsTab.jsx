@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import axios from "axios";
 import { BASE_URL } from "../../../config/apiConfig";
-
 const SolutionsTab = ({ testId, userData, studentId }) => {
   const [testPaperData, setTestPaperData] = useState([]);
   const [selectedSubjectSection, setSelectedSubjectSection] = useState(null);
@@ -133,13 +132,9 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
 
         <div >
           {selectedSubjectSection && (
-            <div>
-              {/* <h3>Subject: {selectedSubjectSection.SubjectName}</h3> */}
-              {/* {selectedSubjectSection.SectionName && (
-                <h4>Section: {selectedSubjectSection.SectionName}</h4>
-              )} */}
+            <div >
               {selectedSubjectSection.questions.map((question) => (
-                <div key={question.question_id} className={styles.questionSolutionsDiv}>
+                <div key={question.question_id} className={`${styles.questionSolutionsDiv} ${styles.watermarkForSolution}`}>
                   <p>Question No: {question.question_id}</p>
                   <div className={styles.questionImageInSolutionTab}>
                     <img

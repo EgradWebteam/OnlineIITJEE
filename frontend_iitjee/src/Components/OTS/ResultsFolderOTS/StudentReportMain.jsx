@@ -40,7 +40,7 @@ const StudentReportMain = () => {
               Test Name: <b>{test_name}</b>
             </li>
             <li>
-              TotalMatks: <b>{total_marks}.</b>
+              TotalMarks: <b>{total_marks}</b>
             </li>
             <li>
               Duration: <b>{duration}</b>
