@@ -106,7 +106,27 @@ const StudentReport = ({ testId, studentId }) => {
         <div className={styles.timeSpentContainer}>
           <p className={styles.timeProgressPara}>Time Progress</p>
           <div className={styles.timeProgressContainer}>
-            <div
+            
+            <div className={styles.timeLeftContainer}>
+              <p className={styles.timeLeftData}>
+                {formatToHHMMSS(timeSpentSec)}
+              </p>
+              <p className={styles.timeLeftSpentPara}>
+                <span className={styles.timeSpentIcon}></span>
+                <span>Time Spent</span>
+              </p>
+            </div>
+            <div className={styles.timeLeftContainer}>
+              <p className={styles.timeLeftData}>
+                {formatToHHMMSS(timeLeftSec)}
+              </p>
+              <p className={styles.timeLeftSpentPara}>
+                <span className={styles.timeLeftIcon}></span>
+                <span>Time Left</span>
+              </p>
+            </div>
+          </div>
+          <div
               style={{
                 width: "100%",
                 backgroundColor: "#ccc",
@@ -135,25 +155,6 @@ const StudentReport = ({ testId, studentId }) => {
                 title={`Time Left: ${formatToHHMMSS(timeLeftSec)} mins`}
               />
             </div>
-            <div className={styles.timeLeftContainer}>
-              <p className={styles.timeLeftData}>
-                {formatToHHMMSS(timeSpentSec)}
-              </p>
-              <p className={styles.timeLeftSpentPara}>
-                <span className={styles.timeSpentIcon}></span>
-                <span>Time Spent</span>
-              </p>
-            </div>
-            <div className={styles.timeLeftContainer}>
-              <p className={styles.timeLeftData}>
-                {formatToHHMMSS(timeLeftSec)}
-              </p>
-              <p className={styles.timeLeftSpentPara}>
-                <span className={styles.timeLeftIcon}></span>
-                <span>Time Left</span>
-              </p>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -204,64 +205,66 @@ const StudentReport = ({ testId, studentId }) => {
           </table>
         </div>
       </div>
-      <div>
-        <h3 style={{ textAlign: "center" }}>Answer Evaluation</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={pieChartData1}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              label={({ name, percent }) =>
-                `${name}: ${(percent * 100).toFixed(0)}%`
-              }
-              outerRadius={100}
-              fill="#8884d8"
-              dataKey="value"
-            >
-              {pieChartData1.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={pieChart1COLORS[index % pieChart1COLORS.length]}
+      <div className={styles.pieChartsMainDiv}>
+        <div style={{ width: "100%" , margin: "0 auto" }}>
+          <h3 className={styles.pieChartHeadings}>Answer Evaluation</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart style={{ transform: "scale(1.4)", transformOrigin: "center", marginTop: "3rem" }}>
+              <Pie
+                data={pieChartData1}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ name, percent }) =>
+                  `${name}: ${(percent * 100).toFixed(0)}%`
+                }
+                outerRadius={100}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {pieChartData1.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={pieChart1COLORS[index % pieChart1COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend verticalAlign="bottom" height={36} />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+        <div style={{ width: "100%", maxWidth: 400, margin: "0 auto" }}>
+          <h3 className={styles.pieChartHeadings}>Total Percentage</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart style={{ transform: "scale(1.6)", transformOrigin: "center", marginTop: "2rem" }}>
+              <Pie
+                data={pieChartData2}
+                cx="50%"
+                cy="50%"
+                innerRadius={60} // to create a ring shape
+                outerRadius={80}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {pieChartData2.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={pieChart2COLORS[index % pieChart2COLORS.length]}
+                  />
+                ))}
+                <Label
+                  value={`${percentage}%`}
+                  position="center"
+                  fontSize={24}
+                  fontWeight="bold"
+                  fill="#333"
                 />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend verticalAlign="bottom" height={36} />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
-      <div style={{ width: "100%", maxWidth: 400, margin: "0 auto" }}>
-        <h3 style={{ textAlign: "center" }}>Student Performance</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={pieChartData2}
-              cx="50%"
-              cy="50%"
-              innerRadius={60} // to create a ring shape
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="value"
-            >
-              {pieChartData2.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={pieChart2COLORS[index % pieChart2COLORS.length]}
-                />
-              ))}
-              <Label
-                value={`${percentage}%`}
-                position="center"
-                fontSize={24}
-                fontWeight="bold"
-                fill="#333"
-              />
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );

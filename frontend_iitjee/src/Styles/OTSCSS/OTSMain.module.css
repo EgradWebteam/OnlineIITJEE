@@ -875,6 +875,7 @@ border-radius: 10px;
   justify-content: center;
   background-color: #f3f1fe;
   border: 1px solid white;
+  padding: 1rem;
 }
 .airRankSubDiv{
   height: 100%;
@@ -883,6 +884,9 @@ border-radius: 10px;
   justify-content: center;
   font-size: 2rem;
   flex: 1 1;
+}
+.pieChartsMainDiv{
+  display: flex;
 }
 .timeSpentContainer{
   width: 50%;
@@ -918,6 +922,10 @@ border-radius: 10px;
 }
 .timeSpentIcon{
   background:rgb(230 102 102);
+}
+.pieChartHeadings{
+  text-align: center;
+  text-decoration: underline;
 }
 .studentReportSubjectWiseConatiner{
   margin: auto;
@@ -975,7 +983,7 @@ border-radius: 10px;
   display: flex;
   flex-direction: column;
   height: fit-content;
-  padding: 2rem;
+  padding: 1.5rem;
   gap: 7px;
   position: relative;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
@@ -1084,6 +1092,16 @@ margin-left: 10px;
 }
 .solutionImageDivInSolutionTab{
   width: 400px;
+}
+.watermarkForSolution{
+  position: relative;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  background-image: url('../../assets//waterMarkLogo.png');
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: contain;
 }
 
 
