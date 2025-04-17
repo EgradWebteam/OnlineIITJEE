@@ -213,156 +213,13 @@ function calculateWeightage(totalVideos, totalExercises) {
     exerciseWeight: totalExercises / total,
   };
 }
-// router.get("/UserResponseStatus/:student_registration_id/:course_creation_id/:ORVLTopicId", async (req, res) => {
+router.get("/UserResponseStatus/:student_registration_id/:course_creation_id/:orvl_topic_id", async (req, res) => {
 
 
-//   const { student_registration_id, course_creation_id, orvl_topic_id } = req.params;
+  const { student_registration_id, course_creation_id, orvl_topic_id } = req.params;
 
-//   // Check if necessary parameters are provided
-//   if (!student_registration_id || !course_creation_id || !orvl_topic_id) {
-//     return res.status(400).send("Missing parameters");
-//   }
-
-//   let connection;
-//   try {
-//     connection = await db.getConnection();
-
-//     const [rows] = await connection.query(
-//       `SELECT
-//         ivl.orvl_lecture_name_id,
-//         COALESCE(MAX(vc.video_count), 0) AS videoCount,
-//         COALESCE(MAX(vc.progress_time), 0) AS progressTime,
-//         COALESCE(MAX(vc.total_video_time), 0) AS totalVideoTime,
-//         e.exercise_name_id,
-//         COALESCE(COUNT(DISTINCT eq.exercise_question_id), 0) AS totalQuestions,
-//         COALESCE(COUNT(DISTINCT CASE WHEN eur.question_status = 1 THEN eur.exercise_question_id END), 0) AS answeredQuestions
-//       FROM
-//         iit_orvl_lecture_names ivl
-//       LEFT JOIN iit_orvl_video_count vc
-//         ON ivl.orvl_lecture_name_id = vc.orvl_lecture_name_id
-//         AND vc.student_registration_id = ? AND vc.orvl_topic_id = ? AND vc.course_creation_id = ?
-//       LEFT JOIN iit_orvl_exercise_names e
-//         ON ivl.orvl_lecture_name_id = e.orvl_lecture_name_id
-//       LEFT JOIN iit_orvl_exercise_questions eq
-//         ON eq.exercise_name_id = e.exercise_name_id
-//       LEFT JOIN iit_orvl_exercise_userresponses eur
-//         ON eq.exercise_question_id = eur.exercise_question_id
-//         AND eur.student_registration_id = ? AND eur.orvl_topic_id = ? AND eur.course_creation_id = ?
-//       WHERE
-//         ivl.orvl_topic_id = ?
-//       GROUP BY
-//         ivl.orvl_lecture_name_id, e.exercise_name_id`,
-//       [
-//         student_registration_id,
-//         orvl_topic_id,
-//         course_creation_id,
-//         student_registration_id,
-//         orvl_topic_id,
-//         course_creation_id,
-//         orvl_topic_id,
-//       ]
-//     );
-
-//     // Calculate total videos and total exercises
-//     const totalVideos = new Set(rows.filter((row) => row.orvl_lecture_name_id).map((row) => row.orvl_lecture_name_id)).size;
-//     const totalExercises = new Set(rows.filter((row) => row.exercise_name_id).map((row) => row.exercise_name_id)).size;
-//     const { videoWeight, exerciseWeight } = calculateWeightage(totalVideos, totalExercises);
-
-//     // Calculate visited videos and their details
-//     const visitedVideos = [
-//       ...new Set(rows.filter((row) => row.videoCount > 0).map((row) => row.orvl_lecture_name_id)),
-//     ];
-
-//     // Video details (unique records for each lectureId)
-//     const videoCountDetails = Array.from(
-//       rows.reduce((map, row) => {
-//         if (row.orvl_lecture_name_id && !map.has(row.orvl_lecture_name_id)) {
-//           map.set(row.orvl_lecture_name_id, {
-//             lectureId: row.orvl_lecture_name_id,
-//             videoCount: row.videoCount,
-//             progress_time: row.progressTime,
-//             totalVideoTime: row.totalVideoTime,
-//           });
-//         }
-//         return map;
-//       }, new Map()).values()
-//     );
-
-//     // Exercise details (unique records for each exerciseId)
-//     const exerciseDetails = Array.from(
-//       rows
-//         .filter((row) => row.exercise_name_id)
-//         .reduce((map, row) => {
-//           if (!map.has(row.exercise_name_id)) {
-//             map.set(row.exercise_name_id, {
-//               lectureId: row.orvl_lecture_name_id,
-//               exerciseId: row.exercise_name_id,
-//               totalQuestions: row.totalQuestions,
-//               answeredQuestions: row.answeredQuestions,
-//               exerciseCompletionPercentage:
-//                 row.totalQuestions > 0
-//                   ? (row.answeredQuestions / row.totalQuestions) * 100
-//                   : 0,
-//             });
-//           }
-//           return map;
-//         }, new Map()).values()
-//     );
-
-//     // Calculate exercise completion percentage
-//     const exerciseCompletionPercentage =
-//       exerciseDetails.length > 0
-//         ? exerciseDetails.reduce((sum, exercise) => sum + exercise.exerciseCompletionPercentage, 0) / exerciseDetails.length
-//         : 100;
-
-//     // Calculate video progress percentages
-//     const videoProgressPercentages = videoCountDetails.map((video) => {
-//       if (video.videoCount > 0) return 100;
-//       if (video.totalVideoTime > 0) {
-//         const percentage = (video.progress_time / video.totalVideoTime) * 100;
-//         return Math.min(percentage, 100);
-//       }
-//       return 0;
-//     });
-
-//     // Compute overall video completion percentage
-//     const videoCompletionPercentage =
-//       videoProgressPercentages.length > 0
-//         ? videoProgressPercentages.reduce((sum, perc) => sum + perc, 0) / videoProgressPercentages.length
-//         : 100;
-
-//     // Compute total completion percentage
-//     const totalCompletionPercentage = (videoWeight * videoCompletionPercentage) + (exerciseWeight * exerciseCompletionPercentage);
-
-//     // Determine access granted (if all videos visited and exercises answered)
-//     const allVideosVisited = visitedVideos.length === totalVideos;
-//     const allExercisesAnswered = exerciseDetails.every(
-//       (exercise) => exercise.totalQuestions === exercise.answeredQuestions
-//     );
-
-//     const accessGranted = allVideosVisited && allExercisesAnswered;
-
-//     // Return the response
-//     res.json({
-//       videoCompletionPercentage: videoCompletionPercentage.toFixed(2),
-//       exerciseCompletionPercentage: exerciseCompletionPercentage.toFixed(2),
-//       totalCompletionPercentage: totalCompletionPercentage.toFixed(2),
-//       visitedVideos,
-//       videoCount: videoCountDetails,
-//       exerciseDetails,
-//       access: accessGranted,
-//     });
-//   } catch (error) {
-//     console.error("Error during access status check:", error);
-//     res.status(500).send("Internal Server Error");
-//   } finally {
-//     if (connection) connection.release();
-//   }
-// });
-router.get("/UserResponseStatus/:student_registration_id/:course_creation_id/:ORVLTopicId", async (req, res) => {
-  const { student_registration_id, course_creation_id, ORVLTopicId } = req.params;
-
-  if (!student_registration_id || !course_creation_id || !ORVLTopicId) {
+  // Check if necessary parameters are provided
+  if (!student_registration_id || !course_creation_id || !orvl_topic_id) {
     return res.status(400).send("Missing parameters");
   }
 
@@ -379,57 +236,113 @@ router.get("/UserResponseStatus/:student_registration_id/:course_creation_id/:OR
         e.exercise_name_id,
         COALESCE(COUNT(DISTINCT eq.exercise_question_id), 0) AS totalQuestions,
         COALESCE(COUNT(DISTINCT CASE WHEN eur.question_status = 1 THEN eur.exercise_question_id END), 0) AS answeredQuestions
-      FROM iit_orvl_lecture_names ivl
-      LEFT JOIN iit_orvl_video_count vc ON ivl.orvl_lecture_name_id = vc.orvl_lecture_name_id
+      FROM
+        iit_orvl_lecture_names ivl
+      LEFT JOIN iit_orvl_video_count vc
+        ON ivl.orvl_lecture_name_id = vc.orvl_lecture_name_id
         AND vc.student_registration_id = ? AND vc.orvl_topic_id = ? AND vc.course_creation_id = ?
-      LEFT JOIN iit_orvl_exercise_names e ON ivl.orvl_lecture_name_id = e.orvl_lecture_name_id
-      LEFT JOIN iit_orvl_exercise_questions eq ON eq.exercise_name_id = e.exercise_name_id
-      LEFT JOIN iit_orvl_exercise_userresponses eur ON eq.exercise_question_id = eur.exercise_question_id
+      LEFT JOIN iit_orvl_exercise_names e
+        ON ivl.orvl_lecture_name_id = e.orvl_lecture_name_id
+      LEFT JOIN iit_orvl_exercise_questions eq
+        ON eq.exercise_name_id = e.exercise_name_id
+      LEFT JOIN iit_orvl_exercise_userresponses eur
+        ON eq.exercise_question_id = eur.exercise_question_id
         AND eur.student_registration_id = ? AND eur.orvl_topic_id = ? AND eur.course_creation_id = ?
-      WHERE ivl.orvl_topic_id = ?
-      GROUP BY ivl.orvl_lecture_name_id, e.exercise_name_id`,
-      [student_registration_id, ORVLTopicId, course_creation_id, student_registration_id, ORVLTopicId, course_creation_id, ORVLTopicId]
+      WHERE
+        ivl.orvl_topic_id = ?
+      GROUP BY
+        ivl.orvl_lecture_name_id, e.exercise_name_id`,
+      [
+        student_registration_id,
+        orvl_topic_id,
+        course_creation_id,
+        student_registration_id,
+        orvl_topic_id,
+        course_creation_id,
+        orvl_topic_id,
+      ]
     );
 
-    const totalVideos = new Set(rows.map(r => r.orvl_lecture_name_id)).size;
-    const totalExercises = new Set(rows.map(r => r.exercise_name_id).filter(Boolean)).size;
+    // Calculate total videos and total exercises
+    const totalVideos = new Set(rows.filter((row) => row.orvl_lecture_name_id).map((row) => row.orvl_lecture_name_id)).size;
+    const totalExercises = new Set(rows.filter((row) => row.exercise_name_id).map((row) => row.exercise_name_id)).size;
     const { videoWeight, exerciseWeight } = calculateWeightage(totalVideos, totalExercises);
 
-    const videoCountDetails = Array.from(new Map(
-      rows.filter(r => r.orvl_lecture_name_id).map(r => [r.orvl_lecture_name_id, {
-        lectureId: r.orvl_lecture_name_id,
-        videoCount: r.videoCount,
-        progress_time: r.progressTime,
-        totalVideoTime: r.totalVideoTime
-      }])
-    ).values());
+    // Calculate visited videos and their details
+    const visitedVideos = [
+      ...new Set(rows.filter((row) => row.videoCount > 0).map((row) => row.orvl_lecture_name_id)),
+    ];
 
-    const visitedVideos = videoCountDetails.filter(v => v.videoCount > 0).map(v => v.lectureId);
+    // Video details (unique records for each lectureId)
+    const videoCountDetails = Array.from(
+      rows.reduce((map, row) => {
+        if (row.orvl_lecture_name_id && !map.has(row.orvl_lecture_name_id)) {
+          map.set(row.orvl_lecture_name_id, {
+            lectureId: row.orvl_lecture_name_id,
+            videoCount: row.videoCount,
+            progress_time: row.progressTime,
+            totalVideoTime: row.totalVideoTime,
+          });
+        }
+        return map;
+      }, new Map()).values()
+    );
 
-    const exerciseDetails = Array.from(new Map(
-      rows.filter(r => r.exercise_name_id).map(r => [r.exercise_name_id, {
-        lectureId: r.orvl_lecture_name_id,
-        exerciseId: r.exercise_name_id,
-        totalQuestions: r.totalQuestions,
-        answeredQuestions: r.answeredQuestions,
-        exerciseCompletionPercentage: r.totalQuestions ? (r.answeredQuestions / r.totalQuestions) * 100 : 0
-      }])
-    ).values());
+    // Exercise details (unique records for each exerciseId)
+    const exerciseDetails = Array.from(
+      rows
+        .filter((row) => row.exercise_name_id)
+        .reduce((map, row) => {
+          if (!map.has(row.exercise_name_id)) {
+            map.set(row.exercise_name_id, {
+              lectureId: row.orvl_lecture_name_id,
+              exerciseId: row.exercise_name_id,
+              totalQuestions: row.totalQuestions,
+              answeredQuestions: row.answeredQuestions,
+              exerciseCompletionPercentage:
+                row.totalQuestions > 0
+                  ? (row.answeredQuestions / row.totalQuestions) * 100
+                  : 0,
+            });
+          }
+          return map;
+        }, new Map()).values()
+    );
 
-    const exerciseCompletionPercentage = exerciseDetails.length
-      ? exerciseDetails.reduce((sum, e) => sum + e.exerciseCompletionPercentage, 0) / exerciseDetails.length
-      : 100;
+    // Calculate exercise completion percentage
+    const exerciseCompletionPercentage =
+      exerciseDetails.length > 0
+        ? exerciseDetails.reduce((sum, exercise) => sum + exercise.exerciseCompletionPercentage, 0) / exerciseDetails.length
+        : 100;
 
-    const videoCompletionPercentage = videoCountDetails.length
-      ? videoCountDetails.reduce((sum, v) => {
-          if (v.videoCount > 0) return sum + 100;
-          const perc = v.totalVideoTime ? (v.progress_time / v.totalVideoTime) * 100 : 0;
-          return sum + Math.min(perc, 100);
-        }, 0) / videoCountDetails.length
-      : 100;
+    // Calculate video progress percentages
+    const videoProgressPercentages = videoCountDetails.map((video) => {
+      if (video.videoCount > 0) return 100;
+      if (video.totalVideoTime > 0) {
+        const percentage = (video.progress_time / video.totalVideoTime) * 100;
+        return Math.min(percentage, 100);
+      }
+      return 0;
+    });
 
-    const totalCompletionPercentage = videoWeight * videoCompletionPercentage + exerciseWeight * exerciseCompletionPercentage;
+    // Compute overall video completion percentage
+    const videoCompletionPercentage =
+      videoProgressPercentages.length > 0
+        ? videoProgressPercentages.reduce((sum, perc) => sum + perc, 0) / videoProgressPercentages.length
+        : 100;
 
+    // Compute total completion percentage
+    const totalCompletionPercentage = (videoWeight * videoCompletionPercentage) + (exerciseWeight * exerciseCompletionPercentage);
+
+    // Determine access granted (if all videos visited and exercises answered)
+    const allVideosVisited = visitedVideos.length === totalVideos;
+    const allExercisesAnswered = exerciseDetails.every(
+      (exercise) => exercise.totalQuestions === exercise.answeredQuestions
+    );
+
+    const accessGranted = allVideosVisited && allExercisesAnswered;
+
+    // Return the response
     res.json({
       videoCompletionPercentage: videoCompletionPercentage.toFixed(2),
       exerciseCompletionPercentage: exerciseCompletionPercentage.toFixed(2),
@@ -437,11 +350,10 @@ router.get("/UserResponseStatus/:student_registration_id/:course_creation_id/:OR
       visitedVideos,
       videoCount: videoCountDetails,
       exerciseDetails,
-      access: visitedVideos.length === totalVideos &&
-              exerciseDetails.every(e => e.totalQuestions === e.answeredQuestions)
+      access: accessGranted,
     });
-  } catch (err) {
-    console.error("Error:", err);
+  } catch (error) {
+    console.error("Error during access status check:", error);
     res.status(500).send("Internal Server Error");
   } finally {
     if (connection) connection.release();
