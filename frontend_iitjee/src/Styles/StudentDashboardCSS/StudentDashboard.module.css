@@ -267,11 +267,12 @@ flex-direction: row;
   .resultsMainDiv{
     display: flex;
     padding: 1.5rem;
-    width: 135px;
+    width: 250px;
     background-color: #444444;
     color: white;
     border-radius: 6px;
     margin: 1rem;
+    flex-direction: column;
   }
   .resultsSubDiv{
     display: flex;
@@ -290,7 +291,7 @@ flex-direction: row;
     text-transform: uppercase;
   }
   .resultsViewReportBtn button{
-      background-color:rgba(8, 145, 209, 0.89);
+      background-color:rgb(3, 170, 236);
       color: white;
       border-radius: 10px;
       padding: 0.3em 0.5em;
@@ -298,10 +299,18 @@ flex-direction: row;
       align-items: center;
       gap: 5px;
       cursor: pointer;
+      width: 175px;
+      font-size: 17px;
+      font-weight: bold;
   }
   .resultsBtnIcon{
     font-size: 20px;
     margin-top:10px;
+  }
+  .myResultsSubContainer{
+    display: flex;
+    gap: 2rem;
+    margin: 1rem;
   }
 
   
