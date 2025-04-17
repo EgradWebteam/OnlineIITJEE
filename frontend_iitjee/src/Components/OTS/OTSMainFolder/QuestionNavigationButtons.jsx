@@ -544,10 +544,46 @@ export default function QuestionNavigationButtons({
 
   
   
-  const handleClearResponse = () => {
+  // const handleClearResponse = () => {
+  //   const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
+  //   const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
+  //   const question = section?.questions?.[activeQuestionIndex];
+  //   if (!question) return;
+  
+  //   const qid = question.question_id;
+  
+  //   // Reset selections
+  //   setSelectedOption(null);
+  //   setSelectedOptionsArray([]);
+  //   setNatValue("");
+  
+  //   // Instead of deleting, mark as Not Answered
+  //   setUserAnswers(prev => {
+  //     const updated = {
+  //       ...prev,
+  //       [qid]: {
+  //         subjectId: subject.subjectId,
+  //         sectionId: section.sectionId,
+  //         questionId: qid,
+  //         type: "",
+  //         buttonClass: styles.NotAnsweredBtnCls,
+  //       }
+  //     };
+  //     console.log("Cleared and updated Answer:", updated[qid]);
+  //     return updated;
+  //   });
+  // };
+  
+
+
+
+
+
+  const handleClearResponse = async () => {
     const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
     const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
     const question = section?.questions?.[activeQuestionIndex];
+  
     if (!question) return;
   
     const qid = question.question_id;
@@ -557,7 +593,7 @@ export default function QuestionNavigationButtons({
     setSelectedOptionsArray([]);
     setNatValue("");
   
-    // Instead of deleting, mark as Not Answered
+    // Mark as Not Answered in state
     setUserAnswers(prev => {
       const updated = {
         ...prev,
@@ -567,12 +603,43 @@ export default function QuestionNavigationButtons({
           questionId: qid,
           type: "",
           buttonClass: styles.NotAnsweredBtnCls,
-        }
+        },
       };
       console.log("Cleared and updated Answer:", updated[qid]);
       return updated;
     });
+  
+    try {
+      // Call DELETE API without a body
+      const response = await fetch(`${BASE_URL}/OTS/ClearResponse/${realStudentId}/${realTestId}/${qid}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      const data = await response.json();
+  
+      if (!data.success) {
+        console.warn('Delete API response:', data.message);
+      } else {
+        console.log('Response deleted from DB');
+      }
+    } catch (err) {
+      console.error('Error deleting user response:', err);
+    }
   };
+
+
+
+
+
+
+
+
+
+
+
   
   const handlePrevious = () => {
     if (activeQuestionIndex > 0) {

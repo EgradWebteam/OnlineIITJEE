@@ -1,6 +1,6 @@
-// App.js or MainLayout.jsx
+
 import React from 'react';
-import AdminDashboardHome from './AdminDashboardHome'; // Main layout
+import AdminDashboardHome from './AdminDashboardHome.jsx'; 
 
 export default function MainLayout() {
   return (

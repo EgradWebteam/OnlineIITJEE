@@ -1,13 +1,13 @@
 // AdminDashboardHome.jsx
 import React, { useState } from 'react';
-import styles  from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css'; // Importing CSS module for styling
-import AdminLeftSideBar from './AdminLeftSideBar';  // Static Sidebar
-import AdminDashboardHeader from './AdminDashboardHeader'; // Static Header
-import DashBoard from './DashBoard';
-import CourseCreationTab from './CourseCreationTab';
-import TestCreationTab from './TestCreationTab';
-import DocumentUpload from './DocumentUpload';
-import InstructionsTab from './InstructionsTab';
+import styles  from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css'; 
+import AdminLeftSideBar from './AdminLeftSideBar.jsx';  
+import AdminDashboardHeader from './AdminDashboardHeader.jsx'; 
+import DashBoard from './DashBoard.jsx';
+import CourseCreationTab from './CourseCreationTab.jsx';
+import TestCreationTab from './TestCreationTab.jsx';
+import DocumentUpload from './DocumentUpload.jsx';
+import InstructionsTab from './InstructionsTab.jsx';
 
 export default function AdminDashboardHome() {
   // State to track the selected component
