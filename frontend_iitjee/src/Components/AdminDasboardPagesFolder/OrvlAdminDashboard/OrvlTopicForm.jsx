@@ -9,7 +9,7 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
   const [selectedExamId, setSelectedExamId] = useState(topic ? topic.exam_id : '');
   const [selectedSubjectId, setSelectedSubjectId] = useState(topic ? topic.subject_id : '');
   const [topicName, setTopicName] = useState(topic ? topic.orvl_topic_name : '');
-  const [topicPdf, setTopicPdf] = useState(null);
+  const [topicPdf, setTopicPdf] = useState(topic ? topic.orvl_topic_pdf : '');
   const [topicDoc, setTopicDoc] = useState(null);
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
 
     try {
       const response = topic
-        ? await axios.put(`${BASE_URL}/OrvlTopicCreation/updateTopic/${topic.orvl_topic_id}`, formData, {
+        ? await axios.post(`${BASE_URL}/OrvlTopicCreation/updateTopic/${topic.orvl_topic_id}`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
@@ -65,8 +65,8 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
           });
 
       console.log("Topic submitted successfully:", response.data);
-      onSuccess();  // Refresh the topics list
-      onClose();  // Close the form
+      onSuccess(); 
+      onClose();  
     } catch (error) {
       console.error("Error submitting topic:", error.response?.data || error.message);
     }
@@ -117,12 +117,20 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
 
           <div className={styles.flex}>
             <label>Upload Topic PDF:</label>
-            <input
-              type="file"
-              accept="application/pdf"
-              onChange={(e) => setTopicPdf(e.target.files[0])}
-              className={styles.inputFile}
-            />
+            {/* If editing, show the file name instead of input field */}
+            {topicPdf ? (
+              <div className={styles.fileInfo}>
+                <span>{topicPdf}</span>
+                <button type="button" onClick={() => setTopicPdf('')} className={styles.removeFileBtn}>Remove</button>
+              </div>
+            ) : (
+              <input
+                type="file"
+                accept="application/pdf"
+                onChange={(e) => setTopicPdf(e.target.files[0].name)} // Store the file name
+                className={styles.inputFile}
+              />
+            )}
           </div>
 
           <div className={styles.flex}>
