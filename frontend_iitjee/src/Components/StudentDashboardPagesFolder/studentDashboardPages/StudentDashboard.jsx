@@ -14,7 +14,6 @@ export default function StudentDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [isLoading, setIsLoading] = useState(true);
   const studentData = JSON.parse(localStorage.getItem('studentData'));
-  console.log("studentData:", studentData);
   const studentName = studentData?.userDetails?.candidate_name;
   const studentId = localStorage.getItem('decryptedId');
     useEffect(() => {
@@ -63,7 +62,7 @@ export default function StudentDashboard() {
   
   return (
     <div>
-      <StudentDashboardHeader />
+      <StudentDashboardHeader  userData ={studentData?.userDetails}/>
       <div className={styles.StudentDashboardContentHolder}>
         <div className={styles.studentDashboardLeftNavHolder}>
           <StudentDashboardLeftSideBar

@@ -3,11 +3,13 @@
     border-radius: 1rem 1rem 0px 0px;
     border: none;
     padding: 0.7rem;
+    cursor: pointer;
 }
 .examActiveBtn,.portalActiveBtn{
     background-color: #09bffc;
     color: white;
     border: 1px solid #09bffc;
+    cursor: pointer;
 }
 .examButtonsDiv{
     margin: 2rem 2rem 0;
@@ -51,6 +53,9 @@
     border-radius: 1rem;
     border: none;
     color: black;
+    border: none;
+    padding: 0.7rem;
+    cursor: pointer;
   }
 @media (max-width:768px) {
   .stuentDashboardGlobalHeading{

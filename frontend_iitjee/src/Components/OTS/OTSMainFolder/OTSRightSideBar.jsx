@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
-import studentImg from "../../../assets/OtsCourseCardImages/iit_jee1.png";
 import { FaChevronRight } from "react-icons/fa";
+import {useStudent} from "../../../ContextFolder/StudentContext.jsx";
 export default function OTSRightSideBar({
   testData,
   activeSubject,
@@ -24,6 +24,12 @@ export default function OTSRightSideBar({
   const section = subject?.sections?.find(
     (sec) => sec.SectionName === activeSection
   );
+
+   const { studentData} = useStudent();
+  
+    const userData = studentData?.userDetails;
+    const studentProfile = userData?.uploaded_photo;
+    const studentName = userData?.candidate_name;
 
   // useEffect(() => {
   //   if (!testData || !Array.isArray(testData.subjects)) return;
@@ -129,9 +135,9 @@ export default function OTSRightSideBar({
       {/* Student Profile */}
       <div className={styles.StudentProfileHolderOTS}>
         <div className={styles.profileImage}>
-          <img src={studentImg} alt='studentimg' />
+          <img src={studentProfile} alt='studentimg' />
         </div>
-        <p>Student</p>
+        <p>{studentName}</p>
       </div>
 
       <div className={styles.rightChevronBtn}>
