@@ -4,7 +4,7 @@ import styles from "../../../Styles/StudentDashboardCSS/Student.module.css";
 import stdLogo from '../../../assets/logoCap.jpeg';
 import MainHeader from '../../LandingPagesFolder/MainPageHeaderFooterFiles/MainHeader.jsx';
 import MainFooter from '../../LandingPagesFolder/MainPageHeaderFooterFiles/MainFooter.jsx';
-import { BASE_URL } from "../../../config/apiConfig.js";
+import { BASE_URL } from "../../../Config/ApiConfig.js";
 import StudentLoginFormeGradTutor from './StudentLoginFormeGradTutor.jsx';
 import { useStudent } from '../../../ContextFolder/StudentContext.jsx';
 import { v4 as uuidv4 } from 'uuid';

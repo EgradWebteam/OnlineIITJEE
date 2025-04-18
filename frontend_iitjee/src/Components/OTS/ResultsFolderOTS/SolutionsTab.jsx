@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import axios from "axios";
-import { BASE_URL } from "../../../config/apiConfig.js";
+import { BASE_URL } from "../../../Config/ApiConfig.js";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 
 const SolutionsTab = ({ testId, userData, studentId }) => {
