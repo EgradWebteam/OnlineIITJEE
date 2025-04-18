@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import globalCSS from "../../../Styles/Global.module.css";
-import CourseCard from "../../LandingPagesFolder/CourseCards.jsx"; // Import CourseCard component
+import OrvlTopicCardSub from "./OrvlTopicCardSub.jsx";
 
-export default function OrvlTopicCards({ studentId, courseCreationId, setShowTestContainer, context, setShowQuizContainer,setSelectedTestCourse,setShowTopicContainer, onBack }) {
+
+export default function OrvlTopicCards({
+  studentId,
+  courseCreationId,
+  setShowTestContainer,
+  context,
+  setOpenCourseOrvl,
+  setShowQuizContainer,
+  setSelectedTestCourse,
+  setShowTopicContainer,
+  onBack,
+}) {
   const [courseData, setCourseData] = useState(null);
-
   const [selectedSubjectId, setSelectedSubjectId] = useState(null);
-  const [openCourseOrvl,setOpenCourseOrvl] = useState(false);
+
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -18,7 +28,6 @@ export default function OrvlTopicCards({ studentId, courseCreationId, setShowTes
         const data = await res.json();
         setCourseData(data);
 
-        // Default to the first subject
         if (data.subjects?.length > 0) {
           setSelectedSubjectId(data.subjects[0].subject_id);
         }
@@ -37,47 +46,44 @@ export default function OrvlTopicCards({ studentId, courseCreationId, setShowTes
   const selectedSubject = courseData.subjects.find(
     (subj) => subj.subject_id === selectedSubjectId
   );
-  const handleGoToTest = () => {
-setOpenCourseOrvl(true);
-setShowQuizContainer(false);
-setShowTopicContainer(false);
-setShowTestContainer(false);
-  }
+
+  const handleGoToTest = (topic) => {
+    console.log("CourseCard clicked!");
+    setOpenCourseOrvl(true);
+    setShowTopicContainer(false); // Hide topics container when opening OrvlCourseTopic
+  };
+
   return (
     <div className={styles.OrvlTopicCardsMainDiv}>
- 
-  
-
-
       {/* Subject Buttons */}
       <div className={globalCSS.examButtonsDiv}>
-  {courseData.subjects.map((subject) => (
-    <button
-      key={subject.subject_id}
-      className={`${globalCSS.examButtons} ${
-        selectedSubjectId === subject.subject_id ? globalCSS.examActiveBtn : ""
-      }`}
-      onClick={() => setSelectedSubjectId(subject.subject_id)}
-    >
-      {subject.subject_name}
-    </button>
-  ))}
-</div>
+        {courseData.subjects.map((subject) => (
+          <button
+            key={subject.subject_id}
+            className={`${globalCSS.examButtons} ${
+              selectedSubjectId === subject.subject_id
+                ? globalCSS.examActiveBtn
+                : ""
+            }`}
+            onClick={() => setSelectedSubjectId(subject.subject_id)}
+          >
+            {subject.subject_name}
+          </button>
+        ))}
+      </div>
 
-
-      {/* Topic Cards for Selected Subject */}
+      {/* Topic Cards */}
       <div className={globalCSS.cardHolderOTSORVLHome}>
         {selectedSubject?.topics.length > 0 ? (
           selectedSubject.topics.map((topic) => (
-            <CourseCard
+            <OrvlTopicCardSub
               key={topic.orvl_topic_id}
               title={topic.orvl_topic_name}
               price={500}
               context={context}
               portalId={courseData.portal_id}
               type={true}
-             
-              onGoToTest={() => handleGoToTest()}
+              onGoToTest={() => handleGoToTest(topic)}
             />
           ))
         ) : (
@@ -88,11 +94,8 @@ setShowTestContainer(false);
           </div>
         )}
       </div>
-      {openCourseOrvl && (
-        <div>
-          dfjfds
-          </div>
-      )}
+
+
     </div>
   );
 }

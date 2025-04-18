@@ -5,7 +5,7 @@ import CourseCard from '../../LandingPagesFolder/CourseCards.jsx';
 import { BASE_URL } from '../../../config/apiConfig';
 import TestDetailsContainer from './TestDetailsContainer';
 import OrvlTopicCards from "./OrvlTopicCards";
-
+import OrvlCourseTopic from "./OrvlCourseTopic.jsx"; 
 export default function StudentDashboard_MyCourses({ studentId }) {
 
   const [structuredCourses, setStructuredCourses] = useState([]);
@@ -13,7 +13,7 @@ export default function StudentDashboard_MyCourses({ studentId }) {
   const [selectedExam, setSelectedExam] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedTestCourse, setSelectedTestCourse] = useState(null);
-
+  const [openCourseOrvl, setOpenCourseOrvl] = useState(false);
   const [showQuizContainer, setShowQuizContainer] = useState(true);
   const [showTestContainer, setShowTestContainer] = useState(false);
   const [showTopicContainer, setShowTopicContainer] = useState(false);
@@ -157,10 +157,26 @@ export default function StudentDashboard_MyCourses({ studentId }) {
           courseCreationId={selectedTestCourse.course_creation_id}
           context="myCourses"
           setShowQuizContainer = {setShowQuizContainer}
+          setOpenCourseOrvl= {setOpenCourseOrvl}
           setSelectedTestCourse={setSelectedTestCourse}
           setShowTestContainer = { setShowTestContainer}
           setShowTopicContainer = {setShowTopicContainer}
           onBack={handleBackToCourses}
+        />
+      )}
+            {openCourseOrvl &&  (
+        <OrvlCourseTopic
+          studentId={studentId}
+          setOpenCourseOrvl= {setOpenCourseOrvl}
+          setSelectedTestCourse={setSelectedTestCourse}
+          setShowTestContainer = { setShowTestContainer}
+          setShowTopicContainer = {setShowTopicContainer}
+          courseCreationId={selectedTestCourse.course_creation_id}
+           topicid = {1}
+          onBack={() => {
+            setOpenCourseOrvl(false);
+            setShowTopicContainer(true); // When going back, show topic container again
+          }}
         />
       )}
     </>

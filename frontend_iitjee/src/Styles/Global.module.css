@@ -12,6 +12,16 @@
     cursor: pointer;
 }
 .examButtonsDiv{
+  margin: 2rem ;
+  display: flex;
+  gap: 10px;
+}
+.OrvlLectureCards{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.examButtonsDiv{
     margin: 2rem 2rem 0;
     display: flex;
     gap: 10px;
