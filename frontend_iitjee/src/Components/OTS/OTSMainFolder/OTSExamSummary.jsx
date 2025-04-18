@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from "react";
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import { useQuestionStatus } from "../../../ContextFolder/CountsContext.jsx";
-import { BASE_URL } from '../../../Config/ApiConfig.js';
+import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 
 const ExamSummaryComponent = ({
   // userAnswers,

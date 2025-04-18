@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import globalCSS from "../../../Styles/global.module.css";
+import globalCSS from "../../../Styles/Global.module.css";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import CourseCard from '../../LandingPagesFolder/CourseCards.jsx';
-import { BASE_URL } from '../../../Config/ApiConfig.js';
+import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import TestDetailsContainer from './TestDetailsContainer.jsx';
 import OrvlTopicCards from "./OrvlTopicCards.jsx";
 import OrvlCourseTopic from "./OrvlCourseTopic.jsx"; 
@@ -172,7 +172,7 @@ export default function StudentDashboard_MyCourses({ studentId }) {
           setShowTestContainer = { setShowTestContainer}
           setShowTopicContainer = {setShowTopicContainer}
           courseCreationId={selectedTestCourse.course_creation_id}
-           topicid = {1}
+           topicid = {3}
           onBack={() => {
             setOpenCourseOrvl(false);
             setShowTopicContainer(true); // When going back, show topic container again

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { BASE_URL } from "../../../Config/ApiConfig.js";
+import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import styles from "../../../Styles/AdminDashboardCSS/TopicForm.module.css";
 
 const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect,useMemo } from "react";
 import styles from "../../../Styles/AdminDashboardCSS/AdminDashboard.module.css";
-import { BASE_URL } from '../../../Config/ApiConfig.js';
+import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import JSZip from "jszip";
 import mammoth from "mammoth";
 import DynamicTable from "./DynamicTable.jsx";

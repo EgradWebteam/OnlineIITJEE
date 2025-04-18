@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BASE_URL } from '../../../Config/ApiConfig.js';
+import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import styles from "../../../Styles/AdminDashboardCSS/CourseForm.module.css";
 
 const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,onCourseCreated, courseData }) => {

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import OrvlTopicForm from "./orvlTopicForm.jsx";
+import OrvlTopicForm from "./OrvlTopicForm.jsx";
 import ORVLDynamicTable from "./ORVLDynamicTable.jsx";
 import styles from "../../../Styles/AdminDashboardCSS/AdminDashboard.module.css";
-import { BASE_URL } from "../../../Config/ApiConfig.js";
+import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 
 const OrvlTopicCreation = () => {
   const [showForm, setShowForm] = useState(false);
