@@ -11,22 +11,22 @@ const DynamicTable = ({
   columns,
   isOpen,
   data,
-  type, // "test" or "course"
+  type, 
   onEdit,
-  onOpen,
   onDelete,
   onToggle,
   onAssign,
   onDownload,
   showEdit = true,
   showToggle = true,
-  tableType, // Pass a tableType to differentiate between multiple tables
+  tableType, 
 }) => {
   const [selectedRow, setSelectedRow] = useState(null);
-  const [popupType, setPopupType] = useState(""); // "arrange", "viewQuestions", or "viewResults"
+  const [popupType, setPopupType] = useState(""); 
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    console.log("Selected Row", selectedRow); // This will log selected row whenever it changes
+    console.log("Selected Row", selectedRow);
   }, [selectedRow]);
 
   const handleOptionSelect = (e, row) => {
@@ -58,7 +58,6 @@ const DynamicTable = ({
         setSelectedRow(row);
         setPopupType("assignTest");
         break;
-     
       case "deleteTest":
         onDelete?.(row);
         break;
@@ -66,6 +65,7 @@ const DynamicTable = ({
         break;
     }
   };
+
   const handleTakeTest = async (row) => {
     try {
       const testId = row.test_creation_table_id;
@@ -91,10 +91,19 @@ const DynamicTable = ({
       console.error("Encryption failed:", err);
     }
   };
-  
-  
+
   const handleClosePopup = () => {
     setPopupType("");
+    setSelectedRow(null);
+  };
+
+  const handleOpenModal = (row) => {
+    setSelectedRow(row);
+    setShowModal(true); // Open the modal
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false); // Close the modal
     setSelectedRow(null);
   };
 
@@ -145,7 +154,7 @@ const DynamicTable = ({
                   ) : (
                     <>
                       {isOpen && (
-                        <button className={styles.onOpen} onClick={() => onOpen(row)}>
+                        <button className={styles.onOpen} onClick={() => handleOpenModal(row)}>
                           Open
                         </button>
                       )}
@@ -161,48 +170,57 @@ const DynamicTable = ({
                   )}
                 </td>
                 {showToggle && type !== "document" && (
-  <td>
-    <button
-      className={`${styles.toggleBtn} ${
-        type === "test"
-          ? row.test_activation === "active"
-            ? styles.activate
-            : styles.deactivate
-          : row.active_course === "active"
-          ? styles.activate
-          : styles.deactivate
-      }`}
-      onClick={() => {
-        console.log("Toggle clicked for row:", row);
-        onToggle(row);
-      }}
-      title={
-        type === "test"
-          ? row.test_activation === "active"
-            ? "Deactivate the test"
-            : "Activate the test"
-          : row.active_course === "active"
-          ? "Deactivate the course"
-          : "Activate the course"
-      }
-    >
-      {type === "test"
-        ? row.test_activation === "active"
-          ? "Deactivate Test"
-          : "Activate Test"
-        : row.active_course === "active"
-        ? "Deactivate Course"
-        : "Activate Course"
-      }
-    </button>
-  </td>
-)}
-
+                  <td>
+                    <button
+                      className={`${styles.toggleBtn} ${
+                        type === "test"
+                          ? row.test_activation === "active"
+                            ? styles.activate
+                            : styles.deactivate
+                          : row.active_course === "active"
+                          ? styles.activate
+                          : styles.deactivate
+                      }`}
+                      onClick={() => {
+                        console.log("Toggle clicked for row:", row);
+                        onToggle(row);
+                      }}
+                      title={
+                        type === "test"
+                          ? row.test_activation === "active"
+                            ? "Deactivate the test"
+                            : "Activate the test"
+                          : row.active_course === "active"
+                          ? "Deactivate the course"
+                          : "Activate the course"
+                      }
+                    >
+                      {type === "test"
+                        ? row.test_activation === "active"
+                          ? "Deactivate Test"
+                          : "Activate Test"
+                        : row.active_course === "active"
+                        ? "Deactivate Course"
+                        : "Activate Course"}
+                    </button>
+                  </td>
+                )}
               </tr>
             ))
           )}
         </tbody>
       </table>
+
+      {/* ✅ Modal handler */}
+      {showModal && selectedRow && (
+        <div className={styles.modalBackdrop} onClick={handleCloseModal}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <h3>Document for {selectedRow.name}</h3> {/* Example title */}
+            <p>{selectedRow.documentText || "This is the content of the document."}</p>
+            <button className={styles.closeModalBtn} onClick={handleCloseModal}>Close</button>
+          </div>
+        </div>
+      )}
 
       {/* ✅ Popup handler */}
       {popupType === "arrange" && selectedRow && (
@@ -226,13 +244,12 @@ const DynamicTable = ({
           />
         </div>
       )}
- {popupType === "assignTest" && selectedRow && (
+      {popupType === "assignTest" && selectedRow && (
         <div className={styles.popupWrapper}>
           <AssignToTest data={selectedRow} onClose={handleClosePopup} />
         </div>
       )}
     </div>
-  );
-};
-
-export default DynamicTable;
+  )
+}
+export default DynamicTable

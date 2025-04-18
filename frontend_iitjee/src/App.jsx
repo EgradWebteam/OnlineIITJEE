@@ -93,7 +93,7 @@ function App() {
       <Route path='/GeneralInstructions/:testId' element={<GeneralInstructions/>}/>
       <Route path='/ExamInstructions/:testId' element={<ExamInstrctions/>}/>
       <Route path='/OTSRootFile/:testId' element={<OTSRootFile/>}/>
-      <Route path='/StudentReport' element={<StudentReportMain/>} />
+      <Route path='/StudentReport/:testId' element={<StudentReportMain/>} />
     </Routes>
     </BrowserRouter>
    </Suspense>

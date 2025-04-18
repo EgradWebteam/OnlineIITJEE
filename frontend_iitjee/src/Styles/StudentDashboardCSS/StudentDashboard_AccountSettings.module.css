@@ -64,7 +64,6 @@ flex-wrap: wrap;
 margin: .7rem 0;
 padding: .5rem;
 justify-content: center;
-width: 100%;
 box-shadow:0 2px 7px rgba(0, 0, 0, 0.2);
 border-radius: 5px;
 font-weight: 500;
@@ -100,6 +99,8 @@ font-weight: 500;
     cursor: pointer;
     width: 50%;
     margin: auto;
+    padding: 0.5rem;
+    margin-top: 10px;
 }
 .passwordInputContainer {
     position: relative;
@@ -120,6 +121,9 @@ font-weight: 500;
     cursor: pointer;
     color: black;
     transition: color 0.3s ease;
+  }
+  .listofMandatory li.valid {
+    color: green;
   }
   
   

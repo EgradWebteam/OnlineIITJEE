@@ -9,7 +9,7 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
   const [selectedExamId, setSelectedExamId] = useState(topic ? topic.exam_id : '');
   const [selectedSubjectId, setSelectedSubjectId] = useState(topic ? topic.subject_id : '');
   const [topicName, setTopicName] = useState(topic ? topic.orvl_topic_name : '');
-  const [topicPdf, setTopicPdf] = useState(null);
+  const [topicPdf, setTopicPdf] = useState(null); // now stores file instead of just name
   const [topicDoc, setTopicDoc] = useState(null);
 
   useEffect(() => {
@@ -48,12 +48,12 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
     formData.append("exam_id", selectedExamId);
     formData.append("subject_id", selectedSubjectId);
 
-    if (topicPdf) formData.append("topic_pdf", topicPdf);
-    if (topicDoc) formData.append("topic_doc", topicDoc);
+    if (topicPdf) formData.append("topic_pdf", topicPdf); // ✅ binary
+    if (topicDoc) formData.append("topic_doc", topicDoc); // ✅ binary
 
     try {
       const response = topic
-        ? await axios.put(`${BASE_URL}/OrvlTopicCreation/updateTopic/${topic.orvl_topic_id}`, formData, {
+        ? await axios.post(`${BASE_URL}/OrvlTopicCreation/updateTopic/${topic.orvl_topic_id}`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
@@ -65,8 +65,8 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
           });
 
       console.log("Topic submitted successfully:", response.data);
-      onSuccess();  // Refresh the topics list
-      onClose();  // Close the form
+      onSuccess();
+      onClose();
     } catch (error) {
       console.error("Error submitting topic:", error.response?.data || error.message);
     }
@@ -123,6 +123,11 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
               onChange={(e) => setTopicPdf(e.target.files[0])}
               className={styles.inputFile}
             />
+            {topic?.orvl_topic_pdf && !topicPdf && (
+              <div className={styles.fileInfo}>
+                <span>{topic.orvl_topic_pdf}</span>
+              </div>
+            )}
           </div>
 
           <div className={styles.flex}>

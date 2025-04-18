@@ -243,9 +243,16 @@ export default function StudentDashboard_BuyCourses({setActiveSection,studentId}
 console.log("Student ID:", studentId); // Check the student ID
   const [structuredCourses, setStructuredCourses] = useState([]);
   const [selectedExam, setSelectedExam] = useState("");
+  const [selectedPortal, setSelectedPortal] = useState("Online Test Series");
+
+
   const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
  
 
+  useEffect(() => {
+    console.log("Structured Courses:", structuredCourses);
+  }, [structuredCourses]);
+  
   useEffect(() => {
     const fetchCoursesInBuyCourses = async () => {
       try {
@@ -267,10 +274,24 @@ console.log("Student ID:", studentId); // Check the student ID
     fetchCoursesInBuyCourses();
   }, []);
 
+   // Extract unique portal names dynamically from structuredCourses
+   const portalNames = useMemo(() => {
+    const names = structuredCourses.map((portal) => portal.portal_name);
+    return [...new Set(names)];
+  }, [structuredCourses]);
+
+
+  // Set default portal name to the first portal in the list
+  useEffect(() => {
+    if (portalNames.length > 0) {
+      setSelectedPortal(portalNames[0]);
+    }
+  }, [portalNames]);
+
   // Flatten the structured courses
   const flatCourses = useMemo(() => {
     const courses = [];
-
+  
     structuredCourses.forEach((portal) => {
       Object.values(portal.exams).forEach((exam) => {
         exam.courses.forEach((course) => {
@@ -284,26 +305,37 @@ console.log("Student ID:", studentId); // Check the student ID
         });
       });
     });
-
+  
     return courses;
   }, [structuredCourses]);
-
+  
   // Extract unique exam names
   const examNames = useMemo(() => {
-    return [...new Set(flatCourses.map((c) => c.exam_name))];
-  }, [flatCourses]);
-
+    const names = flatCourses
+      .filter((c) => c.portal_name === selectedPortal)
+      .map((c) => c.exam_name);
+  
+    return [...new Set(names)];
+  }, [flatCourses, selectedPortal]);
+  
   // Set default selected exam when data is ready
   useEffect(() => {
-    if (!selectedExam && examNames.length > 0) {
-      setSelectedExam(examNames[0]);
+    if (examNames.length > 0) {
+      setSelectedExam((prevExam) =>
+        examNames.includes(prevExam) ? prevExam : examNames[0]
+      );
+    } else {
+      setSelectedExam("");
     }
-  }, [examNames, selectedExam]);
+  }, [examNames, selectedPortal]);
 
   // Filter courses based on selected exam
   const filteredCourses = useMemo(() => {
-    return flatCourses.filter((c) => c.exam_name === selectedExam);
-  }, [flatCourses, selectedExam]);
+    return flatCourses.filter(
+      (c) => c.portal_name === selectedPortal && c.exam_name === selectedExam
+    );
+  }, [flatCourses, selectedExam, selectedPortal]);
+  
 
   const studentpaymentcreation = async (courseId, studentId) => {
     console.log("Payment creation started...");
@@ -409,8 +441,21 @@ console.log("Student ID:", studentId); // Check the student ID
   return (
     <div className={styles.StudentDashboardBuyCoursesMainDiv}>
       <div className={globalCSS.stuentDashboardGlobalHeading}>
-        <h3>Buy Courses</h3>
+  <h3>Buy Courses</h3>
+  </div>
+  {/* Toggle Portal Buttons */}
+      <div className={styles.toggleTypeButtons}>
+        {portalNames.map((portal, idx) => (
+          <button
+            key={idx}
+            className={`${styles.toggleBtn} ${selectedPortal === portal ? styles.active : ""}`}
+            onClick={() => setSelectedPortal(portal)}
+          >
+            {portal}
+          </button>
+        ))}
       </div>
+
 
       {/* Exam Filter Buttons */}
       <div className={globalCSS.examButtonsDiv}>
@@ -429,7 +474,7 @@ console.log("Student ID:", studentId); // Check the student ID
 
       {/* Course Cards */}
       {/* Course Cards or No Courses Message */}
-    {filteredCourses.length > 0 ? (
+    {filteredCourses.length >0 ? (
       <div className={globalCSS.cardHolderOTSORVLHome}>
         {filteredCourses.map((course) => (
           <CourseCard
