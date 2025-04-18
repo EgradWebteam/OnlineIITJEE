@@ -8,20 +8,19 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 app.use(cors());
 app.use(express.json());
-app.use(cors());
-app.use(express.json());
-app.use(
-  cors({
-    origin: [
-      "https://icy-sand-03dfe2700.6.azurestaticapps.net",
-      "http://localhost:5173",
-      "iit-server-fyahe4drftaadxgq.centralindia-01.azurewebsites.net",
-    ], // Allowed origins
-    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"], // Allowed methods
-    credentials: true, // Enable cookies and credentials
-    allowedHeaders: ["Content-Type", "Authorization", "popup-page-status"], // Allowed headers
-  })
-);
+const corsOptions = {
+  origin: [
+    "https://icy-sand-03dfe2700.6.azurestaticapps.net",
+    "http://localhost:5173",
+    "https://iit-server-fyahe4drftaadxgq.centralindia-01.azurewebsites.net"
+  ],
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization", "popup-page-status"]
+};
+
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json({ limit: "10mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
 app.use(morgan(":method :url :status :response-time ms"));
