@@ -359,6 +359,104 @@ router.get("/UserResponseStatus/:student_registration_id/:course_creation_id/:or
     if (connection) connection.release();
   }
 });
+// POST API to insert exercise user response
+router.post('/ExerciseQuestionstatus', async (req, res) => {
+  const {
+    question_status,
+    orvl_topic_id,
+    exercise_question_id,
+    exercise_name_id,
+    student_registration_id,
+    course_creation_id,
+  } = req.body;
+
+  let connection;
+
+  try {
+    connection = await db.getConnection();
+    const sql = `
+      INSERT INTO iit_orvl_exercise_userresponses 
+      (question_status, orvl_topic_id, exercise_question_id, exercise_name_id, student_registration_id, course_creation_id) 
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+    
+    const values = [
+      question_status,
+      orvl_topic_id,
+      exercise_question_id,
+      exercise_name_id,
+      student_registration_id,
+      course_creation_id
+    ];
+
+    // Use promise-based query
+    const [result] = await connection.query(sql, values);
+
+    res.status(200).json({
+      message: 'Exercise user response inserted successfully',
+      insertId: result.insertId
+    });
+  } catch (err) {
+    console.error('Error inserting response:', err);
+    res.status(500).json({ message: 'Server error', error: err });
+  } finally {
+    if (connection) connection.release();
+  }
+});
+
+router.put('/SubmitUserAnswer', async (req, res) => {
+  const {
+    question_status,
+    exercise_userresponse,
+    orvl_topic_id,
+    exercise_question_id,
+    exercise_name_id,
+    student_registration_id,
+    course_creation_id
+  } = req.body;
+
+  let connection;
+
+  try {
+    connection = await db.getConnection();
+
+    const sql = `
+      UPDATE iit_orvl_exercise_userresponses 
+      SET question_status = ?, exercise_userresponse = ?
+      WHERE orvl_topic_id = ? 
+        AND exercise_question_id = ? 
+        AND exercise_name_id = ? 
+        AND student_registration_id = ? 
+        AND course_creation_id = ?
+    `;
+
+    const values = [
+      question_status,
+      exercise_userresponse,
+      orvl_topic_id,
+      exercise_question_id,
+      exercise_name_id,
+      student_registration_id,
+      course_creation_id
+    ];
+
+    const [result] = await connection.query(sql, values);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'No matching record found to update' });
+    }
+
+    res.status(200).json({
+      message: 'User answer updated successfully'
+    });
+  } catch (err) {
+    console.error('Error updating user answer:', err);
+    res.status(500).json({ message: 'Server error', error: err });
+  } finally {
+    if (connection) connection.release();
+  }
+});
+
 
 
       
