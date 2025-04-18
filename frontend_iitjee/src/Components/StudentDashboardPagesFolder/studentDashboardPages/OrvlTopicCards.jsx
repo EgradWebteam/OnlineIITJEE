@@ -55,6 +55,10 @@ export default function OrvlTopicCards({
 
   return (
     <div className={styles.OrvlTopicCardsMainDiv}>
+      <div className={styles.goBackInTestContainerDiv}>
+        <button className={styles.goBackBtn} onClick={onBack}>Go Back</button>
+      </div>
+
       {/* Subject Buttons */}
       <div className={globalCSS.examButtonsDiv}>
         {courseData.subjects.map((subject) => (

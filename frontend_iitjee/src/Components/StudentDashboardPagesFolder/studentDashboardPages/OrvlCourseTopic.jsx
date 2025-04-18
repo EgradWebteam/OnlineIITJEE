@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BASE_URL } from '../../../config/apiConfig'; // Import the base URL from config
 import LectureExerciseList from './LectureExerciseList';
 import Popup from './Popup'; // Assuming Popup component is the same
+import globalCSS from '../../../Styles/Global.module.css'
 
 const OrvlCourseTopic = ({ topicid, onBack }) => {
   const [courseData, setCourseData] = useState(null);
@@ -52,16 +53,20 @@ const OrvlCourseTopic = ({ topicid, onBack }) => {
   }
 
   return (
-    <div>
+    <div className={globalCSS.OrvlCourseTopicContainer}>
+      <div className={globalCSS.OrvlCourseTopicbtn}>
       <button onClick={onBack}>Back</button>
-      <h1>{courseData.orvl_topic_name}</h1>
-
+      </div>
+      <div className={globalCSS.OrvlCourseTopicHeader}>
+      <div>{courseData.orvl_topic_name}</div>
+      </div>
+      <div className={globalCSS.OrvlCourseTopicContent}>
       <LectureExerciseList
         lectures={courseData.lectures}
         onLectureClick={handleLectureClick}
         onExerciseClick={handleExerciseClick}
       />
-
+</div>
       {(selectedLecture || selectedExercise) && (
         <Popup
           lecture={selectedLecture}
