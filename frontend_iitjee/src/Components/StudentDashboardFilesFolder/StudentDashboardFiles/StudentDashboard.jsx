@@ -5,7 +5,7 @@ import StudentDashboardLeftSideBar from './StudentDashboardLeftSidebar.jsx';
 import { useLocation, } from 'react-router-dom';
 // import { useStudent } from '../../../ContextFolder/StudentContext.jsx';
 // Lazy loaded components
-const StudentDashboardHome = lazy(() => import("../StudentDashboardFiles/StudentDashboardHome.jsx"));
+const StudentDashboardHome = lazy(() => import("./StudentDashboardHome.jsx"));
 const StudentDashboard_MyCourses = lazy(() => import("./StudentDashboard_MyCourses.jsx"));
 const StudentDashboard_BuyCourses = lazy(() => import("./StudentDashboard_BuyCourses.jsx"));
 const StudentDashboard_MyResults = lazy(() => import("./StudentDashboard_MyResults.jsx"));
