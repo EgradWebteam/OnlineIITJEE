@@ -4,6 +4,8 @@ const cors = require("cors");
 require("dotenv").config();
 const db = require("./src/config/database.js");
 const app = express();
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
 app.use(cors());
 app.use(express.json());
 app.use(cors());
