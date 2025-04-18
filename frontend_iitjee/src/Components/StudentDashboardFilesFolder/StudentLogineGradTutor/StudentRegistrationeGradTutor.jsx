@@ -3,7 +3,7 @@ import Styles from "../../../Styles/StudentDashboardCSS/StudentRegistration.modu
 import SRFormImage from "../../../assets/SRFormImage.jpg";
 import MainHeader from "../../LandingPagesFolder/MainPageHeaderFooterFiles/MainHeader.jsx";
 import MainFooter from "../../LandingPagesFolder/MainPageHeaderFooterFiles/MainFooter.jsx";
-import { BASE_URL } from "../../../config/apiConfig.js";
+import { BASE_URL } from "../../../Config/ApiConfig.js";
 import TermsAndConditions from "../../GlobalFiles/TermsAndConditions.jsx";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import axios from "axios";

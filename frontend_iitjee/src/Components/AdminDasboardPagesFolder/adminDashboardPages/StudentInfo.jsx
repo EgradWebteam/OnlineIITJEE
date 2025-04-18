@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { BASE_URL } from '../../../config/apiConfig.js';
+import { BASE_URL } from '../../../Config/ApiConfig.js';
 import html2canvas from "html2canvas";
 import { FaUser } from "react-icons/fa6";
 import { MdModeEditOutline } from "react-icons/md";
