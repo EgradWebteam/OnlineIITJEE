@@ -3,8 +3,9 @@ import Contact_Data from "../../DataFiles/Contact_Data";
 import { IoCall } from "react-icons/io5";
 import { IoIosMail } from "react-icons/io";
 import styles from '../../Styles/GlobalFilesCSS/ContacUs.module.css'
-import MainFooter from "../LandingPagesFolder/mainPageHeaderFooterFolder/MainFooter.jsx";
+import MainFooter from "../LandingPagesFolder/MainPageHeaderFooterFolder/MainFooter.jsx";
 import LogoHomeHeader from "../LandingPagesFolder/mainPageHeaderFooterFolder/LogoHomeHeader.jsx";
+
 
 const ContactUs = () => {
   return (
