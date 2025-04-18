@@ -1,7 +1,7 @@
 // AdminDashboardHome.jsx
 import React, { useState } from 'react';
 import OrvlLeftNav from './OrvlLeftNav';
-import AdminDashboardHeader from '../adminDashboardPages/AdminDashboardHeader.jsx';
+import AdminDashboardHeader from '../AdminDashboardFiles/AdminDashboardHeader.jsx';
 import OrvlCourseCreation from './orvlCourseCreation.jsx';
 import OrvlTopicCreation from './orvlTopicCreation.jsx';
 

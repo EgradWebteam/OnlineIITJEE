@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../../../Config/ApiConfig.js";
 import styles from "../../../Styles/AdminDashboardCSS/Instruction.module.css";
-import DynamicTable from "./DynamicTable.jsx";
+import DynamicTable from "../AdminDashboardFiles/DynamicTable.jsx";
 
 const InstructionsTab = () => {
   const isOpen=true
