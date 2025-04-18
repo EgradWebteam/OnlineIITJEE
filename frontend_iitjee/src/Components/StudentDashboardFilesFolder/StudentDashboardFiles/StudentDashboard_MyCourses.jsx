@@ -172,7 +172,7 @@ export default function StudentDashboard_MyCourses({ studentId }) {
           setShowTestContainer = { setShowTestContainer}
           setShowTopicContainer = {setShowTopicContainer}
           courseCreationId={selectedTestCourse.course_creation_id}
-           topicid = {1}
+           topicid = {3}
           onBack={() => {
             setOpenCourseOrvl(false);
             setShowTopicContainer(true); // When going back, show topic container again

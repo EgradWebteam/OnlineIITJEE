@@ -34,15 +34,28 @@ const OrvlCourseTopic = ({ topicid, onBack }) => {
 
   const handleLectureClick = (lecture) => {
     setSelectedLecture(lecture);
+    setSelectedExercise(null);         // Don't auto-start exercise
+    setShowExercise(false);            // Start with lecture only
     setShowPopup(true);
-    setShowExercise(false);
   };
+  
 
   const handleExerciseClick = (exercise) => {
+  const parentLecture = courseData.lectures.find((lecture) =>
+    lecture.exercises.some((ex) => ex.exercise_name === exercise.exercise_name)
+  );
+
+  if (parentLecture) {
+    setSelectedLecture(parentLecture);
     setSelectedExercise(exercise);
-    setShowPopup(true);
     setShowExercise(true);
-  };
+    setShowPopup(true);
+  } else {
+    console.error("Parent lecture not found for exercise.");
+  }
+};
+
+  
 
   const handleClosePopup = () => {
     setSelectedLecture(null);
@@ -51,105 +64,88 @@ const OrvlCourseTopic = ({ topicid, onBack }) => {
   };
 
   const nextLectureOrExercise = () => {
-    if (!courseData || !courseData.lectures) {
-      console.log("No course data available.");
-      return;
-    }
+    if (!courseData || !selectedLecture) return;
   
-    const currentLecture = courseData.lectures.find(
-      (lecture) => lecture.orvl_lecture_name === selectedLecture?.orvl_lecture_name
+    const currentLectureIndex = courseData.lectures.findIndex(
+      (lecture) => lecture.orvl_lecture_name === selectedLecture.orvl_lecture_name
     );
+    const currentLecture = courseData.lectures[currentLectureIndex];
   
-    if (!currentLecture) {
-      console.log("Current lecture not found.");
-      return;
-    }
-  
-    if (showExercise) {
-      const currentExerciseIndex = currentLecture.exercises.findIndex(
-        (ex) => ex.exercise_id === selectedExercise?.exercise_id
-      );
-  
-      const nextExerciseIndex = currentExerciseIndex + 1;
-  
-      if (nextExerciseIndex < currentLecture.exercises.length) {
-        const nextExercise = currentLecture.exercises[nextExerciseIndex];
-        setSelectedExercise(nextExercise);
+    if (!showExercise) {
+      // Go from lecture → first exercise (if any)
+      if (currentLecture.exercises.length > 0) {
+        setSelectedExercise(currentLecture.exercises[0]);
+        setShowExercise(true);
       } else {
-        // Move to next lecture after the last exercise
-        const nextLectureIndex = courseData.lectures.indexOf(currentLecture) + 1;
-        if (nextLectureIndex < courseData.lectures.length) {
-          const nextLecture = courseData.lectures[nextLectureIndex];
+        // No exercises → next lecture
+        const nextLecture = courseData.lectures[currentLectureIndex + 1];
+        if (nextLecture) {
           setSelectedLecture(nextLecture);
+          setSelectedExercise(null);
           setShowExercise(false);
         } else {
-          alert("You are already on the last lecture.");
+          alert("You're already at the last lecture.");
         }
       }
     } else {
-      if (currentLecture.exercises.length > 0) {
-        // Go to the first exercise if available
-        const firstExercise = currentLecture.exercises[0];
-        setSelectedExercise(firstExercise);
-        setShowExercise(true);
+      // In exercises → move to next exercise
+      const currentExerciseIndex = currentLecture.exercises.findIndex(
+        (ex) => ex.exercise_name === selectedExercise.exercise_name
+      );
+  
+      if (currentExerciseIndex < currentLecture.exercises.length - 1) {
+        setSelectedExercise(currentLecture.exercises[currentExerciseIndex + 1]);
       } else {
-        // If no exercises, just go to the next lecture
-        const currentLectureIndex = courseData.lectures.indexOf(selectedLecture);
-        if (currentLectureIndex < courseData.lectures.length - 1) {
-          const nextLecture = courseData.lectures[currentLectureIndex + 1];
+        // Finished last exercise → move to next lecture
+        const nextLecture = courseData.lectures[currentLectureIndex + 1];
+        if (nextLecture) {
           setSelectedLecture(nextLecture);
+          setSelectedExercise(null);
           setShowExercise(false);
         } else {
-          alert("You are already on the last lecture.");
+          alert("You're already at the last lecture.");
         }
       }
     }
   };
   
+  
   const previousLectureOrExercise = () => {
-    if (!courseData || !courseData.lectures) {
-      console.log("No course data available.");
-      return;
-    }
+    if (!courseData || !selectedLecture) return;
   
-    const currentLecture = courseData.lectures.find(
-      (lecture) => lecture.orvl_lecture_name === selectedLecture?.orvl_lecture_name
+    const currentLectureIndex = courseData.lectures.findIndex(
+      (lecture) => lecture.orvl_lecture_name === selectedLecture.orvl_lecture_name
     );
+    const currentLecture = courseData.lectures[currentLectureIndex];
   
-    if (!currentLecture) {
-      console.log("Current lecture not found.");
-      return;
-    }
-  
-    if (showExercise) {
+    if (showExercise && selectedExercise) {
       const currentExerciseIndex = currentLecture.exercises.findIndex(
-        (ex) => ex.exercise_id === selectedExercise?.exercise_id
+        (ex) => ex.exercise_name === selectedExercise.exercise_name
       );
   
-      if (currentExerciseIndex === 0) {
-        // Exit exercises and stay on the current lecture
+      if (currentExerciseIndex > 0) {
+        // Go to previous exercise
+        setSelectedExercise(currentLecture.exercises[currentExerciseIndex - 1]);
+      } else {
+        // First exercise → back to lecture
         setShowExercise(false);
-      } else if (currentExerciseIndex > 0) {
-        // Go to the previous exercise
-        const prevExercise = currentLecture.exercises[currentExerciseIndex - 1];
-        setSelectedExercise(prevExercise);
+        setSelectedExercise(null);
       }
     } else {
-      const currentLectureIndex = courseData.lectures.indexOf(selectedLecture);
-      if (currentLectureIndex === 0) {
-        alert("You are already on the first lecture.");
-      } else if (currentLectureIndex > 0) {
-        const previousLecture = courseData.lectures[currentLectureIndex - 1];
-        setSelectedLecture(previousLecture);
+      // Back from lecture → previous lecture's last exercise (if any)
+      const previousLecture = courseData.lectures[currentLectureIndex - 1];
   
-        // If the previous lecture has exercises, go to the last exercise
+      if (previousLecture) {
+        setSelectedLecture(previousLecture);
         if (previousLecture.exercises.length > 0) {
-          const lastExercise = previousLecture.exercises[previousLecture.exercises.length - 1];
-          setSelectedExercise(lastExercise);
+          setSelectedExercise(previousLecture.exercises[previousLecture.exercises.length - 1]);
           setShowExercise(true);
         } else {
+          setSelectedExercise(null);
           setShowExercise(false);
         }
+      } else {
+        alert("You're already at the first lecture.");
       }
     }
   };
