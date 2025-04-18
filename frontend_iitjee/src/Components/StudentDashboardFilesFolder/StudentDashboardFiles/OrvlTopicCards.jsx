@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import globalCSS from "../../../Styles/Global.module.css";
 import OrvlTopicCardSub from "./OrvlTopicCardSub.jsx";
-
+import { BASE_URL } from '../../../config/apiConfig';
 
 export default function OrvlTopicCards({
   studentId,
@@ -23,7 +23,7 @@ export default function OrvlTopicCards({
     const fetchCourseData = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/OrvlTopics/OrvlTopicForCourse/${studentId}/${courseCreationId}`
+          `${BASE_URL}/OrvlTopics/OrvlTopicForCourse/${studentId}/${courseCreationId}`
         );
         const data = await res.json();
         setCourseData(data);

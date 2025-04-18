@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
 import styles from "../../Styles/LandingPageCSS/LandingPageIITJEE.module.css";
 import globalCSS from "../../Styles/Global.module.css";
 import otsBannerImg from "../../assets/PortalBanner.png";
@@ -9,7 +8,7 @@ import otsFeatureImg from "../../assets/TestSeriesDescription.png";
 import orvlFeatureImg from "../../assets/TestSeriesDescription.png";
 import pqbBannerImg from "../../assets/PortalBanner.png";
 import pqbFeatureImg from "../../assets/TestSeriesDescription.png";
-import { BASE_URL } from '../../../config/apiConfig';
+import { BASE_URL } from '../../Config/ApiConfig';
 import { useNavigate } from 'react-router-dom';
 import CourseCard from "./CourseCards";
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa6";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard_AccountSettings.module.css";
-import { BASE_URL } from "../../../config/apiConfig";
+import { BASE_URL } from "../../../Config/ApiConfig.js";
 const StudentDashboard_AccountSettings = ({ userData }) => {
   const [activeSection, setActiveSection] = useState("profile");
   const [showPassword, setShowPassword] = useState({

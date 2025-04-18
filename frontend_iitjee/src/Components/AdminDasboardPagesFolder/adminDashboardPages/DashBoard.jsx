@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AdminCards from './AdminCards.jsx';
 import styles from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css'; // Importing CSS module for styling
 import { FaBook, FaFileAlt, FaUserGraduate, FaQuestionCircle } from 'react-icons/fa';
-import { BASE_URL } from '../../../config/apiConfig';
+import { BASE_URL } from '../../../Config/ApiConfig.js';
 
 const DashBoard = () => {
     console.log("Dashboard called");

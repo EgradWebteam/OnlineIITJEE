@@ -3,7 +3,7 @@ import DynamicTable from "./DynamicTable.jsx";
 import styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css";
 import TestCreationForm from "./TestCreationForm.jsx"; 
 import axios from "axios";
-import { BASE_URL } from '../../../config/apiConfig';
+import { BASE_URL } from '../../../Config/ApiConfig.js';
 
 const TestCreationTab = () => {
   const [showAddTestForm, setShowAddTestForm] = useState(false);

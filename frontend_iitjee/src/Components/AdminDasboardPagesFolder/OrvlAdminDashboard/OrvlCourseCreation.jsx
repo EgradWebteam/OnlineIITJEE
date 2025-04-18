@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CourseForm from "./ORVLCourseForm.jsx"; // updated component name
 import DynamicTable from "./ORVLDynamicTable.jsx";
-import { BASE_URL } from '../../../config/apiConfig';
+import { BASE_URL } from '../../../Config/ApiConfig.js';
 import Styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css";
 
 

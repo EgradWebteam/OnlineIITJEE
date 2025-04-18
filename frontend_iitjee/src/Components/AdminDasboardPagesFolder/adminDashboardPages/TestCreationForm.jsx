@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { RxCross2 } from "react-icons/rx";
 import styles from "../../../Styles/AdminDashboardCSS/TestCreation.module.css";
-import { BASE_URL } from '../../../config/apiConfig';
+import { BASE_URL } from '../../../Config/ApiConfig.js';
 import axios from "axios";
 
 const TestCreationForm = ({ setShowAddTestForm, testCreationFormData, editData, onTestSaved }) => {
