@@ -1,7 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../config/database.js");
-console.log("hi")
+const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
+const sasToken = process.env.AZURE_SAS_TOKEN;
+const containerName = process.env.AZURE_CONTAINER_NAME;
+const testDocumentFolderName = process.env.AZURE_DOCUMENT_FOLDER_ORVL;
+
+// Helper to get image URL
+const getImageUrl = (documentName, folder, fileName) => {
+  if (!fileName || !documentName) return null;
+  return `https://${accountName}.blob.core.windows.net/${containerName}/${testDocumentFolderName}/${documentName}/${folder}/${fileName}?${sasToken}`;
+};
+
 router.get('/OrvlTopicForCourse/:student_registration_id/:course_creation_id', async (req, res) => {
   const { student_registration_id, course_creation_id } = req.params;
   let connection;
@@ -172,7 +182,11 @@ router.get('/CourseTopic/:orvl_topic_id', async (req, res) => {
           if (!question) {
             question = {
               exercise_question_id: row.exercise_question_id,
-              exercise_question_img: row.exercise_question_img,
+              exercise_question_img: getImageUrl(
+                row.orvl_document_name,
+                "exercisequestions",
+                row.exercise_question_img 
+              ),
               exercise_question_type: row.exercise_question_type,
               exercise_answer_unit: row.exercise_answer_unit,
               exercise_answer: row.exercise_answer,
@@ -185,7 +199,12 @@ router.get('/CourseTopic/:orvl_topic_id', async (req, res) => {
           if (row.exercise_option_id) {
             question.options.push({
               exercise_option_index: row.exercise_option_index,
-              exercise_option_img: row.exercise_option_img,
+          
+              exercise_option_img: getImageUrl(
+                row.orvl_document_name,
+                "exerciseoptions",
+                row.exercise_option_img 
+              ),
               exercise_option_id: row.exercise_option_id
             });
           }
@@ -198,6 +217,28 @@ router.get('/CourseTopic/:orvl_topic_id', async (req, res) => {
   } catch (error) {
     console.error("Error fetching ORVL topic details:", error);
     res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    if (connection) connection.release();
+  }
+});
+router.get('/GetExcerciseQuestionStatus/:orvl_topic_id/:exercise_name_id/:student_registration_id/:course_creation_id', async (req, res) => {
+  const { orvl_topic_id, exercise_name_id, student_registration_id, course_creation_id } = req.params;
+  let connection;
+
+  try {
+    connection = await db.getConnection();
+
+    const [rows] = await connection.execute(
+      `SELECT question_status, exercise_question_id
+       FROM iit_db.iit_orvl_exercise_userresponses
+       WHERE orvl_topic_id = ? AND exercise_name_id = ? AND student_registration_id = ? AND course_creation_id = ?`,
+      [orvl_topic_id, exercise_name_id, student_registration_id, course_creation_id]
+    );
+
+    res.status(200).json( rows );
+  } catch (error) {
+    console.error('Error fetching question status:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
   } finally {
     if (connection) connection.release();
   }
@@ -343,7 +384,7 @@ router.get("/UserResponseStatus/:student_registration_id/:course_creation_id/:or
     const accessGranted = allVideosVisited && allExercisesAnswered;
 
     // Return the response
-    res.json({
+    res.status(200).json({
       videoCompletionPercentage: videoCompletionPercentage.toFixed(2),
       exerciseCompletionPercentage: exerciseCompletionPercentage.toFixed(2),
       totalCompletionPercentage: totalCompletionPercentage.toFixed(2),
@@ -403,6 +444,7 @@ router.post('/ExerciseQuestionstatus', async (req, res) => {
     if (connection) connection.release();
   }
 });
+
 
 router.put('/SubmitUserAnswer', async (req, res) => {
   const {
