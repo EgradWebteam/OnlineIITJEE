@@ -38,7 +38,6 @@ const OrvlCourseTopic = ({ topicid, onBack }) => {
     setShowExercise(false);            // Start with lecture only
     setShowPopup(true);
   };
-  
 
   const handleExerciseClick = (exercise) => {
   const parentLecture = courseData.lectures.find((lecture) =>
@@ -106,7 +105,6 @@ const OrvlCourseTopic = ({ topicid, onBack }) => {
       }
     }
   };
-  
   
   const previousLectureOrExercise = () => {
     if (!courseData || !selectedLecture) return;
