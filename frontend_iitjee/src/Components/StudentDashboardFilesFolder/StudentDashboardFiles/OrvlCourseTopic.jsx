@@ -55,8 +55,6 @@ const OrvlCourseTopic = ({ topicid, onBack }) => {
   }
 };
 
-  
-
   const handleClosePopup = () => {
     setSelectedLecture(null);
     setSelectedExercise(null);
