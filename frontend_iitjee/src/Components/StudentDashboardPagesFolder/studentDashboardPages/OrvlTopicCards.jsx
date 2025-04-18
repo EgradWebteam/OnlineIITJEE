@@ -3,9 +3,11 @@ import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.
 import globalCSS from "../../../Styles/Global.module.css";
 import CourseCard from "../../LandingPagesFolder/CourseCards.jsx"; // Import CourseCard component
 
-export default function OrvlTopicCards({ studentId, courseCreationId, context, onBack }) {
+export default function OrvlTopicCards({ studentId, courseCreationId, setShowTestContainer, context, setShowQuizContainer,setSelectedTestCourse,setShowTopicContainer, onBack }) {
   const [courseData, setCourseData] = useState(null);
+
   const [selectedSubjectId, setSelectedSubjectId] = useState(null);
+  const [openCourseOrvl,setOpenCourseOrvl] = useState(false);
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -35,12 +37,17 @@ export default function OrvlTopicCards({ studentId, courseCreationId, context, o
   const selectedSubject = courseData.subjects.find(
     (subj) => subj.subject_id === selectedSubjectId
   );
-
+  const handleGoToTest = () => {
+setOpenCourseOrvl(true);
+setShowQuizContainer(false);
+setShowTopicContainer(false);
+setShowTestContainer(false);
+  }
   return (
     <div className={styles.OrvlTopicCardsMainDiv}>
  
   
-      
+
 
       {/* Subject Buttons */}
       <div className={globalCSS.examButtonsDiv}>
@@ -69,8 +76,8 @@ export default function OrvlTopicCards({ studentId, courseCreationId, context, o
               context={context}
               portalId={courseData.portal_id}
               type={true}
-              onBuy={() => {}}
-              onGoToTest={() => {}}
+             
+              onGoToTest={() => handleGoToTest()}
             />
           ))
         ) : (
@@ -81,6 +88,11 @@ export default function OrvlTopicCards({ studentId, courseCreationId, context, o
           </div>
         )}
       </div>
+      {openCourseOrvl && (
+        <div>
+          dfjfds
+          </div>
+      )}
     </div>
   );
 }
