@@ -8,13 +8,14 @@ const OrvlCourseTopic = ({ topicid, onBack }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedLecture, setSelectedLecture] = useState(null);
-  const [selectedExercise, setSelectedExercise] = useState(null);
+  const [selectedExercise, setSelectedExercise] = useState(null);             
   const [showExercise, setShowExercise] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
+        
         const response = await fetch(`${BASE_URL}/OrvlTopics/CourseTopic/${topicid}`);
         if (!response.ok) {
           throw new Error('Failed to fetch course data');
