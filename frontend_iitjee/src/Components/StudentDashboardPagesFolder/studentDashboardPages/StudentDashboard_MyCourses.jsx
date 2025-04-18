@@ -4,7 +4,7 @@ import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.
 import CourseCard from '../../LandingPagesFolder/CourseCards.jsx';
 import { BASE_URL } from '../../../config/apiConfig';
 import TestDetailsContainer from './TestDetailsContainer';
-import OrvlTopicCards from "./OrvlTopicCards"; 
+import OrvlTopicCards from "./OrvlTopicCards";
 
 export default function StudentDashboard_MyCourses({ studentId }) {
 
@@ -14,39 +14,36 @@ export default function StudentDashboard_MyCourses({ studentId }) {
   const [loading, setLoading] = useState(true);
   const [selectedTestCourse, setSelectedTestCourse] = useState(null);
 
+  const [showQuizContainer, setShowQuizContainer] = useState(true);
+  const [showTestContainer, setShowTestContainer] = useState(false);
+  const [showTopicContainer, setShowTopicContainer] = useState(false);
 
   useEffect(() => {
     const fetchPurchasedCourses = async () => {
-
       try {
         setLoading(true);
-
         const res = await fetch(`${BASE_URL}/studentmycourses/Purchasedcourses/${studentId}`);
         const data = await res.json();
-        console.log("API Response:", data); // Log the response to inspect it
-    
+
         if (Array.isArray(data) && data.length > 0) {
           const defaultPortal = data[0];
           const firstExam = Object.values(defaultPortal.exams)?.[0];
-    
           setStructuredCourses(data);
           setSelectedPortal(defaultPortal.portal_name);
           setSelectedExam(firstExam?.exam_name || null);
         } else {
-          setStructuredCourses([]); // No courses found, set empty state
+          setStructuredCourses([]);
         }
       } catch (err) {
         console.error("Error fetching purchased courses", err);
-        setStructuredCourses([]); // In case of error, reset the state
+        setStructuredCourses([]);
       } finally {
         setLoading(false);
       }
     };
-    
 
     fetchPurchasedCourses();
   }, [studentId]);
-
 
   const portalData = useMemo(() => {
     return structuredCourses.find(p => p.portal_name === selectedPortal);
@@ -57,115 +54,115 @@ export default function StudentDashboard_MyCourses({ studentId }) {
   }, [portalData]);
 
   const filteredCourses = useMemo(() => {
-    if (!portalData || !selectedExam) return null; // null means "not ready yet"
-  
+    if (!portalData || !selectedExam) return null;
     const exam = Object.values(portalData.exams).find(e => e.exam_name === selectedExam);
     if (!exam) return [];
-  
-    const courses = exam.courses.map(course => ({
+    return exam.courses.map(course => ({
       ...course,
       exam_name: exam.exam_name,
       portal_name: portalData.portal_name,
-      portal_id: portalData.portal_id  // ⬅️ Add portal_id here
+      portal_id: portalData.portal_id
     }));
-  
-    console.log("📘 Filtered Courses Returned from useMemo:", courses);
-    return courses;
   }, [portalData, selectedExam]);
-  
+
   const handleGoToTest = (course) => {
     setSelectedTestCourse(course);
+    setShowQuizContainer(false);
+    if (course.portal_id === 3) {
+      setShowTopicContainer(true);
+    } else {
+      setShowTestContainer(true);
+    }
   };
- 
-  if (selectedTestCourse) {
-    if (selectedTestCourse.portal_id === 3) {
-      return (
+
+  const handleBackToCourses = () => {
+    setSelectedTestCourse(null);
+    setShowQuizContainer(true);
+    setShowTestContainer(false);
+    setShowTopicContainer(false);
+  };
+
+  return (
+    <>
+      {showQuizContainer && (
+        <div className={styles.studentDashboardMyCoursesMainDiv}>
+          <div className={globalCSS.stuentDashboardGlobalHeading}>
+            <h3>My Courses</h3>
+          </div>
+
+          {/* Portal Buttons */}
+          <div className={styles.toggleTypeButtons}>
+            {structuredCourses.map((portal, index) => (
+              <button
+                key={index}
+                className={`${styles.toggleBtn} ${selectedPortal === portal.portal_name ? styles.active : ""}`}
+                onClick={() => {
+                  setSelectedPortal(portal.portal_name);
+                  const firstExam = Object.values(portal.exams)[0];
+                  setSelectedExam(firstExam?.exam_name || null);
+                }}
+              >
+                {portal.portal_name}
+              </button>
+            ))}
+          </div>
+
+          {/* Exam Buttons */}
+          <div className={globalCSS.examButtonsDiv}>
+            {examsForSelectedPortal.map((exam, idx) => (
+              <button
+                key={idx}
+                className={`${globalCSS.examButtons} ${selectedExam === exam.exam_name ? globalCSS.examActiveBtn : ""}`}
+                onClick={() => setSelectedExam(exam.exam_name)}
+              >
+                {exam.exam_name}
+              </button>
+            ))}
+          </div>
+
+          {/* Loading or Not Ready */}
+          {(!structuredCourses.length || !selectedPortal || !selectedExam || filteredCourses.length === 0) ? (
+            <div className={globalCSS.noCoursesContainer}>
+              <p className={globalCSS.noCoursesMsg}>YOU HAVE NO ACTIVE COURSES</p>
+            </div>
+          ) : (
+            <div className={globalCSS.cardHolderOTSORVLHome}>
+              {filteredCourses.map((course) => (
+                <CourseCard
+                  key={course.course_creation_id}
+                  title={course.course_name}
+                  cardImage={course.card_image}
+                  context="myCourses"
+                  portalId={course.portal_id}
+                  onGoToTest={() => handleGoToTest(course)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {showTestContainer && selectedTestCourse && (
+        <TestDetailsContainer
+          course={selectedTestCourse}
+          onBack={handleBackToCourses}
+          studentId={studentId}
+        />
+      )}
+
+      {showTopicContainer && selectedTestCourse && (
         <OrvlTopicCards
           key={selectedTestCourse.course_creation_id}
           studentId={studentId}
           courseCreationId={selectedTestCourse.course_creation_id}
           context="myCourses"
-          onBack={() => setSelectedTestCourse(null)}
+          setShowQuizContainer = {setShowQuizContainer}
+          setSelectedTestCourse={setSelectedTestCourse}
+          setShowTestContainer = { setShowTestContainer}
+          setShowTopicContainer = {setShowTopicContainer}
+          onBack={handleBackToCourses}
         />
-      );
-    } else {
-      return (
-        <TestDetailsContainer
-          course={selectedTestCourse}
-          onBack={() => setSelectedTestCourse(null)}
-          studentId={studentId}
-        />
-      );
-    }
-  }
-  
-  
-  return (
-    <div className={styles.studentDashboardMyCoursesMainDiv}>
-      <div className={globalCSS.stuentDashboardGlobalHeading}>
-        <h3>My Courses</h3>
-      </div>
-
-      {/* Portal Buttons */}
-      <div className={styles.toggleTypeButtons}>
-        {structuredCourses.map((portal, index) => (
-          <button
-            key={index}
-            className={`${styles.toggleBtn} ${
-              selectedPortal === portal.portal_name ?  styles.active  : ""
-            }`}
-            onClick={() => {
-              setSelectedPortal(portal.portal_name);
-              const firstExam = Object.values(portal.exams)[0];
-              setSelectedExam(firstExam?.exam_name || null);
-            }}
-          >
-            {portal.portal_name}
-          </button>
-        ))}
-      </div>
-
-      {/* Exam Buttons */}
-      <div className={globalCSS.examButtonsDiv}>
-        {examsForSelectedPortal.map((exam, idx) => (
-          <button
-            key={idx}
-            className={`${globalCSS.examButtons} ${selectedExam === exam.exam_name ? globalCSS.examActiveBtn : ""
-              }`}
-            onClick={() => setSelectedExam(exam.exam_name)}
-          >
-            {exam.exam_name}
-          </button>
-        ))}
-      </div>
-
-       {/* Loading or Not Ready */}
-      {(!structuredCourses.length || !selectedPortal || !selectedExam || filteredCourses.length === 0) ? (
-        <div className={globalCSS.noCoursesContainer}>
-          <p className={globalCSS.noCoursesMsg}>YOU HAVE NO ACTIVE COURSES</p>
-        </div>
-      ) : (
-        <div className={globalCSS.cardHolderOTSORVLHome}>
-          {filteredCourses.map((course) => {
-        
-  console.log("Rendering CourseCard for:", course.course_name, "Portal ID:", structuredCourses[0].portal_id);
-  return (
-    <CourseCard
-      key={course.course_creation_id}
-      title={course.course_name}
-      cardImage={course.card_image}
-      context="myCourses"
-      portalId={course.portal_id}
-      onGoToTest={() => handleGoToTest(course)}
-    />
-  );
-})}
-
-
-
-
-        </div>
       )}
-    </div>
+    </>
   );
 }
