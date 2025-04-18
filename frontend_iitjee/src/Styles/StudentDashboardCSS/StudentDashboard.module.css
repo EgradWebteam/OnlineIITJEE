@@ -6,6 +6,67 @@
 .studentDashboardHeaderLogoDiv{
     width:250px;
 }
+.options-container {
+  flex-direction: column;
+  display: flex;
+}
+.question-number-palette {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.status-pallete {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.status-item {
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+  text-align: center;
+  line-height: 30px;
+  border-radius: 50%;
+  background-color: #ccc;
+  cursor: pointer;
+}
+
+.status-item.notvisited {
+  background-color: #ccc;
+}
+
+.status-item.answered {
+  background-color: green;
+}
+
+.status-item.notanswered {
+  background-color: red;
+}
+
+.navigation-buttons-for-ques {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.question-number-palette button {
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+.question-number-palette button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.question-number-palette button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
 .studentDashboardHeaderMain {
     width: 95%;
     height: 100%;
