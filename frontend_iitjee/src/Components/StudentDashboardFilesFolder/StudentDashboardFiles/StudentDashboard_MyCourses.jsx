@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import globalCSS from "../../../Styles/global.module.css";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import CourseCard from '../../LandingPagesFolder/CourseCards.jsx';
-import { BASE_URL } from '../../../Config/ApiConfig.js';
+import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import TestDetailsContainer from './TestDetailsContainer.jsx';
 import OrvlTopicCards from "./OrvlTopicCards.jsx";
 import OrvlCourseTopic from "./OrvlCourseTopic.jsx"; 

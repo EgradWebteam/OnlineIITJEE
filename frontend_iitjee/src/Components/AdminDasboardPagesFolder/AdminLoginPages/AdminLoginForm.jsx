@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Styles from '../../../Styles/AdminDashboardCSS/AdminLoginPage.module.css';
-import { BASE_URL } from "../../../Config/ApiConfig.js";
+import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 const AdminLoginForm = () => {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [isResetCodeStage, setIsResetCodeStage] = useState(false);

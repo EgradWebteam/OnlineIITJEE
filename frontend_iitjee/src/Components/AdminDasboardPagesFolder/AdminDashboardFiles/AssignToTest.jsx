@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "../../../Styles/AdminDashboardCSS/Assigntotest.module.css";
-import { BASE_URL } from '../../../Config/ApiConfig.js';
+import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 
 const AssignToTest = ({ testCreationTableId, onClose }) => {
   const [notAssignedCourses, setNotAssignedCourses] = useState([]);

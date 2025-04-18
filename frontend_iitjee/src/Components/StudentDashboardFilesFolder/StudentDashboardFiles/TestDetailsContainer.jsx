@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
-import { BASE_URL } from '../../../Config/ApiConfig.js';
+import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import { encryptBatch } from '../../../utils/cryptoUtils.jsx';
 import { useNavigate } from 'react-router-dom';
 

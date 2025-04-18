@@ -1,4 +1,4 @@
-import { BASE_URL } from "../Config/ApiConfig.js";
+import { BASE_URL } from "../ConfigFile/ApiConfigURL.js";
 
 // Encrypt multiple texts (returns 5-char short codes)
 export const encryptBatch = async (textsArray) => {
