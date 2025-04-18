@@ -4,7 +4,7 @@ import { IoCall } from "react-icons/io5";
 import { IoIosMail } from "react-icons/io";
 import styles from '../../Styles/GlobalFilesCSS/ContacUs.module.css'
 import MainFooter from "../LandingPagesFolder/MainPageHeaderFooterFolder/MainFooter.jsx";
-import LogoHomeHeader from "../LandingPagesFolder/mainPageHeaderFooterFolder/LogoHomeHeader.jsx";
+import LogoHomeHeader from "../LandingPagesFolder/MainPageHeaderFooterFolder/LogoHomeHeader.jsx";
 
 
 const ContactUs = () => {
