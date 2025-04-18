@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import globalCSS from "../../../Styles/Global.module.css";
 import OrvlTopicCardSub from "./OrvlTopicCardSub.jsx";
-import { BASE_URL } from '../../../config/apiConfig';
+import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 
 export default function OrvlTopicCards({
   studentId,
