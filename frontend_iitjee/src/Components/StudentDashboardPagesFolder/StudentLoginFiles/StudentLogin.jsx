@@ -5,7 +5,7 @@ import stdLogo from '../../../assets/logoCap.jpeg';
 import MainHeader from '../../LandingPagesFolder/MainPageHeaderFooterFolder/MainHeader.jsx';
 import MainFooter from '../../LandingPagesFolder/MainPageHeaderFooterFolder/MainFooter.jsx';
 import { BASE_URL } from "../../../config/apiConfig.js";
-import StudentLoginForm from './studentLoginForm';
+import StudentLoginForm from './StudentLoginForm';
 import { useStudent } from '../../../ContextFolder/StudentContext.jsx';
 import { v4 as uuidv4 } from 'uuid';
 export default function StudentLogin() {
