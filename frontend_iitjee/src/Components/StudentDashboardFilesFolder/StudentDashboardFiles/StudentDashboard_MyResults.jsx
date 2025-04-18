@@ -4,7 +4,7 @@ import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { BASE_URL } from '../../../config/apiConfig';
+import { BASE_URL } from '../../../config/apiConfig.js';
 
 export default function StudentDashboard_MyResults({ studentId,userData }) {
   const [testData, setTestData] = useState([]);

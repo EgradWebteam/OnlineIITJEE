@@ -2,7 +2,7 @@
 // import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 // import globalCSS from "../../../Styles/Global.module.css";
 // import CourseCard from "../../LandingPagesFolder/CourseCards";
-// import { BASE_URL } from "../../../../apiConfig";
+// import { BASE_URL } from "../../../../apiConfig.js";
 
 // export default function StudentDashboard_BuyCourses() {
 //   useEffect(() => {

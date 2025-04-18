@@ -9,7 +9,7 @@ import otsFeatureImg from "../../assets/TestSeriesDescription.png";
 import orvlFeatureImg from "../../assets/TestSeriesDescription.png";
 import pqbBannerImg from "../../assets/PortalBanner.png";
 import pqbFeatureImg from "../../assets/TestSeriesDescription.png";
-import { BASE_URL } from '../../../config/apiConfig';
+import { BASE_URL } from '../../../config/apiConfig.js';
 import { useNavigate } from 'react-router-dom';
 import CourseCard from "./CourseCards";
 
