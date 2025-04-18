@@ -91,24 +91,17 @@ const Popup = ({
         <button onClick={previousLectureOrExercise}>
           <MemoizedGrPrevious />
         </button>
-
-        {lecture ? (
-          <div>
-            <h2>{lecture.orvl_lecture_name}</h2>
-            {lecture.lecture_video_link && (
-              <ReactPlayer url={lecture.lecture_video_link} controls width="100%" />
-            )}
-          </div>
-        ) : exercise ? (
+  
+        {exercise && exercise.questions?.length > 0 ? (
           <div className="slideshow">
             <div className="SlideShow_Heading_container">
               <h2>{exercise.exercise_name}</h2>
             </div>
-
+  
             <div className="exercise-question-container">
               <h4>{currentQuestion.exercise_question_sort_id}</h4>
               <p>{currentQuestion.exercise_question_type}</p>
-
+  
               {currentQuestion.exercise_question_img && (
                 <div className="img-container">
                   <img
@@ -117,7 +110,7 @@ const Popup = ({
                   />
                 </div>
               )}
-
+  
               {currentQuestion.exercise_question_type === 'NATD' && (
                 <div className="calc-container">
                   <input
@@ -130,7 +123,7 @@ const Popup = ({
                   />
                 </div>
               )}
-
+  
               {(currentQuestion.exercise_question_type === 'MCQ' ||
                 currentQuestion.exercise_question_type === 'MSQ') &&
                 currentQuestion.options?.length > 0 && (
@@ -138,12 +131,18 @@ const Popup = ({
                     {currentQuestion.options.map((option) => (
                       <label key={option.exercise_option_id}>
                         <input
-                          type={currentQuestion.exercise_question_type === 'MSQ' ? 'checkbox' : 'radio'}
+                          type={
+                            currentQuestion.exercise_question_type === 'MSQ'
+                              ? 'checkbox'
+                              : 'radio'
+                          }
                           name={`question_${currentQuestion.exercise_question_id}`}
                           value={option.exercise_option_index}
-                          checked={currentQuestion.exercise_question_type === 'MSQ'
-                            ? selectedOptions.includes(option.exercise_option_index)
-                            : userAnswer === option.exercise_option_index}
+                          checked={
+                            currentQuestion.exercise_question_type === 'MSQ'
+                              ? selectedOptions.includes(option.exercise_option_index)
+                              : userAnswer === option.exercise_option_index
+                          }
                           onChange={() => handleOptionChange(option.exercise_option_index)}
                           disabled={answerDisabled}
                         />
@@ -160,9 +159,9 @@ const Popup = ({
                   </div>
                 )}
             </div>
-
+  
             {feedback && <div>{feedback}</div>}
-
+  
             <div className="navigation-buttons-for-ques">
               {currentQuestionIndex > 0 && (
                 <button onClick={previousQuestion}>Previous Question</button>
@@ -181,7 +180,7 @@ const Popup = ({
                 <button onClick={nextQuestion}>Next Question</button>
               )}
             </div>
-
+  
             <div className={styles['status-pallete']}>
               {exercise.questions.map((question, index) => {
                 const status = getStatus(question.exercise_question_id);
@@ -189,8 +188,6 @@ const Popup = ({
                   <span
                     key={question.exercise_question_id}
                     className={`${styles['status-item']} ${styles[status.toLowerCase()]}`}
-
-
                     title={`Question ${index + 1}: ${status}`}
                     onClick={() => setCurrentQuestionIndex(index)}
                   >
@@ -200,16 +197,24 @@ const Popup = ({
               })}
             </div>
           </div>
+        ) : lecture ? (
+          <div>
+            <h2>{lecture.orvl_lecture_name}</h2>
+            {lecture.lecture_video_link && (
+              <ReactPlayer url={lecture.lecture_video_link} controls width="100%" />
+            )}
+          </div>
         ) : (
           <div>No data available</div>
         )}
-
+  
         <button onClick={nextLectureOrExercise}>
           <MemoizedGrNext />
         </button>
       </div>
     </div>
   );
-};
+  
+}
 
 export default Popup;
