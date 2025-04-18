@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../../Styles/AdminDashboardCSS/AdminDashboard.module.css";
-import ArrangeQuestions from "./ArrangeQuestion";
-import ViewQuestions from "./ViewQuestions";
-import ViewResults from "./ViewResults"; // Assuming ViewResults is another component
+import ArrangeQuestions from "./ArrangeQuestion.jsx";
+import ViewQuestions from "./ViewQuestions.jsx";
+import ViewResults from "./ViewResults.jsx"; // Assuming ViewResults is another component
 import { RxWidth } from "react-icons/rx";
 import { encryptBatch } from '../../../utils/cryptoUtils.jsx';
-import AssignToTest from "./AssignToTest";
+import AssignToTest from "./AssignToTest.jsx";
 
 const DynamicTable = ({
   columns,

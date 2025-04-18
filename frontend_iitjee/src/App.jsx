@@ -5,16 +5,16 @@
 // const OTSandORVLHomePage = React.lazy(() => import('./Components/LandingPagesFolder/OTSandORVLHomePage.jsx'));
 // const StudentRegistration = React.lazy(() => import('./Components/StudentDashboardFilesFolder/StudentLoginFiles/studentRegistration.jsx'));
 // const AdminLogin = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminLoginPages/AdminLogin.jsx'));
-// const AdminDashboardHome  = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/AdminDashboardHome.jsx'));
+// const AdminDashboardHome  = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminDashboardFiles/AdminDashboardHome.jsx'));
 // const FooterTermsAndConditions = React.lazy(() => import('./Components/LandingPagesFolder/MainPageHeaderFooterFiles/FooterTermsAndConditions.jsx'));
 // const StudentLogin= React.lazy(() => import('./Components/StudentDashboardFilesFolder/StudentLoginFiles/studentLogin.jsx'));
 // const StudentDashboard = React.lazy(() => import('./Components/StudentDashboardFilesFolder/StudentDashboardFiles/StudentDashboard.jsx'));
 // const OTSRootFile = React.lazy(() => import('./Components/OTS/OTSRootFile.jsx'));
-// const DashBoard = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/DashBoard.jsx'));
-// const CourseCreationTab = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/CourseCreationTab.jsx'));
-// const Instruction = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/Instruction.jsx'));
-// const TestCreation = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/TestCreation.jsx'));
-// const DocumentUpload = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/DocumentUpload.jsx'));
+// const DashBoard = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminDashboardFiles/DashBoard.jsx'));
+// const CourseCreationTab = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminDashboardFiles/CourseCreationTab.jsx'));
+// const Instruction = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminDashboardFiles/Instruction.jsx'));
+// const TestCreation = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminDashboardFiles/TestCreation.jsx'));
+// const DocumentUpload = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminDashboardFiles/DocumentUpload.jsx'));
 // function App() {
 //   return (
 //    <Suspense>
@@ -53,18 +53,18 @@ const LandingPageIITJEE = React.lazy(() => import('./Components/LandingPagesFold
 const OTSandORVLHomePage = React.lazy(() => import('./Components/LandingPagesFolder/OTSandORVLHomePage.jsx'));
 const StudentRegistrationeGradTutor = React.lazy(() => import('./Components/StudentDashboardFilesFolder/StudentLogineGradTutor/StudentRegistrationeGradTutor.jsx'));
 const AdminLogin = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminLoginPages/AdminLogin.jsx'));
-const AdminDashboardHome  = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/AdminDashboardHome.jsx'));
+const AdminDashboardHome  = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminDashboardFiles/AdminDashboardHome.jsx'));
 const FooterTermsAndConditions = React.lazy(() => import('./Components/LandingPagesFolder/MainPageHeaderFooterFiles/FooterTermsAndConditions.jsx'));
 const StudentLogineGradTutor = React.lazy(() => import('./Components/StudentDashboardFilesFolder/StudentLogineGradTutor/StudentLogineGradTutor.jsx'));
 const StudentDashboard = React.lazy(() => import('./Components/StudentDashboardFilesFolder/StudentDashboardFiles/StudentDashboard.jsx'));
 const OTSRootFile = React.lazy(() => import('./Components/OTS/OTSRootFile.jsx'));
-const MainLayout = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/AdminMainLayout.jsx'));
-const CourseCreationTab = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/CourseCreationTab.jsx'));
-const StudentInfo = React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/StudentInfo.jsx'));
+const MainLayout = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminDashboardFiles/AdminMainLayout.jsx'));
+const CourseCreationTab = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminDashboardFiles/CourseCreationTab.jsx'));
+const StudentInfo = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminDashboardFiles/StudentInfo.jsx'));
 const GeneralInstructions = React.lazy(() => import('./Components/OTS/InstructionsFolder/GeneralInstructions.jsx'));
 const PageNotFound =   React.lazy(() => import('./Components/OTS/InstructionsFolder/PageNotFound.jsx'));
 const ExamInstrctions =  React.lazy(() => import( './Components/OTS/InstructionsFolder/ExamInstrctions.jsx'));
-const AdminProfiler=React.lazy(() => import('./Components/AdminDasboardPagesFolder/adminDashboardPages/AdminProfiler.jsx'));
+const AdminProfiler=React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminDashboardFiles/AdminProfiler.jsx'));
 const OrvlDashboard=React.lazy(()=>import("./Components/AdminDasboardPagesFolder/OrvlAdminDashboard/OrvlAdminDashboard.jsx"))
 const StudentReportMain  = React.lazy(()=>import('./Components/OTS/ResultsFolderOTS/StudentReportMain.jsx'));
 function App() {

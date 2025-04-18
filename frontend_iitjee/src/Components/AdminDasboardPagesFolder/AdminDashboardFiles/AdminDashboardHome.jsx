@@ -6,8 +6,8 @@ import AdminDashboardHeader from './AdminDashboardHeader.jsx';
 import DashBoard from './DashBoard.jsx';
 import CourseCreationTab from './CourseCreationTab.jsx';
 import TestCreationTab from './TestCreationTab.jsx';
-import DocumentUpload from './DocumentUpload.jsx';
-import InstructionsTab from './InstructionsTab.jsx';
+import DocumentUpload from '../AdminDashboardFiles/DocumentUpload.jsx';
+import InstructionsTab from '../AdminDashboardFiles/InstructionsTab.jsx';
 
 export default function AdminDashboardHome() {
   // State to track the selected component
