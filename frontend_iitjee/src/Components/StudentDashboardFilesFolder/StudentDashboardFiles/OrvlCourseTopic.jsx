@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BASE_URL } from '../../../Config/ApiConfig.js'; // Import the base URL from config
+import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js'; // Import the base URL from config
 import LectureExerciseList from './LectureExerciseList';
 import Popup from './Popup';
 
