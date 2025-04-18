@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Styles from "../../../Styles/StudentDashboardCSS/StudentRegistration.module.css";
 import SRFormImage from "../../../assets/SRFormImage.jpg";
-import MainHeader from "../../LandingPagesFolder/MainPageHeaderFooterFolder/MainHeader.jsx";
-import MainFooter from "../../LandingPagesFolder/MainPageHeaderFooterFolder/MainFooter.jsx";
+import MainHeader from "../../LandingPagesFolder/MainPageHeaderFooterFiles/MainHeader.jsx";
+import MainFooter from "../../LandingPagesFolder/MainPageHeaderFooterFiles/MainFooter.jsx";
 import { BASE_URL } from "../../../config/apiConfig.js";
 import TermsAndConditions from "../../GlobalFiles/TermsAndConditions.jsx";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useRef } from "react";
-const StudentRegistration = () => {
+const StudentRegistrationeGradTutor = () => {
   const [formData, setFormData] = useState({
     candidateName: "",
     dateOfBirth: "",
@@ -1059,4 +1059,4 @@ if (formData.uploadedPhoto) {
   );
 };
 
-export default StudentRegistration;
+export default StudentRegistrationeGradTutor;

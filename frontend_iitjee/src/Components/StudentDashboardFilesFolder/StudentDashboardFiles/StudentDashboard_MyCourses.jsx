@@ -2,9 +2,9 @@ import React, { useEffect, useState, useMemo } from 'react';
 import globalCSS from "../../../Styles/global.module.css";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import CourseCard from '../../LandingPagesFolder/CourseCards.jsx';
-import { BASE_URL } from '../../../config/apiConfig';
-import TestDetailsContainer from './TestDetailsContainer';
-import OrvlTopicCards from "./OrvlTopicCards";
+import { BASE_URL } from '../../../config/apiConfig.js';
+import TestDetailsContainer from './TestDetailsContainer.jsx';
+import OrvlTopicCards from "./OrvlTopicCards.jsx";
 import OrvlCourseTopic from "./OrvlCourseTopic.jsx"; 
 export default function StudentDashboard_MyCourses({ studentId }) {
 

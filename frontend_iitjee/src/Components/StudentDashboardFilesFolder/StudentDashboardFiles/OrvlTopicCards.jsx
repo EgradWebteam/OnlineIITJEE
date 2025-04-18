@@ -73,7 +73,7 @@ export default function OrvlTopicCards({
       </div>
 
       {/* Topic Cards */}
-      <div className={globalCSS.cardHolderOTSORVLHome}>
+      <div className={globalCSS.OrvlTopicCardSub}>
         {selectedSubject?.topics.length > 0 ? (
           selectedSubject.topics.map((topic) => (
             <OrvlTopicCardSub

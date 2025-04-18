@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate,Link } from 'react-router-dom';
 import styles from "../../../Styles/StudentDashboardCSS/Student.module.css"; 
 import stdLogo from '../../../assets/logoCap.jpeg';
-import MainHeader from '../../LandingPagesFolder/MainPageHeaderFooterFolder/MainHeader.jsx';
-import MainFooter from '../../LandingPagesFolder/MainPageHeaderFooterFolder/MainFooter.jsx';
+import MainHeader from '../../LandingPagesFolder/MainPageHeaderFooterFiles/MainHeader.jsx';
+import MainFooter from '../../LandingPagesFolder/MainPageHeaderFooterFiles/MainFooter.jsx';
 import { BASE_URL } from "../../../config/apiConfig.js";
-import StudentLoginForm from './studentLoginForm';
+import StudentLoginFormeGradTutor from './StudentLoginFormeGradTutor.jsx';
 import { useStudent } from '../../../ContextFolder/StudentContext.jsx';
 import { v4 as uuidv4 } from 'uuid';
-export default function StudentLogin() {
+export default function StudentLogineGradTutor() {
   const [username, setUsername] = useState(""); 
   const [password, setPassword] = useState("");  
   const [newPassword, setNewPassword] = useState("");  
@@ -154,7 +154,7 @@ const handleResetPassword = async (e) => {
           <h1>{isForgotPassword ? "Forgot Password" : "Student Login"}</h1>
           
           {/* Render the form here */}
-          <StudentLoginForm 
+          <StudentLoginFormeGradTutor 
             isForgotPassword={isForgotPassword}
             isResetPassword={isResetPassword}
             username={username}
