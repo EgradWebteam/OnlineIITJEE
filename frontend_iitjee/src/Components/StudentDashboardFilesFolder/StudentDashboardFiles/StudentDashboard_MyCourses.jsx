@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import globalCSS from "../../../Styles/global.module.css";
+import globalCSS from "../../../Styles/Global.module.css";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import CourseCard from '../../LandingPagesFolder/CourseCards.jsx';
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
