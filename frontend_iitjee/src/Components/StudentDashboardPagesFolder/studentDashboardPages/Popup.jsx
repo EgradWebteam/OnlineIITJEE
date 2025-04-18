@@ -1,12 +1,14 @@
 import React from 'react';
 import ReactPlayer from 'react-player'; // Assuming ReactPlayer is installed for video playback
 
-const Popup = ({ lecture, exercise, onClose }) => {
+const Popup = ({ lecture, exercise, onClose,previousLectureOrExercise,nextLectureOrExercise }) => {
+    
   return (
     <div className="popup-overlay">
       <div className="popup-content">
         <button onClick={onClose}>Close</button>
-
+        <button onClick={previousLectureOrExercise}>Previous</button>
+       
         {lecture ? (
           <div>
             <h2>{lecture.orvl_lecture_name}</h2>
@@ -35,7 +37,9 @@ const Popup = ({ lecture, exercise, onClose }) => {
           </div>
         ) : (
           <div>No data available</div>
+          
         )}
+         <button onClick={nextLectureOrExercise}>Next</button>
       </div>
     </div>
   );
