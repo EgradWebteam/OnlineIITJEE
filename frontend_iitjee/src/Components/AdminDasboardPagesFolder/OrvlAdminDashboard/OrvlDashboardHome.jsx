@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import OrvlLeftNav from './OrvlLeftNav';
 import AdminDashboardHeader from '../AdminDashboardFiles/AdminDashboardHeader.jsx';
-import OrvlCourseCreation from './orvlCourseCreation.jsx';
+import OrvlCourseCreation from './OrvlCourseCreation.jsx';
 import OrvlTopicCreation from './orvlTopicCreation.jsx';
 
 import styles  from '../../../Styles/AdminDashboardCSS/AdminDashboard.module.css'; 
