@@ -2,6 +2,7 @@ import React, { useState, memo } from 'react';
 import ReactPlayer from 'react-player';
 import { IoClose } from 'react-icons/io5';
 import { GrPrevious, GrNext } from 'react-icons/gr';
+import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js'; 
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";// Import the CSS file
 
 export const MemoizedIoClose = memo(IoClose);
@@ -10,13 +11,18 @@ export const MemoizedGrNext = memo(GrNext);
 
 const Popup = ({
   lecture,
+  topicid,
+  courseCreationId,
+  studentId,
   exercise,
   exerciseStatus, // Assuming exerciseStatus contains the status of each question
   onClose,
   previousLectureOrExercise,
   nextLectureOrExercise,
+  currentQuestionIndex,
+  setCurrentQuestionIndex
 }) => {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+ 
   const [userAnswer, setUserAnswer] = useState('');
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [answerDisabled, setAnswerDisabled] = useState(false);
@@ -46,10 +52,8 @@ const Popup = ({
   };
 
   const handleSubmitAnswer = () => {
-    setFeedback('Answer submitted!');
-    setAnswerDisabled(true);
-
     let submittedAnswer;
+  
     if (currentQuestion.exercise_question_type === 'NATD') {
       submittedAnswer = userAnswer;
     } else if (currentQuestion.exercise_question_type === 'MSQ') {
@@ -57,10 +61,39 @@ const Popup = ({
     } else if (currentQuestion.exercise_question_type === 'MCQ') {
       submittedAnswer = userAnswer;
     }
-
+  
+    const payload = {
+      question_status: 1, // or "not_answered", etc.
+      orvl_topic_id: topicid,
+      exercise_question_id: exercise?.questions?.[currentQuestionIndex]?.exercise_question_id,
+      exercise_name_id: exercise.exercise_name_id,
+      student_registration_id: studentId,
+      course_creation_id: courseCreationId,
+      exercise_userresponse: submittedAnswer,  // Pass the answer here
+    };
+  
+    setFeedback('Answer submitted!');
+    setAnswerDisabled(true);
+  
     console.log('Answer:', submittedAnswer);
+  
+    // Send the answer via fetch request
+    fetch(`${BASE_URL}/OrvlTopics/SubmitUserAnswer`, {
+      method: 'PUT', // Specify the request method
+      headers: {
+        'Content-Type': 'application/json', // We are sending JSON data
+      },
+      body: JSON.stringify(payload), // Convert the payload to JSON string
+    })
+      .then(response => response.json()) // Parse the response as JSON
+      .then(data => {
+        console.log('Answer submitted successfully:', data);
+      })
+      .catch(error => {
+        console.error('Error submitting answer:', error);
+      });
   };
-
+  
   const handleOptionChange = (value) => {
     if (currentQuestion.exercise_question_type === 'MCQ') {
       setUserAnswer(value);
@@ -81,6 +114,7 @@ const Popup = ({
     }
     return 'NotVisited';
   };
+  
 
   return (
     <div className="popup-overlay">

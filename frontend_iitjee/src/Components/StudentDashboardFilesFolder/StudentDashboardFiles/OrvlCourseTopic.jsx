@@ -13,6 +13,7 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
   const [showExercise, setShowExercise] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const[exerciseStatus,setExerciseStatus] = useState(null)
+   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
@@ -33,128 +34,151 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
     fetchCourseData();
   }, [topicid]);
     const fetchExerciseStatus = async () => {
-      try {
-        const response = await fetch(
-          `${BASE_URL}/OrvlTopics/GetExcerciseQuestionStatus/${topicid}/${exercise_name_id}/${studentId}/${courseCreationId}`
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-  
-        const data = await response.json();
-        const statuses = {};
-  
-        // Check if there are any questions to iterate over and if data is not empty
-        if (data && Object.keys(data).length > 0 && selectedExercise.exerciseQuestions?.length > 0) {
-          selectedExercise.exerciseQuestions.forEach((question) => {
-            const questionStatus = data[question.exercise_question_id];
-  
-            // If no status is found, set it as "NotVisited", otherwise set as "Answered" or "NotAnswered"
-            if (questionStatus === undefined) {
-              statuses[question.exercise_question_id] = "NotVisited";
-            } else {
-              statuses[question.exercise_question_id] = questionStatus === 1 ? "Answered" : "NotAnswered";
+          const exercise_name_id = selectedExercise?.exercise_name_id;
+        
+            try {
+              const response = await fetch(
+                `${BASE_URL}/OrvlTopics/GetExcerciseQuestionStatus/${topicid}/${exercise_name_id}/${studentId}/${courseCreationId}`
+              );
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+        
+              const statusData = await response.json(); // API response for question status
+        
+              // Initialize an object to store statuses
+              const statuses = {};
+        
+              // Map over the exercises and questions
+              selectedExercise.questions.forEach((question) => {
+                // Find the corresponding status from the statusData
+                const questionStatus = statusData.find(
+                  (status) => status.exercise_question_id === question.exercise_question_id
+                );
+        
+                // Determine the question status
+                const status = questionStatus
+                  ? questionStatus.question_status === 1
+                    ? "answered"
+                    : questionStatus.question_status === 0
+                    ? "unanswered"
+                    : "unvisited"
+                  : "unvisited"; // Default to "unvisited" if no status found
+        
+                // Add the status to the statuses object with question ID as key
+                statuses[question.exercise_question_id] = status;
+              });
+        
+              setExerciseStatus(statuses);
+              console.log(statuses);
+            } catch (err) {
+              console.error('Error fetching exercise status:', err);
+              setError(err);
+            } finally {
+              setLoading(false);
             }
-          });
-        } else {
-          // Default every question to "NotVisited" if no response found or exerciseQuestions is empty
-          if (selectedExercise.exerciseQuestions?.length > 0) {
-            selectedExercise.exerciseQuestions.forEach((question) => {
-              statuses[question.exercise_question_id] = "NotVisited";
-            });
+          };
+        
+  
+    useEffect(() => {
+      const exercise_name_id = selectedExercise?.exercise_name_id;
+    
+      const fetchExerciseStatus = async () => {
+        try {
+          const response = await fetch(
+            `${BASE_URL}/OrvlTopics/GetExcerciseQuestionStatus/${topicid}/${exercise_name_id}/${studentId}/${courseCreationId}`
+          );
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
           }
-        }
-  
-        setExerciseStatus(statuses); // Store statuses as an object
-      } catch (err) {
-        console.error('Error fetching exercise status:', err);
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-  useEffect(() => {
-    const exercise_name_id = selectedExercise?.exercise_name_id;
-  
-    const fetchExerciseStatus = async () => {
-      try {
-        const response = await fetch(
-          `${BASE_URL}/OrvlTopics/GetExcerciseQuestionStatus/${topicid}/${exercise_name_id}/${studentId}/${courseCreationId}`
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-  
-        const data = await response.json();
-        const statuses = {};
-  
-        // Check if there are any questions to iterate over and if data is not empty
-        if (data && Object.keys(data).length > 0 && selectedExercise.exerciseQuestions?.length > 0) {
-          selectedExercise.exerciseQuestions.forEach((question) => {
-            const questionStatus = data[question.exercise_question_id];
-  
-            // If no status is found, set it as "NotVisited", otherwise set as "Answered" or "NotAnswered"
-            if (questionStatus === undefined) {
-              statuses[question.exercise_question_id] = "NotVisited";
-            } else {
-              statuses[question.exercise_question_id] = questionStatus === 1 ? "Answered" : "NotAnswered";
-            }
+    
+          const statusData = await response.json(); // API response for question status
+    
+          // Initialize an object to store statuses
+          const statuses = {};
+    
+          // Map over the exercises and questions
+          selectedExercise.questions.forEach((question) => {
+            // Find the corresponding status from the statusData
+            const questionStatus = statusData.find(
+              (status) => status.exercise_question_id === question.exercise_question_id
+            );
+    
+            // Determine the question status
+            const status = questionStatus
+              ? questionStatus.question_status === 1
+                ? "answered"
+                : questionStatus.question_status === 0
+                ? "unanswered"
+                : "unvisited"
+              : "unvisited"; // Default to "unvisited" if no status found
+    
+            // Add the status to the statuses object with question ID as key
+            statuses[question.exercise_question_id] = status;
           });
-        } else {
-          // Default every question to "NotVisited" if no response found or exerciseQuestions is empty
-          if (selectedExercise.exerciseQuestions?.length > 0) {
-            selectedExercise.exerciseQuestions.forEach((question) => {
-              statuses[question.exercise_question_id] = "NotVisited";
-            });
-          }
+    
+          setExerciseStatus(statuses);
+          console.log(statuses);
+        } catch (err) {
+          console.error('Error fetching exercise status:', err);
+          setError(err);
+        } finally {
+          setLoading(false);
         }
-  
-        setExerciseStatus(statuses); // Store statuses as an object
-      } catch (err) {
-        console.error('Error fetching exercise status:', err);
-        setError(err);
-      } finally {
-        setLoading(false);
+      };
+    
+      if (topicid && exercise_name_id && studentId && courseCreationId) {
+        fetchExerciseStatus();
       }
-    };
-  
-    if (topicid && exercise_name_id && studentId && courseCreationId) {
-      fetchExerciseStatus();
-    }
-  }, [topicid, selectedExercise, studentId, courseCreationId]);
-  
-  
+    }, [topicid, selectedExercise, studentId, courseCreationId]);
+    
   useEffect(() => {
-    if (
-      selectedExercise &&
-      selectedExercise.exerciseQuestions &&
-      exerciseStatus
-    ) {
-      selectedExercise.exerciseQuestions.forEach((question) => {
-        const status = exerciseStatus[question.exercise_question_id];
-        if (status === "NotVisited") {
-         
-          submitExerciseStatus(); 
+    console.log("gd");
+  
+    if (selectedExercise) {
+      console.log("gdgdgd");
+      console.log(selectedExercise)
+  console.log(selectedExercise?.questions?.[currentQuestionIndex]?.exercise_question_id)
+      const questionid = selectedExercise?.questions?.[currentQuestionIndex]?.exercise_question_id;
+      if (!questionid) return; // If there's no questionid, exit early
+  
+      // Check if exerciseStatus is an object and not null
+      if (exerciseStatus && typeof exerciseStatus === 'object') {
+        const status = exerciseStatus[questionid]; // Get the status for the current question
+
+  
+        // Only submit if the status is "NotVisited"
+        if (status === 'unvisited') {
+          submitExerciseStatus(questionid);
         } else {
           console.log({ alldhf: 'Question already visited or answered' });
         }
-      });
+      } else {
+        console.log("exerciseStatus or questionid is invalid.");
+      }
     }
-  }, [selectedExercise, exerciseStatus]);
+  }, [selectedExercise, currentQuestionIndex]);
   
-  const submitExerciseStatus = async () => {
+  
+  
+
+
+  
+  
+  
+  
+  const submitExerciseStatus = async (questionid ) => {
     const payload = {
       question_status: 0, // or "not_answered", etc.
       orvl_topic_id: topicid,
-      exercise_question_id: yourQuestionId,
+      exercise_question_id: questionid,
       exercise_name_id: selectedExercise.exercise_name_id,
       student_registration_id: studentId,
       course_creation_id: courseCreationId,
     };
   
     try {
-      const response = await fetch(`${BASE_URL}/ExerciseQuestionstatus`, {
+      const response = await fetch(`${BASE_URL}/OrvlTopics/ExerciseQuestionstatus`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -307,9 +331,14 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
           lecture={selectedLecture}
           exercise={selectedExercise}
           onClose={handleClosePopup}
+          topicid={topicid}
+          currentQuestionIndex={currentQuestionIndex}
+          setCurrentQuestionIndex={setCurrentQuestionIndex}
           exerciseStatus={exerciseStatus}
           previousLectureOrExercise={previousLectureOrExercise}
           nextLectureOrExercise={nextLectureOrExercise}
+          studentId = {studentId} 
+          courseCreationId = {courseCreationId}
         />
       ) : (
         <LectureExerciseList
