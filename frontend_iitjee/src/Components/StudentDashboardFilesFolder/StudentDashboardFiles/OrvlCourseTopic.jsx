@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js'; // Import the base URL from config
 import LectureExerciseList from './LectureExerciseList';
 import Popup from './Popup';
-
+import globalCSS from '../../../Styles/Global.module.css'
 const OrvlCourseTopic = ({ topicid, onBack }) => {
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -15,7 +15,7 @@ const OrvlCourseTopic = ({ topicid, onBack }) => {
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
-        
+
         const response = await fetch(`${BASE_URL}/OrvlTopics/CourseTopic/${topicid}`);
         if (!response.ok) {
           throw new Error('Failed to fetch course data');
@@ -159,9 +159,15 @@ const OrvlCourseTopic = ({ topicid, onBack }) => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div>
-      <button onClick={onBack}>Back</button>
-      <h1>{courseData.orvl_topic_name}</h1>
+ 
+     <div className={globalCSS.OrvlCourseTopicContainer}>
+         <div className={globalCSS.OrvlCourseTopicbtn}>
+         <button onClick={onBack}>Back</button>
+         </div>
+         <div className={globalCSS.OrvlCourseTopicHeader}>
+         <div>{courseData.orvl_topic_name}</div>
+         </div>
+         <div className={globalCSS.OrvlCourseTopicContent}>
 
       {showPopup ? (
         <Popup
@@ -178,6 +184,7 @@ const OrvlCourseTopic = ({ topicid, onBack }) => {
           onExerciseClick={handleExerciseClick}
         />
       )}
+    </div>
     </div>
   );
 };
