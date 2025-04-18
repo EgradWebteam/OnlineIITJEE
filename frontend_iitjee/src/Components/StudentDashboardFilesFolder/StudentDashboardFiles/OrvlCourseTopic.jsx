@@ -34,15 +34,28 @@ const OrvlCourseTopic = ({ topicid, onBack }) => {
 
   const handleLectureClick = (lecture) => {
     setSelectedLecture(lecture);
+    setSelectedExercise(null);         // Don't auto-start exercise
+    setShowExercise(false);            // Start with lecture only
     setShowPopup(true);
-    setShowExercise(false);
   };
+  
 
   const handleExerciseClick = (exercise) => {
+  const parentLecture = courseData.lectures.find((lecture) =>
+    lecture.exercises.some((ex) => ex.exercise_name === exercise.exercise_name)
+  );
+
+  if (parentLecture) {
+    setSelectedLecture(parentLecture);
     setSelectedExercise(exercise);
-    setShowPopup(true);
     setShowExercise(true);
-  };
+    setShowPopup(true);
+  } else {
+    console.error("Parent lecture not found for exercise.");
+  }
+};
+
+  
 
   const handleClosePopup = () => {
     setSelectedLecture(null);
@@ -51,69 +64,60 @@ const OrvlCourseTopic = ({ topicid, onBack }) => {
   };
 
   const nextLectureOrExercise = () => {
-    if (!courseData || !courseData.lectures) return;
+    if (!courseData || !selectedLecture) return;
   
-    const currentLecture = courseData.lectures.find(
-      (lecture) => lecture.orvl_lecture_name === selectedLecture?.orvl_lecture_name
+    const currentLectureIndex = courseData.lectures.findIndex(
+      (lecture) => lecture.orvl_lecture_name === selectedLecture.orvl_lecture_name
     );
+    const currentLecture = courseData.lectures[currentLectureIndex];
   
-    if (!currentLecture) return;
-  
-    // If currently on a lecture (not exercise), and it has exercises, go to the first one
-    if (!showExercise && currentLecture.exercises.length > 0) {
-      setSelectedExercise(currentLecture.exercises[0]);
-      setShowExercise(true);
-      return;
-    }
-  
-    // If already in an exercise
-    if (showExercise) {
-      const currentExerciseIndex = currentLecture.exercises.findIndex(
-        (ex) => ex.exercise_name === selectedExercise?.exercise_name
-      );
-  
-      const nextExerciseIndex = currentExerciseIndex + 1;
-  
-      if (nextExerciseIndex < currentLecture.exercises.length) {
-        // Go to next exercise
-        setSelectedExercise(currentLecture.exercises[nextExerciseIndex]);
+    if (!showExercise) {
+      // Go from lecture → first exercise (if any)
+      if (currentLecture.exercises.length > 0) {
+        setSelectedExercise(currentLecture.exercises[0]);
+        setShowExercise(true);
       } else {
-        // No more exercises, move to next lecture
-        const nextLectureIndex = courseData.lectures.indexOf(currentLecture) + 1;
-  
-        if (nextLectureIndex < courseData.lectures.length) {
-          const nextLecture = courseData.lectures[nextLectureIndex];
+        // No exercises → next lecture
+        const nextLecture = courseData.lectures[currentLectureIndex + 1];
+        if (nextLecture) {
           setSelectedLecture(nextLecture);
           setSelectedExercise(null);
           setShowExercise(false);
         } else {
-          alert("You are already on the last lecture.");
+          alert("You're already at the last lecture.");
         }
       }
     } else {
-      // No exercises and not in exercise mode, just move to next lecture
-      const currentLectureIndex = courseData.lectures.indexOf(currentLecture);
-      if (currentLectureIndex < courseData.lectures.length - 1) {
-        const nextLecture = courseData.lectures[currentLectureIndex + 1];
-        setSelectedLecture(nextLecture);
+      // In exercises → move to next exercise
+      const currentExerciseIndex = currentLecture.exercises.findIndex(
+        (ex) => ex.exercise_name === selectedExercise.exercise_name
+      );
+  
+      if (currentExerciseIndex < currentLecture.exercises.length - 1) {
+        setSelectedExercise(currentLecture.exercises[currentExerciseIndex + 1]);
       } else {
-        alert("You are already on the last lecture.");
+        // Finished last exercise → move to next lecture
+        const nextLecture = courseData.lectures[currentLectureIndex + 1];
+        if (nextLecture) {
+          setSelectedLecture(nextLecture);
+          setSelectedExercise(null);
+          setShowExercise(false);
+        } else {
+          alert("You're already at the last lecture.");
+        }
       }
     }
   };
   
+  
   const previousLectureOrExercise = () => {
-    if (!courseData || !courseData.lectures) return;
+    if (!courseData || !selectedLecture) return;
   
     const currentLectureIndex = courseData.lectures.findIndex(
-      (lecture) => lecture.orvl_lecture_name === selectedLecture?.orvl_lecture_name
+      (lecture) => lecture.orvl_lecture_name === selectedLecture.orvl_lecture_name
     );
-  
-    if (currentLectureIndex === -1) return;
-  
     const currentLecture = courseData.lectures[currentLectureIndex];
   
-    // If currently viewing an exercise
     if (showExercise && selectedExercise) {
       const currentExerciseIndex = currentLecture.exercises.findIndex(
         (ex) => ex.exercise_name === selectedExercise.exercise_name
@@ -121,36 +125,30 @@ const OrvlCourseTopic = ({ topicid, onBack }) => {
   
       if (currentExerciseIndex > 0) {
         // Go to previous exercise
-        const prevExercise = currentLecture.exercises[currentExerciseIndex - 1];
-        setSelectedExercise(prevExercise);
+        setSelectedExercise(currentLecture.exercises[currentExerciseIndex - 1]);
       } else {
-        // First exercise: return to lecture
+        // First exercise → back to lecture
         setShowExercise(false);
         setSelectedExercise(null);
       }
-      return;
-    }
+    } else {
+      // Back from lecture → previous lecture's last exercise (if any)
+      const previousLecture = courseData.lectures[currentLectureIndex - 1];
   
-    // If currently on a lecture
-    if (!showExercise) {
-      if (currentLectureIndex > 0) {
-        const previousLecture = courseData.lectures[currentLectureIndex - 1];
+      if (previousLecture) {
         setSelectedLecture(previousLecture);
-  
         if (previousLecture.exercises.length > 0) {
-          const lastExercise = previousLecture.exercises[previousLecture.exercises.length - 1];
-          setSelectedExercise(lastExercise);
+          setSelectedExercise(previousLecture.exercises[previousLecture.exercises.length - 1]);
           setShowExercise(true);
         } else {
           setSelectedExercise(null);
           setShowExercise(false);
         }
       } else {
-        alert("You are already on the first lecture.");
+        alert("You're already at the first lecture.");
       }
     }
   };
-  
   
 
   if (loading) return <div>Loading...</div>;
