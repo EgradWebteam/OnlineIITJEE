@@ -17,7 +17,7 @@ const LectureExerciseList = ({ lectures, onLectureClick, onExerciseClick }) => {
 
           {/* Display the exercises for the current lecture */}
           <div>
-            <h3>Exercises</h3>
+          
             {lecture.exercises.map((exercise) => (
               <button
                 key={exercise.exercise_name_id}
