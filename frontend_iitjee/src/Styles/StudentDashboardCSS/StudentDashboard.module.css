@@ -234,6 +234,10 @@
   text-align: right;
   margin: 1rem;
 }
+.CloseBtnForPopup  button{
+  padding: 4px;
+  font-size: 12px;
+}
 .headerForCloseSndHeading {
   display: flex;
   justify-content: center;
@@ -247,6 +251,8 @@
   width: 100%;
   text-align: center;
   justify-self: end;
+  font-size: 30px;
+    font-weight: 600;
 }
 .lecturesOrExercisesContainer {
   display: flex;
@@ -289,7 +295,7 @@
   padding: 0 50px;
 }
 .QuestionsAndImgScrollContainer {
-  max-height: 400px; 
+  max-height: 350px; 
   overflow-y: auto; 
   padding-right: 10px; 
   overflow-x: hidden;
@@ -303,6 +309,10 @@
 .options_container {
   max-height: 200px; 
   overflow-y: auto; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
 }
 .popup_main_content {
   flex: 1; /* Allow this section to take up the remaining width */
@@ -324,6 +334,9 @@
   cursor: pointer;
   border: none;
   transition: background-color 0.3s ease;
+  
+}
+.side_nav_button svg{
   font-size: 20px;
 }
 .status_pallete {
@@ -334,17 +347,18 @@
   gap: 8px;
   padding: 10px 0;
   justify-content: flex-start; 
+  align-items: center;
 }
-.status_pallete::-webkit-scrollbar {
+/* .status_pallete::-webkit-scrollbar {
   display: none;
-}
+} */
 .status_item {
   border-radius: 50%;
-  padding: 10px;
   border: 1px solid black;
-  width: 20px;
-  height: 20px;
+  width: 40px;
+  height: 40px;
   text-align: center;
+  padding: 5px;
   background-color: rgb(221, 220, 220);
 }
 .slideshow {
@@ -381,16 +395,12 @@
   border-top: 1px solid rgb(192, 191, 191);
   padding: 1rem 0;
 }
-.options_container{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 10px;
-}
 .options_container label{
   display: flex;
   align-items: center;
-
+}
+.options_container input{
+  color: blue;
 }
 .BtnForQuestion button {
   padding: 10px 15px;
@@ -424,16 +434,19 @@ justify-content: center;
   padding: 7px;
 }
 
-.unanswered {
-  background-color: red;
+.unanswered{
+  background-color: rgb(253, 52, 52);
+  
 }
 
-.answered {
-  background-color: green;
+.answered{
+  background-color: rgb(57, 190, 57);
+ 
 }
 
 .notVisited {
-  background-color: #a9a9a9; /* ash color */
+  background-color: #e6e1e1; 
+ 
 }
 .ContainerforLectures {
   width: 100%;
