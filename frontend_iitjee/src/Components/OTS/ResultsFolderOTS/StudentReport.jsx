@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import axios from "axios";
-import { BASE_URL } from "../../../config/apiConfig";
+import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import {
   PieChart,
   Pie,

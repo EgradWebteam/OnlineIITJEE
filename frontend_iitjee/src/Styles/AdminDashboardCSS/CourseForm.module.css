@@ -64,7 +64,7 @@ color: brown;
     border: 1px solid rgb(194, 188, 188);
     border-radius: 5px;
 }
-.InputBoxForCourses2 input{
+.InputBoxForCourses2  input{
     width: 200px;
     height: 20px;
     padding: 17px;
@@ -99,8 +99,15 @@ font-size: 18px;
     width: 50%;
     display: flex;
     flex-direction: column;
-    padding: 1rem;
+justify-content: space-between;
     gap:10px
+}
+.InputSelectBoxForCourses select{
+    width: 200px;
+    height: 40px;
+    padding: 5px;
+    border: 1px solid rgb(194, 188, 188);
+    border-radius: 5px;
 }
 .SelectSubjectOptionsForCourses{
     display: flex;
@@ -116,13 +123,13 @@ justify-content: space-between;
 }
 .closeBtn {
     position: absolute;
-    top: 1rem;       /* distance from the top */
-    right: 1rem;     /* distance from the right */
+    top: 0;       /* distance from the top */
+    right: 0;     /* distance from the right */
     background: none;
     border: none;
-    font-size: 1rem;
     color: #333;
     cursor: pointer;
     z-index: 10;
   }
   
+ 

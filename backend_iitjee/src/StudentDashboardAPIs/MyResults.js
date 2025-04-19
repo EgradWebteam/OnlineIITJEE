@@ -170,15 +170,15 @@ router.get('/StudentReportQuestionPaper/:test_creation_table_id/:studentId', asy
         sol.solution_img_name,
         sol.video_solution_link,
         ur.user_answer
-      FROM iit_db.iit_questions q
-      INNER JOIN iit_db.iit_ots_document d ON q.document_Id = d.document_Id
-      INNER JOIN iit_db.iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
-      INNER JOIN iit_db.iit_subjects s ON d.subject_id = s.subject_id
-      LEFT JOIN iit_db.iit_sections sec ON d.section_id = sec.section_id
-      LEFT JOIN iit_db.iit_options o ON q.question_id = o.question_id
-      LEFT JOIN iit_db.iit_question_type qts ON q.question_type_id = qts.question_type_id
-      LEFT JOIN iit_db.iit_solutions sol ON q.question_id = sol.question_id    
-      LEFT JOIN iit_db.iit_user_responses ur ON q.question_id = ur.question_id AND ur.student_registration_id = ?
+      FROM iit_questions q
+      INNER JOIN iit_ots_document d ON q.document_Id = d.document_Id
+      INNER JOIN iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
+      INNER JOIN iit_subjects s ON d.subject_id = s.subject_id
+      LEFT JOIN iit_sections sec ON d.section_id = sec.section_id
+      LEFT JOIN iit_options o ON q.question_id = o.question_id
+      LEFT JOIN iit_question_type qts ON q.question_type_id = qts.question_type_id
+      LEFT JOIN iit_solutions sol ON q.question_id = sol.question_id    
+      LEFT JOIN iit_user_responses ur ON q.question_id = ur.question_id AND ur.student_registration_id = ?
       WHERE d.test_creation_table_id = ?
       ORDER BY s.subject_id, sec.section_id, q.question_id, o.option_index
       `,
@@ -217,7 +217,7 @@ router.get('/StudentRankSummary/:studentId/:testId', async (req, res) => {
 
         (
           SELECT time_spent 
-          FROM iit_db.iit_student_exam_summary 
+          FROM iit_student_exam_summary 
           WHERE student_registration_id = ? 
             AND test_creation_table_id = ?
         ) AS TimeLeft,
@@ -241,19 +241,19 @@ router.get('/StudentRankSummary/:studentId/:testId', async (req, res) => {
           ) AS rank_position,
           SUM(CASE WHEN sm.status = 1 THEN sm.student_marks ELSE 0 END) AS positive_marks,
           SUM(CASE WHEN sm.status != 1 THEN sm.student_marks ELSE 0 END) AS negative_marks
-        FROM iit_db.iit_student_marks sm
-        JOIN iit_db.iit_test_creation_table tct 
+        FROM iit_student_marks sm
+        JOIN iit_test_creation_table tct 
           ON sm.test_creation_table_id = tct.test_creation_table_id
         WHERE sm.test_creation_table_id = ?
         GROUP BY sm.student_registration_id, sm.test_creation_table_id, tct.total_marks, tct.total_questions
       ) AS rankedData
 
-      JOIN iit_db.iit_test_creation_table tct 
+      JOIN iit_test_creation_table tct 
         ON rankedData.test_creation_table_id = tct.test_creation_table_id
 
       JOIN (
         SELECT COUNT(DISTINCT student_registration_id) AS total_students
-        FROM iit_db.iit_student_marks 
+        FROM iit_student_marks 
         WHERE test_creation_table_id = ?
       ) AS totalAttemptedStudents ON 1 = 1
 
@@ -265,12 +265,12 @@ router.get('/StudentRankSummary/:studentId/:testId', async (req, res) => {
           COUNT(CASE WHEN sm.status = 0 THEN 1 ELSE NULL END) AS totalWrong,
           (
             SELECT COUNT(*) 
-            FROM iit_db.iit_questions q
+            FROM iit_questions q
             WHERE q.test_creation_table_id = sm.test_creation_table_id
           ) AS totalQuestions,
           SUM(CASE WHEN sm.status = 1 THEN sm.student_marks ELSE 0 END) AS sumStatus1,
           SUM(CASE WHEN sm.status = 0 THEN sm.student_marks ELSE 0 END) AS sumStatus0
-        FROM iit_db.iit_student_marks sm
+        FROM iit_student_marks sm
         WHERE sm.student_registration_id = ?
           AND sm.test_creation_table_id = ?
         GROUP BY sm.student_registration_id, sm.test_creation_table_id
@@ -375,6 +375,7 @@ router.post('/bookmark/:question_id/:test_creation_table_id/:student_registratio
         'DELETE FROM iit_bookmark_questions WHERE question_id = ? AND test_creation_table_id = ? AND student_registration_id = ?',
         [question_id, test_creation_table_id, student_registration_id]
       );
+      console.log("Bookmark removed")
       return res.status(200).json({ message: 'Bookmark removed' });
     } else {
       // If not, insert (bookmark)
@@ -382,6 +383,7 @@ router.post('/bookmark/:question_id/:test_creation_table_id/:student_registratio
         'INSERT INTO iit_bookmark_questions (question_id, test_creation_table_id, student_registration_id) VALUES (?, ?, ?)',
         [question_id, test_creation_table_id, student_registration_id]
       );
+      console.log("Bookmarked successfully")
       return res.status(201).json({ message: 'Bookmarked successfully' });
     }
   } catch (err) {
@@ -389,5 +391,6 @@ router.post('/bookmark/:question_id/:test_creation_table_id/:student_registratio
     res.status(500).json({ error: 'Server Error' });
   }
 });
+
 
 module.exports = router;
