@@ -6,5 +6,5 @@
 export const frontEndURL = `https://icy-sand-03dfe2700.6.azurestaticapps.net/Vite + React`
 
  
-export const BASE_URL = `iit-server-fyahe4drftaadxgq.centralindia-01.azurewebsites.net`
+export const BASE_URL = `https://iit-server-fyahe4drftaadxgq.centralindia-01.azurewebsites.net`
  
