@@ -23,6 +23,37 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
     setActiveQuestionIndex(0); // This resets to 1st question when section changes
   }, [activeSection]);
 
+  // const autoSaveNATIfNeeded = () => {
+  //   const subject = testData?.subjects?.find(
+  //     (sub) => sub.SubjectName === activeSubject
+  //   );
+  //   const section = subject?.sections?.find(
+  //     (sec) => sec.SectionName === activeSection
+  //   );
+  //   const question = section?.questions?.[activeQuestionIndex];
+  //   const qTypeId = question?.questionType?.quesionTypeId;
+
+  //   if ([5, 6].includes(qTypeId) && natValue?.trim() !== "") {
+  //     const qid = question.question_id;
+  //     const subjectId = subject.subjectId;
+  //     const sectionId = section.sectionId;
+
+  //     const savedData = {
+  //       subjectId,
+  //       sectionId,
+  //       questionId: qid,
+  //       natAnswer: natValue,
+  //       type: "NAT",
+  //       buttonClass: styles.AnswerdBtnCls,
+  //     };
+
+  //     setUserAnswers((prev) => ({
+  //       ...prev,
+  //       [qid]: savedData,
+  //     }));
+  //   }
+  // };
+
   const autoSaveNATIfNeeded = () => {
     const subject = testData?.subjects?.find(
       (sub) => sub.SubjectName === activeSubject
@@ -32,28 +63,33 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
     );
     const question = section?.questions?.[activeQuestionIndex];
     const qTypeId = question?.questionType?.quesionTypeId;
-
+  
     if ([5, 6].includes(qTypeId) && natValue?.trim() !== "") {
       const qid = question.question_id;
       const subjectId = subject.subjectId;
       const sectionId = section.sectionId;
-
+  
+      //  Check previous answer's buttonClass
+      const prevAnswer = userAnswers?.[qid];
+      const wasMarkedForReview = prevAnswer?.buttonClass === styles.AnsMarkedForReview;
+  
       const savedData = {
         subjectId,
         sectionId,
         questionId: qid,
         natAnswer: natValue,
         type: "NAT",
-        buttonClass: styles.AnswerdBtnCls,
+        //  Preserve Marked for Review if previously set
+        buttonClass: wasMarkedForReview ? styles.AnsMarkedForReview : styles.AnswerdBtnCls,
       };
-
+  
       setUserAnswers((prev) => ({
         ...prev,
         [qid]: savedData,
       }));
     }
   };
-
+  
   return (
     <div>
       <div className={styles.OTSMainFileMainContainer}>

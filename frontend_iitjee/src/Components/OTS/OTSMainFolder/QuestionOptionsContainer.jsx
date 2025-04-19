@@ -34,6 +34,14 @@ console.log("questionId", questionId);
   const calculatorButtons = ['7', '8', '9', '4', '5', '6', '3', '2', '1', '0', '.', '-'];
 
   const handleCalculatorInput = (val) => {
+    const inputElement = inputRef.current;
+    if (!inputElement) return;
+  
+    inputElement.focus(); // Ensure focus
+  
+    let currentValue = natValue;
+    let cursorPos = inputElement.selectionStart;
+  
     if (val === "ClearAll") {
       setNatValue("");
       onSelectOption("");
@@ -41,77 +49,68 @@ console.log("questionId", questionId);
     }
   
     if (val === "BackSpace") {
-      let updated = natValue;
+      if (cursorPos > 0) {
+        currentValue = currentValue.slice(0, cursorPos - 1) + currentValue.slice(cursorPos);
+        setNatValue(currentValue);
+        onSelectOption(currentValue);
   
-      // Remove last char (handle "-" properly)
-      if (updated.length === 2 && updated.startsWith("-")) {
-        updated = "";
-      } else {
-        updated = updated.slice(0, -1);
+        setTimeout(() => {
+          inputElement.setSelectionRange(cursorPos - 1, cursorPos - 1);
+        }, 0);
       }
-  
-      setNatValue(updated);
-      onSelectOption(updated);
       return;
     }
   
     if (val === "-") {
-      // Allow "-" only at the first position
-      if (natValue.startsWith("-")) return; // If it's already at the start, do nothing
-      if (natValue === "") {
-        setNatValue("-");
-        onSelectOption("-");
+      // Only allow "-" at beginning
+      if (!currentValue.includes("-") && cursorPos === 0) {
+        currentValue = "-" + currentValue;
+        setNatValue(currentValue);
+        onSelectOption(currentValue);
+        setTimeout(() => {
+          inputElement.setSelectionRange(cursorPos + 1, cursorPos + 1);
+        }, 0);
       }
       return;
     }
   
     if (val === ".") {
-      // Prevent multiple dots
-      const numericPart = natValue.startsWith("-") ? natValue.slice(1) : natValue;
-      
-      // If the value is empty, set to 0.
-      if (numericPart === "") {
-        setNatValue("0.");
-        onSelectOption("0.");
-        return;
-      }
-  
-      // Prevent adding another dot if one already exists
+      const numericPart = currentValue.startsWith("-") ? currentValue.slice(1) : currentValue;
       if (numericPart.includes(".")) return;
   
-      // If starting with ".", add "0." or "-0."
-      let updated = natValue === "" ? "0." : natValue;
-      if (natValue === "-") updated = "-0.";
-      else updated += ".";
-  
-      setNatValue(updated);
-      onSelectOption(updated);
-      return;
+      val = currentValue === "" || currentValue === "-" ? "0." : "."; // Handle . and - cases
     }
   
-    // Default numeric input
-    let updated = natValue + val;
-    setNatValue(updated);
-    onSelectOption(updated);
+    // Insert at cursor position
+    const updatedValue = currentValue.slice(0, cursorPos) + val + currentValue.slice(cursorPos);
+    const newCursorPos = cursorPos + val.length;
+  
+    setNatValue(updatedValue);
+    onSelectOption(updatedValue);
+  
+    setTimeout(() => {
+      inputElement.setSelectionRange(newCursorPos, newCursorPos);
+    }, 0);
   };
-
+  
   const inputRef = useRef(null); // Ref to the NAT input field
 
   // Function to move the cursor position
   const handleArrowInput = (direction) => {
     const inputElement = inputRef.current;
     if (!inputElement) return;
-
+  
+    inputElement.focus();  // Make sure it's focused
+  
     const currentPosition = inputElement.selectionStart;
-
+  
     if (direction === "left" && currentPosition > 0) {
-      // Move cursor to the left
       inputElement.setSelectionRange(currentPosition - 1, currentPosition - 1);
     } else if (direction === "right" && currentPosition < inputElement.value.length) {
-      // Move cursor to the right
       inputElement.setSelectionRange(currentPosition + 1, currentPosition + 1);
     }
   };
+  
   return (
     <div className={styles.QuestionOptionsMainContainer}>
       {/* MCQ */}

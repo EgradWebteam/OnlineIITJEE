@@ -1,10 +1,10 @@
 /*student header css */
-.studentDashboardHeaderLogoDiv img{
-    width:100%;
-    height: 100%;
+.studentDashboardHeaderLogoDiv img {
+  width: 100%;
+  height: 100%;
 }
-.studentDashboardHeaderLogoDiv{
-    width:250px;
+.studentDashboardHeaderLogoDiv {
+  width: 250px;
 }
 .options-container {
   flex-direction: column;
@@ -68,121 +68,119 @@
 }
 
 .studentDashboardHeaderMain {
-    width: 95%;
-    height: 100%;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: white;
-  }
-  .MainDivStudentDasboard{
-    background: white;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    height: 70px;
-    padding: 5px;
-  }
-.studentLogo{
-width: 65px;
-cursor: pointer;
-height: 65px;
-border-radius: 50%;
-border: 1px solid rgba(0, 0, 0, 0.1);
+  width: 95%;
+  height: 100%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
 }
-  
-  .studentLogo img {
-    width: 100%;
+.MainDivStudentDasboard {
+  background: white;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  height: 70px;
+  padding: 5px;
+}
+.studentLogo {
+  width: 65px;
+  cursor: pointer;
+  height: 65px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
 
-    height: 100%;
+.studentLogo img {
+  width: 100%;
 
-  }
-  .toggleTypeButtons{
-    display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 0 15px;
-        justify-content: center;
-     
-  }
-  .toggleTypeButtons button{
-    padding:10px 15px;
-    font-size: 15px;
-    font-weight: bold;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    background-color: rgb(7, 174, 240);
-    cursor: pointer;
-  }
-  .toggleTypeButtons button.active {
-    background-color: #28a745; /* Green when active */
-    color: white;
-    border-color: #28a745;
-  }
-  .onHoverOFstudent {
-    position: absolute;
-    top: 64px;
-    right: 3px;
-    background: white;
-    /* border: 1px solid #ccc; */
-    padding: 10px;
-    z-index: 100;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    width: 200px;
-  }
-  
-  .onHoverOFstudent div {
-    padding: 6px 10px;
-    cursor: pointer;
-    font-weight: 500;
-    text-align: center;
-  }
-  
-  .profileWrapper {
-    position: relative;
-  }
-  .LogoutBtnDivStudent button{
-        border: 1px solid rgb(77, 166, 250);
-        background-color: rgb(77, 166, 250);
-        padding: 5px;
-        width: 155px;
-        border-radius: 30px;
-        color: white;
-  }
-  .LogoutBtnDivStudent button:hover{
-    border: 1px solid rgb(60, 129, 194);
-    background-color: rgb(60, 129, 194);
-    padding: 5px;
-    width: 155px;
-    border-radius: 30px;
-    color: white;
+  height: 100%;
+}
+.toggleTypeButtons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 15px;
+  justify-content: center;
+}
+.toggleTypeButtons button {
+  padding: 10px 15px;
+  font-size: 15px;
+  font-weight: bold;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(7, 174, 240);
+  cursor: pointer;
+}
+.toggleTypeButtons button.active {
+  background-color: #28a745; /* Green when active */
+  color: white;
+  border-color: #28a745;
+}
+.onHoverOFstudent {
+  position: absolute;
+  top: 64px;
+  right: 3px;
+  background: white;
+  /* border: 1px solid #ccc; */
+  padding: 10px;
+  z-index: 100;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  width: 200px;
+}
+
+.onHoverOFstudent div {
+  padding: 6px 10px;
+  cursor: pointer;
+  font-weight: 500;
+  text-align: center;
+}
+
+.profileWrapper {
+  position: relative;
+}
+.LogoutBtnDivStudent button {
+  border: 1px solid rgb(77, 166, 250);
+  background-color: rgb(77, 166, 250);
+  padding: 5px;
+  width: 155px;
+  border-radius: 30px;
+  color: white;
+}
+.LogoutBtnDivStudent button:hover {
+  border: 1px solid rgb(60, 129, 194);
+  background-color: rgb(60, 129, 194);
+  padding: 5px;
+  width: 155px;
+  border-radius: 30px;
+  color: white;
 }
 /*StudentDashboard css leftsidebar*/
-.StudentDashboardContentHolder{
-    display: flex;
-flex-direction: row;
+.StudentDashboardContentHolder {
+  display: flex;
+  flex-direction: row;
 }
-.studentDashboardLeftNavHolder{
-    display: flex;
+.studentDashboardLeftNavHolder {
+  display: flex;
 }
-.stuentDashboardMainContentContainer{
-    display: flex;
-    height: 100vh;
+.stuentDashboardMainContentContainer {
+  display: flex;
+  height: 100vh;
 }
-.studentDashboardLeftsidebar{
-    width: 280px;
-    display: flex;
-    flex-direction: column;
-    background: #fcfcfc;
-    height: auto;
-    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1);
-    gap: 2rem;
-    align-items: center;
-    position: relative;
-    z-index: 1;
+.studentDashboardLeftsidebar {
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  background: #fcfcfc;
+  height: auto;
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1);
+  gap: 2rem;
+  align-items: center;
+  position: relative;
+  z-index: 1;
 }
-.LeftsidebarItem{
+.LeftsidebarItem {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -196,159 +194,383 @@ flex-direction: row;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
-.LeftsidebarItem span{
-    margin-left: 1.5rem;
+.LeftsidebarItem span {
+  margin-left: 1.5rem;
 }
-.activeLeftSideItem{
+.activeLeftSideItem {
   position: relative;
-    background: rgb(7, 174, 240);
-    color: #ffffff;
-    border-radius: 0 100px 100px 0;
+  background: rgb(7, 174, 240);
+  color: #ffffff;
+  border-radius: 0 100px 100px 0;
 }
-.StudentDashboardcontentArea{
-    /* flex-grow: 1; */
-    padding: 5px;
-    height: auto;
-    margin: 10px auto;
-    width: 90%;
-
+.StudentDashboardcontentArea {
+  /* flex-grow: 1; */
+  padding: 5px;
+  height: auto;
+  margin: 10px auto;
+  width: 90%;
 }
 .studentDashboardHamburgerMenu {
-    display: none;
-  }
-  
-  .studentDashboardHamburgerMenu button {
-    font-size: 24px;
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  .StudentDashboardRightSideContentHolder{
-    width: 100%;
-    overflow: scroll;
-  }
-  
-  /* Sidebar Responsive Behavior */
-  @media (max-width: 768px) {
-    .studentDashboardLeftsidebar {
-      position: absolute;
-      top: 80px;
-      left: 0;
-      width: 220px;
-      height: 100vh;
-      background-color: #f9f9f9;
-      z-index: 1000;
-      /* transition: transform 0.3s ease-in-out; */
-    }
-  
-    .sidebarHidden {
-      transform: translateX(-100%);
-    }
-  
-    .sidebarVisible {
-      transform: translateX(0%);
-    }
-  
-    .studentDashboardHamburgerMenu {
-        display: block;
-        position: absolute;
-        top: 47px;
-        left: -3px;
-        z-index: 1100;
-    }
-  
-    .StudentDashboardcontentArea {
-      margin-top: 50px;
-      padding-left: 10px;
-    }
+  display: none;
+}
+
+.studentDashboardHamburgerMenu button {
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.StudentDashboardRightSideContentHolder {
+  width: 100%;
+
+}
+.LectureHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.CloseBtnForPopup {
+  text-align: right;
+  margin: 1rem;
+}
+.headerForCloseSndHeading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #444444;
+  color: white;
+  width: 95%;
+  margin: 1rem auto;
+}
+.headingForLectures{
+  width: 100%;
+  text-align: center;
+  justify-self: end;
+}
+.lecturesOrExercisesContainer {
+  display: flex;
+  background-color: white;
+  box-shadow: 0px 0px 3px 3px rgb(206, 204, 204);
+  padding: 10px;
+  width: 100%;
+  max-width: 60%;
+  align-items: center;
+  border-radius: 10px;
+}
+.VideoLecturesForPopup {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.LecturesPreAndNextBtn {
+  padding: 10px;
+  width: 35px;
+  height: 100px;
+  color: black;
+  background-color: whitesmoke;
+  border-radius: 10px;
+  border: none;
+}
+.QuestionTypeAndID {
+  display: flex;
+  justify-content: space-around;
+  margin: 1rem 0;
+}
+.popup_body {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  width: 100%; 
+  height: 60vh; 
+}
+.img_container {
+  width: 500px;
+  padding: 0 50px;
+}
+.QuestionsAndImgScrollContainer {
+  max-height: 400px; 
+  overflow-y: auto; 
+  padding-right: 10px; 
+  overflow-x: hidden;
+}
+
+.img_container img {
+  max-width: 100%; 
+  height: auto;
+}
+
+.options_container {
+  max-height: 200px; 
+  overflow-y: auto; 
+}
+.popup_main_content {
+  flex: 1; /* Allow this section to take up the remaining width */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.side_nav_button {
+  width: 50px; 
+  height: 50px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e7f6f7;
+  border-radius: 50%; 
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+  font-size: 20px;
+}
+.status_pallete {
+  max-height: 300px;
+  overflow-y: scroll;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 0;
+  justify-content: flex-start; 
+}
+.status_pallete::-webkit-scrollbar {
+  display: none;
+}
+.status_item {
+  border-radius: 50%;
+  padding: 10px;
+  border: 1px solid black;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  background-color: rgb(221, 220, 220);
+}
+.slideshow {
+  display: flex;
+  justify-content: center;
+  box-shadow: 0px 0px 2px 2px rgb(216, 214, 214);
+  border-radius: 10px;
+  height: 500px;
+}
+.ExerciseQuestionContainers {
+  width: 70%; /* Full width */
+  padding: 20px;
+  border-right: 1px solid #dbdada;
+}
+.exercise_question_Subcontainer{
+  width: 30%; /* Full width */
+  padding: 10px;
+}
+.QuestionImgForExercise{
+  height: 400px;
+}
+.calc_container {
+  margin: 1rem;
+}
+.calc_container input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid rgb(212, 209, 209);
+}
+.navigation_buttons_for_ques {
+  display: flex;
+  gap: 2rem;
+  margin: 1rem;
+  border-top: 1px solid rgb(192, 191, 191);
+  padding: 1rem 0;
+}
+.options_container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+.options_container label{
+  display: flex;
+  align-items: center;
+
+}
+.BtnForQuestion button {
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: none;
+  background-color: #438092;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+}
+.HeadingForLegend {
+  font-size: 20px;
+  color: #1a1818;
+  padding: 1rem 0;
+}
+.circleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 5px 0;
+}
+
+.circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+  padding: 7px;
+}
+
+.unanswered {
+  background-color: red;
+}
+
+.answered {
+  background-color: green;
+}
+
+.notVisited {
+  background-color: #a9a9a9; /* ash color */
+}
+.ContainerforLectures {
+  width: 100%;
+  max-width: 100%; /* Ensure the video container doesn't overflow */
+}
+.lecture_video_link {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.lecture_video_link iframe{
+  width: 100%;
+  height: 100%;
+}
+/* Sidebar Responsive Behavior */
+@media (max-width: 768px) {
+  .studentDashboardLeftsidebar {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background-color: #f9f9f9;
+    z-index: 1000;
+    /* transition: transform 0.3s ease-in-out; */
   }
 
-  /* student dashboard test  container css */
-  .testDetailsConatinerMainDiv {
-    padding: 2rem;
+  .sidebarHidden {
+    transform: translateX(-100%);
   }
-  
-  .goBackInTestContainerDiv {
-    text-align: right;
-    margin-bottom: 1rem;
+
+  .sidebarVisible {
+    transform: translateX(0%);
   }
-  
-  .goBackBtn {
-    background-color: #15803d;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    font-weight: bold;
-    border-radius: 6px;
-    cursor: pointer;
+
+  .studentDashboardHamburgerMenu {
+    display: block;
+    position: absolute;
+    top: 47px;
+    left: -3px;
+    z-index: 1100;
   }
-  
-  .courseNameHolderDiv {
-    text-align: center;
-    margin-bottom: 1rem;
+
+  .StudentDashboardcontentArea {
+    margin-top: 50px;
+    padding-left: 10px;
   }
-  
-  .typeOfTestsSelector {
-    text-align: right;
-    margin-bottom: 1rem;
-  }
-  
-  .typeOfTestsSelector select {
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-weight: 500;
-  }
-  
-  .testsContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .testCard {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #dbeafe;
-    padding: 1rem;
-    border: 3px solid black;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  }
-  
-  .testInfoBox h4 {
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    font-size: 20px;
-  }
-  .startTestBtn, .viewReportBtn{
-    color: white;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  .startTestBtn {
-    background-color: #06b6d4;
-  }
-  .viewReportBtn{
-    background-color: green;
-  }
-  .durationHolderdiv{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-   gap: 3rem;
-    font-size: 18px;
-    font-weight: 500;
-    }
-  .testContainerDivForflex{
-    display: flex;
-    gap: 1rem;
-    flex-direction: column;
-  }
+}
+
+/* student dashboard test  container css */
+.testDetailsConatinerMainDiv {
+  padding: 2rem;
+}
+
+.goBackInTestContainerDiv {
+  text-align: right;
+  margin-bottom: 1rem;
+}
+
+.goBackBtn {
+  background-color: #15803d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.courseNameHolderDiv {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.typeOfTestsSelector {
+  text-align: right;
+  margin-bottom: 1rem;
+}
+
+.typeOfTestsSelector select {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-weight: 500;
+}
+
+.testsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.testCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #dbeafe;
+  padding: 1rem;
+  border: 3px solid black;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.testInfoBox h4 {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-size: 20px;
+}
+.startTestBtn,
+.viewReportBtn {
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.startTestBtn {
+  background-color: #06b6d4;
+}
+.viewReportBtn {
+  background-color: green;
+}
+.durationHolderdiv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  font-size: 18px;
+  font-weight: 500;
+}
+.testContainerDivForflex {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
 
   /* My results css */
   .resultsMainDiv{
@@ -365,8 +587,8 @@ flex-direction: row;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* gap: 1rem;
-    justify-content: center; */
+    gap: 1rem;
+    justify-content: center; 
   }
   .testNameInResults{
       font-size: 20px;
@@ -404,14 +626,115 @@ flex-direction: row;
     margin: 1rem;
   }
   .bookMarksTestName{
-    background-color:gainsboro
+    background-color:gainsboro;
   }
   .bookMarksTestName h4{
-padding: 10px;
+      padding: 10px;
+      margin: 1rem;
   }
   .questionsContainerInBookMarks{
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     padding: 1rem;
   }
-
-  
+.testContainerSub{
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+}
+.testContainerIcon{
+  font-size: 2rem;
+}
+  @media (max-width:1024px) {
+    .testCard{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #dbeafe;
+      padding: 1rem;
+      border: 3px solid black;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      flex-direction: column;
+      gap: 1.5rem;
+  }
+  .durationHolderdiv{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 18px;
+    font-weight: 500;
+}
+  }
+  @media (max-width:425px) {
+    .testContainerSub{
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+  }
+  .durationHolderdiv{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 18px;
+    font-weight: 500;
+    flex-direction: column;
+}
+.testInfoBox{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+.testsContainer{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: scroll;
+  height: 55vh;
+}
+.toggleTypeButtons{
+  padding: 5px 5px;
+  font-size: 13px;
+  font-weight: bold;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.toggleTypeButtons button {
+  padding: 5px 6px;
+  font-size: 13px;
+  font-weight: bold;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.examButtons{
+  background-color: white;
+  border-radius: 1rem 1rem 0px 0px;
+  border: none;
+  padding: 0.5rem;
+  font-size: 13px;
+  cursor: pointer;
+}
+  }
+  @media (max-width:375px) {
+    .testCard{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #dbeafe;
+      border: 3px solid black;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 10px;
+  }
+  }
