@@ -4,7 +4,7 @@ import egradLogo from "../../../assets/EGTLogoExamHeaderCompressed.jpg";
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import axios from "axios"
 
-const OTSQuestionPaper = ({ testName,realTestId }) => {
+const OTSQuestionPaper = ({ testName,realTestId, closeQuestionPaper }) => {
   const [questionData, setQuestionData] = useState([]);
  
  
@@ -34,40 +34,37 @@ const OTSQuestionPaper = ({ testName,realTestId }) => {
           <div className={styles.testNameInQuestionPaper}>
             <h3>{testName}</h3>
           </div>
-          <div className={styles.closeBtn}>
-            <button>Close</button>
+          <div className={styles.OTSQuestionPapercloseBtn}>
+            <button onClick={closeQuestionPaper}>Close</button>
           </div>
         </div>
 
         {/* Questions */}
         <div>
-      <h2>{questionData.TestName}</h2>
  
       {questionData.subjects?.map((subject) => (
-        <div key={subject.subjectId}>
-          <h3>Subject: {subject.SubjectName}</h3>
- 
+        <div key={subject.subjectId} >
           {subject.sections.map((section) => (
             <div key={section.sectionId}>
-              <h4>Section: {section.SectionName}</h4>
- 
               {section.questions.map((question) => (
-                <div key={question.question_id} style={{ marginBottom: "2rem" }}>
-                  <p>Question No: {question.question_id}</p>
+                <div key={question.question_id}  className={styles.OTSQuestionContainer}>
+                  <p className={styles.OTSQuestionPaperNumber}>Question No: {question.question_id}</p>
+                  <div className={styles.OTSQuestionPaperQuestionImgDIv}>
                   <img
                     src={question.questionImgName}
-                    alt={`Question ${question.question_id,question.questionImgName}`}
-                    style={{ width: "300px", height: "auto" }}
+                    alt={`Question ${question.question_id,question.questionImgName}`} 
                   />
+                  </div>
                   <div style={{ marginTop: "1rem" }}>
                     {question.options.map((option) => (
                       <div key={option.option_id} style={{ display: "flex", alignItems: "center" }}>
-                        <strong>({option.option_index})</strong>
+                        <strong className={styles.OTSQuestionPaperOptionIndex}>({option.option_index})</strong>
+                        <div className={styles.OTSQuestionPaperOptionsDiv}>
                         <img
                           src={option.optionImgName}
                           alt={`Option ${option.option_index}`}
-                          style={{ width: "150px", height: "auto", marginLeft: "10px" }}
                         />
+                        </div>
                       </div>
                     ))}
                   </div>
