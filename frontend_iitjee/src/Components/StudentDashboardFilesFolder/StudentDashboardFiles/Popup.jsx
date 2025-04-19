@@ -107,12 +107,12 @@ const Popup = ({
   };
 
   const getStatus = (questionId) => {
-    if (exerciseStatus) {
+    if (exerciseStatus && typeof exerciseStatus === 'object') {
       const status = exerciseStatus[questionId];
-      if (status === undefined) return 'NotVisited';
-      return status === 1 ? 'Answered' : 'NotAnswered';
+      console.log(status);
+      return status; // No default here
     }
-    return 'NotVisited';
+    return undefined;
   };
   
 
@@ -221,7 +221,7 @@ const Popup = ({
                 return (
                   <span
                     key={question.exercise_question_id}
-                    className={`${styles['status-item']} ${styles[status.toLowerCase()]}`}
+                    className={`${styles['status-item']} ${status}`}
                     title={`Question ${index + 1}: ${status}`}
                     onClick={() => setCurrentQuestionIndex(index)}
                   >
