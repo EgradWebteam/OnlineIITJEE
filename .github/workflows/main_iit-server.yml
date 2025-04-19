@@ -1,68 +1,79 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy Node.js app to Azure Web App - iit-server
+name: Build and Deploy Node.js App to Azure Web App 
 
 on:
   push:
     branches:
-      - main
-  workflow_dispatch:
+      - main  # Trigger deployment on push to the main branch
 
 jobs:
   build:
-    runs-on: windows-latest
-    permissions:
-      contents: read #This is required for actions/checkout
-
+    runs-on: ubuntu-latest 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Set up Node.js version
-        uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: '20.x'
+          node-version: '20'  # Specify the Node.js version
 
-      - name: npm install, build, and test
+      - name: Install dependencies
         run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
-      
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: node-app
-          path: .
+          cd name: Build and Deploy Node.js App to Azure Web App 
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
+on:
+  push:
+    branches:
+      - main  # Trigger deployment on push to the main branch
 
+jobs:
+  build:
+    runs-on: ubuntu-latest 
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: node-app
-      
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_33436ECBBE16407AA71671AD69C20184 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_63240F7F5ACA4781BF0DA27E02956C21 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_6BC32DFC12264CDAA841A5DB7FF51261 }}
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v3
-        id: deploy-to-webapp
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          app-name: 'iit-server'
-          slot-name: 'Production'
-          package: .
-          
+          node-version: '20'  # Specify the Node.js version
+
+      - name: Install dependencies
+        run: |
+          cd name: Build and Deploy Node.js App to Azure Web App 
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment on push to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'  # Specify the Node.js version
+
+      - name: Install dependencies
+        run: |
+          cd backend_iitjee
+          npm install  # Install dependencies
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}  # Use the service principal credentials(PG-app) in JSON format
+          auth-type: service_principal  # Ensure you're using service_principal here
+          environment: azurecloud  # Ensure you're using the correct Azure cloud environment
+ 
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with: 
+          app-name: 'iit-server'  # Your App Service name
+          package: 'backend_iitjee'  # Path to your app's root directory (where package.json is located)
+         
