@@ -24,7 +24,7 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}  # Use the service principal credentials(PG-app) in JSON format
+          creds: ${{ secrets.AZURE_CREDENTIALS }}  # Use the service principal credentials(iit-app) in JSON format
           auth-type: service_principal  # Ensure you're using service_principal here
           environment: azurecloud  # Ensure you're using the correct Azure cloud environment
  
