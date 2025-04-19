@@ -40,7 +40,7 @@
   background-color: green;
 }
 
-.status-item.notanswered {
+.status-item.unanswered {
   background-color: red;
 }
 
@@ -398,6 +398,20 @@ flex-direction: row;
     display: flex;
     gap: 2rem;
     margin: 1rem;
+  }
+  /* STUDENT DASHBOARD BOOKMARKS */
+  .StudentdashboardBookMarksSubDiv{
+    margin: 1rem;
+  }
+  .bookMarksTestName{
+    background-color:gainsboro
+  }
+  .bookMarksTestName h4{
+padding: 10px;
+  }
+  .questionsContainerInBookMarks{
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    padding: 1rem;
   }
 
   
