@@ -97,6 +97,40 @@ router.get('/OrvlTopicForCourse/:student_registration_id/:course_creation_id', a
     if (connection) connection.release();
   }
 });
+router.get('/UserAnswer/:student_registration_id/:course_creation_id/:orvl_topic_id/:exercise_question_id', async (req, res) => {
+  const { student_registration_id, course_creation_id, orvl_topic_id, exercise_question_id } = req.params;
+ // or dynamically determine this based on your logic
+
+  let connection;
+  try {
+    connection = await db.getConnection(); // assuming you use a promise-based MySQL library like `mysql2/promise`
+
+    const [rows] = await connection.query(
+      `SELECT 
+          u.exercise_userresponse AS userAnswer,
+          q.exercise_answer AS correctAnswer,
+          v.exercise_solution_video_link AS videoSolution,
+          v.exercise_solution_img AS imageSolution
+        FROM iit_orvl_exercise_userresponses u
+        LEFT JOIN iit_orvl_exercise_questions q ON u.exercise_question_id = q.exercise_question_id
+        LEFT JOIN iit_orvl_exercise_solutions v ON u.exercise_question_id = v.exercise_question_id
+        WHERE u.student_registration_id = ?
+          AND u.exercise_question_id = ?
+          AND u.orvl_topic_id = ?
+          AND u.question_status = 1
+          AND u.course_creation_id = ?`,
+      [student_registration_id, exercise_question_id, orvl_topic_id,  course_creation_id]
+    );
+
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error('Error fetching user answer:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  } finally {
+    if (connection) connection.release(); // or connection.end() based on your pool config
+  }
+});
+
 router.get('/CourseTopic/:orvl_topic_id', async (req, res) => {
   const { orvl_topic_id } = req.params;
   let connection;
@@ -440,6 +474,81 @@ router.post('/ExerciseQuestionstatus', async (req, res) => {
   } catch (err) {
     console.error('Error inserting response:', err);
     res.status(500).json({ message: 'Server error', error: err });
+  } finally {
+    if (connection) connection.release();
+  }
+});
+router.post('/VideoVisitStatus', async (req, res) => {
+  const {
+    orvl_topic_id,
+    total_video_time,
+    progress_time,
+    student_registration_id,
+    course_creation_id,
+    orvl_lecture_name_id,
+  } = req.body;
+
+  let connection;
+
+  try {
+    connection = await db.getConnection();
+
+    // Check if a record already exists
+    const [prevRows] = await connection.query(
+      `SELECT video_count FROM iit_orvl_video_count 
+       WHERE orvl_topic_id = ? 
+         AND student_registration_id = ? 
+         AND course_creation_id = ? 
+         AND orvl_lecture_name_id = ?`,
+      [orvl_topic_id, student_registration_id, course_creation_id, orvl_lecture_name_id]
+    );
+
+    // Calculate whether progress exceeds 70%
+    const videoWatched = (progress_time / total_video_time) * 100 >= 70 ? 1 : 0;
+
+    if (prevRows.length > 0) {
+      const updatedCount = prevRows[0].video_count + videoWatched;
+
+      // Update existing record
+      await connection.query(
+        `UPDATE iit_orvl_video_count 
+         SET total_video_time = ?, progress_time = ?, video_count = ?
+         WHERE orvl_topic_id = ? 
+           AND orvl_lecture_name_id = ? 
+           AND student_registration_id = ? 
+           AND course_creation_id = ?`,
+        [
+          total_video_time,
+          progress_time,
+          updatedCount,
+          orvl_topic_id,
+          orvl_lecture_name_id,
+          student_registration_id,
+          course_creation_id,
+        ]
+      );
+    } else {
+      // Insert new record
+      await connection.query(
+        `INSERT INTO iit_orvl_video_count 
+         (orvl_topic_id, total_video_time, progress_time, video_count, student_registration_id, course_creation_id, orvl_lecture_name_id)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [
+          orvl_topic_id,
+          total_video_time,
+          progress_time,
+          videoWatched,
+          student_registration_id,
+          course_creation_id,
+          orvl_lecture_name_id,
+        ]
+      );
+    }
+
+    res.status(200).json({ success: true, message: 'Video status saved successfully.' });
+  } catch (error) {
+    console.error('Error saving video status:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
   } finally {
     if (connection) connection.release();
   }

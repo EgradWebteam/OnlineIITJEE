@@ -8,6 +8,7 @@ import {
   FaBars,
   FaTimes
 } from "react-icons/fa";
+import { IoMdBookmarks} from "react-icons/io";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 
 // Sidebar data
@@ -16,6 +17,7 @@ const sidebarItems = [
   { id: "myCourses", label: "My Courses", icon: <FaBook /> },
   { id: "buyCourses", label: "Buy Courses", icon: <FaShoppingCart /> },
   { id: "results", label: "My Results", icon: <FaListAlt /> },
+  { id: "bokmarks", label: "BookMarks", icon: <IoMdBookmarks /> },
   { id: "account", label: "My Account", icon: <FaUser /> }
 ];
 

@@ -4,6 +4,7 @@ import { decryptBatch as decryptDataBatch, encryptBatch } from '../../../utils/c
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import {useStudent} from "../../../ContextFolder/StudentContext.jsx";
+import OTSHeader from '../OTSHeaderFolder/OTSHeader.jsx';
 
 const ExamInstructions = () => {
   const { testId, studentId } = useParams();
@@ -148,6 +149,9 @@ const ExamInstructions = () => {
   };
   return (
     <div className={styles.examInstructionsContainer}>
+       <div>
+            <OTSHeader />
+        </div>
       <div className={styles.instrcutionstudentProfileDiv}>
       <div className={styles.examinstructionSubdiv}>
         <h2 className={styles.instrctionMianHeading}>{examName}</h2>
@@ -180,7 +184,7 @@ const ExamInstructions = () => {
       </div>
 
       <div className={styles.readytoBeginDiv}>
-        <button className={styles.previuosBtn}>
+        <button className={styles.previuosBtn} onClick={() => navigate(-1)}>
           <span className={styles.previosBtnArrow}>&lt;</span> Previous
         </button>
         <button

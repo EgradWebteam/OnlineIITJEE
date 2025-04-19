@@ -22,7 +22,13 @@ export default function SubjectsAndSectionsContainer(
   };
 
   const subjects = getSubjects();
-  const sections = getSections(activeSubject);
+  const sections = getSections(activeSubject).filter(
+    (section) => section?.SectionName && section.SectionName.trim() !== ""
+  );
+  console.log("Raw Sections:", getSections(activeSubject));
+  console.log("Filtered Sections:", sections);
+  console.log("Filtered Sections Length:", sections.length);
+    
 
   // Set default active subject and section on mount
   useEffect(() => {
@@ -70,29 +76,13 @@ export default function SubjectsAndSectionsContainer(
         ))}
       </div>
 
-      {/* Section Buttons */}
-      {/* {sections.length > 0 && (
+      {/* Section Buttons (only if valid sections are present) */}
+      {sections.length > 0 && (
         <div className={styles.OTSSubjectandSectionButtonsGroup}>
           {sections.map((section, secIndex) => (
             <button
               key={secIndex}
-              className={`${styles.OTSSubjectButton} ${
-                activeSection === section.SectionName ? styles.activeSubjectAndSectionBtn : ''
-              }`}
-              onClick={() => handleSectionClick(section.SectionName)}
-            >
-              {section.SectionName}
-            </button>
-          ))}
-        </div>
-      )} */}
-      {Array.isArray(sections) && sections.length > 0 && (
-        <div className={styles.OTSSubjectandSectionButtonsGroup}>
-          {sections.map((section, secIndex) => (
-            <button
-              key={secIndex}
-              className={`${styles.OTSSubjectButton} ${activeSection === section.SectionName ? styles.activeSubjectAndSectionBtn : ''
-                }`}
+              className={`${styles.OTSSubjectButton} ${activeSection === section.SectionName ? styles.activeSubjectAndSectionBtn : ''}`}
               onClick={() => handleSectionClick(section.SectionName)}
             >
               {section.SectionName}
@@ -100,6 +90,7 @@ export default function SubjectsAndSectionsContainer(
           ))}
         </div>
       )}
+
     </div>
   );
 }
