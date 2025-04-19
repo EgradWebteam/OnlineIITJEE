@@ -92,7 +92,7 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
   
   return (
     <div>
-      <div className={styles.OTSMainFileMainContainer}>
+      <div className={`${styles.OTSMainFileMainContainer} ${styles.OTSWaterMark}`}>
         <div className={styles.OTSMainFileSubContainer}>
           <TimerProvider testData={testData}>
             <OtsTimer testData={testData}/>
