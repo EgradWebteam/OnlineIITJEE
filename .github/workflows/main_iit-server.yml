@@ -19,49 +19,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd name: Build and Deploy Node.js App to Azure Web App 
-
-on:
-  push:
-    branches:
-      - main  # Trigger deployment on push to the main branch
-
-jobs:
-  build:
-    runs-on: ubuntu-latest 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20'  # Specify the Node.js version
-
-      - name: Install dependencies
-        run: |
-          cd name: Build and Deploy Node.js App to Azure Web App 
-
-on:
-  push:
-    branches:
-      - main  # Trigger deployment on push to the main branch
-
-jobs:
-  build:
-    runs-on: ubuntu-latest 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20'  # Specify the Node.js version
-
-      - name: Install dependencies
-        run: |
-          cd backend_iitjee
+          cd backend-iitjee
           npm install  # Install dependencies
       - name: Login to Azure
         uses: azure/login@v1
@@ -75,5 +33,4 @@ jobs:
         uses: azure/webapps-deploy@v2
         with: 
           app-name: 'iit-server'  # Your App Service name
-          package: 'backend_iitjee'  # Path to your app's root directory (where package.json is located)
-         
+          package: 'backend-iitjee'  # Path to your app's root directory (where package.json is located)
