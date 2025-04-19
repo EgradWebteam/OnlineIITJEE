@@ -59,19 +59,47 @@ const generatePassword = (length = 12) => {
     }
   }
 
+  const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
   const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const sasToken = process.env.AZURE_SAS_TOKEN;
 const containerName = process.env.AZURE_CONTAINER_NAME;
 const CourseCardImagesFolderName = process.env.AZURE_COURSECARDS_FOLDER;  
+const BackendBASE_URL = process.env.BASE_URL;
+// // Helper to get image URL
+// const getImageUrl = ( fileName) => {
 
-// Helper to get image URL
-const getImageUrl = ( fileName) => {
+//   if (!fileName ) return null;
+//   return `https://${accountName}.blob.core.windows.net/${containerName}/${CourseCardImagesFolderName}/${fileName}?${sasToken}`;
+// };
 
-  if (!fileName ) return null;
-  return `https://${accountName}.blob.core.windows.net/${containerName}/${CourseCardImagesFolderName}/${fileName}?${sasToken}`;
-};
-
-
+// Helper to return proxy URL instead of exposing SAS token
+const getImageUrl = (fileName) => {
+    if (!fileName) return null;
+    return `${BackendBASE_URL}/studentbuycourses/CourseImage/${fileName}`; // or use your production domain
+  };
+  
+  // ✅ Route to serve the actual course card image securely (proxy)
+  router.get('/CourseImage/:fileName', async (req, res) => {
+    const { fileName } = req.params;
+  
+    if (!fileName) return res.status(400).send("File name is required");
+  
+    const imageUrl = `https://${accountName}.blob.core.windows.net/${containerName}/${CourseCardImagesFolderName}/${fileName}?${sasToken}`;
+  
+    try {
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        return res.status(response.status).send("Failed to fetch image from Azure");
+      }
+  
+      res.setHeader("Content-Type", response.headers.get("Content-Type"));
+      response.body.pipe(res); // Stream the image directly
+    } catch (error) {
+      console.error("Error fetching image from Azure Blob:", error);
+      res.status(500).send("Error fetching image");
+    }
+  });
+  
 router.get("/UnPurchasedcourses/:studentregisterationid",async (req,res) => {
     const { studentregisterationid } = req.params;
     console.log("Received request for unpurchased courses:", { studentregisterationid });

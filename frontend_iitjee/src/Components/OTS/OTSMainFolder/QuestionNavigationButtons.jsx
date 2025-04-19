@@ -350,6 +350,8 @@ export default function QuestionNavigationButtons({
     }
   };
 
+
+
   const handleSaveAndNext = async () => {
     const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
     const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
@@ -360,7 +362,7 @@ export default function QuestionNavigationButtons({
     const subjectId = subject.subjectId;
     const sectionId = section.sectionId;
     const qTypeId = question?.questionType?.quesionTypeId;
-  
+
     let buttonClass = styles.NotAnsweredBtnCls;
     let savedData = { subjectId, sectionId, questionId: qid, type: "", buttonClass };
   
