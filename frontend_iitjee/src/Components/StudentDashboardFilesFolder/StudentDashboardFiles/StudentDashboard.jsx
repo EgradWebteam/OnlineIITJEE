@@ -3,6 +3,7 @@ import StudentDashboardHeader from './StudentDashboardHeader.jsx';
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import StudentDashboardLeftSideBar from './StudentDashboardLeftSidebar.jsx';
 import { useLocation, } from 'react-router-dom';
+const StudentDashboardBookmarks = lazy(() => import('./StudentDashboardBookmarks.jsx'));
 // import { useStudent } from '../../../ContextFolder/StudentContext.jsx';
 // Lazy loaded components
 const StudentDashboardHome = lazy(() => import("./StudentDashboardHome.jsx"));
@@ -46,6 +47,8 @@ export default function StudentDashboard() {
           return <StudentDashboard_BuyCourses setActiveSection = {setActiveSection} studentId = {studentId}/>;
         case "results":
           return <StudentDashboard_MyResults userData ={studentData?.userDetails}  studentId = {studentId}/>;
+          case "bokmarks":
+            return <StudentDashboardBookmarks userData ={studentData?.userDetails}  studentId = {studentId}/>;
         case "account":
           return <StudentDashboard_AccountSettings userData ={studentData?.userDetails}/>;
         default:
