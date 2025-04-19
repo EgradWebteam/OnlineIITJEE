@@ -3,6 +3,7 @@ import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import { FcDocument } from "react-icons/fc";
 import { IoIosAlert } from "react-icons/io";
 import OTSQuestionPaper from './OTSQuestionPaper';
+import OTSInstrcutions from './OTSInstrcutions';
 
 export default function OTSNavbar({testName, testData,realTestId}) {
 
@@ -41,8 +42,14 @@ export default function OTSNavbar({testName, testData,realTestId}) {
         testName ={testName}
         testData ={testData}
         realTestId={realTestId}
+        closeQuestionPaper={closeQuestionPaper}
         />
       )}
+     { showInstrutions &&(
+      <OTSInstrcutions
+      closeInstructions={closeInstructions}
+      />
+     )}
     </div>
   )
 }
