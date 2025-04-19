@@ -125,5 +125,16 @@ font-weight: 500;
   .listofMandatory li.valid {
     color: green;
   }
-  
+  @media (max-width:768px) {
+    .StdAccountPwdContainer{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      position: absolute;
+      left: 22%;
+  }
+  }
   

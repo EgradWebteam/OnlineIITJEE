@@ -3,6 +3,8 @@ import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import { encryptBatch } from '../../../utils/cryptoUtils.jsx';
 import { useNavigate } from 'react-router-dom';
+import { FaBookReader } from "react-icons/fa";
+
 
 export default function TestDetailsContainer({ course, onBack, studentId }) {
   const [groupedTests, setGroupedTests] = useState({});
@@ -138,14 +140,18 @@ export default function TestDetailsContainer({ course, onBack, studentId }) {
                 console.log(`Test ID: ${test.test_creation_table_id}, Attempt Status: ${test.test_attempt_status}`);
                 return (
                   <div key={test.test_creation_table_id} className={styles.testCard}>
-                    <div className={styles.testInfoBox}>
-                      <h4>{test.test_name}</h4>
-                      <div className={styles.durationHolderdiv}>
-                        <p>{type}</p>
-                        <p>Total Marks: {test.total_marks} Marks</p>
-                        <p>Duration: {test.duration} Minutes</p>
+                    <div className={styles.testContainerSub}>
+                      <div className={styles.testContainerIcon}><FaBookReader /></div>
+                      <div className={styles.testInfoBox}>
+                        <h4>{test.test_name}</h4>
+                        <div className={styles.durationHolderdiv}>
+                          <p>{type}</p>
+                          <p>Total Marks: {test.total_marks} Marks</p>
+                          <p>Duration: {test.duration} Minutes</p>
+                        </div>
                       </div>
                     </div>
+                   
                     {test.test_attempt_status?.toLowerCase().trim() === 'completed' ? (
                       <button
                         className={styles.viewReportBtn}
@@ -173,13 +179,16 @@ export default function TestDetailsContainer({ course, onBack, studentId }) {
               console.log(`Test ID: ${test.test_creation_table_id}, Attempt Status: ${test.test_attempt_status}`);
               return (
                 <div key={test.test_creation_table_id} className={styles.testCard}>
-                  <div className={styles.testInfoBox}>
-                    <h4>{test.test_name}</h4>
-                    <div className={styles.durationHolderdiv}>
-                      <p>Total Marks: {test.total_marks} Marks</p>
-                      <p>Duration: {test.duration} Minutes</p>
+                  <div className={styles.testContainerSub}>
+                      <div className={styles.testContainerIcon}><FaBookReader /></div>
+                      <div className={styles.testInfoBox}>
+                        <h4>{test.test_name}</h4>
+                        <div className={styles.durationHolderdiv}>
+                          <p>Total Marks: {test.total_marks} Marks</p>
+                          <p>Duration: {test.duration} Minutes</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
                   {test.test_attempt_status?.toLowerCase().trim() === 'completed' ? (
                     <button
                       className={styles.viewReportBtn}

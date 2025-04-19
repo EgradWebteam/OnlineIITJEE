@@ -365,8 +365,8 @@ flex-direction: row;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* gap: 1rem;
-    justify-content: center; */
+    gap: 1rem;
+    justify-content: center; 
   }
   .testNameInResults{
       font-size: 20px;
@@ -404,14 +404,115 @@ flex-direction: row;
     margin: 1rem;
   }
   .bookMarksTestName{
-    background-color:gainsboro
+    background-color:gainsboro;
   }
   .bookMarksTestName h4{
-padding: 10px;
+      padding: 10px;
+      margin: 1rem;
   }
   .questionsContainerInBookMarks{
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     padding: 1rem;
   }
-
-  
+.testContainerSub{
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+}
+.testContainerIcon{
+  font-size: 2rem;
+}
+  @media (max-width:1024px) {
+    .testCard{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #dbeafe;
+      padding: 1rem;
+      border: 3px solid black;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      flex-direction: column;
+      gap: 1.5rem;
+  }
+  .durationHolderdiv{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 18px;
+    font-weight: 500;
+}
+  }
+  @media (max-width:425px) {
+    .testContainerSub{
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+  }
+  .durationHolderdiv{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 18px;
+    font-weight: 500;
+    flex-direction: column;
+}
+.testInfoBox{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+.testsContainer{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: scroll;
+  height: 55vh;
+}
+.toggleTypeButtons{
+  padding: 5px 5px;
+  font-size: 13px;
+  font-weight: bold;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.toggleTypeButtons button {
+  padding: 5px 6px;
+  font-size: 13px;
+  font-weight: bold;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.examButtons{
+  background-color: white;
+  border-radius: 1rem 1rem 0px 0px;
+  border: none;
+  padding: 0.5rem;
+  font-size: 13px;
+  cursor: pointer;
+}
+  }
+  @media (max-width:375px) {
+    .testCard{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #dbeafe;
+      border: 3px solid black;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 10px;
+  }
+  }
