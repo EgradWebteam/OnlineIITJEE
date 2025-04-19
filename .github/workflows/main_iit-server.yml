@@ -19,7 +19,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd backend-iitjee
+          cd backend_iitjee
           npm install  # Install dependencies
       - name: Login to Azure
         uses: azure/login@v1
@@ -33,4 +33,4 @@ jobs:
         uses: azure/webapps-deploy@v2
         with: 
           app-name: 'iit-server'  # Your App Service name
-          package: 'backend-iitjee'  # Path to your app's root directory (where package.json is located)
+          package: 'backend_iitjee'  # Path to your app's root directory (where package.json is located)
