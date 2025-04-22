@@ -8,7 +8,16 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
 app.use(express.json());
-const corsOptions = {
+// const corsOptions = {
+//   origin: [
+//     "https://icy-sand-03dfe2700.6.azurestaticapps.net",
+//     "http://localhost:5173"
+//   ],
+//   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
+//   credentials: true,
+//   allowedHeaders: ["Content-Type", "Authorization", "popup-page-status"]
+// };
+app.use(cors({
   origin: [
     "https://icy-sand-03dfe2700.6.azurestaticapps.net",
     "http://localhost:5173"
@@ -16,9 +25,8 @@ const corsOptions = {
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization", "popup-page-status"]
-};
-
-app.use(cors(corsOptions));
+}));
+// app.use(cors(corsOptions));
 
 app.use(bodyParser.json({ limit: "10mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
