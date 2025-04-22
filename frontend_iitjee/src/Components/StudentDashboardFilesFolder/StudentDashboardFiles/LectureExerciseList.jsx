@@ -14,11 +14,11 @@ const LectureExerciseList = ({ lectures, onLectureClick, onExerciseClick, userSt
         const videoInfo = userStatus?.videoCount?.find(
           (v) => v.lectureId === lecture.orvl_lecture_name_id
         );
- 
+ console.log(videoInfo)
         const videoProgress = videoInfo && videoInfo.totalVideoTime > 0
           ? Math.min((videoInfo.progress_time / videoInfo.totalVideoTime) * 100, 100)
           : 0;
- 
+ const videoCount = videoInfo  ? videoInfo.videoCount:0;
         return (
           <div key={lecture.orvl_lecture_name_id} className={styles.LectureexcerciseContainer}>
             <div className={styles.LectureVideosContent}>
@@ -30,8 +30,8 @@ const LectureExerciseList = ({ lectures, onLectureClick, onExerciseClick, userSt
                     </div>
                     <div style={{ width: 40, height: 40, marginLeft: 10 }}>
                       {/* Conditionally show the tick mark or progress bar */}
-                      {videoProgress === 100 ? (
-                        <span style={{ fontSize: '30px', color: 'green' }}>✅</span>  // Show tick mark
+                      {videoProgress === 100 || videoCount > 0  ? (
+                          <FaCheckCircle style={{ fontSize: '20px' }} title="Completed" />
                       ) : (
                         <CircularProgressbar
                           value={videoProgress}
