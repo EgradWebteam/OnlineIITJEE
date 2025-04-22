@@ -4,7 +4,7 @@ const { BlobServiceClient } = require("@azure/storage-blob");
 const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
-const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 const router = express.Router();
 const sendMail = require("../utils/email"); // Import the sendMail function
 // Assuming you have a separate email.js function

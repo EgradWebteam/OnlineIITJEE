@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef  } from 'react';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import { FaChevronRight } from "react-icons/fa";
+import { FaChevronCircleLeft } from "react-icons/fa";
+import { FaChevronCircleRight } from "react-icons/fa";
 import {useStudent} from "../../../ContextFolder/StudentContext.jsx";
 export default function OTSRightSideBar({
   testData,
@@ -11,6 +13,8 @@ export default function OTSRightSideBar({
   userAnswers,
   setUserAnswers,
   autoSaveNATIfNeeded,
+  showSidebar,
+  setShowSidebar
 }) {
  
   if (!testData || !Array.isArray(testData.subjects)) return null;
@@ -124,11 +128,34 @@ export default function OTSRightSideBar({
 
     setActiveQuestionIndex(index);
   };
-  const [showSidebar, setShowSidebar] = useState(true); 
+  // const [showSidebar, setShowSidebar] = useState(true); 
    // Toggle Sidebar visibility when button is clicked
    const toggleSidebar = () => {
     setShowSidebar(prev => !prev); // Toggle state
   };
+
+  const questionsContainerRef = useRef(null);
+
+  useEffect(() => {
+    console.log("questionsContainerRef:", questionsContainerRef.current);
+  }, []);
+  
+const scrollLeft = () => {
+  console.log("scroll left")
+  questionsContainerRef.current?.scrollBy({
+    left: -150,
+    behavior: 'smooth',
+  });
+};
+
+const scrollRight = () => {
+  console.log("scroll right")
+  questionsContainerRef.current?.scrollBy({
+    left: 150,
+    behavior: 'smooth',
+  });
+};
+
   return (
     <div className={styles.OTSRightSideBarMainContainer}>
 
@@ -140,7 +167,11 @@ export default function OTSRightSideBar({
         <p>{studentName}</p>
       </div>
 
-      <div className={styles.rightChevronBtn}>
+      <div 
+       className={`${styles.rightChevronBtn} ${
+                !showSidebar ? styles.rightChevronBtnFortransform :""
+                          }`}
+      >
        <button onClick={toggleSidebar}>
           <FaChevronRight />
         </button>
@@ -186,10 +217,11 @@ export default function OTSRightSideBar({
         )}
       </div>
 
+      {/* <div className={styles.chevRonLeftForMobileRes} onClick={scrollLeft}><FaChevronCircleLeft /></div> */}
       {/* Active Section Questions */}
       <div className={styles.AllQuestionRenderBox}>
-        <p>Choose a Question</p>
-        <div className={styles.QuestionsBtnsConatiner}>
+        <p className={styles.chooseQuestionInRightSideBar}>Choose a Question</p>
+        <div className={styles.QuestionsBtnsConatiner} ref={questionsContainerRef}>
           {section?.questions?.map((q, index) => {
             const savedAnswer = userAnswers?.[q.question_id];
 
@@ -213,6 +245,7 @@ export default function OTSRightSideBar({
           })}
         </div>
       </div>
+      {/* <div className={styles.chevRonrightForMobileRes} onClick={scrollRight}><FaChevronCircleRight/></div> */}
       </div>
     </div>
   );
