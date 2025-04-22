@@ -352,6 +352,7 @@ export const MemoizedGrNext = memo(GrNext);
 const Popup = ({
   lecture,
   topicid,
+
   courseCreationId,
   studentId,
   exercise,
@@ -377,9 +378,10 @@ const Popup = ({
 
 
   const [selectedOptions, setSelectedOptions] = useState([]);
-  const [showSolution, setShowSolution] = useState(false);
-  const [activeSolution, setActiveSolution] = useState(null); // 'video' or 'image'
-  
+ // stores question ID of currently viewed solution
+  const [solutionTypes, setSolutionTypes] = useState({}); // { [questionId]: 'video' | 'image' }
+   // 'video' or 'image'
+  const [solutionVisibility, setSolutionVisibility] = useState(null); 
  
   const currentQuestion = exercise?.questions?.[currentQuestionIndex];
  
@@ -390,6 +392,7 @@ const Popup = ({
   const previousQuestion = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
+      
    
     }
   };
@@ -397,6 +400,7 @@ const Popup = ({
   const nextQuestion = () => {
     if (currentQuestionIndex < exercise.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
+   
  
     }
   };
@@ -559,11 +563,12 @@ const Popup = ({
                           ))}
                         </div>
                       )}
+                        {feedback && <div>{feedback}</div>}
                   </div>
               
  
                 {/* Feedback */}
-                {feedback && <div>{feedback}</div>}
+              
  
                 {/* Navigation Buttons */}
                 <div className={styles.navigation_buttons}>
@@ -576,17 +581,17 @@ const Popup = ({
                  {answerDisabled && (
   <button
     onClick={() => {
-      setShowSolution(true);
-      if (solutionVideo) {
-        setActiveSolution('video');
-      } else if (solutionImage) {
-        setActiveSolution('image');
-      }
+      setSolutionVisibility(currentQuestion.exercise_question_id);
+      setSolutionTypes(prev => ({
+        ...prev,
+        [currentQuestion.exercise_question_id]: solutionVideo ? 'video' : 'image',
+      }));
     }}
   >
     View Solution
   </button>
 )}
+
 
                   {currentQuestionIndex < exercise.questions.length - 1 && (
                     <button onClick={nextQuestion}>Next Question</button>
@@ -632,21 +637,39 @@ const Popup = ({
           </button>
         </div>
       </div>
-      {showSolution && (
+      {exercise && currentQuestion && solutionVisibility === currentQuestion.exercise_question_id && (
+         <div className={styles.solutionModalOverlay}>
+         <div className={styles.solutionModalContent}>
+         <button
+               className={styles.solutionModalCloseBtn}
+               onClick={() => setSolutionVisibility(null)}
+             >
+               <IoClose />
+             </button>
   <div className={styles.solutionSection}>
     <div className={styles.solutionButtons}>
       {solutionVideo && (
         <button
-          className={activeSolution === 'video' ? styles.activeButton : ''}
-          onClick={() => setActiveSolution('video')}
+          className={solutionTypes[currentQuestion.exercise_question_id] === 'video' ? styles.activeButton : ''}
+          onClick={() =>
+            setSolutionTypes(prev => ({
+              ...prev,
+              [currentQuestion.exercise_question_id]: 'video',
+            }))
+          }
         >
           Video Solution
         </button>
       )}
       {solutionImage && (
         <button
-          className={activeSolution === 'image' ? styles.activeButton : ''}
-          onClick={() => setActiveSolution('image')}
+          className={solutionTypes[currentQuestion.exercise_question_id] === 'image' ? styles.activeButton : ''}
+          onClick={() =>
+            setSolutionTypes(prev => ({
+              ...prev,
+              [currentQuestion.exercise_question_id]: 'image',
+            }))
+          }
         >
           Image Solution
         </button>
@@ -654,23 +677,24 @@ const Popup = ({
     </div>
 
     <div className={styles.solutionDisplay}>
-    {activeSolution === 'video' && solutionVideo && (
-  <iframe
-    src={solutionVideo}
-    title="Video Solution"
-    width="100%"
-    height="400"
-    frameBorder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowFullScreen
-    className={styles.solutionVideoIframe}
-  ></iframe>
-)}
+      {solutionTypes[currentQuestion.exercise_question_id] === 'video' && solutionVideo && (
+        <iframe
+          src={solutionVideo}
+          title="Video Solution"
+          width="100%"
+          height="400"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className={styles.solutionVideoIframe}
+        ></iframe>
+      )}
 
-      {activeSolution === 'image' && solutionImage && (
+      {solutionTypes[currentQuestion.exercise_question_id] === 'image' && solutionImage && (
         <img src={solutionImage} alt="Solution" className={styles.solutionImage} />
       )}
     </div>
+  </div>    </div>
   </div>
 )}
 

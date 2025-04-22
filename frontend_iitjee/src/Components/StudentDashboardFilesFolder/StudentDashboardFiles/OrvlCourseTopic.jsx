@@ -279,6 +279,7 @@ const [solutionImage, setSolutionImage] = useState(null);
     setSelectedExercise(null);         // Don't auto-start exercise
     setShowExercise(false);            // Start with lecture only
     setShowPopup(true);
+   
 
   };
 
@@ -302,6 +303,7 @@ const [solutionImage, setSolutionImage] = useState(null);
     setSelectedLecture(null);
     setSelectedExercise(null);
     setShowPopup(false);
+   
   };
 
   const nextLectureOrExercise = () => {
@@ -468,6 +470,7 @@ const [solutionImage, setSolutionImage] = useState(null);
           courseCreationId = {courseCreationId}
           solutionVideo={solutionVideo}
           solutionImage={solutionImage}
+        
         />
       ) : (
         <LectureExerciseList
