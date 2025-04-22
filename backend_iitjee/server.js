@@ -7,7 +7,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
-app.use(express.json());
+// app.use(express.json());
 // const corsOptions = {
 //   origin: [
 //     "https://icy-sand-03dfe2700.6.azurestaticapps.net",
@@ -29,6 +29,9 @@ app.use(cors({
 // app.use(cors(corsOptions));
 
 app.use(bodyParser.json({ limit: "10mb" }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
 app.use(morgan(":method :url :status :response-time ms"));
 
