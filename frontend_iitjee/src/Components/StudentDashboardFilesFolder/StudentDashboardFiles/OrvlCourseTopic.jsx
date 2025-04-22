@@ -363,7 +363,7 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
             </div>
           </div>
         )}
-         <div>{courseData.orvl_topic_name}</div>
+         <div className={globalCSS.OrvlTopicName}>{courseData.orvl_topic_name}</div>
          </div>
          <div className={globalCSS.OrvlCourseTopicContent}>
 
