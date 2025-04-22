@@ -17,6 +17,7 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedOptionsArray, setSelectedOptionsArray] = useState([]);
   const [natValue, setNatValue] = useState("");
+    const [showSidebar, setShowSidebar] = useState(true); 
 
   // Reset question index when section changes
   useEffect(() => {
@@ -104,6 +105,12 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
             activeSection={activeSection}
             setActiveSection={setActiveSection}
             autoSaveNATIfNeeded={autoSaveNATIfNeeded}
+            setUserAnswers={setUserAnswers}
+            userAnswers={userAnswers}
+            activeQuestionIndex={activeQuestionIndex}
+            setActiveQuestionIndex={setActiveQuestionIndex}
+            showSidebar={showSidebar}
+            setShowSidebar={setShowSidebar}
           />
           <QuestionsMainContainer
             testData={testData}
@@ -117,6 +124,8 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
             setSelectedOptionsArray={setSelectedOptionsArray}
             natValue={natValue}
             setNatValue={setNatValue}
+            showSidebar={showSidebar}
+            setShowSidebar={setShowSidebar}
           />
         </div>
         <div>
@@ -130,6 +139,8 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
               userAnswers={userAnswers}
               setUserAnswers={setUserAnswers}
               autoSaveNATIfNeeded={autoSaveNATIfNeeded}
+              showSidebar={showSidebar}
+              setShowSidebar={setShowSidebar}
             />
        
         </div>

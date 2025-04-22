@@ -277,8 +277,8 @@ height: 100%;
     gap: 10px;
   }
   .profileImage {
-    width: 100px;
-    height: 100px;
+    width: 115px;
+    height: 115px;
   }
   .profileImage img{
      width: 100%;
@@ -773,6 +773,11 @@ background-color: #04c7f8;
     border-radius: 5px;
     border-radius: 4px;
 }
+.rightChevronBtnFortransform{
+  /* display: none; */
+  right: 0;
+  left: 92%;
+}
 
 .hiddenSidebar {
   display: none; /* Or visibility: hidden; */
@@ -1198,6 +1203,9 @@ background-position: center center, /* Center image */ center 10%, center 30%,
   height: 60vh;
   padding: 1rem;
 }
+.chevRonrightForMobileRes, .chevRonLeftForMobileRes{
+display: none;
+}
 
 @media (max-width:1280px) {
   .OTSMainFileMainContainer{
@@ -1302,7 +1310,7 @@ background-position: center center, /* Center image */ center 10%, center 30%,
 }
 }
 
-@media (max-width:425px) {
+@media (max-width:425px) and (min-width: 320px) {
   .userImageDivInst{
     display: flex;
     flex-direction: column;
@@ -1373,6 +1381,13 @@ background-position: center center, /* Center image */ center 10%, center 30%,
   padding: 1rem 3rem;
 }
 .OTSRightSideBarMainContainer{
+  /* display: none; */
+}
+.StudentProfileHolderOTS,
+.rightChevronBtn, 
+.OTSRightSideBarSubContainer,
+.SectionsAndSubjectDiv,
+.chooseQuestionInRightSideBar{
   display: none;
 }
 .OTSMainFileSubContainer{
@@ -1433,7 +1448,7 @@ padding: 3px;
   justify-content: space-between;
   width: 100%;
   flex-direction: column;
-  gap: 1rem;
+  /* gap: 1rem; */
 }
 .btnsSubContainer{
   display: flex;
@@ -1441,7 +1456,7 @@ padding: 3px;
   justify-content: space-between;
   width: 85%;
   flex-direction: column;
-  gap: 1rem;
+  gap: 7px;
 }
 .navigationBtnHolderSubContainer{
   display: flex;
@@ -1449,7 +1464,7 @@ padding: 3px;
 }
 .markedForReviewNavigationBtn, .clearResponseBtn, .previousBtn, .saveandnextNavigationBtn, .submitNavigationBtn{
   border: 1px solid rgb(153, 151, 151);
-  padding: 10px;
+  padding: 8px;
   cursor: pointer;
   font-size: 13px;
 }
@@ -1458,9 +1473,90 @@ padding: 3px;
   padding: 10px;
   cursor: pointer;
   font-size: 13px;
-  /* width: 300px; */
+  width: 170px;
 }
 .saveandnextNavigationBtn{
-  /* width: 300px; */
+  width: 170px;
+}
+.navigationBtnHolderSubContainerForSubmit{
+  display: flex;
+  gap: 2rem;
+}
+._QuestionNavigationBTns_8o7gq_863 {
+  border: 1px solid rgb(204, 204, 204);
+  padding: 10px;
+  position: sticky;
+  width: 100%;
+  margin-top: 30px;
+  height: 0vh;
+}
+.QuestionTypeHolderContainer{
+  gap: 0px;
+}
+.QuestionNavigationBTns{
+  border: 1px solid rgb(204, 204, 204);
+  padding: 10px;
+  position: sticky;
+  width: 100%;
+  margin-top: 30px;
+  height: 17vh;
+}
+.OTSMainFileMainContainer{
+  width: 100%;
+  position: relative;
+  height: 63vh;
+}
+.QuestionsBtnsConatiner{
+  display: flex;
+  padding: 0;
+  justify-content: flex-start;
+  gap: 2px;
+  padding-top: 0px;
+  padding-left: 0px;
+  white-space: nowrap;
+  border: none;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  max-width: 100%;
+  flex-wrap: nowrap;
+}
+.OTSRightSideBarMainContainer{
+  position: absolute;
+  border: 1px solid gainsboro;
+  background-color: white;
+  width: auto;
+  top: 9rem;
+}
+ .QuestionTypeHolderContainer{
+  margin-top: 3rem;
+ }
+ .AllQuestionRenderBox{
+  padding: 0px;
+  display: flex;
+  /* left: 34.2rem; */
+  overflow: scroll;
+  /* position: relative; Needed for absolute chevrons */
+  /* right: 0rem; */
+  width: 390px;
+}
+.OTSQuestionOptionsContainerForScroll{
+  height: 22vh;
+  overflow-y: scroll;
+}
+.chevRonrightForMobileRes, .chevRonLeftForMobileRes{
+  display: flex;
+  align-items: center;
+  position: absolute;
+  font-size: 25px;
+  background-color: white;
+  padding: 10px;
+  z-index: 1000;
+}
+.chevRonLeftForMobileRes{
+  left: 5rem;
+}
+.chevRonrightForMobileRes{
+  right: 0rem;
+  top: 0rem;
 }
 }

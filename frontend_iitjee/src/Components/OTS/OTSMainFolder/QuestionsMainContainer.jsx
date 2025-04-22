@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import QuestionOptionsContainer from './QuestionOptionsContainer';
+import { FaChevronLeft } from 'react-icons/fa';
 
 export default function QuestionsMainContainer({ 
   testData, 
@@ -13,7 +14,9 @@ export default function QuestionsMainContainer({
   selectedOptionsArray,
   setSelectedOptionsArray,
   natValue,
-  setNatValue
+  setNatValue,
+  setShowSidebar,
+  showSidebar
 }) {
 
   //  Get current question based on active subject, section, and question index
@@ -118,10 +121,10 @@ export default function QuestionsMainContainer({
       negativeMarks: question?.nmarks_text || "N/A",
     };
   };
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  // const [isCollapsed, setIsCollapsed] = useState(false);
   const handleLeftClickMain = () => {
     console.log("in handle left click in main page");
-    setIsCollapsed((prev) => !prev);
+    setShowSidebar((prev) => !prev);
   };
   const { questionType, marks, negativeMarks } = getQuestionMeta();
 
@@ -150,7 +153,7 @@ export default function QuestionsMainContainer({
     );
   };
   return (
-    <div className={!isCollapsed ? styles.OTSQuestionContainerMainDiv : styles.fullWidth }>
+    <div className={!showSidebar ? styles.fullWidth : styles.OTSQuestionContainerMainDiv  }>
       <div className={styles.QuestionTypeHolderContainer}>
         <p>Question Type: <strong>{questionType}</strong></p>
         <div className={styles.marksContainer}>
@@ -184,7 +187,7 @@ export default function QuestionsMainContainer({
       </div>
      
 
-      {isCollapsed && (
+      {showSidebar && (
         <div className={styles.rightChevronBtn}>
         <button
           onClick={handleLeftClickMain}
