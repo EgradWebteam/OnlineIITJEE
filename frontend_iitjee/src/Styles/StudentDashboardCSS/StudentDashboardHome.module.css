@@ -58,3 +58,11 @@
     color: rgb(68, 68, 68);
     padding: 5px 9px;
 }
+@media(max-width:600px){
+    .welcomeNoteStudentDashboard{
+        font-size: 20px;
+    }
+    .exploreCoursesHeading{
+        font-size: 20px;
+    }
+}

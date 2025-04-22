@@ -36,6 +36,7 @@ const Popup = ({
   useEffect(() => {
     resetAnswerState();
   }, [currentQuestionIndex]);
+
   const previousQuestion = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
@@ -51,15 +52,11 @@ const Popup = ({
   };
 
   const resetAnswerState = () => {
-
-      setUserAnswer('');
-      setSelectedOptions([]);
-    }
-  
+    setUserAnswer('');
+    setSelectedOptions([]);
     setFeedback('');
   };
   
-
   const handleSubmitAnswer = () => {
     let submittedAnswer;
   
@@ -154,8 +151,8 @@ const Popup = ({
                 <div className={styles.ExerciseQuestionContainers}>
                   <div className={styles.QuestionsAndImgScrollContainer}>
                     <div className={styles.QuestionTypeAndID}>
-                      <h4>{currentQuestion.exercise_question_sort_id}</h4>
-                      <p>{currentQuestion.exercise_question_type}</p>
+                      <h4>Question No : {currentQuestion.exercise_question_sort_id}</h4>
+                      <p>type : {currentQuestion.exercise_question_type}</p>
                     </div>
                     <div className={styles.QuestionImgForExercise}>
                       {currentQuestion.exercise_question_img && (
