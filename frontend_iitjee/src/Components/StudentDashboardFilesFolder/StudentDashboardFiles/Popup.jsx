@@ -4,11 +4,11 @@
 // import { GrPrevious, GrNext } from "react-icons/gr";
 // import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 // import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css"; // Import the CSS file
-
+ 
 // export const MemoizedIoClose = memo(IoClose);
 // export const MemoizedGrPrevious = memo(GrPrevious);
 // export const MemoizedGrNext = memo(GrNext);
-
+ 
 // const Popup = ({
 //   lecture,
 //   topicid,
@@ -27,12 +27,12 @@
 //   const [selectedOptions, setSelectedOptions] = useState([]);
 //   const [answerDisabled, setAnswerDisabled] = useState(false);
 //   const [feedback, setFeedback] = useState("");
-
+ 
 //   const [userAnswers, setUserAnswers] = useState({});
-
+ 
 //   const currentQuestion = exercise?.questions?.[currentQuestionIndex];
-
-
+ 
+ 
 //   useEffect(() => {
 //     resetAnswerState();
 //   }, [currentQuestionIndex]);
@@ -42,27 +42,27 @@
 //       resetAnswerState();
 //     }
 //   };
-
+ 
 //   const nextQuestion = () => {
 //     if (currentQuestionIndex < exercise.questions.length - 1) {
 //       setCurrentQuestionIndex(currentQuestionIndex + 1);
 //       resetAnswerState();
 //     }
 //   };
-
+ 
 //   const resetAnswerState = () => {
-
+ 
 //       setUserAnswer('');
 //       setSelectedOptions([]);
 //     }
-  
+ 
 //     setFeedback('');
 //   };
-  
-
+ 
+ 
 //   const handleSubmitAnswer = () => {
 //     let submittedAnswer;
-  
+ 
 //     if (currentQuestion.exercise_question_type === 'NATD') {
 //       submittedAnswer = userAnswer;
 //     } else if (currentQuestion.exercise_question_type === 'MSQ') {
@@ -70,7 +70,7 @@
 //     } else if (currentQuestion.exercise_question_type === 'MCQ') {
 //       submittedAnswer = userAnswer;
 //     }
-  
+ 
 //     const payload = {
 //       question_status: 1, // or "not_answered", etc.
 //       orvl_topic_id: topicid,
@@ -80,12 +80,12 @@
 //       course_creation_id: courseCreationId,
 //       exercise_userresponse: submittedAnswer,  // Pass the answer here
 //     };
-  
+ 
 //     setFeedback('Answer submitted!');
 //     setAnswerDisabled(true);
-  
+ 
 //     console.log('Answer:', submittedAnswer);
-  
+ 
 //     // Send the answer via fetch request
 //     fetch(`${BASE_URL}/OrvlTopics/SubmitUserAnswer`, {
 //       method: 'PUT', // Specify the request method
@@ -103,8 +103,8 @@
 //         console.error('Error submitting answer:', error);
 //       });
 //   };
-  
-
+ 
+ 
 //   const handleOptionChange = (value) => {
 //     if (currentQuestion.exercise_question_type === "MCQ") {
 //       setUserAnswer(value);
@@ -116,7 +116,7 @@
 //       }
 //     }
 //   };
-
+ 
 //   const getStatus = (questionId) => {
 //     if (exerciseStatus && typeof exerciseStatus === 'object') {
 //       const status = exerciseStatus[questionId];
@@ -125,7 +125,7 @@
 //     }
 //     return undefined;
 //   };
-
+ 
 //   return (
 //     <div className={styles.popup_overlay}>
 //       <div className={styles.popup_content}>
@@ -146,7 +146,7 @@
 //           >
 //             <GrPrevious />
 //           </button>
-
+ 
 //           {/* Main Content */}
 //           <div className={styles.popup_main_content}>
 //             {exercise && exercise.questions?.length > 0 ? (
@@ -166,7 +166,7 @@
 //                           />
 //                         </div>
 //                       )}
-
+ 
 //                       {currentQuestion.exercise_question_type === "NATD" && (
 //                         <div className={styles.calc_container}>
 //                           <input
@@ -179,7 +179,7 @@
 //                           />
 //                         </div>
 //                       )}
-
+ 
 //                       {(currentQuestion.exercise_question_type === "MCQ" ||
 //                         currentQuestion.exercise_question_type === "MSQ") &&
 //                         currentQuestion.options?.length > 0 && (
@@ -226,7 +226,7 @@
 //                     </div>
 //                   </div>
 //                   {feedback && <div>{feedback}</div>}
-
+ 
 //                   <div className={styles.navigation_buttons_for_ques}>
 //                     {currentQuestionIndex > 0 && (
 //                       <div className={styles.BtnForQuestion}>
@@ -276,7 +276,7 @@
 //                   </div>
 //                   <div className={styles.CircleForAllWrapers}>
 //                     <div className={styles.HeadingForLegend}>Legend</div>
-
+ 
 //                     <div className={styles.circleWrapper}>
 //                       <div className={`${styles.circle} ${styles.unanswered}`}>
 //                         1
@@ -314,7 +314,7 @@
 //               <div>No data available</div>
 //             )}
 //           </div>
-
+ 
 //           {/* Next Button (right side) */}
 //           <button
 //             onClick={nextLectureOrExercise}
@@ -327,17 +327,17 @@
 //     </div>
 //   );
 // };
-
+ 
 // export default Popup;
-
-
-
-
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 import React, { useState, memo,useEffect } from 'react';
 import ReactPlayer from 'react-player';
 import { IoClose } from 'react-icons/io5';
@@ -369,10 +369,10 @@ const Popup = ({
   const [feedback, setFeedback] = useState('');
  
   const currentQuestion = exercise?.questions?.[currentQuestionIndex];
-
-
-
-
+ 
+ 
+ 
+ 
  
   const previousQuestion = () => {
     if (currentQuestionIndex > 0) {
@@ -387,8 +387,8 @@ const Popup = ({
  
     }
   };
-
-  
+ 
+ 
  
   const handleSubmitAnswer = () => {
     let submittedAnswer;
@@ -467,13 +467,13 @@ const Popup = ({
             <button onClick={onClose}><IoClose /></button>
           </div>
         </div>
-
+ 
         <div className={styles.popup_body}>
           {/* Previous Lecture Button */}
           <button onClick={previousLectureOrExercise} className={styles.side_nav_button}>
             <GrPrevious />
           </button>
-
+ 
           <div className={styles.popup_main_content}>
             {exercise && exercise.questions?.length > 0 ? (
               <div className={styles.slideshow}>
@@ -484,7 +484,7 @@ const Popup = ({
                       <h4>Question No : {currentQuestion.exercise_question_sort_id}</h4>
                       <p>Type : {currentQuestion.exercise_question_type}</p>
                     </div>
-
+ 
                     {/* Question Image */}
                     {currentQuestion.exercise_question_img && (
                       <div className={styles.img_container}>
@@ -494,7 +494,7 @@ const Popup = ({
                         />
                       </div>
                     )}
-
+ 
                     {/* NATD Input */}
                     {currentQuestion.exercise_question_type === 'NATD' && (
                       <div className={styles.calc_container}>
@@ -508,7 +508,7 @@ const Popup = ({
                         />
                       </div>
                     )}
-
+ 
                     {/* Options (MCQ/MSQ) */}
                     {(currentQuestion.exercise_question_type === 'MCQ' ||
                       currentQuestion.exercise_question_type === 'MSQ') &&
@@ -542,10 +542,10 @@ const Popup = ({
                       )}
                   </div>
                 </div>
-
+ 
                 {/* Feedback */}
                 {feedback && <div>{feedback}</div>}
-
+ 
                 {/* Navigation Buttons */}
                 <div className={styles.navigation_buttons}>
                   {currentQuestionIndex > 0 && (
@@ -561,7 +561,7 @@ const Popup = ({
                     <button onClick={nextQuestion}>Next Question</button>
                   )}
                 </div>
-
+ 
                 {/* Status Palette */}
                 <div className={styles.status_pallete}>
                   {exercise.questions.map((question, index) => {
@@ -590,7 +590,7 @@ const Popup = ({
               <div>No data available</div>
             )}
           </div>
-
+ 
           {/* Next Lecture Button */}
           <button onClick={nextLectureOrExercise} className={styles.side_nav_button}>
             <GrNext />
@@ -600,5 +600,6 @@ const Popup = ({
     </div>
   );
 };
-
+ 
 export default Popup;
+ 
