@@ -15,6 +15,38 @@
   justify-content: center;
   margin-top: 20px;
 }
+.solutionSection {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.solutionButtons {
+  margin-bottom: 1rem;
+}
+
+.solutionButtons button {
+  margin: 0 10px;
+  padding: 8px 16px;
+  border: none;
+  background-color: #e0e0e0;
+  cursor: pointer;
+}
+
+.solutionButtons .activeButton {
+  background-color: #4caf50;
+  color: white;
+}
+
+.solutionImage {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+.solutionVideoIframe {
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
 .status-pallete {
   display: flex;
   flex-wrap: wrap;

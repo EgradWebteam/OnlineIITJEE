@@ -15,7 +15,13 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
   const [selectedExercise, setSelectedExercise] = useState(null);             
   const [showExercise, setShowExercise] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const[exerciseStatus,setExerciseStatus] = useState(null)
+  const[exerciseStatus,setExerciseStatus] = useState(null);
+    const [userAnswer, setUserAnswer] = useState('');
+    const [answerDisabled, setAnswerDisabled] = useState(false);
+    const [feedback, setFeedback] = useState('');
+    const [solutionVideo, setSolutionVideo] = useState(null);
+const [solutionImage, setSolutionImage] = useState(null);
+
    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -134,7 +140,61 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
         fetchExerciseStatus();
       }
     }, [topicid, selectedExercise, studentId, courseCreationId]);
+    const useranswervalue = async () => {
+      const questionid = selectedExercise?.questions?.[currentQuestionIndex]?.exercise_question_id;
     
+      if (!questionid) return;
+    
+      try {
+        const response = await fetch(
+          `${BASE_URL}/OrvlTopics/UserAnswer/${studentId}/${courseCreationId}/${topicid}/${questionid}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+    
+        const data = await response.json();
+    
+        if (data.length > 0) {
+          const result = data[0];
+          const isCorrect = result.userAnswer === result.correctAnswer;
+    
+          setUserAnswer(result.userAnswer || '');
+    
+          if (!result.userAnswer) {
+            setFeedback('Not answered yet.');
+          } else if (isCorrect) {
+            setFeedback('Correct Answer! ✅');
+          } else {
+            setFeedback('Incorrect Answer ❌');
+          }
+          if(result){
+            setAnswerDisabled(true)
+          }
+          // Set solution video and image if available
+          if (result.videoSolution) {
+          setSolutionVideo(result.videoSolution || null);
+          }
+          if (result.imageSolution) {
+          setSolutionImage(result.imageSolution || null);
+          }
+    
+          setAnswerDisabled(true);
+        } else {
+          setUserAnswer('');
+          setFeedback('No attempt found.');
+          setSolutionVideo(null);
+          setSolutionImage(null);
+        }
+      } catch (error) {
+        console.error('Error fetching user answer:', error);
+        setFeedback('Error loading answer.');
+        setSolutionVideo(null);
+        setSolutionImage(null);
+      }
+    };
+    ;
+     
   useEffect(() => {
     console.log("gd");
   
@@ -153,11 +213,21 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
         // Only submit if the status is "NotVisited"
         if (status === 'unvisited') {
           submitExerciseStatus(questionid);
+          setAnswerDisabled(false)
+          setUserAnswer("")
+          setFeedback(null)
+          setSolutionVideo(null);
+          setSolutionImage(null);
         } 
-        else if (status === 'unvisited'){
-          useranswer()
+        else if (status === 'answered'){
+          useranswervalue()
         }
           else {
+            setAnswerDisabled(false)
+            setUserAnswer("")
+            setFeedback(null)
+            setSolutionVideo(null);
+            setSolutionImage(null);
           console.log({ alldhf: 'Question already visited or answered' });
         }
       } else {
@@ -378,7 +448,13 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
       {showPopup ? (
         <Popup
           lecture={selectedLecture}
-         
+          userAnswer={userAnswer}
+          setUserAnswer={setUserAnswer}           
+          answerDisabled={answerDisabled}  
+          setAnswerDisabled = {setAnswerDisabled}      
+          feedback={feedback}
+          setFeedback={setFeedback} 
+          useranswervalue={useranswervalue}
           exercise={selectedExercise}
           onClose={handleClosePopup}
           fetchExerciseStatus={fetchExerciseStatus}
@@ -390,6 +466,8 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
           nextLectureOrExercise={nextLectureOrExercise}
           studentId = {studentId} 
           courseCreationId = {courseCreationId}
+          solutionVideo={solutionVideo}
+          solutionImage={solutionImage}
         />
       ) : (
         <LectureExerciseList

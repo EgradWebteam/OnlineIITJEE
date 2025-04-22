@@ -360,14 +360,26 @@ const Popup = ({
   previousLectureOrExercise,
   nextLectureOrExercise,
   currentQuestionIndex,
+  setAnswerDisabled,
+  userAnswer,
+  setUserAnswer,
+  answerDisabled,
+  feedback,
+  setFeedback,
+  useranswervalue,
   fetchExerciseStatus,
-  setCurrentQuestionIndex
+  setCurrentQuestionIndex,
+  solutionVideo,
+  solutionImage
 }) => {
  
-  const [userAnswer, setUserAnswer] = useState('');
+
+
+
   const [selectedOptions, setSelectedOptions] = useState([]);
-  const [answerDisabled, setAnswerDisabled] = useState(false);
-  const [feedback, setFeedback] = useState('');
+  const [showSolution, setShowSolution] = useState(false);
+  const [activeSolution, setActiveSolution] = useState(null); // 'video' or 'image'
+  
  
   const currentQuestion = exercise?.questions?.[currentQuestionIndex];
  
@@ -412,7 +424,7 @@ const Popup = ({
       exercise_userresponse: submittedAnswer,
     };
   
-    setFeedback('Answer submitted!');
+    
     setAnswerDisabled(true);
   
     try {
@@ -431,7 +443,8 @@ const Popup = ({
       const data = await response.json();
       console.log('Answer submitted successfully:', data);
   
-      await fetchExerciseStatus(); // ✅ Runs only if status is OK (200-range)
+      await fetchExerciseStatus(); 
+      await useranswervalue();
     } catch (error) {
       console.error('Error submitting answer:', error);
       setFeedback('Failed to submit answer. Please try again.'); // Optional feedback for user
@@ -560,9 +573,21 @@ const Popup = ({
                   {!answerDisabled && (
                     <button onClick={handleSubmitAnswer}>Submit</button>
                   )}
-                  {answerDisabled && (
-                    <button onClick={() => setFeedback('Solution displayed!')}>View Solution</button>
-                  )}
+                 {answerDisabled && (
+  <button
+    onClick={() => {
+      setShowSolution(true);
+      if (solutionVideo) {
+        setActiveSolution('video');
+      } else if (solutionImage) {
+        setActiveSolution('image');
+      }
+    }}
+  >
+    View Solution
+  </button>
+)}
+
                   {currentQuestionIndex < exercise.questions.length - 1 && (
                     <button onClick={nextQuestion}>Next Question</button>
                   )}
@@ -607,6 +632,48 @@ const Popup = ({
           </button>
         </div>
       </div>
+      {showSolution && (
+  <div className={styles.solutionSection}>
+    <div className={styles.solutionButtons}>
+      {solutionVideo && (
+        <button
+          className={activeSolution === 'video' ? styles.activeButton : ''}
+          onClick={() => setActiveSolution('video')}
+        >
+          Video Solution
+        </button>
+      )}
+      {solutionImage && (
+        <button
+          className={activeSolution === 'image' ? styles.activeButton : ''}
+          onClick={() => setActiveSolution('image')}
+        >
+          Image Solution
+        </button>
+      )}
+    </div>
+
+    <div className={styles.solutionDisplay}>
+    {activeSolution === 'video' && solutionVideo && (
+  <iframe
+    src={solutionVideo}
+    title="Video Solution"
+    width="100%"
+    height="400"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowFullScreen
+    className={styles.solutionVideoIframe}
+  ></iframe>
+)}
+
+      {activeSolution === 'image' && solutionImage && (
+        <img src={solutionImage} alt="Solution" className={styles.solutionImage} />
+      )}
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
