@@ -3,11 +3,14 @@ import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js'; // Import the ba
 import LectureExerciseList from './LectureExerciseList';
 import Popup from './Popup';
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
-import globalCSS from '../../../Styles/Global.module.css'
+import globalCSS from '../../../Styles/Global.module.css';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userStatus, setUserStatus] = useState(null);
   const [selectedLecture, setSelectedLecture] = useState(null);
   const [selectedExercise, setSelectedExercise] = useState(null);             
   const [showExercise, setShowExercise] = useState(false);
@@ -270,7 +273,26 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
       }
     }
   };
-  
+  useEffect(() => {
+    const fetchUserStatus = async () => {
+      try {
+        const response = await fetch(
+          `${BASE_URL}/OrvlTopics/UserResponseStatus/${studentId}/${courseCreationId}/${topicid}`
+        );
+        if (!response.ok) {
+          throw new Error('Failed to fetch user response status');
+        }
+        const data = await response.json();
+        setUserStatus(data);
+      } catch (err) {
+        console.error('Error fetching user status:', err);
+      }
+    };
+ 
+    if (studentId && courseCreationId && topicid) {
+      fetchUserStatus();
+    }
+  }, [studentId, courseCreationId, topicid]);
   const previousLectureOrExercise = () => {
     if (!courseData || !selectedLecture) return;
   
@@ -322,6 +344,25 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
          <button onClick={onBack}>Back</button>
          </div>
          <div className={globalCSS.OrvlCourseTopicHeader}>
+         {userStatus && (
+          <div className={globalCSS.completionInfo}>
+          
+     
+            <div style={{ width: 60, height: 60 }}>
+              <CircularProgressbar
+                value={parseFloat(userStatus.totalCompletionPercentage)}
+                text={`${userStatus.totalCompletionPercentage}%`}
+                styles={buildStyles({
+                  textSize: '16px',
+                  pathColor: '#4caf50',
+                  textColor: 'white',
+                  trailColor: '#d6d6d6',
+                })}
+              />
+           
+            </div>
+          </div>
+        )}
          <div>{courseData.orvl_topic_name}</div>
          </div>
          <div className={globalCSS.OrvlCourseTopicContent}>
@@ -346,6 +387,7 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
           lectures={courseData.lectures}
           onLectureClick={handleLectureClick}
           onExerciseClick={handleExerciseClick}
+          userStatus={userStatus}
         />
       )}
     </div>

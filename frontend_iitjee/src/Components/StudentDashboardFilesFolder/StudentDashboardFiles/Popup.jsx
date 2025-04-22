@@ -4,11 +4,11 @@
 // import { GrPrevious, GrNext } from "react-icons/gr";
 // import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 // import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css"; // Import the CSS file
-
+ 
 // export const MemoizedIoClose = memo(IoClose);
 // export const MemoizedGrPrevious = memo(GrPrevious);
 // export const MemoizedGrNext = memo(GrNext);
-
+ 
 // const Popup = ({
 //   lecture,
 //   topicid,
@@ -27,12 +27,12 @@
 //   const [selectedOptions, setSelectedOptions] = useState([]);
 //   const [answerDisabled, setAnswerDisabled] = useState(false);
 //   const [feedback, setFeedback] = useState("");
-
+ 
 //   const [userAnswers, setUserAnswers] = useState({});
-
+ 
 //   const currentQuestion = exercise?.questions?.[currentQuestionIndex];
-
-
+ 
+ 
 //   useEffect(() => {
 //     resetAnswerState();
 //   }, [currentQuestionIndex]);
@@ -42,27 +42,27 @@
 //       resetAnswerState();
 //     }
 //   };
-
+ 
 //   const nextQuestion = () => {
 //     if (currentQuestionIndex < exercise.questions.length - 1) {
 //       setCurrentQuestionIndex(currentQuestionIndex + 1);
 //       resetAnswerState();
 //     }
 //   };
-
+ 
 //   const resetAnswerState = () => {
-
+ 
 //       setUserAnswer('');
 //       setSelectedOptions([]);
 //     }
-  
+ 
 //     setFeedback('');
 //   };
-  
-
+ 
+ 
 //   const handleSubmitAnswer = () => {
 //     let submittedAnswer;
-  
+ 
 //     if (currentQuestion.exercise_question_type === 'NATD') {
 //       submittedAnswer = userAnswer;
 //     } else if (currentQuestion.exercise_question_type === 'MSQ') {
@@ -70,7 +70,7 @@
 //     } else if (currentQuestion.exercise_question_type === 'MCQ') {
 //       submittedAnswer = userAnswer;
 //     }
-  
+ 
 //     const payload = {
 //       question_status: 1, // or "not_answered", etc.
 //       orvl_topic_id: topicid,
@@ -80,12 +80,12 @@
 //       course_creation_id: courseCreationId,
 //       exercise_userresponse: submittedAnswer,  // Pass the answer here
 //     };
-  
+ 
 //     setFeedback('Answer submitted!');
 //     setAnswerDisabled(true);
-  
+ 
 //     console.log('Answer:', submittedAnswer);
-  
+ 
 //     // Send the answer via fetch request
 //     fetch(`${BASE_URL}/OrvlTopics/SubmitUserAnswer`, {
 //       method: 'PUT', // Specify the request method
@@ -103,8 +103,8 @@
 //         console.error('Error submitting answer:', error);
 //       });
 //   };
-  
-
+ 
+ 
 //   const handleOptionChange = (value) => {
 //     if (currentQuestion.exercise_question_type === "MCQ") {
 //       setUserAnswer(value);
@@ -116,7 +116,7 @@
 //       }
 //     }
 //   };
-
+ 
 //   const getStatus = (questionId) => {
 //     if (exerciseStatus && typeof exerciseStatus === 'object') {
 //       const status = exerciseStatus[questionId];
@@ -125,7 +125,7 @@
 //     }
 //     return undefined;
 //   };
-
+ 
 //   return (
 //     <div className={styles.popup_overlay}>
 //       <div className={styles.popup_content}>
@@ -146,7 +146,7 @@
 //           >
 //             <GrPrevious />
 //           </button>
-
+ 
 //           {/* Main Content */}
 //           <div className={styles.popup_main_content}>
 //             {exercise && exercise.questions?.length > 0 ? (
@@ -166,7 +166,7 @@
 //                           />
 //                         </div>
 //                       )}
-
+ 
 //                       {currentQuestion.exercise_question_type === "NATD" && (
 //                         <div className={styles.calc_container}>
 //                           <input
@@ -179,7 +179,7 @@
 //                           />
 //                         </div>
 //                       )}
-
+ 
 //                       {(currentQuestion.exercise_question_type === "MCQ" ||
 //                         currentQuestion.exercise_question_type === "MSQ") &&
 //                         currentQuestion.options?.length > 0 && (
@@ -226,7 +226,7 @@
 //                     </div>
 //                   </div>
 //                   {feedback && <div>{feedback}</div>}
-
+ 
 //                   <div className={styles.navigation_buttons_for_ques}>
 //                     {currentQuestionIndex > 0 && (
 //                       <div className={styles.BtnForQuestion}>
@@ -276,7 +276,7 @@
 //                   </div>
 //                   <div className={styles.CircleForAllWrapers}>
 //                     <div className={styles.HeadingForLegend}>Legend</div>
-
+ 
 //                     <div className={styles.circleWrapper}>
 //                       <div className={`${styles.circle} ${styles.unanswered}`}>
 //                         1
@@ -314,7 +314,7 @@
 //               <div>No data available</div>
 //             )}
 //           </div>
-
+ 
 //           {/* Next Button (right side) */}
 //           <button
 //             onClick={nextLectureOrExercise}
@@ -327,18 +327,18 @@
 //     </div>
 //   );
 // };
-
+ 
 // export default Popup;
-
-
-
-
-
-
-
-
-
-import React, { useState, memo, useEffect } from 'react';
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+import React, { useState, memo,useEffect } from 'react';
 import ReactPlayer from 'react-player';
 import { IoClose } from 'react-icons/io5';
 import { GrPrevious, GrNext } from 'react-icons/gr';
@@ -369,34 +369,26 @@ const Popup = ({
   const [feedback, setFeedback] = useState('');
  
   const currentQuestion = exercise?.questions?.[currentQuestionIndex];
-
-
-  useEffect(() => {
-    resetAnswerState();
-  }, [currentQuestionIndex]);
-
+ 
+ 
+ 
+ 
  
   const previousQuestion = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
-      resetAnswerState();
+   
     }
   };
  
   const nextQuestion = () => {
     if (currentQuestionIndex < exercise.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      resetAnswerState();
+ 
     }
   };
  
-  const resetAnswerState = () => {
-    setUserAnswer('');
-    setSelectedOptions([]);
-    setFeedback('');
-    setAnswerDisabled(false);
-  };
-  
+ 
  
   const handleSubmitAnswer = () => {
     let submittedAnswer;
@@ -472,95 +464,89 @@ const Popup = ({
             {exercise ? exercise.exercise_name : lecture?.orvl_lecture_name}
           </div>
           <div className={styles.CloseBtnForPopup}>
-            <button onClick={onClose}>
-              <IoClose />
-            </button>
+            <button onClick={onClose}><IoClose /></button>
           </div>
         </div>
-
-        {/* Body */}
+ 
         <div className={styles.popup_body}>
-          <button
-            onClick={previousLectureOrExercise}
-            className={styles.side_nav_button}
-          >
+          {/* Previous Lecture Button */}
+          <button onClick={previousLectureOrExercise} className={styles.side_nav_button}>
             <GrPrevious />
           </button>
-
-          {/* Main Content */}
+ 
           <div className={styles.popup_main_content}>
             {exercise && exercise.questions?.length > 0 ? (
               <div className={styles.slideshow}>
-                <div className={styles.SlideShow_Heading_container}>
-                  <h2>{exercise.exercise_name}</h2>
-                </div>
-
+                {/* Question Section */}
                 <div className={styles.ExerciseQuestionContainers}>
-                  <div className={styles.QuestionTypeAndID}>
-                    <h4>Question No: {currentQuestion.exercise_question_sort_id}</h4>
-                    <p>Type: {currentQuestion.exercise_question_type}</p>
-                  </div>
-
-                  {currentQuestion.exercise_question_img && (
-                    <div className={styles.img_container}>
-                      <img
-                        src={currentQuestion.exercise_question_img}
-                        alt={`Question ${currentQuestionIndex + 1}`}
-                      />
+                  <div className={styles.QuestionsAndImgScrollContainer}>
+                    <div className={styles.QuestionTypeAndID}>
+                      <h4>Question No : {currentQuestion.exercise_question_sort_id}</h4>
+                      <p>Type : {currentQuestion.exercise_question_type}</p>
                     </div>
-                  )}
-
-                  {currentQuestion.exercise_question_type === 'NATD' && (
-                    <div className={styles.calc_container}>
-                      <input
-                        type="text"
-                        value={userAnswer}
-                        onChange={(e) => setUserAnswer(e.target.value)}
-                        disabled={answerDisabled}
-                        className={styles.inputnat}
-                        placeholder="Enter your answer"
-                      />
-                    </div>
-                  )}
-
-                  {(currentQuestion.exercise_question_type === 'MCQ' ||
-                    currentQuestion.exercise_question_type === 'MSQ') &&
-                    currentQuestion.options?.length > 0 && (
-                      <div className={styles.options_container}>
-                        {currentQuestion.options.map((option) => (
-                          <label key={option.exercise_option_id}>
-                            <input
-                              type={
-                                currentQuestion.exercise_question_type === 'MSQ'
-                                  ? 'checkbox'
-                                  : 'radio'
-                              }
-                              name={`question_${currentQuestion.exercise_question_id}`}
-                              value={option.exercise_option_index}
-                              checked={
-                                currentQuestion.exercise_question_type === 'MSQ'
-                                  ? selectedOptions.includes(option.exercise_option_index)
-                                  : userAnswer === option.exercise_option_index
-                              }
-                              onChange={() => handleOptionChange(option.exercise_option_index)}
-                              disabled={answerDisabled}
-                            />
-                            {option.exercise_option_img ? (
-                              <img
-                                src={option.exercise_option_img}
-                                alt={`Option ${option.exercise_option_index}`}
-                              />
-                            ) : (
-                              option.exercise_option_index
-                            )}
-                          </label>
-                        ))}
+ 
+                    {/* Question Image */}
+                    {currentQuestion.exercise_question_img && (
+                      <div className={styles.img_container}>
+                        <img
+                          src={currentQuestion.exercise_question_img}
+                          alt={`Question ${currentQuestionIndex + 1}`}
+                        />
                       </div>
                     )}
+ 
+                    {/* NATD Input */}
+                    {currentQuestion.exercise_question_type === 'NATD' && (
+                      <div className={styles.calc_container}>
+                        <input
+                          type="text"
+                          value={userAnswer}
+                          onChange={(e) => setUserAnswer(e.target.value)}
+                          disabled={answerDisabled}
+                          className={styles.inputnat}
+                          placeholder="Enter your answer"
+                        />
+                      </div>
+                    )}
+ 
+                    {/* Options (MCQ/MSQ) */}
+                    {(currentQuestion.exercise_question_type === 'MCQ' ||
+                      currentQuestion.exercise_question_type === 'MSQ') &&
+                      currentQuestion.options?.length > 0 && (
+                        <div className={styles.options_container}>
+                          {currentQuestion.options.map((option) => (
+                            <label key={option.exercise_option_id}>
+                              <input
+                                type={currentQuestion.exercise_question_type === 'MSQ' ? 'checkbox' : 'radio'}
+                                name={`question_${currentQuestion.exercise_question_id}`}
+                                value={option.exercise_option_index}
+                                checked={
+                                  currentQuestion.exercise_question_type === 'MSQ'
+                                    ? selectedOptions.includes(option.exercise_option_index)
+                                    : userAnswer === option.exercise_option_index
+                                }
+                                onChange={() => handleOptionChange(option.exercise_option_index)}
+                                disabled={answerDisabled}
+                              />
+                              {option.exercise_option_img ? (
+                                <img
+                                  src={option.exercise_option_img}
+                                  alt={`Option ${option.exercise_option_index}`}
+                                />
+                              ) : (
+                                option.exercise_option_index
+                              )}
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                  </div>
                 </div>
-
-                {feedback && <div className={styles.feedback}>{feedback}</div>}
-
+ 
+                {/* Feedback */}
+                {feedback && <div>{feedback}</div>}
+ 
+                {/* Navigation Buttons */}
                 <div className={styles.navigation_buttons}>
                   {currentQuestionIndex > 0 && (
                     <button onClick={previousQuestion}>Previous Question</button>
@@ -569,22 +555,21 @@ const Popup = ({
                     <button onClick={handleSubmitAnswer}>Submit</button>
                   )}
                   {answerDisabled && (
-                    <button onClick={() => setFeedback('Solution displayed!')}>
-                      View Solution
-                    </button>
+                    <button onClick={() => setFeedback('Solution displayed!')}>View Solution</button>
                   )}
                   {currentQuestionIndex < exercise.questions.length - 1 && (
                     <button onClick={nextQuestion}>Next Question</button>
                   )}
                 </div>
-
+ 
+                {/* Status Palette */}
                 <div className={styles.status_pallete}>
                   {exercise.questions.map((question, index) => {
                     const status = getStatus(question.exercise_question_id);
                     return (
                       <span
                         key={question.exercise_question_id}
-                        className={`${styles.status_item} ${styles[status]}`}
+                        className={`${styles.status_item} ${status}`}
                         title={`Question ${index + 1}: ${status}`}
                         onClick={() => setCurrentQuestionIndex(index)}
                       >
@@ -595,7 +580,7 @@ const Popup = ({
                 </div>
               </div>
             ) : lecture ? (
-              <div className={styles.lecture_content}>
+              <div>
                 <h2>{lecture.orvl_lecture_name}</h2>
                 {lecture.lecture_video_link && (
                   <ReactPlayer url={lecture.lecture_video_link} controls width="100%" />
@@ -605,11 +590,9 @@ const Popup = ({
               <div>No data available</div>
             )}
           </div>
-
-          <button
-            onClick={nextLectureOrExercise}
-            className={styles.side_nav_button}
-          >
+ 
+          {/* Next Lecture Button */}
+          <button onClick={nextLectureOrExercise} className={styles.side_nav_button}>
             <GrNext />
           </button>
         </div>
@@ -617,7 +600,6 @@ const Popup = ({
     </div>
   );
 };
-
-export default Popup;
  
+export default Popup;
  
