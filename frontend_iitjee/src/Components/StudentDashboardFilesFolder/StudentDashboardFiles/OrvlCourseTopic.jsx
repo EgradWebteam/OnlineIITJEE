@@ -331,6 +331,7 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
           lecture={selectedLecture}
           exercise={selectedExercise}
           onClose={handleClosePopup}
+          fetchExerciseStatus={fetchExerciseStatus}
           topicid={topicid}
           currentQuestionIndex={currentQuestionIndex}
           setCurrentQuestionIndex={setCurrentQuestionIndex}
