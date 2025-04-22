@@ -360,6 +360,7 @@ const Popup = ({
   previousLectureOrExercise,
   nextLectureOrExercise,
   currentQuestionIndex,
+  fetchExerciseStatus,
   setCurrentQuestionIndex
 }) => {
  
@@ -390,9 +391,9 @@ const Popup = ({
  
  
  
-  const handleSubmitAnswer = () => {
+  const handleSubmitAnswer = async () => {
     let submittedAnswer;
- 
+  
     if (currentQuestion.exercise_question_type === 'NATD') {
       submittedAnswer = userAnswer;
     } else if (currentQuestion.exercise_question_type === 'MSQ') {
@@ -400,39 +401,44 @@ const Popup = ({
     } else if (currentQuestion.exercise_question_type === 'MCQ') {
       submittedAnswer = userAnswer;
     }
- 
+  
     const payload = {
-      question_status: 1, // or "not_answered", etc.
+      question_status: 1,
       orvl_topic_id: topicid,
       exercise_question_id: exercise?.questions?.[currentQuestionIndex]?.exercise_question_id,
       exercise_name_id: exercise.exercise_name_id,
       student_registration_id: studentId,
       course_creation_id: courseCreationId,
-      exercise_userresponse: submittedAnswer,  // Pass the answer here
+      exercise_userresponse: submittedAnswer,
     };
- 
+  
     setFeedback('Answer submitted!');
     setAnswerDisabled(true);
- 
-    console.log('Answer:', submittedAnswer);
- 
-    // Send the answer via fetch request
-    fetch(`${BASE_URL}/OrvlTopics/SubmitUserAnswer`, {
-      method: 'PUT', // Specify the request method
-      headers: {
-        'Content-Type': 'application/json', // We are sending JSON data
-      },
-      body: JSON.stringify(payload), // Convert the payload to JSON string
-    })
-      .then(response => response.json()) // Parse the response as JSON
-      .then(data => {
-        console.log('Answer submitted successfully:', data);
-      })
-      .catch(error => {
-        console.error('Error submitting answer:', error);
+  
+    try {
+      const response = await fetch(`${BASE_URL}/OrvlTopics/SubmitUserAnswer`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
       });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`); // Will skip everything below if failed
+      }
+  
+      const data = await response.json();
+      console.log('Answer submitted successfully:', data);
+  
+      await fetchExerciseStatus(); // ✅ Runs only if status is OK (200-range)
+    } catch (error) {
+      console.error('Error submitting answer:', error);
+      setFeedback('Failed to submit answer. Please try again.'); // Optional feedback for user
+    }
   };
- 
+  
+  
   const handleOptionChange = (value) => {
     if (currentQuestion.exercise_question_type === 'MCQ') {
       setUserAnswer(value);

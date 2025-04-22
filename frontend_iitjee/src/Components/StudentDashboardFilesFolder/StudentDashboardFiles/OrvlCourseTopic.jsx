@@ -153,14 +153,18 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
         // Only submit if the status is "NotVisited"
         if (status === 'unvisited') {
           submitExerciseStatus(questionid);
-        } else {
+        } 
+        else if (status === 'unvisited'){
+          useranswer()
+        }
+          else {
           console.log({ alldhf: 'Question already visited or answered' });
         }
       } else {
         console.log("exerciseStatus or questionid is invalid.");
       }
     }
-  }, [selectedExercise, currentQuestionIndex]);
+  }, [selectedExercise, currentQuestionIndex,exerciseStatus]);
   
   
   
@@ -205,6 +209,7 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
     setSelectedExercise(null);         // Don't auto-start exercise
     setShowExercise(false);            // Start with lecture only
     setShowPopup(true);
+
   };
 
   const handleExerciseClick = (exercise) => {
@@ -214,6 +219,7 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
 
   if (parentLecture) {
     setSelectedLecture(parentLecture);
+    setCurrentQuestionIndex(0);
     setSelectedExercise(exercise);
     setShowExercise(true);
     setShowPopup(true);
@@ -241,6 +247,7 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
       if (currentLecture.exercises.length > 0) {
         setSelectedExercise(currentLecture.exercises[0]);
         setShowExercise(true);
+        setCurrentQuestionIndex(0);
       } else {
         // No exercises → next lecture
         const nextLecture = courseData.lectures[currentLectureIndex + 1];
@@ -260,6 +267,7 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
   
       if (currentExerciseIndex < currentLecture.exercises.length - 1) {
         setSelectedExercise(currentLecture.exercises[currentExerciseIndex + 1]);
+        setCurrentQuestionIndex(0);
       } else {
         // Finished last exercise → move to next lecture
         const nextLecture = courseData.lectures[currentLectureIndex + 1];
@@ -370,6 +378,7 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
       {showPopup ? (
         <Popup
           lecture={selectedLecture}
+         
           exercise={selectedExercise}
           onClose={handleClosePopup}
           fetchExerciseStatus={fetchExerciseStatus}
