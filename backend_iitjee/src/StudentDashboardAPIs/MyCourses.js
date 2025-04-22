@@ -12,11 +12,7 @@ const containerName = process.env.AZURE_CONTAINER_NAME;
 const CourseCardImagesFolderName = process.env.AZURE_COURSECARDS_FOLDER;  
 const BackendBASE_URL = process.env.BASE_URL;
 
-// Helper to get image URL
-// const getImageUrl = ( fileName) => {
-//   if (!fileName ) return null;
-//   return `https://${accountName}.blob.core.windows.net/${containerName}/${CourseCardImagesFolderName}/${fileName}?${sasToken}`;
-// };
+
 
 
 // Helper to return proxy URL instead of exposing SAS token
