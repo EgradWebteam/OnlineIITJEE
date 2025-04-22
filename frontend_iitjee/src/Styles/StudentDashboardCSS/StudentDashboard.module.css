@@ -412,13 +412,21 @@ height: 80%;
   font-size: 20px;
 }
 .status_pallete {
-  min-height: 70%;
-  overflow-y: scroll;
+  min-height: 65%;
+  overflow-y: auto;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 1rem;
+  max-height: 65%;
+  padding: 0rem;
   justify-content: flex-start;
+}
+.status_pallete_container{
+  display: flex;
+  flex-wrap: wrap;
+  height: fit-content;
+  gap:10px;
+
 }
 /* .status_pallete::-webkit-scrollbar {
   display: none;
