@@ -101,7 +101,8 @@ const transformTestData = (rows) => {
 
     if (!question) {
       question = {
-        question_id: row.question_id,
+        question_id: row.question_id,        
+        bookMark_Qid:row.bookMark_Qid,
         questionImgName: getImageUrl(row.document_name, 'questions', row.questionImgName),
         document_name: row.document_name,
         options: [],
@@ -120,7 +121,8 @@ const transformTestData = (rows) => {
         },
         userAnswer:{
           user_answer:row.user_answer,
-        }
+        },
+
       };
       section.questions.push(question);
     }
@@ -142,13 +144,68 @@ const transformTestData = (rows) => {
   return result;
 };
 
+//WITHOUT BOOKMARK
+// // Route to get question paper
+// router.get('/StudentReportQuestionPaper/:test_creation_table_id/:studentId', async (req, res) => {
+//   try {
+//     const { test_creation_table_id,studentId } = req.params;
+//     const [rows] = await db.query(
+//       `
+//       SELECT 
+//         t.test_name AS TestName,
+//         t.test_creation_table_id AS testId,
+//         s.subject_id AS subjectId,
+//         s.subject_name AS SubjectName,
+//         sec.section_id,
+//         sec.section_name AS SectionName,
+//         q.question_id,
+//         q.question_img_name AS questionImgName,
+//         d.document_name,
+//         o.option_id,
+//         o.option_index,
+//         o.option_img_name,
+//         q.answer_text AS answer,
+//         q.marks_text,
+//         q.nmarks_text,
+//         q.question_type_id AS questionTypeId,
+//         q.qtype_text,
+//         sol.solution_id,
+//         sol.solution_img_name,
+//         sol.video_solution_link,
+//         ur.user_answer
+//       FROM iit_questions q
+//       INNER JOIN iit_ots_document d ON q.document_Id = d.document_Id
+//       INNER JOIN iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
+//       INNER JOIN iit_subjects s ON d.subject_id = s.subject_id
+//       LEFT JOIN iit_sections sec ON d.section_id = sec.section_id
+//       LEFT JOIN iit_options o ON q.question_id = o.question_id
+//       LEFT JOIN iit_question_type qts ON q.question_type_id = qts.question_type_id
+//       LEFT JOIN iit_solutions sol ON q.question_id = sol.question_id    
+//       LEFT JOIN iit_user_responses ur ON q.question_id = ur.question_id AND ur.student_registration_id = ?
+//       WHERE d.test_creation_table_id = ?
+//       ORDER BY s.subject_id, sec.section_id, q.question_id, o.option_index
+//       `,
+//       [studentId, test_creation_table_id] // ✅ correct order
+//     );
+
+
+//     const structured = transformTestData(rows);
+//     res.json(structured);
+//   } catch (error) {
+//     console.error('Error fetching question paper:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+
+
+//WITH BOOKMARK
 // Route to get question paper
 router.get('/StudentReportQuestionPaper/:test_creation_table_id/:studentId', async (req, res) => {
   try {
     const { test_creation_table_id,studentId } = req.params;
     const [rows] = await db.query(
       `
-      SELECT 
+    SELECT 
         t.test_name AS TestName,
         t.test_creation_table_id AS testId,
         s.subject_id AS subjectId,
@@ -169,20 +226,22 @@ router.get('/StudentReportQuestionPaper/:test_creation_table_id/:studentId', asy
         sol.solution_id,
         sol.solution_img_name,
         sol.video_solution_link,
-        ur.user_answer
-      FROM iit_questions q
-      INNER JOIN iit_ots_document d ON q.document_Id = d.document_Id
-      INNER JOIN iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
-      INNER JOIN iit_subjects s ON d.subject_id = s.subject_id
-      LEFT JOIN iit_sections sec ON d.section_id = sec.section_id
-      LEFT JOIN iit_options o ON q.question_id = o.question_id
-      LEFT JOIN iit_question_type qts ON q.question_type_id = qts.question_type_id
-      LEFT JOIN iit_solutions sol ON q.question_id = sol.question_id    
-      LEFT JOIN iit_user_responses ur ON q.question_id = ur.question_id AND ur.student_registration_id = ?
+        ur.user_answer,
+        bq.question_id As bookMark_Qid
+      FROM iit_db.iit_questions q
+      INNER JOIN iit_db.iit_ots_document d ON q.document_Id = d.document_Id
+      INNER JOIN iit_db.iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
+      INNER JOIN iit_db.iit_subjects s ON d.subject_id = s.subject_id
+      LEFT JOIN iit_db.iit_sections sec ON d.section_id = sec.section_id
+      LEFT JOIN iit_db.iit_options o ON q.question_id = o.question_id
+      LEFT JOIN iit_db.iit_question_type qts ON q.question_type_id = qts.question_type_id
+      LEFT JOIN iit_db.iit_solutions sol ON q.question_id = sol.question_id    
+      LEFT JOIN iit_db.iit_user_responses ur ON q.question_id = ur.question_id AND ur.student_registration_id = ?
+        LEFT JOIN iit_db.iit_bookmark_questions bq ON q.question_id = bq.question_id AND bq.student_registration_id = ?
       WHERE d.test_creation_table_id = ?
       ORDER BY s.subject_id, sec.section_id, q.question_id, o.option_index
       `,
-      [studentId, test_creation_table_id] // ✅ correct order
+      [studentId,studentId, test_creation_table_id] // ✅ correct order
     );
 
 

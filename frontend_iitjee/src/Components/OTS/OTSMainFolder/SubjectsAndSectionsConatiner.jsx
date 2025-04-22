@@ -7,7 +7,9 @@ export default function SubjectsAndSectionsContainer(
   setActiveSubject,
   activeSection,
   setActiveSection,
-  autoSaveNATIfNeeded }) {
+  autoSaveNATIfNeeded ,
+  setShowSidebar,
+  showSidebar}) {
 
   //  Function: Get all subject names
   const getSubjects = () => {
@@ -78,7 +80,11 @@ export default function SubjectsAndSectionsContainer(
 
       {/* Section Buttons (only if valid sections are present) */}
       {sections.length > 0 && (
-        <div className={styles.OTSSubjectandSectionButtonsGroup}>
+        <div 
+         className={`${styles.OTSSubjectandSectionButtonsGroup} ${
+          !showSidebar ? styles.fullWidth :""
+                    }`}
+        >
           {sections.map((section, secIndex) => (
             <button
               key={secIndex}

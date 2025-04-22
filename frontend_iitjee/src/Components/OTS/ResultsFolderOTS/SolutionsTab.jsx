@@ -101,10 +101,8 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             question_id: questionId,
-            test_creation_table_id:
-            testId,
-            student_registration_id:
-            studentId,
+            test_creation_table_id: testId,
+            student_registration_id: studentId,
           }),
         }
       );
@@ -190,6 +188,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                     />
                   </div>
                   <div style={{ marginTop: "1rem" }}>
+              
                     {/* Bookmark Button */}
                     <button
                       onClick={() => toggleBookmark(question.question_id)}
@@ -199,10 +198,12 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                           : ""
                       }`}
                     >
-                       {bookmarkedQuestions.includes(question.question_id)
-                        ? <FaBookmark />
-                        : <FaRegBookmark />}
-                     
+                      {question.bookMark_Qid === null &&
+                      !bookmarkedQuestions.includes(question.question_id) ? (
+                        <FaRegBookmark />
+                      ) : (
+                        <FaBookmark />
+                      )}
                     </button>
 
                     {(() => {

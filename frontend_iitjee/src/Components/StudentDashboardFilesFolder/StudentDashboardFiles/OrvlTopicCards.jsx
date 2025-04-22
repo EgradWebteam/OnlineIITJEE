@@ -9,6 +9,8 @@ export default function OrvlTopicCards({
   courseCreationId,
   setShowTestContainer,
   context,
+  setTopicId,
+
   setOpenCourseOrvl,
   setShowQuizContainer,
   setSelectedTestCourse,
@@ -50,6 +52,7 @@ export default function OrvlTopicCards({
   const handleGoToTest = (topic) => {
     console.log("CourseCard clicked!");
     setOpenCourseOrvl(true);
+    setTopicId(topic.orvl_topic_id)
     setShowTopicContainer(false); // Hide topics container when opening OrvlCourseTopic
   };
 
@@ -85,6 +88,7 @@ export default function OrvlTopicCards({
               title={topic.orvl_topic_name}
               price={500}
               context={context}
+             
               portalId={courseData.portal_id}
               type={true}
               onGoToTest={() => handleGoToTest(topic)}

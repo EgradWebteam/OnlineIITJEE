@@ -28,12 +28,29 @@ export default function StudentDashboard() {
       setActiveSection(section);
       localStorage.setItem("activeSection", section);
     }, []);
-    useEffect(() => {
-      const savedSection = localStorage.getItem("activeSection");
-      setActiveSection(savedSection || "dashboard"); // fallback to dashboard
-      setIsLoading(false); // always mark as done loading
-    }, []);
     const location = useLocation();
+    useEffect(() => {
+      const sectionFromRoute = location.state?.activeSection;
+    
+      // Only use route state if it exists AND hasn't been used before
+      if (sectionFromRoute && !sessionStorage.getItem("sectionFromRouteUsed")) {
+        setActiveSection(sectionFromRoute);
+        localStorage.setItem("activeSection", sectionFromRoute);
+        sessionStorage.setItem("sectionFromRouteUsed", "true");
+      } else {
+        const savedSection = localStorage.getItem("activeSection") || "dashboard";
+        setActiveSection(savedSection);
+      }
+    
+      setIsLoading(false);
+    }, [location.state]);
+    
+    // useEffect(() => {
+    //   const savedSection = localStorage.getItem("activeSection");
+    //   setActiveSection(savedSection || "dashboard"); // fallback to dashboard
+    //   setIsLoading(false); // always mark as done loading
+    // }, []);
+  
 
     const renderStudentDashboardContent = () => {
       switch (activeSection) {

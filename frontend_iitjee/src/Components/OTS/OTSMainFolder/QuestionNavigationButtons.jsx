@@ -34,7 +34,7 @@ export default function QuestionNavigationButtons({
   } = useQuestionStatus();
   const [showExamSummary, setShowExamSummary] = useState(false);
   const { timeSpent } = useTimer();  // Get timeSpent in seconds
-  console.log("Time Spent (seconds):", timeSpent);
+  // console.log("Time Spent (seconds):", timeSpent);
 
   useEffect(() => {
     if (!testData || !testData.subjects) return;
@@ -634,16 +634,6 @@ export default function QuestionNavigationButtons({
       console.error('Error deleting user response:', err);
     }
   };
-
-
-
-
-
-
-
-
-
-
 
   
   const handlePrevious = () => {
