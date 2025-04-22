@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js'; // Import the base URL from config
 import LectureExerciseList from './LectureExerciseList';
 import Popup from './Popup';
@@ -21,6 +21,8 @@ const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
     const [feedback, setFeedback] = useState('');
     const [solutionVideo, setSolutionVideo] = useState(null);
 const [solutionImage, setSolutionImage] = useState(null);
+const [refetchTrigger, setRefetchTrigger] = useState(false);
+const playedTimeRef = useRef(0);
 
    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   useEffect(() => {
@@ -299,12 +301,19 @@ const [solutionImage, setSolutionImage] = useState(null);
   }
 };
 
-  const handleClosePopup = () => {
-    setSelectedLecture(null);
-    setSelectedExercise(null);
-    setShowPopup(false);
-   
-  };
+const handleClosePopup = async () => {
+  if (selectedLecture) {
+    console.log("hi");
+    await trackVideoVisitpost(selectedLecture.orvl_lecture_name_id); // Ensure this finishes first
+  }
+
+  // Now update the states
+  setSelectedLecture(null);
+  setRefetchTrigger(prev => !prev);
+  setSelectedExercise(null);
+  setShowPopup(false);
+};
+
 
   const nextLectureOrExercise = () => {
     if (!courseData || !selectedLecture) return;
@@ -372,7 +381,7 @@ const [solutionImage, setSolutionImage] = useState(null);
     if (studentId && courseCreationId && topicid) {
       fetchUserStatus();
     }
-  }, [studentId, courseCreationId, topicid]);
+  }, [studentId, courseCreationId, topicid,refetchTrigger]);
   const previousLectureOrExercise = () => {
     if (!courseData || !selectedLecture) return;
   
@@ -412,7 +421,76 @@ const [solutionImage, setSolutionImage] = useState(null);
       }
     }
   };
-  
+  const trackVideoVisitpost = async (videoId) => {
+    try {
+      const savedProgress = localStorage.getItem(`${videoId}:playedTime`);
+            const savedTotalTime = localStorage.getItem(`${videoId}:totalTime`);
+        console.log(savedProgress, savedTotalTime);
+
+        if (!studentId || !topicid || !videoId || !savedProgress || savedProgress === "0" || !savedTotalTime || savedTotalTime === null) {
+            console.log("Missing required data: studentId, topicid, or videoId, savedProgress, savedTotalTime.");
+            return;
+        }
+
+        const response = await fetch(`${BASE_URL}/OrvlTopics/VideoVisitStatus`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                student_registration_id: studentId,
+                orvl_topic_id: topicid,
+                orvl_lecture_name_id: videoId,
+                course_creation_id: courseCreationId, // Ensure this is set properly
+                progress_time: savedProgress,
+                total_video_time: savedTotalTime,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Successfully tracked video visit:", data);
+      
+        localStorage.removeItem(`${videoId}:playedTime`);
+        localStorage.removeItem(`${videoId}:totalTime`);
+    } catch (err) {
+        setError(`Error posting video visit: ${err.message}`);
+    }
+};
+
+  useEffect(() => {
+
+    const handleBeforeUnload = () => {
+      console.log("fgjdf")
+        if (selectedLecture && !showExercise) {
+            trackVideoVisitpost(selectedLecture.orvl_lecture_name_id
+            );
+        }
+
+    };
+
+    const handleRouteChange = () => {
+      console.log("fgjdf")
+        if (selectedLecture && !showExercise) {
+            trackVideoVisitpost(selectedLecture.orvl_lecture_name_id
+            );
+        }
+
+    };
+
+    // Add event listener for beforeunload
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Call handleRouteChange on unmount to capture navigation away
+    return () => {
+        window.removeEventListener("beforeunload", handleBeforeUnload);
+        handleRouteChange();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [location, selectedLecture, showExercise]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -470,6 +548,8 @@ const [solutionImage, setSolutionImage] = useState(null);
           courseCreationId = {courseCreationId}
           solutionVideo={solutionVideo}
           solutionImage={solutionImage}
+          playedTimeRef={playedTimeRef}
+         
         
         />
       ) : (

@@ -5,14 +5,13 @@ const db = require("../config/database.js");
 // const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 // const sasToken = process.env.AZURE_SAS_TOKEN;
 // const containerName = process.env.AZURE_CONTAINER_NAME;
-// const testDocumentFolderName = process.env.AZURE_DOCUMENT_FOLDER;  
+// const testDocumentFolderName = process.env.AZURE_DOCUMENT_FOLDER;
 
 // // Helper to get image URL
 // const getImageUrl = (documentName, folder, fileName) => {
 //   if (!fileName || !documentName) return null;
 //   return `https://${accountName}.blob.core.windows.net/${containerName}/${testDocumentFolderName}/${documentName}/${folder}/${fileName}?${sasToken}`;
 // };
-
 
 // // Transform SQL flat rows into structured question paper format
 // const transformTestData = (rows) => {
@@ -109,7 +108,7 @@ const db = require("../config/database.js");
 
 //     const [rows] = await db.query(
 //       `
-//       SELECT 
+//       SELECT
 //         t.test_name AS TestName,
 //         t.test_creation_table_id AS examId,
 //         t.course_type_of_test_id AS courseTypeOfTestId,
@@ -140,7 +139,7 @@ const db = require("../config/database.js");
 //       LEFT JOIN iit_sections sec ON d.section_id = sec.section_id
 //       LEFT JOIN iit_options o ON q.question_id = o.question_id
 //       LEFT JOIN iit_question_type qts ON q.question_type_id = qts.question_type_id
-//       LEFT JOIN iit_solutions sol ON q.question_id = sol.question_id 
+//       LEFT JOIN iit_solutions sol ON q.question_id = sol.question_id
 //       WHERE d.test_creation_table_id = ?
 //       ORDER BY s.subject_id, sec.section_id, q.question_id, o.option_index
 //       `,
@@ -155,30 +154,15 @@ const db = require("../config/database.js");
 //   }
 // });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 //MAIN WORKING CODE
-const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
-
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const sasToken = process.env.AZURE_SAS_TOKEN;
 const containerName = process.env.AZURE_CONTAINER_NAME;
-const testDocumentFolderName = process.env.AZURE_DOCUMENT_FOLDER;  
+const testDocumentFolderName = process.env.AZURE_DOCUMENT_FOLDER;
 const BackendBASE_URL = process.env.BASE_URL;
-
-
 
 // Helper to get image URL
 const getImageUrl = (documentName, folder, fileName) => {
@@ -186,10 +170,9 @@ const getImageUrl = (documentName, folder, fileName) => {
   return `${BackendBASE_URL}/OTS/QOSImages/${documentName}/${folder}/${fileName}`;
 };
 
-
 // ✅ Route to serve the actual course card image securely (proxy)
-router.get('/QOSImages/:documentName/:folder/:fileName', async (req, res) => {
-  const { documentName,folder,fileName } = req.params;
+router.get("/QOSImages/:documentName/:folder/:fileName", async (req, res) => {
+  const { documentName, folder, fileName } = req.params;
 
   if (!fileName) return res.status(400).send("File name is required");
 
@@ -198,7 +181,9 @@ router.get('/QOSImages/:documentName/:folder/:fileName', async (req, res) => {
   try {
     const response = await fetch(imageUrl);
     if (!response.ok) {
-      return res.status(response.status).send("Failed to fetch image from Azure");
+      return res
+        .status(response.status)
+        .send("Failed to fetch image from Azure");
     }
 
     res.setHeader("Content-Type", response.headers.get("Content-Type"));
@@ -261,7 +246,11 @@ const transformTestData = (rows) => {
     if (!question) {
       question = {
         question_id: row.question_id,
-        questionImgName: getImageUrl(row.document_name, 'questions', row.questionImgName),
+        questionImgName: getImageUrl(
+          row.document_name,
+          "questions",
+          row.questionImgName
+        ),
         document_name: row.document_name,
         options: [],
         answer: row.answer,
@@ -274,7 +263,11 @@ const transformTestData = (rows) => {
         },
         solution: {
           solution_id: row.solution_id,
-          solutionImgName: getImageUrl(row.document_name, 'solution', row.solution_img_name),
+          solutionImgName: getImageUrl(
+            row.document_name,
+            "solution",
+            row.solution_img_name
+          ),
           video_solution_link: row.video_solution_link,
         },
       };
@@ -289,7 +282,11 @@ const transformTestData = (rows) => {
       question.options.push({
         option_id: row.option_id,
         option_index: row.option_index,
-        optionImgName: getImageUrl(row.document_name, 'options', row.option_img_name),
+        optionImgName: getImageUrl(
+          row.document_name,
+          "options",
+          row.option_img_name
+        ),
       });
     }
   }
@@ -298,7 +295,7 @@ const transformTestData = (rows) => {
 };
 
 // Route to get question paper
-router.get('/QuestionPaper/:test_creation_table_id', async (req, res) => {
+router.get("/QuestionPaper/:test_creation_table_id", async (req, res) => {
   try {
     const { test_creation_table_id } = req.params;
 
@@ -345,38 +342,18 @@ router.get('/QuestionPaper/:test_creation_table_id', async (req, res) => {
     const structured = transformTestData(rows);
     res.json(structured);
   } catch (error) {
-    console.error('Error fetching question paper:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Error fetching question paper:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 router.post("/QusetionsSorting", async (req, res) => {
   const { questions } = req.body;
 
   if (!Array.isArray(questions)) {
-    return res.status(400).json({ error: "Invalid data format. 'questions' must be an array." });
+    return res
+      .status(400)
+      .json({ error: "Invalid data format. 'questions' must be an array." });
   }
 
   try {
@@ -395,10 +372,6 @@ router.post("/QusetionsSorting", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
-
-
-
 
 // CHECK FUNCTION
 async function checkIfResponseExists(connection, identifiers) {
@@ -463,7 +436,6 @@ async function updateResponse(connection, data) {
   `;
 
   const updateValues = [
-
     data.userAnswer,
     data.optionIds,
     data.answered,
@@ -502,9 +474,9 @@ router.post("/SaveResponse", async (req, res) => {
     connection = await db.getConnection();
 
     const commonAnswer =
-      optionIndexes1CharCodes.join(",") +
-      optionIndexes2CharCodes.join(",");
-    const commonOptions = optionIndexes1 + optionIndexes2 + calculatorInputValue;
+      optionIndexes1CharCodes.join(",") + optionIndexes2CharCodes.join(",");
+    const commonOptions =
+      optionIndexes1 + optionIndexes2 + calculatorInputValue;
 
     const identifiers = {
       realStudentId,
@@ -528,62 +500,71 @@ router.post("/SaveResponse", async (req, res) => {
       await updateResponse(connection, data);
       console.log("Data to be inserted/updated:", data);
       console.log("Response updated");
-      return res.status(200).json({ success: true, message: "Response updated successfully" });
+      return res
+        .status(200)
+        .json({ success: true, message: "Response updated successfully" });
     } else {
       await insertResponse(connection, data);
       console.log("Data to be inserted/updated:", data);
       console.log("Response inserted");
-      return res.status(200).json({ success: true, message: "Response inserted successfully" });
+      return res
+        .status(200)
+        .json({ success: true, message: "Response inserted successfully" });
     }
   } catch (error) {
     console.error("SaveResponse Error:", error);
-    return res.status(500).json({ success: false, message: "Internal server error" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
   } finally {
     if (connection) connection.release();
   }
 });
-
-
-
 
 //CLEAR RESPONSE API
-router.delete("/ClearResponse/:studentId/:testCreationTableId/:questionId", async (req, res) => {
-  let connection;
-  try {
-    const { studentId, testCreationTableId, questionId } = req.params;
+router.delete(
+  "/ClearResponse/:studentId/:testCreationTableId/:questionId",
+  async (req, res) => {
+    let connection;
+    try {
+      const { studentId, testCreationTableId, questionId } = req.params;
 
-    // console.log(Clearing response for studentId: ${studentId}, testCreationTableId: ${testCreationTableId}, questionId: ${questionId});
+      // console.log(Clearing response for studentId: ${studentId}, testCreationTableId: ${testCreationTableId}, questionId: ${questionId});
 
-    connection = await db.getConnection();
+      connection = await db.getConnection();
 
-    const deleteQuery = 
-    `  DELETE FROM iit_user_responses
-      WHERE student_registration_id = ? AND test_creation_table_id = ? AND question_id = ?`
-    ;
+      const deleteQuery = `  DELETE FROM iit_user_responses
+      WHERE student_registration_id = ? AND test_creation_table_id = ? AND question_id = ?`;
+      const deleteValues = [
+        parseInt(studentId, 10),
+        parseInt(testCreationTableId, 10),
+        parseInt(questionId, 10),
+      ];
 
-    const deleteValues = [
-      parseInt(studentId, 10),
-      parseInt(testCreationTableId, 10),
-      parseInt(questionId, 10),
-    ];
+      const [deleteResult] = await connection.query(deleteQuery, deleteValues);
 
-    const [deleteResult] = await connection.query(deleteQuery, deleteValues);
+      if (deleteResult.affectedRows === 0) {
+        return res
+          .status(404)
+          .json({
+            success: false,
+            message: "No matching response found to clear",
+          });
+      }
 
-    if (deleteResult.affectedRows === 0) {
-      return res.status(404).json({ success: false, message: "No matching response found to clear" });
+      console.log("Response cleared successfully");
+      res
+        .status(200)
+        .json({ success: true, message: "Response cleared successfully" });
+    } catch (error) {
+      console.error("ClearResponse Error:", error);
+      res
+        .status(500)
+        .json({ success: false, message: "Internal server error" });
+    } finally {
+      if (connection) connection.release();
     }
-
-    console.log("Response cleared successfully");
-    res.status(200).json({ success: true, message: "Response cleared successfully" });
-
-  } catch (error) {
-    console.error("ClearResponse Error:", error);
-    res.status(500).json({ success: false, message: "Internal server error" });
-  } finally {
-    if (connection) connection.release();
   }
-});
-
-
+);
 
 module.exports = router;
