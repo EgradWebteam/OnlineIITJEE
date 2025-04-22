@@ -87,13 +87,23 @@
     margin: 1rem;
   }
   .OrvlCourseTopicHeader{
+    display: flex;
+    align-items: center;
     background-color: #444444;
     color: white;
     text-align: center;
     font-size: 35px;
     font-weight: 600;
     padding: 10px;
+    margin: 0 1rem;
    
+  }
+  .completionInfo{
+    width: 10%;
+  }
+  .OrvlTopicName{
+    text-align: center;
+    width: 90%;
   }
   .OrvlCourseTopicContent{
     display: flex;

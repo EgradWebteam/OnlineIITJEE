@@ -5,9 +5,6 @@
 }
 .studentDashboardHeaderLogoDiv {
   width: 250px;
-}.unanswered {
-  background: red;
-  color: #fff;
 }
 .options-container {
   flex-direction: column;
@@ -42,11 +39,6 @@
 .status-item.answered {
   background-color: green;
 }
-
-.status-item.unanswered {
-  background-color: red;
-}
-
 .navigation-buttons-for-ques {
   display: flex;
   justify-content: space-between;
@@ -240,7 +232,8 @@ color: black;
 }
 .CloseBtnForPopup  button{
   padding: 4px;
-  font-size: 12px;
+  font-size: 15px;
+  color: red;
 }
 .headerForCloseSndHeading {
   display: flex;
@@ -351,9 +344,9 @@ color: black;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 10px 0;
+  padding: 1rem;
   justify-content: flex-start; 
-  align-items: center;
+
 }
 /* .status_pallete::-webkit-scrollbar {
   display: none;
@@ -394,12 +387,18 @@ color: black;
   border-radius: 5px;
   border: 1px solid rgb(212, 209, 209);
 }
-.navigation_buttons_for_ques {
+.navigation_buttons {
   display: flex;
   gap: 2rem;
   margin: 1rem;
   border-top: 1px solid rgb(192, 191, 191);
   padding: 1rem 0;
+}
+.navigation_buttons button{
+  color:white;
+  background-color: #204e31;
+  padding: 10px;
+  border-radius: 10px;
 }
 .options_container label{
   display: flex;
@@ -442,12 +441,9 @@ justify-content: center;
 
 .unanswered{
   background-color: rgb(253, 52, 52);
-  
 }
-
 .answered{
   background-color: rgb(57, 190, 57);
- 
 }
 
 .notVisited {
@@ -480,7 +476,9 @@ justify-content: center;
     z-index: 1000;
     /* transition: transform 0.3s ease-in-out; */
   }
-
+  .headingForLectures{
+    font-size: 15px;
+  }
   .sidebarHidden {
     transform: translateX(-133%);
   }
@@ -734,7 +732,7 @@ justify-content: center;
   padding: 5px 5px;
   font-size: 13px;
   font-weight: bold;
-  color: white;
+  color: black;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -744,7 +742,7 @@ justify-content: center;
   padding: 5px 6px;
   font-size: 13px;
   font-weight: bold;
-  color: white;
+  color: black;
   border: none;
   border-radius: 5px;
   cursor: pointer;

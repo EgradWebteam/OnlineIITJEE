@@ -547,7 +547,7 @@ const Popup = ({
                         </div>
                       )}
                   </div>
-                </div>
+              
  
                 {/* Feedback */}
                 {feedback && <div>{feedback}</div>}
@@ -567,23 +567,27 @@ const Popup = ({
                     <button onClick={nextQuestion}>Next Question</button>
                   )}
                 </div>
- 
-                {/* Status Palette */}
-                <div className={styles.status_pallete}>
-                  {exercise.questions.map((question, index) => {
-                    const status = getStatus(question.exercise_question_id);
-                    return (
-                      <span
-                        key={question.exercise_question_id}
-                        className={`${styles.status_item} ${status}`}
-                        title={`Question ${index + 1}: ${status}`}
-                        onClick={() => setCurrentQuestionIndex(index)}
-                      >
-                        {index + 1}
-                      </span>
-                    );
-                  })}
                 </div>
+                {/* Status Palette */}
+                <div className={styles.exercise_question_Subcontainer}>
+                <div className={styles.status_pallete}>
+                    {exercise.questions.map((question, index) => {
+                      const status = getStatus(question.exercise_question_id);
+                      return (
+                        <span
+                          key={question.exercise_question_id}
+                          className={`${styles.status_item} ${
+                            styles[getStatus(question.exercise_question_id)]
+                          }`}
+                          title={`Question ${index + 1}: ${status}`}
+                          onClick={() => setCurrentQuestionIndex(index)}
+                        >
+                          {index + 1}
+                        </span>
+                      );
+                    })}
+                  </div>
+              </div>
               </div>
             ) : lecture ? (
               <div>
