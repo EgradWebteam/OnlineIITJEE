@@ -11,8 +11,7 @@ app.use(express.json());
 const corsOptions = {
   origin: [
     "https://icy-sand-03dfe2700.6.azurestaticapps.net",
-    "http://localhost:5173",
-    "https://iit-server-fyahe4drftaadxgq.centralindia-01.azurewebsites.net"
+    "http://localhost:5173"
   ],
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
   credentials: true,
