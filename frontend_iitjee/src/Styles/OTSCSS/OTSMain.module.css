@@ -441,6 +441,10 @@ height: 100%;
   display: flex;
   gap: 10px;
 }
+.navigationBtnHolderSubContainerForSubmit{
+  display: flex;
+  gap: 8rem;
+}
 .AnswerdBtnCls, .NotAnsweredBtnCls, .MarkedForReview, .AnsMarkedForReview{
   height: 45px;
   width: 45px;
@@ -470,7 +474,7 @@ height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 85%;
+  width: 100%;
 }
 /* .submitBtnCls{
   display: flex;
@@ -1165,6 +1169,35 @@ margin-left: 10px;
   justify-content: right;
   margin: 1rem;
 }
+.OTSWaterMark{
+  background-image: url("../../assets/waterMarkLogo.png"),
+  url("../../assets/waterMarkLogo.png"), url("../../assets/waterMarkLogo.png"),
+  url("../../assets/waterMarkLogo.png"), url("../../assets/waterMarkLogo.png"),
+  url("../../assets/waterMarkLogo.png"), url("../../assets/waterMarkLogo.png"),
+  url("../../assets/waterMarkLogo.png"), url("../../assets/waterMarkLogo.png"),
+  url("../../assets/waterMarkLogo.png"), url("../../assets/waterMarkLogo.png"),
+  url("../../assets/waterMarkLogo.png"), url("../../assets/waterMarkLogo.png"),
+  url("../../assets/waterMarkLogo.png"), url("../../assets/waterMarkLogo.png"),
+  url("../../assets/waterMarkLogo.png"), url("../../assets/waterMarkLogo.png"),
+  url("../../assets/waterMarkLogo.png"), url("../../assets/waterMarkLogo.png"),
+  url("../../assets/waterMarkLogo.png"), url("../../assets/waterMarkLogo.png"),
+  url("../../assets/waterMarkLogo.png"), url("../../assets/waterMarkLogo.png"),
+  url("../../assets/waterMarkLogo.png"), url("../../assets/waterMarkLogo.png"),
+  url("../../assets/waterMarkLogo.png");
+background-repeat: no-repeat;
+background-size: 10%; /* Adjust the size of the watermark images */
+background-position: center center, /* Center image */ center 10%, center 30%,
+  /* Top center */ 75% center, /* Right center */ 100% center, 75% 30%,
+  /* Top right */ 75% 70%, /* Bottom right */ 25% 30%, /* Top left */ 75% 10%,
+  0% 30%, /* Top left */ 0% 70%, 0% 10%, 25% 10%, 0% 90%, 25% 70%,
+  /* Bottom left */ 25% 90%, center 70%, /* Bottom center */ center 90%,
+  75% 90%, 100% 10%, 100% 30%, 100% 70%, 100% 90%, 0% center, 25% center;
+}
+.OTSQuestionOptionsContainerForScroll{
+  overflow-y: scroll;
+  height: 60vh;
+  padding: 1rem;
+}
 
 @media (max-width:1280px) {
   .OTSMainFileMainContainer{
@@ -1214,6 +1247,10 @@ margin-left: 10px;
   padding-left: 4px;
   overflow: scroll;
   height: 165px;
+}
+.OTSQuestionOptionsContainerForScroll{
+  overflow-y: scroll;
+  height: 35vh;
 }
 }
 @media (max-width:800px) {
@@ -1334,5 +1371,96 @@ margin-left: 10px;
 }
 .instructionList{
   padding: 1rem 3rem;
+}
+.OTSRightSideBarMainContainer{
+  display: none;
+}
+.OTSMainFileSubContainer{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 100%;
+}
+.OTSSubjectButton{
+  padding: 10px 15px;
+  background-color: unset;
+  font-size: 13px;
+  border: 1px solid gainsboro;
+  cursor: pointer;
+  margin-right: 10px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+.activeSubjectAndSectionBtn{
+  background-color: #587dbd;
+  color: white;
+  border-color: #587dbd;
+}
+.OtsTimerMainDiv{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgb(204, 204, 204);
+  padding: 7px;
+}
+.OtsTimerDiv{
+  font-size: 15px;
+  font-weight: 700;
+}
+.QuestionTypeHolderContainer{
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
+  flex-direction: column;
+}
+.OTSSubjectandSectionButtonsGroup, .QuestionTypeHolderContainer, .QuestionNumberHolderContainer{
+  border: 1px solid gainsboro;
+  padding: 0px 10px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 6px;
+}
+.OTSViewqestionsFormobileRes{
+  display: none;
+}
+.OTSInstrctionsDivHolder button{
+padding: 3px;
+}
+.QuestionNavigationButtonsMainContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  flex-direction: column;
+  gap: 1rem;
+}
+.btnsSubContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 85%;
+  flex-direction: column;
+  gap: 1rem;
+}
+.navigationBtnHolderSubContainer{
+  display: flex;
+  gap: 0.5rem;
+}
+.markedForReviewNavigationBtn, .clearResponseBtn, .previousBtn, .saveandnextNavigationBtn, .submitNavigationBtn{
+  border: 1px solid rgb(153, 151, 151);
+  padding: 10px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.submitNavigationBtn{
+  border: 1px solid rgb(153, 151, 151);
+  padding: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  /* width: 300px; */
+}
+.saveandnextNavigationBtn{
+  /* width: 300px; */
 }
 }

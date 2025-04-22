@@ -18,7 +18,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: hidden;       
+  overflow: auto;       
 }
 
 
@@ -54,5 +54,84 @@ button {
   a:hover {
     color: #747bff;
   }
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  /* Force light mode styles for all input elements */
+input, textarea, select{
+  background-color: #ffffff !important; /* White background */
+  color: black;
+}
+/* Ensure placeholder text is also readable */
+input::placeholder, textarea::placeholder {
+  color: #555 !important; /* Dark gray placeholder */
+  opacity: 1;
+}
+/* Ensure radio buttons remain in light mode */
+input[type="radio"] {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  background-color: #ffffff !important; /* White background */
+  border: 2px solid #000 !important; /* Black border */
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+}
+
+/* Add the black dot when checked */
+input[type="radio"]:checked::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background-color: #000 !important; /* Black dot inside */
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+/* Force checkbox to have a light mode style */
+input[type="checkbox"] {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  width: 18px;
+  height: 18px;
+  background-color: #ffffff !important; /* White background */
+  border: 2px solid #000000 !important; /* Black border */
+  border-radius: 4px; /* Optional: Rounded corners */
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+/* Add checkmark when checked */
+input[type="checkbox"]:checked {
+  background-color: #ffffff !important; /* White background when checked */
+}
+
+input[type="checkbox"]:checked::before {
+  content: "✔"; /* Unicode checkmark */
+  font-size: 16px;
+  color: #000000 !important; /* Black checkmark */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+}
+/* Remove autofill darkening in Chrome */
+input:-webkit-autofill {
+  background-color: #ffffff !important;
+  color: black;
+}
+
 }
 
