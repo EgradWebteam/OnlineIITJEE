@@ -1,6 +1,6 @@
 const express = require("express");
 const db = require("../config/database.js");
-const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");  // To generate reset codes
 const sendMail = require('../utils/email'); // Assuming you have a separate email.js function
@@ -38,7 +38,7 @@ router.post("/adminLogin", async (req, res) => {
       const user = rows[0];
       console.log("User found:", { email, role: user.role });
   
-      const isMatch = await bcrypt.compare(password, user.password);
+      const isMatch = await bcryptjs.compare(password, user.password);
       if (!isMatch) {
         console.log("Password mismatch");
         return res.status(401).json({ message: "Invalid email or password" });
@@ -143,7 +143,7 @@ router.post("/reset-passwordadmin", async (req, res) => {
             console.log("Invalid reset code");
             return res.status(401).json({ message: "Invalid reset code" });
         }
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const hashedPassword = await bcryptjs.hash(newPassword, 10);
 
         // Update the password for the user (the reset code logic is now managed on the frontend)
         const updateQuery =

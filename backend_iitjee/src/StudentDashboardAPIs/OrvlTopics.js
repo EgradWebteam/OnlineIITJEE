@@ -108,12 +108,14 @@ router.get('/UserAnswer/:student_registration_id/:course_creation_id/:orvl_topic
     const [rows] = await connection.query(
       `SELECT 
           u.exercise_userresponse AS userAnswer,
+           od.orvl_document_name,
           q.exercise_answer AS correctAnswer,
           v.exercise_solution_video_link AS videoSolution,
           v.exercise_solution_img AS imageSolution
         FROM iit_orvl_exercise_userresponses u
         LEFT JOIN iit_orvl_exercise_questions q ON u.exercise_question_id = q.exercise_question_id
         LEFT JOIN iit_orvl_exercise_solutions v ON u.exercise_question_id = v.exercise_question_id
+        LEFT JOIN iit_orvl_documents AS od ON od.orvl_topic_id = u.orvl_topic_id
         WHERE u.student_registration_id = ?
           AND u.exercise_question_id = ?
           AND u.orvl_topic_id = ?
@@ -121,7 +123,13 @@ router.get('/UserAnswer/:student_registration_id/:course_creation_id/:orvl_topic
           AND u.course_creation_id = ?`,
       [student_registration_id, exercise_question_id, orvl_topic_id,  course_creation_id]
     );
-
+    if (rows.length > 0 && rows[0].imageSolution) {
+      rows[0].imageSolution = getImageUrl(
+        rows[0].orvl_document_name, 
+        'exercisesolutions', 
+        rows[0].imageSolution
+      );
+    }
     res.status(200).json(rows);
   } catch (error) {
     console.error('Error fetching user answer:', error);

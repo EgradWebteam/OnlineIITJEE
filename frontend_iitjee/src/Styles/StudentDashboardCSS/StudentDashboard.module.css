@@ -19,6 +19,43 @@
   margin-top: 1rem;
   text-align: center;
 }
+/* Dark blur overlay */
+.solutionModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* semi-dark overlay */
+  backdrop-filter: blur(5px); /* the blur effect */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Popup content box */
+.solutionModalContent {
+  background-color: #fff;
+  padding: 2rem;
+  width: 90%;
+  max-width: 800px;
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Close button inside modal */
+.solutionModalCloseBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.8rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+}
 
 .solutionButtons {
   margin-bottom: 1rem;
@@ -326,9 +363,10 @@ margin: 1.5rem;
   padding: 0 50px;
 }
 .QuestionsAndImgScrollContainer {
-  max-height: 350px; 
-  overflow-y: auto; 
-  padding-right: 10px; 
+
+height: 80%;
+  overflow-y: auto;
+  padding-right: 10px;
   overflow-x: hidden;
 }
 
@@ -371,14 +409,13 @@ margin: 1.5rem;
   font-size: 20px;
 }
 .status_pallete {
-  max-height: 300px;
+  min-height: 70%;
   overflow-y: scroll;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   padding: 1rem;
-  justify-content: flex-start; 
-
+  justify-content: flex-start;
 }
 /* .status_pallete::-webkit-scrollbar {
   display: none;

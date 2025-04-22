@@ -33,7 +33,6 @@ router.get("/TestCreationFormData", async (req, res) => {
 
 // API route to get subject names by course_creation_id
 
- 
 router.get("/CourseSubjects/:course_creation_id", async (req, res) => {
   const { course_creation_id } = req.params;
   console.log("Course Creation ID:", course_creation_id); // Log course_creation_id
@@ -256,19 +255,19 @@ router.delete("/DeleteTest/:testId", async (req, res) => {
     res.status(500).json({ message: "Failed to delete the test." });
   }
 });
-router.post('/toggleTestStatus', async (req, res) => {
+router.post("/toggleTestStatus", async (req, res) => {
   const { testCreationTableId, newStatus } = req.body;
 
   try {
     await db.query(
-      'UPDATE iit_test_creation_table SET status = ? WHERE test_creation_table_id = ?',
+      "UPDATE iit_test_creation_table SET status = ? WHERE test_creation_table_id = ?",
       [newStatus, testCreationTableId]
     );
 
     res.status(200).json({ message: `Test status updated to ${newStatus}` });
   } catch (error) {
-    console.error('Error updating test status:', error);
-    res.status(500).json({ message: 'Failed to update test status' });
+    console.error("Error updating test status:", error);
+    res.status(500).json({ message: "Failed to update test status" });
   }
 });
 router.get("/FetchTestDataFortable", async (req, res) => {
@@ -510,8 +509,8 @@ router.get("/getNotAssignedCourses/:testCreationTableId", async (req, res) => {
 
     // Return both sets of courses in the response
     res.status(200).json({
-      rowsNotAssigned: rowsNA,  // Not assigned courses
-      rowsAssigned: rowsAssigned // Assigned courses
+      rowsNotAssigned: rowsNA, // Not assigned courses
+      rowsAssigned: rowsAssigned, // Assigned courses
     });
   } catch (error) {
     console.error("Error while getting courses:", error);
@@ -539,7 +538,7 @@ router.post("/assignToTest/:testCreationTableId", async (req, res) => {
       const [rows] = await db.query(sql, [
         course_creation_id,
         testCreationTableId,
-        course_name // assuming testName is same as course name for now
+        course_name, // assuming testName is same as course name for now
       ]);
 
       console.log(rows, "Inserted Row");
@@ -551,31 +550,44 @@ router.post("/assignToTest/:testCreationTableId", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
-router.delete("/assignedTestDel/:courseCreationId/:testCreationTableId", async (req, res) => {
-  const { courseCreationId, testCreationTableId } = req.params;
+router.delete(
+  "/assignedTestDel/:courseCreationId/:testCreationTableId",
+  async (req, res) => {
+    const { courseCreationId, testCreationTableId } = req.params;
 
-  console.log("Unassigning course:", courseCreationId, "from test creation table ID:", testCreationTableId);
+    console.log(
+      "Unassigning course:",
+      courseCreationId,
+      "from test creation table ID:",
+      testCreationTableId
+    );
 
-  try {
-    // SQL query to delete the association between the course and the test creation table
-    const sql = `
+    try {
+      // SQL query to delete the association between the course and the test creation table
+      const sql = `
       DELETE FROM iit_course_reference_for_test
       WHERE course_creation_id = ? AND test_creation_table_id = ?
     `;
 
-    const [rows] = await db.query(sql, [courseCreationId, testCreationTableId]);
+      const [rows] = await db.query(sql, [
+        courseCreationId,
+        testCreationTableId,
+      ]);
 
-    if (rows.affectedRows === 0) {
-      return res.status(404).json({ message: "Course not found for the specified test creation table" });
+      if (rows.affectedRows === 0) {
+        return res
+          .status(404)
+          .json({
+            message: "Course not found for the specified test creation table",
+          });
+      }
+
+      res.status(200).json({ message: "Course unassigned successfully" });
+    } catch (error) {
+      console.error("Error while unassigning course:", error);
+      res.status(500).json({ message: "Internal Server Error" });
     }
-
-    res.status(200).json({ message: "Course unassigned successfully" });
-  } catch (error) {
-    console.error("Error while unassigning course:", error);
-    res.status(500).json({ message: "Internal Server Error" });
   }
-});
-
-
+);
 
 module.exports = router;
