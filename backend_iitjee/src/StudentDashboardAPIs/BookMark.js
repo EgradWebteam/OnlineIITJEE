@@ -2,11 +2,10 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/database.js");
 
-
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const sasToken = process.env.AZURE_SAS_TOKEN;
 const containerName = process.env.AZURE_CONTAINER_NAME;
-const testDocumentFolderName = process.env.AZURE_DOCUMENT_FOLDER;  
+const testDocumentFolderName = process.env.AZURE_DOCUMENT_FOLDER;
 
 // Helper to get image URL
 const getImageUrl = (documentName, folder, fileName) => {
@@ -65,9 +64,13 @@ const transformTestData = (rows) => {
 
     if (!question) {
       question = {
-        question_id: row.question_id,        
-        bookMark_Qid:row.bookMark_Qid,
-        questionImgName: getImageUrl(row.document_name, 'questions', row.questionImgName),
+        question_id: row.question_id,
+        bookMark_Qid: row.bookMark_Qid,
+        questionImgName: getImageUrl(
+          row.document_name,
+          "questions",
+          row.questionImgName
+        ),
         document_name: row.document_name,
         options: [],
         answer: row.answer,
@@ -80,10 +83,13 @@ const transformTestData = (rows) => {
         },
         solution: {
           solution_id: row.solution_id,
-          solutionImgName: getImageUrl(row.document_name, 'solution', row.solution_img_name),
+          solutionImgName: getImageUrl(
+            row.document_name,
+            "solution",
+            row.solution_img_name
+          ),
           video_solution_link: row.video_solution_link,
-        }
-
+        },
       };
       section.questions.push(question);
     }
@@ -96,8 +102,12 @@ const transformTestData = (rows) => {
       question.options.push({
         option_id: row.option_id,
         option_index: row.option_index,
-        optionImgName: getImageUrl(row.document_name, 'options', row.option_img_name),
-        user_answer:row.user_answer,
+        optionImgName: getImageUrl(
+          row.document_name,
+          "options",
+          row.option_img_name
+        ),
+        user_answer: row.user_answer,
       });
     }
   }
@@ -105,12 +115,11 @@ const transformTestData = (rows) => {
   return result;
 };
 
-
-router.get('/BookMarkQuestionOptions/:test_creation_table_id/:studentId', async (req, res) => {
-    try {
-      const { test_creation_table_id,studentId } = req.params;
-      const [rows] = await db.query(
-        `
+router.get("/BookMarkQuestionOptions/:studentId", async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    const [rows] = await db.query(
+      `
    SELECT 
   bq.question_id AS bookMark_Qid,
    t.test_name AS TestName,
@@ -143,22 +152,39 @@ INNER JOIN iit_db.iit_ots_document d ON q.document_Id = d.document_Id
       LEFT JOIN iit_db.iit_question_type qts ON q.question_type_id = qts.question_type_id
       LEFT JOIN iit_db.iit_solutions sol ON q.question_id = sol.question_id  
 WHERE bq.student_registration_id = ?
-  AND d.test_creation_table_id = ?
+
 
         `,
-        [studentId, test_creation_table_id] // ✅ correct order
-      );
-  
-  
-      const structured = transformTestData(rows);
-      res.json(structured);
-    } catch (error) {
-      console.error('Error fetching question paper:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      [studentId] // ✅ correct order
+    );
+
+    const structured = transformTestData(rows);
+    res.json(structured);
+  } catch (error) {
+    console.error("Error fetching question paper:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// DELETE bookmarked question by question_id
+router.delete("/DeleteBookmark/:studentId/:questionId", async (req, res) => {
+  const questionId = req.params.questionId;
+  const studentId = req.params.studentId;
+  console.log("questionId,studentId", questionId, studentId);
+  try {
+    const sql =
+      "DELETE FROM iit_bookmark_questions WHERE student_registration_id = ? AND question_id = ?";
+    const [result] = await db.query(sql, [studentId, questionId]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Bookmark not found" });
     }
-  });
-
-
-
+    console.log("Bookmark deleted successfully");
+    res.status(200).json({ message: "Bookmark deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting bookmark:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 module.exports = router;
