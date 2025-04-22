@@ -98,9 +98,10 @@
 .toggleTypeButtons {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 0 15px;
   justify-content: center;
+  gap: 1rem;
+  margin: 1rem 2rem;
+  
 }
 .toggleTypeButtons button {
   padding: 10px 15px;
@@ -203,13 +204,13 @@ color: black;
   color: #ffffff;
   border-radius: 0 100px 100px 0;
 }
-.StudentDashboardcontentArea {
-  /* flex-grow: 1; */
+/* .StudentDashboardcontentArea {
+  
   padding: 5px;
   height: auto;
   margin: 10px auto;
   width: 90%;
-}
+} */
 .studentDashboardHamburgerMenu {
   display: none;
 }
@@ -491,12 +492,13 @@ justify-content: center;
     top: 76px;
     left: -2rem;
     z-index: 1100;
+    background-color: white;
   }
 
-  .StudentDashboardcontentArea {
+  /* .StudentDashboardcontentArea {
     margin-top: 50px;
     padding-left: 10px;
-  }
+  } */
 }
 
 /* student dashboard test  container css */
@@ -506,7 +508,7 @@ justify-content: center;
 
 .goBackInTestContainerDiv {
   text-align: right;
-  margin-bottom: 1rem;
+  margin: 1rem;
 }
 
 .goBackBtn {
@@ -585,6 +587,7 @@ justify-content: center;
   display: flex;
   gap: 1rem;
   flex-direction: column;
+  margin: 1rem;
 }
 
   /* My results css */
@@ -633,8 +636,10 @@ justify-content: center;
   }
   .myResultsSubContainer{
     display: flex;
+ 
     gap: 2rem;
     margin: 1rem;
+    
   }
   /* STUDENT DASHBOARD BOOKMARKS */
   .StudentdashboardBookMarksSubDiv{
@@ -681,6 +686,16 @@ justify-content: center;
     font-size: 18px;
     font-weight: 500;
 }
+  }
+  @media(max-width:768px){
+    .myResultsSubContainer{
+      display: flex;
+      flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin: 1rem;
+    }
   }
   @media (max-width:425px) {
     .testContainerSub{

@@ -6,9 +6,7 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 1rem;
-    position: absolute;
-   
-    
+    margin: 1.5rem;
 }
 .StudentAccountProfile{
     border: 1px solid rgb(204, 202, 202);
@@ -35,7 +33,7 @@ height: 100%;
 }
 .StudentAccountPwds{
     display: flex;
-    gap: 2rem;
+    gap: 1rem;
     align-items: center;
     justify-content: center;
 }
@@ -52,7 +50,6 @@ height: 100%;
     background-color: green; /* Active button color */
   }
 .StudentAccountDetails{
-    width: 400px;
     margin: 1rem;
     padding: 1rem;
     box-shadow: 0px 0px 5px 5px rgb(221, 218, 218);
@@ -63,26 +60,27 @@ height: 100%;
 flex-direction: column;
 flex-wrap: wrap;
 margin: .7rem 0;
-padding: .5rem;
+padding: .5rem 2rem;
 justify-content: center;
 box-shadow:0 2px 7px rgba(0, 0, 0, 0.2);
 border-radius: 5px;
 font-weight: 500;
+
 }
 .StudentResetPassword{
     display: flex;
     flex-direction: column;
     justify-content: center;
     flex-wrap: wrap;
-    width: 400px;
     box-shadow:  0px 0px 3px 3px rgb(221, 218, 218);
-    padding: 1rem;
+    padding: 1rem 2rem;
     gap: .5rem;
     border-radius: 10px;
 }
 .StudentResetPassword input{
     width: 100%;
     height: 30px;
+    padding: 1rem 5rem;
     border-radius: 5px;
    border: 1px solid rgb(187, 187, 187);
 }
@@ -98,7 +96,6 @@ font-weight: 500;
     border-radius: 10px;
     font-weight: 500;
     cursor: pointer;
-    width: 50%;
     margin: auto;
     padding: 0.5rem;
     margin-top: 10px;
@@ -134,9 +131,7 @@ font-weight: 500;
       align-items: center;
       flex-wrap: wrap;
       gap: 1rem;
-      position: absolute;
-      left: 0;
-      margin: 0 1rem;
+      margin:  1rem;
   }
   }
   
