@@ -338,7 +338,7 @@
 
 
 
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useEffect } from 'react';
 import ReactPlayer from 'react-player';
 import { IoClose } from 'react-icons/io5';
 import { GrPrevious, GrNext } from 'react-icons/gr';
@@ -466,17 +466,20 @@ const Popup = ({
   return (
     <div className={styles.popup_overlay}>
       <div className={styles.popup_content}>
-        {/* Header: Close Button and Heading */}
+        {/* Header */}
         <div className={styles.headerForCloseSndHeading}>
           <div className={styles.headingForLectures}>
             {exercise ? exercise.exercise_name : lecture?.orvl_lecture_name}
           </div>
           <div className={styles.CloseBtnForPopup}>
-            <button onClick={onClose}>❌</button>
+            <button onClick={onClose}>
+              <IoClose />
+            </button>
           </div>
         </div>
+
+        {/* Body */}
         <div className={styles.popup_body}>
-          {/* Previous Button (left side) */}
           <button
             onClick={previousLectureOrExercise}
             className={styles.side_nav_button}
@@ -488,149 +491,133 @@ const Popup = ({
           <div className={styles.popup_main_content}>
             {exercise && exercise.questions?.length > 0 ? (
               <div className={styles.slideshow}>
+                <div className={styles.SlideShow_Heading_container}>
+                  <h2>{exercise.exercise_name}</h2>
+                </div>
+
                 <div className={styles.ExerciseQuestionContainers}>
-                  <div className={styles.QuestionsAndImgScrollContainer}>
-                    <div className={styles.QuestionTypeAndID}>
-                      <h4>Question No : {currentQuestion.exercise_question_sort_id}</h4>
-                      <p>type : {currentQuestion.exercise_question_type}</p>
-                    </div>
-                    <div className={styles.QuestionImgForExercise}>
-                      {currentQuestion.exercise_question_img && (
-                        <div className={styles.img_container}>
-    <div className="popup-overlay">
-      <div className="popup-content">
-        <button onClick={onClose}>
-          <MemoizedIoClose />
-        </button>
-        <button onClick={previousLectureOrExercise}>
-          <MemoizedGrPrevious />
-        </button>
- 
-        {exercise && exercise.questions?.length > 0 ? (
-          <div className="slideshow">
-            <div className="SlideShow_Heading_container">
-              <h2>{exercise.exercise_name}</h2>
-            </div>
- 
-            <div className="exercise-question-container">
-              <h4>{currentQuestion.exercise_question_sort_id}</h4>
-              <p>{currentQuestion.exercise_question_type}</p>
- 
-              {currentQuestion.exercise_question_img && (
-                <div className="img-container">
-                  <img
-                    src={currentQuestion.exercise_question_img}
-                    alt={`Question ${currentQuestionIndex + 1}`}
-                  />
-                </div>
-              )}
- 
-              {currentQuestion.exercise_question_type === 'NATD' && (
-                <div className="calc-container">
-                  <input
-                    type="text"
-                    value={userAnswer}
-                    onChange={(e) => setUserAnswer(e.target.value)}
-                    disabled={answerDisabled}
-                    className="inputnat"
-                    placeholder="Enter your answer"
-                  />
-                </div>
-              )}
- 
-              {(currentQuestion.exercise_question_type === 'MCQ' ||
-                currentQuestion.exercise_question_type === 'MSQ') &&
-                currentQuestion.options?.length > 0 && (
-                  <div className={styles['options-container']}>
-                    {currentQuestion.options.map((option) => (
-                      <label key={option.exercise_option_id}>
-                        <input
-                          type={
-                            currentQuestion.exercise_question_type === 'MSQ'
-                              ? 'checkbox'
-                              : 'radio'
-                          }
-                          name={`question_${currentQuestion.exercise_question_id}`}
-                          value={option.exercise_option_index}
-                          checked={
-                            currentQuestion.exercise_question_type === 'MSQ'
-                              ? selectedOptions.includes(option.exercise_option_index)
-                              : userAnswer === option.exercise_option_index
-                          }
-                          onChange={() => handleOptionChange(option.exercise_option_index)}
-                          disabled={answerDisabled}
-                        />
-                        {option.exercise_option_img ? (
-                          <img
-                            src={option.exercise_option_img}
-                            alt={`Option ${option.exercise_option_index}`}
-                          />
-                        ) : (
-                          option.exercise_option_index
-                        )}
-                      </label>
-                    ))}
+                  <div className={styles.QuestionTypeAndID}>
+                    <h4>Question No: {currentQuestion.exercise_question_sort_id}</h4>
+                    <p>Type: {currentQuestion.exercise_question_type}</p>
                   </div>
+
+                  {currentQuestion.exercise_question_img && (
+                    <div className={styles.img_container}>
+                      <img
+                        src={currentQuestion.exercise_question_img}
+                        alt={`Question ${currentQuestionIndex + 1}`}
+                      />
+                    </div>
+                  )}
+
+                  {currentQuestion.exercise_question_type === 'NATD' && (
+                    <div className={styles.calc_container}>
+                      <input
+                        type="text"
+                        value={userAnswer}
+                        onChange={(e) => setUserAnswer(e.target.value)}
+                        disabled={answerDisabled}
+                        className={styles.inputnat}
+                        placeholder="Enter your answer"
+                      />
+                    </div>
+                  )}
+
+                  {(currentQuestion.exercise_question_type === 'MCQ' ||
+                    currentQuestion.exercise_question_type === 'MSQ') &&
+                    currentQuestion.options?.length > 0 && (
+                      <div className={styles.options_container}>
+                        {currentQuestion.options.map((option) => (
+                          <label key={option.exercise_option_id}>
+                            <input
+                              type={
+                                currentQuestion.exercise_question_type === 'MSQ'
+                                  ? 'checkbox'
+                                  : 'radio'
+                              }
+                              name={`question_${currentQuestion.exercise_question_id}`}
+                              value={option.exercise_option_index}
+                              checked={
+                                currentQuestion.exercise_question_type === 'MSQ'
+                                  ? selectedOptions.includes(option.exercise_option_index)
+                                  : userAnswer === option.exercise_option_index
+                              }
+                              onChange={() => handleOptionChange(option.exercise_option_index)}
+                              disabled={answerDisabled}
+                            />
+                            {option.exercise_option_img ? (
+                              <img
+                                src={option.exercise_option_img}
+                                alt={`Option ${option.exercise_option_index}`}
+                              />
+                            ) : (
+                              option.exercise_option_index
+                            )}
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                </div>
+
+                {feedback && <div className={styles.feedback}>{feedback}</div>}
+
+                <div className={styles.navigation_buttons}>
+                  {currentQuestionIndex > 0 && (
+                    <button onClick={previousQuestion}>Previous Question</button>
+                  )}
+                  {!answerDisabled && (
+                    <button onClick={handleSubmitAnswer}>Submit</button>
+                  )}
+                  {answerDisabled && (
+                    <button onClick={() => setFeedback('Solution displayed!')}>
+                      View Solution
+                    </button>
+                  )}
+                  {currentQuestionIndex < exercise.questions.length - 1 && (
+                    <button onClick={nextQuestion}>Next Question</button>
+                  )}
+                </div>
+
+                <div className={styles.status_pallete}>
+                  {exercise.questions.map((question, index) => {
+                    const status = getStatus(question.exercise_question_id);
+                    return (
+                      <span
+                        key={question.exercise_question_id}
+                        className={`${styles.status_item} ${styles[status]}`}
+                        title={`Question ${index + 1}: ${status}`}
+                        onClick={() => setCurrentQuestionIndex(index)}
+                      >
+                        {index + 1}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : lecture ? (
+              <div className={styles.lecture_content}>
+                <h2>{lecture.orvl_lecture_name}</h2>
+                {lecture.lecture_video_link && (
+                  <ReactPlayer url={lecture.lecture_video_link} controls width="100%" />
                 )}
-            </div>
- 
-            {feedback && <div>{feedback}</div>}
- 
-            <div className="navigation-buttons-for-ques">
-              {currentQuestionIndex > 0 && (
-                <button onClick={previousQuestion}>Previous Question</button>
-              )}
-              {!answerDisabled && (
-                <button onClick={handleSubmitAnswer} disabled={answerDisabled}>
-                  Submit
-                </button>
-              )}
-              {answerDisabled && (
-                <button onClick={() => setFeedback('Solution displayed!')}>
-                  View Solution
-                </button>
-              )}
-              {currentQuestionIndex < exercise.questions.length - 1 && (
-                <button onClick={nextQuestion}>Next Question</button>
-              )}
-            </div>
- 
-            <div className={styles['status-pallete']}>
-              {exercise.questions.map((question, index) => {
-                const status = getStatus(question.exercise_question_id);
-                return (
-                  <span
-                    key={question.exercise_question_id}
-                    className={`${styles['status-item']} ${status}`}
-                    title={`Question ${index + 1}: ${status}`}
-                    onClick={() => setCurrentQuestionIndex(index)}
-                  >
-                    {index + 1}
-                  </span>
-                );
-              })}
-            </div>
-          </div>
-        ) : lecture ? (
-          <div>
-            <h2>{lecture.orvl_lecture_name}</h2>
-            {lecture.lecture_video_link && (
-              <ReactPlayer url={lecture.lecture_video_link} controls width="100%" />
+              </div>
+            ) : (
+              <div>No data available</div>
             )}
           </div>
-        ) : (
-          <div>No data available</div>
-        )}
- 
-        <button onClick={nextLectureOrExercise}>
-          <MemoizedGrNext />
-        </button>
+
+          <button
+            onClick={nextLectureOrExercise}
+            className={styles.side_nav_button}
+          >
+            <GrNext />
+          </button>
+        </div>
       </div>
     </div>
   );
- 
-}
- 
+};
+
 export default Popup;
  
  
