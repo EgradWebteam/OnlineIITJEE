@@ -9,21 +9,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
   const [selectedSubjectSection, setSelectedSubjectSection] = useState(null);
   const studentContact = userData?.mobile_no;
   const [visibleSolutions, setVisibleSolutions] = useState({});
-
-  // useEffect(() => {
-  //   const fetchTestPaper = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `${BASE_URL}/MyResults/StudentReportQuestionPaper/${testId}/${studentId}`
-  //       );
-  //       setTestPaperData(response.data);
-  //     } catch (err) {
-  //       console.error("Error fetching test paper:", err);
-  //     }
-  //   };
-
-  //   fetchTestPaper();
-  // }, [testId]);
+  const [showVideoSolution, setShowVideoSolution] = useState(false);
 
   useEffect(() => {
     const fetchTestPaper = async () => {
@@ -88,9 +74,6 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
 
   const [bookmarkedQuestions, setBookmarkedQuestions] = useState([]);
 
-  // Assuming selectedSubjectSection is coming from your state or props
-  // Example: const selectedSubjectSection = { questions: [ ... ] };
-
   // Handle bookmark toggle
   const toggleBookmark = async (questionId) => {
     try {
@@ -125,6 +108,41 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
       console.error("Error:", error);
       alert("An error occurred while bookmarking");
     }
+  };
+
+  const toggleVideoSolution = () => {
+    setShowVideoSolution((prev) => !prev);
+  };
+
+  const PlayVideoById = (url) => {
+    if (typeof url !== "string" || !url || url === "null") {
+      console.error("Invalid URL:", url);
+      return "";
+    }
+
+    let videoId = "";
+
+    // Handle 'youtu.be' format
+    if (url.includes("youtu.be")) {
+      videoId = url.split("youtu.be/")[1].split("?")[0];
+    }
+    // Handle 'youtube.com/watch?v=' format
+    else if (url.includes("watch?v=")) {
+      videoId = url.split("watch?v=")[1].split("&")[0];
+    }
+    // Handle '/v/' format
+    else if (url.includes("/v/")) {
+      videoId = url.split("/v/")[1].split("?")[0];
+    }
+
+    // If a valid video ID is found, return the embed link
+    if (videoId) {
+      console.log("Extracted Video ID:", videoId);
+      return `https://www.youtube.com/embed/${videoId}?rel=0`;
+    }
+
+    console.error("Unrecognized URL format:", url); // Log for debugging
+    return "";
   };
   return (
     <div className={styles.solutionContainerMain}>
@@ -179,18 +197,32 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                   key={question.question_id}
                   className={`${styles.questionSolutionsDiv} ${styles.watermarkForSolution}`}
                 >
-                  <p>Question No: {question.question_id}</p>
+                  <div className={styles.QuestionNoAnsBookmarkHolder}>
+                    <p>Question No: {question.question_id}</p>
+                    <button
+                      onClick={() => toggleBookmark(question.question_id)}
+                      className={`${styles.bookmarkButton} ${bookmarkedQuestions.includes(question.question_id)
+                          ? styles.bookmarked
+                          : ""
+                        }`}
+                    >
+                      {question.bookMark_Qid === null &&
+                        !bookmarkedQuestions.includes(question.question_id) ? (
+                        <FaRegBookmark />
+                      ) : (
+                        <FaBookmark />
+                      )}
+                    </button>
+                  </div>
                   <div className={styles.questionImageInSolutionTab}>
                     <img
                       src={question.questionImgName}
                       alt={`Question ${question.question_id}`}
-                      style={{ width: "300px", height: "auto" }}
                     />
                   </div>
                   <div style={{ marginTop: "1rem" }}>
-              
                     {/* Bookmark Button */}
-                    <button
+                    {/* <button
                       onClick={() => toggleBookmark(question.question_id)}
                       className={`${styles.bookmarkButton} ${
                         bookmarkedQuestions.includes(question.question_id)
@@ -204,7 +236,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                       ) : (
                         <FaBookmark />
                       )}
-                    </button>
+                    </button> */}
 
                     {(() => {
                       const qTypeId = question.questionType?.quesionTypeId;
@@ -346,6 +378,40 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                               alt={`Solution for question ${question.question_id}`}
                             />
                           </div>
+                        </div>
+                      )}
+
+                    {/* Check for video solution link and display button if available */}
+                    {question.solution?.solutionImgName &&
+                      question.solution?.video_solution_link !== "" && (
+                        <div style={{ marginTop: "1rem" }}>
+                          <button
+                            className={styles.showSolutionButton}
+                            onClick={toggleVideoSolution}
+                          >
+                            {" "}
+                            {showVideoSolution
+                              ? "Hide Video Solution"
+                              : "View Video Solution"}
+                          </button>
+
+                          {showVideoSolution && (
+                            <div style={{ marginTop: "1rem" }}>
+                              <p>
+                                <strong>Video Solution:</strong>
+                                <iframe
+                                  src={PlayVideoById(
+                                    question.solution.video_solution_link
+                                  )}
+                                  title="Video Solution"
+                                  frameBorder="0"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowFullScreen
+                                  style={{ width: "100%", height: "400px" }} // Add styling to ensure it fits well in the page
+                                />
+                              </p>
+                            </div>
+                          )}
                         </div>
                       )}
                   </div>

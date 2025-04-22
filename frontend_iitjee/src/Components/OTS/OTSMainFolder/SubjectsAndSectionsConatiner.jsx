@@ -9,7 +9,10 @@ export default function SubjectsAndSectionsContainer(
   setActiveSection,
   autoSaveNATIfNeeded ,
   setShowSidebar,
-  showSidebar}) {
+  showSidebar,
+  activeQuestionIndex,
+  setActiveQuestionIndex
+}) {
 
   //  Function: Get all subject names
   const getSubjects = () => {
@@ -41,6 +44,7 @@ export default function SubjectsAndSectionsContainer(
       const defaultSections = getSections(defaultSubject);
       if (defaultSections.length > 0) {
         setActiveSection(defaultSections[0].SectionName);
+        setActiveQuestionIndex(0); // 👈 go to first question
       }
     }
   }, [testData]); // runs only once when testData is loaded
@@ -51,6 +55,7 @@ export default function SubjectsAndSectionsContainer(
     const subjectSections = getSections(subjectName);
     if (subjectSections.length > 0) {
       setActiveSection(subjectSections[0].SectionName); // auto-select first section
+      setActiveQuestionIndex(0); // 👈 go to first question
     } else {
       setActiveSection(null);
     }
@@ -59,6 +64,7 @@ export default function SubjectsAndSectionsContainer(
   const handleSectionClick = (sectionName) => {
     autoSaveNATIfNeeded();
     setActiveSection(sectionName);
+    setActiveQuestionIndex(0); // 👈 go to first question
   };
 
   return (
