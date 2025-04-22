@@ -5,6 +5,9 @@
 }
 .studentDashboardHeaderLogoDiv {
   width: 250px;
+}.unanswered {
+  background: red;
+  color: #fff;
 }
 .options-container {
   flex-direction: column;

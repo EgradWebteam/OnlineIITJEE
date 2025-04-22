@@ -17,7 +17,7 @@ export default function StudentDashboard_MyCourses({ studentId }) {
   const [showQuizContainer, setShowQuizContainer] = useState(true);
   const [showTestContainer, setShowTestContainer] = useState(false);
   const [showTopicContainer, setShowTopicContainer] = useState(false);
-
+const [topicId,setTopicId] = useState("")
   useEffect(() => {
     const fetchPurchasedCourses = async () => {
       try {
@@ -156,6 +156,8 @@ export default function StudentDashboard_MyCourses({ studentId }) {
           studentId={studentId}
           courseCreationId={selectedTestCourse.course_creation_id}
           context="myCourses"
+          setTopicId={setTopicId}
+          topicId={topicId}
           setShowQuizContainer = {setShowQuizContainer}
           setOpenCourseOrvl= {setOpenCourseOrvl}
           setSelectedTestCourse={setSelectedTestCourse}
@@ -172,7 +174,7 @@ export default function StudentDashboard_MyCourses({ studentId }) {
           setShowTestContainer = { setShowTestContainer}
           setShowTopicContainer = {setShowTopicContainer}
           courseCreationId={selectedTestCourse.course_creation_id}
-           topicid = {1}
+           topicid = { topicId}
           onBack={() => {
             setOpenCourseOrvl(false);
             setShowTopicContainer(true); // When going back, show topic container again
