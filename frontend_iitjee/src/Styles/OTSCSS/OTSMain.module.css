@@ -82,7 +82,10 @@ height: 100%;
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 8px;
+    padding: 4px;
+}
+.QuestionTypeHolderContainer{
+  padding: 4px 25px;
 }
 .hideSections{
   display: none !important;
@@ -90,7 +93,7 @@ height: 100%;
 .OTSSubjectButton {
     padding: 10px 15px;
     background-color: unset;
-    font-size: 1.2rem;
+    font-size: 1rem;
     border: 1px solid gainsboro;
     cursor: pointer;
     margin-right: 10px;
@@ -266,7 +269,7 @@ height: 100%;
     right: 0;
     border: 1px solid gainsboro;
     background-color: white;
-    width: 300px;
+    width: 285px;
     top: 0;
   }
   .StudentProfileHolderOTS{
@@ -278,7 +281,7 @@ height: 100%;
   }
   .profileImage {
     width: 115px;
-    height: 115px;
+    height: 100px;
   }
   .profileImage img{
      width: 100%;
@@ -724,7 +727,7 @@ padding: 3rem;
   flex-direction: column;
   height: auto;
   overflow: auto;
-  min-height: 80vh;
+  min-height: 75vh;
   overflow-y: auto;
   width: 100%;
 }
@@ -1100,6 +1103,10 @@ margin-left: 10px;
   width: 100%;
   height: 100%;
 }
+.questionImageInSolutionTab{
+  width: 400px;
+  height: auto;
+}
 .correctWrongIcon{
   width: 20px;
   margin-right: 10px;
@@ -1206,6 +1213,15 @@ background-position: center center, /* Center image */ center 10%, center 30%,
 .chevRonrightForMobileRes, .chevRonLeftForMobileRes{
 display: none;
 }
+.QuestionNoAnsBookmarkHolder{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.widthForPiechart{
+  width: 53.125rem;
+  margin: 0 auto;
+}
 
 @media (max-width:1280px) {
   .OTSMainFileMainContainer{
@@ -1261,6 +1277,11 @@ display: none;
   height: 35vh;
 }
 }
+@media (max-width:1024px) {
+  .testDetailsContainerSub li {
+    font-size: 15px;
+}
+}
 @media (max-width:800px) {
   .QuestionsBtnsConatiner{
     margin-top: 5px;
@@ -1307,6 +1328,18 @@ display: none;
   width: 100%;
   margin-top: 30px;
   height: 6vh;
+}
+.testDetailsContainerSub li {
+  font-size: 12px;
+}
+.pieChartsMainDiv{
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+}
+.widthForPiechart{
+  width: 28rem;
+  margin: 0 auto;
 }
 }
 
@@ -1558,5 +1591,97 @@ padding: 3px;
 .chevRonrightForMobileRes{
   right: 0rem;
   top: 0rem;
+}
+.widthForPiechart{
+  width: 15rem;
+  margin: 0 auto;
+  transform: scale(0.8);
+}
+.AIRholderDiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f1fe;
+  border: 1px solid white;
+  padding: 1rem;
+  flex-direction: column;
+  gap: 1rem;
+}
+.testDetailsContainerSub{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+  gap: 1rem;
+}
+.testDetailsContainerSub li {
+  font-size: 10px;
+  padding: 10px;
+}
+.questionSolutionsDiv{
+  margin: 1rem 1rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  padding: 1rem;
+  gap: 7px;
+  position: relative;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.studentReportPerformanceBtns{
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem;
+}
+.performanceButtonsInStudentReport{
+  color: #fff;
+  padding: 8px 15px;
+  /* background-color: #2cd1ee; */
+  border-radius: 14px;
+  font-weight: bold;
+  font-size: 12px;
+  border: 0;
+  user-select: none;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+.showSolutionButton{
+  width: fit-content;
+  font-size: 12px;
+  color: white;
+  font-weight: 500;
+  margin-left: 8px;
+  padding: 7px 15px;
+  background-color: rgb(7, 174, 240);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.solutionTag{
+  font-size: 13px;
+  font-weight: 600;
+  margin: 5px;
+}
+.solutionImageInSolutionTab{
+  margin: 0.5rem;
+  padding: 0.5rem;
+  gap: 7px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.solutionImageDivInSolutionTab{
+  width:200px;
+}
+}
+@media (max-width:375px) {
+  .testDetailsContainerSub{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    gap: 0rem;
+}
+.questionImageInSolutionTab{
+  width: 200px;
 }
 }

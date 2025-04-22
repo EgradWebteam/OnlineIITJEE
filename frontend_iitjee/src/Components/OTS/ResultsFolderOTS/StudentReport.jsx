@@ -263,7 +263,7 @@ const StudentReport = ({ testId, studentId }) => {
         </div>
       </div>
       <div className={styles.pieChartsMainDiv}>
-        <div style={{ width: "53.125rem" , margin: "0 auto" }}>
+        <div className={styles.widthForPiechart}> 
           <h3 className={styles.pieChartHeadings}>Answer Evaluation</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart style={{ transform: "scale(1.4)", transformOrigin: "center", marginTop: "5rem" }}>

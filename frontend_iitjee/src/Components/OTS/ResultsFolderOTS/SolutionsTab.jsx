@@ -179,18 +179,33 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                   key={question.question_id}
                   className={`${styles.questionSolutionsDiv} ${styles.watermarkForSolution}`}
                 >
-                  <p>Question No: {question.question_id}</p>
+                  <div className={styles.QuestionNoAnsBookmarkHolder}>
+                    <p>Question No: {question.question_id}</p>
+                    <button
+                      onClick={() => toggleBookmark(question.question_id)}
+                      className={`${styles.bookmarkButton} ${bookmarkedQuestions.includes(question.question_id)
+                          ? styles.bookmarked
+                          : ""
+                        }`}
+                    >
+                      {question.bookMark_Qid === null &&
+                        !bookmarkedQuestions.includes(question.question_id) ? (
+                        <FaRegBookmark />
+                      ) : (
+                        <FaBookmark />
+                      )}
+                    </button>
+                  </div>
                   <div className={styles.questionImageInSolutionTab}>
                     <img
                       src={question.questionImgName}
                       alt={`Question ${question.question_id}`}
-                      style={{ width: "300px", height: "auto" }}
                     />
                   </div>
                   <div style={{ marginTop: "1rem" }}>
               
                     {/* Bookmark Button */}
-                    <button
+                    {/* <button
                       onClick={() => toggleBookmark(question.question_id)}
                       className={`${styles.bookmarkButton} ${
                         bookmarkedQuestions.includes(question.question_id)
@@ -204,7 +219,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                       ) : (
                         <FaBookmark />
                       )}
-                    </button>
+                    </button> */}
 
                     {(() => {
                       const qTypeId = question.questionType?.quesionTypeId;
