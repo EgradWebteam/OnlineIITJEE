@@ -55,6 +55,8 @@ const studentbuycourses = require("./src/StudentDashboardAPIs/BuyCourses.js");
 app.use("/studentbuycourses", studentbuycourses);
 const studentMycourses = require("./src/StudentDashboardAPIs/MyCourses.js");
 app.use("/studentmycourses", studentMycourses);
+const studentBookMarks = require("./src/StudentDashboardAPIs/BookMark.js");
+app.use("/studentBookMarks", studentBookMarks);
 
 const MyResults = require("./src/StudentDashboardAPIs/MyResults.js");
 app.use("/MyResults", MyResults);
