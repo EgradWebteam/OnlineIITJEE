@@ -159,28 +159,30 @@ export default function QuestionsMainContainer({
           <p>Negative Marks: <span className={styles.negtMarksSpan}>{negativeMarks}</span></p>
         </div>
       </div>
+      
+        <div className={styles.QuestionNumberHolderContainer}>
+          <p>Question No. {activeQuestionIndex + 1}</p>
+        </div>
+        <div className={styles.OTSQuestionOptionsContainerForScroll}>
+        <div className={styles.QuestionImageHolder}>
+          {renderQuestion(question)}
+        </div>
 
-      <div className={styles.QuestionNumberHolderContainer}>
-        <p>Question No. {activeQuestionIndex + 1}</p>
+        <QuestionOptionsContainer
+          options={question?.options || []}
+          optPatternId={testData?.opt_pattern_id}
+          questionTypeId={question?.questionType?.quesionTypeId}
+          onSelectOption={setSelectedOption}
+          savedAnswer={savedAnswer}
+          selectedOption={selectedOption}
+          questionId={question?.question_id}
+          selectedOptionsArray={selectedOptionsArray}
+          setSelectedOptionsArray={setSelectedOptionsArray}
+          natValue={natValue}
+          setNatValue={setNatValue}
+        />
       </div>
-
-      <div className={styles.QuestionImageHolder}>
-        {renderQuestion(question)}
-      </div>
-
-      <QuestionOptionsContainer
-        options={question?.options || []} 
-        optPatternId={testData?.opt_pattern_id}
-        questionTypeId={question?.questionType?.quesionTypeId}
-        onSelectOption={setSelectedOption}
-        savedAnswer={savedAnswer}
-        selectedOption={selectedOption}
-        questionId={question?.question_id}
-        selectedOptionsArray={selectedOptionsArray}
-        setSelectedOptionsArray={setSelectedOptionsArray}
-        natValue={natValue}
-        setNatValue={setNatValue}
-      />
+     
 
       {isCollapsed && (
         <div className={styles.rightChevronBtn}>

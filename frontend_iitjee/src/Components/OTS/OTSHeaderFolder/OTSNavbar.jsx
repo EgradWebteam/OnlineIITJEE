@@ -34,8 +34,8 @@ export default function OTSNavbar({testName, testData,realTestId}) {
           <p>{testName}</p>
       </div>
       <div className={styles.OTSInstrctionsDivHolder}>
-          <button onClick={openQuestionPaper}><IoIosAlert className={styles.InstIcon}/>View Questions</button>
-          <button onClick={openInstructions}><FcDocument className={styles.InstIcon}/>View Instructions</button>
+          <button onClick={openQuestionPaper}><IoIosAlert className={styles.InstIcon}/><span className={styles.OTSViewqestionsFormobileRes}>View Questions</span></button>
+          <button onClick={openInstructions}><FcDocument className={styles.InstIcon}/><span className={styles.OTSViewqestionsFormobileRes}>View Instructions</span></button>
       </div>
       {showQuestions &&(
         <OTSQuestionPaper

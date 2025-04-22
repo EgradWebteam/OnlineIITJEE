@@ -106,16 +106,16 @@
   padding: 10px 15px;
   font-size: 15px;
   font-weight: bold;
-  color: white;
   border: none;
   border-radius: 5px;
-  background-color: rgb(7, 174, 240);
+color: black;
   cursor: pointer;
+  background-color: white;
 }
 .toggleTypeButtons button.active {
-  background-color: #28a745; /* Green when active */
+  background-color: rgb(7, 174, 240);/* Green when active */
   color: white;
-  border-color: #28a745;
+
 }
 .onHoverOFstudent {
   position: absolute;
@@ -282,6 +282,8 @@
   display: flex;
   justify-content: space-around;
   margin: 1rem 0;
+  border-bottom: 1px solid whitesmoke;
+ padding: 5px;
 }
 .popup_body {
   display: flex;
@@ -467,16 +469,16 @@ justify-content: center;
   .studentDashboardLeftsidebar {
     position: absolute;
     top: 80px;
-    left: 0;
+    left: 33px;
     width: 220px;
     height: 100vh;
-    background-color: #f9f9f9;
+    background-color: rgba(94, 93, 93,);
     z-index: 1000;
     /* transition: transform 0.3s ease-in-out; */
   }
 
   .sidebarHidden {
-    transform: translateX(-100%);
+    transform: translateX(-133%);
   }
 
   .sidebarVisible {
@@ -486,8 +488,8 @@ justify-content: center;
   .studentDashboardHamburgerMenu {
     display: block;
     position: absolute;
-    top: 47px;
-    left: -3px;
+    top: 76px;
+    left: -2rem;
     z-index: 1100;
   }
 
@@ -718,6 +720,7 @@ justify-content: center;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin: 1rem;
 }
 .toggleTypeButtons button {
   padding: 5px 6px;

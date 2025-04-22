@@ -8,7 +8,6 @@
     gap: 1rem;
     position: absolute;
    
-    left: 50%;
     
 }
 .StudentAccountProfile{
@@ -37,6 +36,8 @@ height: 100%;
 .StudentAccountPwds{
     display: flex;
     gap: 2rem;
+    align-items: center;
+    justify-content: center;
 }
 .passwordsButton{
     background-color:rgb(7, 174, 240) ;
@@ -134,7 +135,8 @@ font-weight: 500;
       flex-wrap: wrap;
       gap: 1rem;
       position: absolute;
-      left: 22%;
+      left: 0;
+      margin: 0 1rem;
   }
   }
   
