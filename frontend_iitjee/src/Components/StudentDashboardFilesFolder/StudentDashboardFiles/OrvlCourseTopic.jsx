@@ -281,6 +281,7 @@ const playedTimeRef = useRef(0);
     setSelectedExercise(null);         // Don't auto-start exercise
     setShowExercise(false);            // Start with lecture only
     setShowPopup(true);
+    setUserStatus(null);
    
 
   };
@@ -296,6 +297,7 @@ const playedTimeRef = useRef(0);
     setSelectedExercise(exercise);
     setShowExercise(true);
     setShowPopup(true);
+    setUserStatus(null);
   } else {
     console.error("Parent lecture not found for exercise.");
   }

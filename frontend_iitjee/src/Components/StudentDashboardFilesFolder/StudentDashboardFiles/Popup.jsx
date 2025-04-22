@@ -704,7 +704,7 @@ useEffect(() => {
               </div>
               </div>
             ) : lecture ? (
-              <div>
+              <div className={styles.lecture_video_React_Player}>
                 {/* <h2>{lecture.orvl_lecture_name}</h2> */}
                 {lecture.lecture_video_link && (
                   <ReactPlayer
