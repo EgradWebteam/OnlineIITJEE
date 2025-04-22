@@ -15,6 +15,38 @@
   justify-content: center;
   margin-top: 20px;
 }
+.solutionSection {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.solutionButtons {
+  margin-bottom: 1rem;
+}
+
+.solutionButtons button {
+  margin: 0 10px;
+  padding: 8px 16px;
+  border: none;
+  background-color: #e0e0e0;
+  cursor: pointer;
+}
+
+.solutionButtons .activeButton {
+  background-color: #4caf50;
+  color: white;
+}
+
+.solutionImage {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+.solutionVideoIframe {
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
 .status-pallete {
   display: flex;
   flex-wrap: wrap;
@@ -39,11 +71,6 @@
 .status-item.answered {
   background-color: green;
 }
-
-.status-item.unanswered {
-  background-color: red;
-}
-
 .navigation-buttons-for-ques {
   display: flex;
   justify-content: space-between;
@@ -98,24 +125,25 @@
 .toggleTypeButtons {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 0 15px;
   justify-content: center;
+  gap: 1rem;
+  margin: 1rem 2rem;
+  
 }
 .toggleTypeButtons button {
   padding: 10px 15px;
   font-size: 15px;
   font-weight: bold;
-  color: white;
   border: none;
   border-radius: 5px;
-  background-color: rgb(7, 174, 240);
+color: black;
   cursor: pointer;
+  background-color: white;
 }
 .toggleTypeButtons button.active {
-  background-color: #28a745; /* Green when active */
+  background-color: rgb(7, 174, 240);/* Green when active */
   color: white;
-  border-color: #28a745;
+
 }
 .onHoverOFstudent {
   position: absolute;
@@ -203,13 +231,13 @@
   color: #ffffff;
   border-radius: 0 100px 100px 0;
 }
-.StudentDashboardcontentArea {
-  /* flex-grow: 1; */
+/* .StudentDashboardcontentArea {
+  
   padding: 5px;
   height: auto;
   margin: 10px auto;
   width: 90%;
-}
+} */
 .studentDashboardHamburgerMenu {
   display: none;
 }
@@ -236,7 +264,8 @@
 }
 .CloseBtnForPopup  button{
   padding: 4px;
-  font-size: 12px;
+  font-size: 15px;
+  color: red;
 }
 .headerForCloseSndHeading {
   display: flex;
@@ -282,6 +311,8 @@
   display: flex;
   justify-content: space-around;
   margin: 1rem 0;
+  border-bottom: 1px solid whitesmoke;
+ padding: 5px;
 }
 .popup_body {
   display: flex;
@@ -345,9 +376,9 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 10px 0;
+  padding: 1rem;
   justify-content: flex-start; 
-  align-items: center;
+
 }
 /* .status_pallete::-webkit-scrollbar {
   display: none;
@@ -388,12 +419,18 @@
   border-radius: 5px;
   border: 1px solid rgb(212, 209, 209);
 }
-.navigation_buttons_for_ques {
+.navigation_buttons {
   display: flex;
   gap: 2rem;
   margin: 1rem;
   border-top: 1px solid rgb(192, 191, 191);
   padding: 1rem 0;
+}
+.navigation_buttons button{
+  color:white;
+  background-color: #204e31;
+  padding: 10px;
+  border-radius: 10px;
 }
 .options_container label{
   display: flex;
@@ -436,12 +473,9 @@ justify-content: center;
 
 .unanswered{
   background-color: rgb(253, 52, 52);
-  
 }
-
 .answered{
   background-color: rgb(57, 190, 57);
- 
 }
 
 .notVisited {
@@ -467,16 +501,18 @@ justify-content: center;
   .studentDashboardLeftsidebar {
     position: absolute;
     top: 80px;
-    left: 0;
+    left: 33px;
     width: 220px;
     height: 100vh;
-    background-color: #f9f9f9;
+    background-color: rgba(94, 93, 93,);
     z-index: 1000;
     /* transition: transform 0.3s ease-in-out; */
   }
-
+  .headingForLectures{
+    font-size: 15px;
+  }
   .sidebarHidden {
-    transform: translateX(-100%);
+    transform: translateX(-133%);
   }
 
   .sidebarVisible {
@@ -486,15 +522,16 @@ justify-content: center;
   .studentDashboardHamburgerMenu {
     display: block;
     position: absolute;
-    top: 47px;
-    left: -3px;
+    top: 76px;
+    left: -2rem;
     z-index: 1100;
+    background-color: white;
   }
 
-  .StudentDashboardcontentArea {
+  /* .StudentDashboardcontentArea {
     margin-top: 50px;
     padding-left: 10px;
-  }
+  } */
 }
 
 /* student dashboard test  container css */
@@ -504,7 +541,7 @@ justify-content: center;
 
 .goBackInTestContainerDiv {
   text-align: right;
-  margin-bottom: 1rem;
+  margin: 1rem;
 }
 
 .goBackBtn {
@@ -583,6 +620,7 @@ justify-content: center;
   display: flex;
   gap: 1rem;
   flex-direction: column;
+  margin: 1rem;
 }
 
   /* My results css */
@@ -631,8 +669,10 @@ justify-content: center;
   }
   .myResultsSubContainer{
     display: flex;
+ 
     gap: 2rem;
     margin: 1rem;
+    
   }
   /* STUDENT DASHBOARD BOOKMARKS */
   .StudentdashboardBookMarksSubDiv{
@@ -680,6 +720,16 @@ justify-content: center;
     font-weight: 500;
 }
   }
+  @media(max-width:768px){
+    .myResultsSubContainer{
+      display: flex;
+      flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin: 1rem;
+    }
+  }
   @media (max-width:425px) {
     .testContainerSub{
       display: flex;
@@ -714,16 +764,17 @@ justify-content: center;
   padding: 5px 5px;
   font-size: 13px;
   font-weight: bold;
-  color: white;
+  color: black;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin: 1rem;
 }
 .toggleTypeButtons button {
   padding: 5px 6px;
   font-size: 13px;
   font-weight: bold;
-  color: white;
+  color: black;
   border: none;
   border-radius: 5px;
   cursor: pointer;
