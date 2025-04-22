@@ -338,7 +338,7 @@
  
  
  
-import React, { useState, memo,useEffect } from 'react';
+import React, { useState, memo,useEffect ,useRef} from 'react';
 import ReactPlayer from 'react-player';
 import { IoClose } from 'react-icons/io5';
 import { GrPrevious, GrNext } from 'react-icons/gr';
@@ -352,7 +352,8 @@ export const MemoizedGrNext = memo(GrNext);
 const Popup = ({
   lecture,
   topicid,
-
+  playedTimeRef,
+  
   courseCreationId,
   studentId,
   exercise,
@@ -376,6 +377,89 @@ const Popup = ({
  
 
 
+
+const [videoDuration, setVideoDuration] = useState(0);
+const [isPlayerReady, setIsPlayerReady] = useState(false);
+const [isVideoPaused, setIsVideoPaused] = useState(false); 
+const playerRef = useRef(null);
+
+// Track video progress
+const handleProgress = (state) => {
+  playedTimeRef.current = state.playedSeconds;
+  console.log('Current Played Time: ', state.playedSeconds);
+
+  localStorage.setItem(`${lecture.orvl_lecture_name_id}:playedTime`, state.playedSeconds);
+
+  if (videoDuration) {
+    localStorage.setItem(`${lecture.orvl_lecture_name_id}:totalTime`, videoDuration);
+  }
+};
+
+// const handleRightClick = (event) => {
+//   event.preventDefault();
+// };
+const handlePause = () => {
+  const currentTime = playerRef.current?.getCurrentTime(); // Safe access with optional chaining
+  console.log(`Saving time ${currentTime} for video ${lecture.orvl_lecture_name_id}`);
+
+  // Only store duration if it's valid
+  if (videoDuration && videoDuration !== 0) {
+    console.log(`Lecture ID: ${lecture.orvl_lecture_name_id}, Current Time: ${currentTime}`);
+    // localStorage.setItem(`${lecture.orvl_lecture_name_id}`, currentTime);
+    // localStorage.setItem(`${lecture.orvl_lecture_name_id}:totalTime`, videoDuration);  // Save the total video duration when paused
+  } else {
+    console.error("Video duration is not valid");
+  }
+};
+
+const handleReady = () => {
+  console.log('Player is ready');
+
+  if (!playerRef.current) {
+    console.log("Player reference is null or undefined");
+    return;
+  }
+
+  let duration = playerRef.current.getDuration();
+
+  if (duration && duration > 0) {
+    setVideoDuration(duration);
+    setIsPlayerReady(true);
+    console.log('Video Duration: ', duration);
+  } else {
+    console.log('Duration is not available immediately, polling...');
+    const durationInterval = setInterval(() => {
+      const polledDuration = playerRef.current?.getDuration();
+      if (polledDuration && polledDuration > 0) {
+        clearInterval(durationInterval);
+        setVideoDuration(polledDuration);
+        setIsPlayerReady(true);
+        console.log('Video Duration (After Polling): ', polledDuration);
+      }
+    }, 1000);
+  }
+};
+
+
+    
+    // const savedTime = localStorage.getItem(`${lecture.orvl_lecture_name_id}:playedTime`);
+    // if (savedTime) {
+    //   playerRef.current.seekTo(parseFloat(savedTime));  // Seek to saved time if available
+    // }
+
+
+const handlePlay = () => {
+  if (isVideoPaused) {
+    setIsVideoPaused(false);
+  }
+};
+
+useEffect(() => {
+  // This will ensure that the player is ready before performing operations
+  if (playerRef.current && playerRef.current.getDuration() > 0) {
+    setIsPlayerReady(true);
+  }
+}, [playerRef]);
 
   const [selectedOptions, setSelectedOptions] = useState([]);
  // stores question ID of currently viewed solution
@@ -467,7 +551,7 @@ const Popup = ({
       }
     }
   };
- 
+
   const getStatus = (questionId) => {
     if (exerciseStatus && typeof exerciseStatus === 'object') {
       const status = exerciseStatus[questionId];
@@ -621,9 +705,32 @@ const Popup = ({
               </div>
             ) : lecture ? (
               <div>
-                <h2>{lecture.orvl_lecture_name}</h2>
+                {/* <h2>{lecture.orvl_lecture_name}</h2> */}
                 {lecture.lecture_video_link && (
-                  <ReactPlayer url={lecture.lecture_video_link} controls width="100%" />
+                  <ReactPlayer
+                  ref={playerRef} 
+                  url={lecture.lecture_video_link} 
+                  playing={false}
+                  controls={true}
+                  width="100%"
+                  height="100%"
+                  onReady={handleReady}
+                  onProgress={handleProgress}
+                  onPause={handlePause}
+                  onPlay={handlePlay}
+                  seekTo={isPlayerReady ? playedTimeRef.current : 0}
+                  playbackRate={1}
+                  
+                  config={{
+                    vimeo: {
+                      playerOptions: {
+                        controls: true,
+                        autopause: true,
+                        autoplay: false
+                      }
+                    }
+                  }}
+                  />
                 )}
               </div>
             ) : (
