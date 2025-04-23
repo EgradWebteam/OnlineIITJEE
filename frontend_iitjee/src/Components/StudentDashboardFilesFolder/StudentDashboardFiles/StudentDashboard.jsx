@@ -3,6 +3,8 @@ import StudentDashboardHeader from './StudentDashboardHeader.jsx';
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import StudentDashboardLeftSideBar from './StudentDashboardLeftSidebar.jsx';
 import { useLocation, } from 'react-router-dom';
+import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx';
+
 const StudentDashboardBookmarks = lazy(() => import('./StudentDashboardBookmarks.jsx'));
 // import { useStudent } from '../../../ContextFolder/StudentContext.jsx';
 // Lazy loaded components
@@ -77,7 +79,7 @@ export default function StudentDashboard() {
 
      // Until we know the correct section to show
   if (isLoading) {
-    return <div>Loading Dashboard...</div>;
+    return <div><LoadingSpinner/></div>;
   }
   
   return (

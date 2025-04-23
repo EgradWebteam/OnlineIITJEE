@@ -11,6 +11,7 @@ import {
   Label,
   ResponsiveContainer,
 } from "recharts";
+import LoadingSpinner from "../../../ContextFolder/LoadingSpinner.jsx";
 
 const StudentReport = ({ testId, studentId }) => {
   const [data, setData] = useState(null);
@@ -68,7 +69,7 @@ const StudentReport = ({ testId, studentId }) => {
       .join(":");
   };
 
-  if (!data) return <p>Loading...</p>;
+  if (!data) return <p><LoadingSpinner/></p>;
 
   const {
     duration,
