@@ -26,7 +26,7 @@ router.get('/FetchResultTestdata/:studentId', async (req, res) => {
         iit_exams e 
         ON cc.exam_id = e.exam_id
     WHERE 
-        tsd.student_registration_id = ?;`
+        tsd.student_registration_id = ? AND tsd.test_attempt_status = 'completed';`
   ;
 
   try {
@@ -228,16 +228,16 @@ router.get('/StudentReportQuestionPaper/:test_creation_table_id/:studentId', asy
         sol.video_solution_link,
         ur.user_answer,
         bq.question_id As bookMark_Qid
-      FROM iit_db.iit_questions q
-      INNER JOIN iit_db.iit_ots_document d ON q.document_Id = d.document_Id
-      INNER JOIN iit_db.iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
-      INNER JOIN iit_db.iit_subjects s ON d.subject_id = s.subject_id
-      LEFT JOIN iit_db.iit_sections sec ON d.section_id = sec.section_id
-      LEFT JOIN iit_db.iit_options o ON q.question_id = o.question_id
-      LEFT JOIN iit_db.iit_question_type qts ON q.question_type_id = qts.question_type_id
-      LEFT JOIN iit_db.iit_solutions sol ON q.question_id = sol.question_id    
-      LEFT JOIN iit_db.iit_user_responses ur ON q.question_id = ur.question_id AND ur.student_registration_id = ?
-        LEFT JOIN iit_db.iit_bookmark_questions bq ON q.question_id = bq.question_id AND bq.student_registration_id = ?
+      FROM iit_questions q
+      INNER JOIN iit_ots_document d ON q.document_Id = d.document_Id
+      INNER JOIN iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
+      INNER JOIN iit_subjects s ON d.subject_id = s.subject_id
+      LEFT JOIN iit_sections sec ON d.section_id = sec.section_id
+      LEFT JOIN iit_options o ON q.question_id = o.question_id
+      LEFT JOIN iit_question_type qts ON q.question_type_id = qts.question_type_id
+      LEFT JOIN iit_solutions sol ON q.question_id = sol.question_id    
+      LEFT JOIN iit_user_responses ur ON q.question_id = ur.question_id AND ur.student_registration_id = ?
+        LEFT JOIN iit_bookmark_questions bq ON q.question_id = bq.question_id AND bq.student_registration_id = ?
       WHERE d.test_creation_table_id = ?
       ORDER BY s.subject_id, sec.section_id, q.question_id, o.option_index
       `,
@@ -253,6 +253,111 @@ router.get('/StudentReportQuestionPaper/:test_creation_table_id/:studentId', asy
   }
 });
 
+// router.get('/StudentRankSummary/:studentId/:testId', async (req, res) => {
+//   const { studentId, testId } = req.params;
+
+//   if (!studentId || !testId) {
+//     return res.status(400).json({ error: 'Missing studentId or testId' });
+//   }
+
+//   try {
+//     const [rows] = await db.execute(`
+//       SELECT 
+//         rankedData.student_registration_id,
+//         rankedData.test_creation_table_id,
+//         rankedData.test_total_marks,
+//         rankedData.total_marks,
+//         rankedData.rank_position,
+//         tct.duration,
+//         totalAttemptedStudents.total_students AS totalAttemptedStudents,
+//         rankedData.positive_marks,
+//         rankedData.negative_marks,
+//         rankedData.test_total_Questions,
+
+//         (
+//           SELECT time_spent 
+//           FROM iit_student_exam_summary 
+//           WHERE student_registration_id = ? 
+//             AND test_creation_table_id = ?
+//         ) AS TimeLeft,
+
+//         stats.totalCorrect,
+//         stats.totalWrong,
+//         stats.totalQuestions,
+//         stats.sumStatus1 AS sumStatus1,
+//         stats.sumStatus0 AS sumStatus0
+
+//       FROM (
+//         SELECT 
+//           sm.student_registration_id, 
+//           sm.test_creation_table_id, 
+//           tct.total_marks AS test_total_marks, 
+//           tct.total_questions AS test_total_Questions,
+//           SUM(CASE WHEN sm.status = 1 THEN sm.student_marks ELSE -sm.student_marks END) AS total_marks,
+//           DENSE_RANK() OVER (
+//             PARTITION BY sm.test_creation_table_id 
+//             ORDER BY SUM(CASE WHEN sm.status = 1 THEN sm.student_marks ELSE -sm.student_marks END) DESC
+//           ) AS rank_position,
+//           SUM(CASE WHEN sm.status = 1 THEN sm.student_marks ELSE 0 END) AS positive_marks,
+//           SUM(CASE WHEN sm.status != 1 THEN sm.student_marks ELSE 0 END) AS negative_marks
+//         FROM iit_student_marks sm
+//         JOIN iit_test_creation_table tct 
+//           ON sm.test_creation_table_id = tct.test_creation_table_id
+//         WHERE sm.test_creation_table_id = ?
+//         GROUP BY sm.student_registration_id, sm.test_creation_table_id, tct.total_marks, tct.total_questions
+//       ) AS rankedData
+
+//       JOIN iit_test_creation_table tct 
+//         ON rankedData.test_creation_table_id = tct.test_creation_table_id
+
+//       JOIN (
+//         SELECT COUNT(DISTINCT student_registration_id) AS total_students
+//         FROM iit_student_marks 
+//         WHERE test_creation_table_id = ?
+//       ) AS totalAttemptedStudents ON 1 = 1
+
+//       JOIN (
+//         SELECT
+//           sm.student_registration_id,
+//           sm.test_creation_table_id,
+//           COUNT(CASE WHEN sm.status = 1 THEN 1 ELSE NULL END) AS totalCorrect,
+//           COUNT(CASE WHEN sm.status = 0 THEN 1 ELSE NULL END) AS totalWrong,
+//           (
+//             SELECT COUNT(*) 
+//             FROM iit_questions q
+//             WHERE q.test_creation_table_id = sm.test_creation_table_id
+//           ) AS totalQuestions,
+//           SUM(CASE WHEN sm.status = 1 THEN sm.student_marks ELSE 0 END) AS sumStatus1,
+//           SUM(CASE WHEN sm.status = 0 THEN sm.student_marks ELSE 0 END) AS sumStatus0
+//         FROM iit_student_marks sm
+//         WHERE sm.student_registration_id = ?
+//           AND sm.test_creation_table_id = ?
+//         GROUP BY sm.student_registration_id, sm.test_creation_table_id
+//       ) AS stats 
+//         ON rankedData.student_registration_id = stats.student_registration_id
+//         AND rankedData.test_creation_table_id = stats.test_creation_table_id
+
+//       WHERE rankedData.student_registration_id = ?
+//     `, [
+//       studentId, // For TimeLeft (1)
+//       testId,    // For TimeLeft (2)
+//       testId,    // For rankedData (3)
+//       testId,    // For totalAttemptedStudents (4)
+//       studentId, // For stats (5)
+//       testId,    // For stats (6)
+//       studentId  // For WHERE clause (7)
+//     ]);
+
+//     res.json(rows[0] || {});
+//   } catch (error) {
+//     console.error('Error fetching student rank summary:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+
+
+
+
 router.get('/StudentRankSummary/:studentId/:testId', async (req, res) => {
   const { studentId, testId } = req.params;
 
@@ -263,36 +368,36 @@ router.get('/StudentRankSummary/:studentId/:testId', async (req, res) => {
   try {
     const [rows] = await db.execute(`
       SELECT 
-        rankedData.student_registration_id,
-        rankedData.test_creation_table_id,
-        rankedData.test_total_marks,
+        ? AS student_registration_id,
+        tct.test_creation_table_id,
+        tct.total_marks AS test_total_marks,
+        tct.total_questions AS test_total_Questions,
         rankedData.total_marks,
         rankedData.rank_position,
         tct.duration,
         totalAttemptedStudents.total_students AS totalAttemptedStudents,
         rankedData.positive_marks,
         rankedData.negative_marks,
-        rankedData.test_total_Questions,
 
         (
           SELECT time_spent 
           FROM iit_student_exam_summary 
-          WHERE student_registration_id = ? 
+          WHERE student_registration_id = ?
             AND test_creation_table_id = ?
         ) AS TimeLeft,
 
         stats.totalCorrect,
         stats.totalWrong,
         stats.totalQuestions,
-        stats.sumStatus1 AS sumStatus1,
-        stats.sumStatus0 AS sumStatus0
+        stats.sumStatus1,
+        stats.sumStatus0
 
-      FROM (
+      FROM iit_test_creation_table tct
+
+      LEFT JOIN (
         SELECT 
           sm.student_registration_id, 
           sm.test_creation_table_id, 
-          tct.total_marks AS test_total_marks, 
-          tct.total_questions AS test_total_Questions,
           SUM(CASE WHEN sm.status = 1 THEN sm.student_marks ELSE -sm.student_marks END) AS total_marks,
           DENSE_RANK() OVER (
             PARTITION BY sm.test_creation_table_id 
@@ -301,22 +406,13 @@ router.get('/StudentRankSummary/:studentId/:testId', async (req, res) => {
           SUM(CASE WHEN sm.status = 1 THEN sm.student_marks ELSE 0 END) AS positive_marks,
           SUM(CASE WHEN sm.status != 1 THEN sm.student_marks ELSE 0 END) AS negative_marks
         FROM iit_student_marks sm
-        JOIN iit_test_creation_table tct 
-          ON sm.test_creation_table_id = tct.test_creation_table_id
         WHERE sm.test_creation_table_id = ?
-        GROUP BY sm.student_registration_id, sm.test_creation_table_id, tct.total_marks, tct.total_questions
+        GROUP BY sm.student_registration_id, sm.test_creation_table_id
       ) AS rankedData
-
-      JOIN iit_test_creation_table tct 
         ON rankedData.test_creation_table_id = tct.test_creation_table_id
+        AND rankedData.student_registration_id = ?
 
-      JOIN (
-        SELECT COUNT(DISTINCT student_registration_id) AS total_students
-        FROM iit_student_marks 
-        WHERE test_creation_table_id = ?
-      ) AS totalAttemptedStudents ON 1 = 1
-
-      JOIN (
+      LEFT JOIN (
         SELECT
           sm.student_registration_id,
           sm.test_creation_table_id,
@@ -334,18 +430,25 @@ router.get('/StudentRankSummary/:studentId/:testId', async (req, res) => {
           AND sm.test_creation_table_id = ?
         GROUP BY sm.student_registration_id, sm.test_creation_table_id
       ) AS stats 
-        ON rankedData.student_registration_id = stats.student_registration_id
-        AND rankedData.test_creation_table_id = stats.test_creation_table_id
+        ON stats.test_creation_table_id = tct.test_creation_table_id
 
-      WHERE rankedData.student_registration_id = ?
+      LEFT JOIN (
+        SELECT COUNT(DISTINCT student_registration_id) AS total_students
+        FROM iit_student_marks 
+        WHERE test_creation_table_id = ?
+      ) AS totalAttemptedStudents ON 1 = 1
+
+      WHERE tct.test_creation_table_id = ?
     `, [
-      studentId, // For TimeLeft (1)
-      testId,    // For TimeLeft (2)
-      testId,    // For rankedData (3)
-      testId,    // For totalAttemptedStudents (4)
-      studentId, // For stats (5)
-      testId,    // For stats (6)
-      studentId  // For WHERE clause (7)
+      studentId, // 1: SELECT student_registration_id
+      studentId, // 2: Subquery TimeLeft
+      testId,    // 3: Subquery TimeLeft
+      testId,    // 4: rankedData subquery filter
+      studentId, // 5: rankedData JOIN
+      studentId, // 6: stats subquery
+      testId,    // 7: stats subquery
+      testId,    // 8: totalAttemptedStudents
+      testId     // 9: WHERE clause for main query
     ]);
 
     res.json(rows[0] || {});
@@ -354,6 +457,7 @@ router.get('/StudentRankSummary/:studentId/:testId', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 router.get('/TestSubjectWiseStudentMarks/:studentId/:testId', async (req, res) => {
   const { studentId, testId } = req.params;

@@ -98,11 +98,11 @@ const DynamicTable = ({
 
   const handleOpenModal = (row) => {
     setSelectedRow(row);
-    setShowModal(true); // Open the modal
+    setShowModal(true); 
   };
 
   const handleCloseModal = () => {
-    setShowModal(false); // Close the modal
+    setShowModal(false); 
     setSelectedRow(null);
   };
 

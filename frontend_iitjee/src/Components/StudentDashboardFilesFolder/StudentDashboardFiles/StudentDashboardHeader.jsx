@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import headerImage from "../../../assets/EGTLogoExamHeaderCompressed.png";
-import logostudent from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
+import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 
 const StudentDashboardHeader = ({ userData, setActiveSection }) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const [studentProfile, setStudentProfile] = useState(logostudent); // Default logo
-  const navigate = useNavigate(); // Initialize navigate hook for redirection
 
-  const AZURE_STORAGE_BASE_URL = `https://${
-    import.meta.env.VITE_AZURE_STORAGE_ACCOUNT_NAME
-  }.blob.core.windows.net/${import.meta.env.VITE_AZURE_CONTAINER_NAME}`;
-  const SAS_TOKEN = `?${import.meta.env.VITE_AZURE_SAS_TOKEN}`;
+  const navigate = useNavigate(); 
+
+const studentProfile = userData?.uploaded_photo;
 
   // Handle mouse events to show/hide profile menu
   const handleMouseEnter = () => {
@@ -24,35 +21,8 @@ const StudentDashboardHeader = ({ userData, setActiveSection }) => {
     setShowProfileMenu(false);
   };
 
-  useEffect(() => {
-    if (userData?.uploaded_photo) {
-      // Dynamically create the image URL
-      const profileImageUrl = `${AZURE_STORAGE_BASE_URL}/${
-        import.meta.env.VITE_AZURE_DOCUMENT_FOLDER
-      }/${userData.uploaded_photo}${SAS_TOKEN}`;
-      console.log("Generated Profile Image URL:", profileImageUrl); // Log the URL for debugging
-
-      // Check if the URL is valid
-      fetch(profileImageUrl, { method: "HEAD" })
-        .then((response) => {
-          if (response.ok) {
-            setStudentProfile(profileImageUrl); // Set the profile image if it's valid
-          } else {
-            console.error(
-              "Image URL is invalid or not accessible:",
-              profileImageUrl
-            );
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching the image URL:", error);
-        });
-    }
-  }, [userData]);
-
-  // Handle logout functionality
   const handleLogout = async () => {
-    const sessionId = localStorage.getItem("sessionId"); // Retrieve sessionId from localStorage
+    const sessionId = localStorage.getItem("sessionId"); 
 
     if (!sessionId) {
       alert("No session found. Please log in again.");
@@ -65,14 +35,14 @@ const StudentDashboardHeader = ({ userData, setActiveSection }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ sessionId }), // Send sessionId in the request body
+        body: JSON.stringify({ sessionId }), 
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // Clear all items from localStorage
-        localStorage.clear(); // Removes all data stored in localStorage
+       
+        localStorage.clear(); 
 
         // Redirect the user to the login page or home page after logout
         navigate("/LoginPage");
@@ -99,7 +69,18 @@ const StudentDashboardHeader = ({ userData, setActiveSection }) => {
           onMouseLeave={handleMouseLeave}
         >
           <div className={styles.studentLogo}>
-            <img src={studentProfile} alt="studentProfile" />
+  
+          <img
+  src={studentProfile || defaultImage}
+  alt="Student Profile"
+  onError={(e) => {
+    e.target.onerror = null;
+    e.target.src = defaultImage;
+  }}
+/>
+
+
+
           </div>
 
           {showProfileMenu && (

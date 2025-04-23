@@ -126,7 +126,7 @@ export default function StudentDashboard() {
         </div>
         <div className={styles.StudentDashboardRightSideContentHolder}>
           <div className={styles.StudentDashboardcontentArea}>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div> <LoadingSpinner /></div>}>
               {renderStudentDashboardContent()}
             </Suspense>
           </div>

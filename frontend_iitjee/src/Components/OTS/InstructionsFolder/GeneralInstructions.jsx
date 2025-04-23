@@ -5,81 +5,22 @@ import { Intstruction_content } from './InstructionsData.js';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css"
 import OTSHeader from '../OTSHeaderFolder/OTSHeader.jsx';
 import {useStudent} from "../../../ContextFolder/StudentContext.jsx";
-import logostudent from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
+import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx';
+
+import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 const GeneralInstructions = () => {
     const { testId, studentId } = useParams();
     const navigate = useNavigate();
-const [studentProfile, setStudentProfile] = useState(logostudent);
+
     const [realTestId, setRealTestId] = useState('');
     const [realStudentId, setRealStudentId] = useState('');
     const [isDecrypting, setIsDecrypting] = useState(true);
     const { studentData} = useStudent();
-
+  
     const userData = studentData?.userDetails;
 
     const studentName = userData?.candidate_name;
-     const AZURE_STORAGE_BASE_URL = `https://${import.meta.env.VITE_AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/${import.meta.env.VITE_AZURE_CONTAINER_NAME}`;
-      const SAS_TOKEN = `?${import.meta.env.VITE_AZURE_SAS_TOKEN}`;
-        useEffect(() => {
-          if (userData?.uploaded_photo) {
-            // Dynamically create the image URL
-            const profileImageUrl = `${AZURE_STORAGE_BASE_URL}/${import.meta.env.VITE_AZURE_DOCUMENT_FOLDER}/${userData.uploaded_photo}${SAS_TOKEN}`;
-            console.log("Generated Profile Image URL:", profileImageUrl); // Log the URL for debugging
-      
-            // Check if the URL is valid
-            fetch(profileImageUrl, { method: 'HEAD' })
-              .then((response) => {
-                if (response.ok) {
-                  setStudentProfile(profileImageUrl); // Set the profile image if it's valid
-                } else {
-                  console.error("Image URL is invalid or not accessible:", profileImageUrl);
-                }
-              })
-              .catch((error) => {
-                console.error("Error fetching the image URL:", error);
-              });
-          }
-        }, [userData]);
-
-    // useEffect(() => {
-    //     const token = sessionStorage.getItem("navigationToken");
-
-    //     // If token missing (user directly opened via copy-paste), redirect to error
-    //     if (!token) {
-    //         navigate("/Error");
-    //         return;
-    //     }
-
-    //     const decryptParams = async () => {
-    //         try {
-    //             const encryptedParams = [
-    //                 decodeURIComponent(testId),
-    //                 decodeURIComponent(studentId),
-    //             ];
-
-    //             const decryptedValues = await decryptDataBatch(encryptedParams);
-
-    //             if (
-    //                 !decryptedValues ||
-    //                 decryptedValues.length !== 2 ||
-    //                 decryptedValues.some(val => !val || isNaN(parseInt(val)))
-    //             ) {
-    //                 navigate("/Error");
-    //                 return;
-    //             }
-
-    //             setRealTestId(decryptedValues[0]);
-    //             setRealStudentId(decryptedValues[1]);
-    //             setIsDecrypting(false);
-    //         } catch (error) {
-    //             console.error("Error decrypting data:", error);
-    //             navigate("/Error");
-    //         }
-    //     };
-
-    //     decryptParams();
-    // }, [testId, studentId, navigate]);
-
+    const studentProfile = userData?.uploaded_photo;
     useEffect(() => {
         const token = sessionStorage.getItem("navigationToken");
     
@@ -121,24 +62,11 @@ const [studentProfile, setStudentProfile] = useState(logostudent);
     if (isDecrypting) {
         return (
             <div>
-                <h2>loading...</h2>
+                <h2> <LoadingSpinner /></h2>
             </div>
         );
     }
-    // const handleNextClick = async () => {
-    //     //  Store token before navigation
-    //     sessionStorage.setItem("navigationToken", "valid");
-    //     try {
-    //       const encryptedArray = await encryptBatch([realTestId, realStudentId]); // ⬅️ Await the result
-    //       const encryptedTestId = encodeURIComponent(encryptedArray[0]);
-    //       const encryptedStudentId = encodeURIComponent(encryptedArray[1]);
-      
-    //       navigate(`/ExamInstructions/${encryptedTestId}/${encryptedStudentId}`);
-    //     } catch (error) {
-    //       console.error("Encryption failed:", error);
-    //       navigate("/Error");
-    //     }
-    //   };
+    
       
     const handleNextClick = async () => {
         sessionStorage.setItem("navigationToken", "valid");
@@ -272,7 +200,16 @@ const [studentProfile, setStudentProfile] = useState(logostudent);
                 <div className={styles.userImageDivInst}>
                     <div className={styles.userDetailsHolder}>
                         <div className={styles.userImageSubDiv}>
-                        <img src={studentProfile} alt='studentProfile' />
+                        
+                                  <img
+                          src={studentProfile || defaultImage}
+                          alt="Student Profile"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = defaultImage;
+                          }}
+                        />
+                        
                         </div>
                         <p>{studentName}</p>
                     </div>    
