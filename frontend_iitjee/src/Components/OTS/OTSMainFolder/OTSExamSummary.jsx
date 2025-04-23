@@ -8,8 +8,7 @@ const ExamSummaryComponent = ({
   // testData,
   onCancelSubmit,
   realTestId,
-  realStudentId,
-  isAutoSubmitted
+  realStudentId
 }) => {
   const [showSubmittedPopup, setShowSubmittedPopup] = useState(false);
   const {
@@ -292,20 +291,7 @@ console.log("isAutoSubmitted SUMMARY",isAutoSubmitted)
               </tr>
             </tbody>
           </table>
-          {isAutoSubmitted === true ? (
-            <div>
-              <div className={styles.confirmationText}>
-              <h2>Your Time is up!</h2>
-              <h3>Your test is automatically submitted successfully.</h3>
-              </div>
-
-              <div className={styles.buttonGroup}>
-                <button    title="Press okay and view report" className={styles.yesBtn} onClick={handleConfirmSubmit}>
-                Okay
-                </button>
-              </div>
-            </div>
-          ) : (
+       
             <div>
               <div className={styles.confirmationText}>
                 Are you sure you want to submit? No changes will be allowed
@@ -321,7 +307,7 @@ console.log("isAutoSubmitted SUMMARY",isAutoSubmitted)
                 </button>
               </div>
             </div>
-          )}
+        
         </>
       ) : (
         <div className={styles.submissionPopup}>
