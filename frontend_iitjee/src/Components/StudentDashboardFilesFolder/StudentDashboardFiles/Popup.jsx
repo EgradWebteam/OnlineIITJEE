@@ -39,7 +39,22 @@ const Popup = ({
   const [isPlayerReady, setIsPlayerReady] = useState(false);
   const [isVideoPaused, setIsVideoPaused] = useState(false);
   const playerRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [showPalette, setShowPalette] = useState(window.innerWidth >= 768);
   DisableKeysAndMouseInteractions();
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      setShowPalette(!mobile); // Always show if desktop, hide if mobile
+    };
+  
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  
+
   // Track video progress
   const handleProgress = (state) => {
     playedTimeRef.current = state.playedSeconds;
@@ -315,6 +330,11 @@ const Popup = ({
     }
   };
 
+  const togglePalette = () => {
+    setShowPalette(prev => !prev);
+  };
+  
+
   const getStatus = (questionId) => {
     if (exerciseStatus && typeof exerciseStatus === "object") {
       const status = exerciseStatus[questionId];
@@ -369,6 +389,16 @@ const Popup = ({
                         {currentQuestion.exercise_question_sort_id}
                       </h4>
                       <p>Type : {currentQuestion.exercise_question_type}</p>
+                      {isMobile && (
+  <div className={styles.toggleIcon} onClick={togglePalette}>
+    {showPalette ? (
+      <span className={styles.closeIcon}>&#10006;</span>  // ✖ Close icon
+    ) : (
+      <span className={styles.hamburgerIcon}>&#9776;</span>  // ☰ Hamburger
+    )}
+  </div>
+)}
+
                     </div>
 
                     {/* Question Image */}
@@ -533,7 +563,14 @@ const Popup = ({
                   </div>
                 </div>
                 {/* Status Palette */}
-                <div className={styles.exercise_question_Subcontainer}>
+                {showPalette && (
+
+<div
+className={`${styles.exercise_question_Subcontainer} ${
+showPalette ? styles.showPaletteMobile : ""
+}`}
+>
+
                   <div className={styles.status_pallete}>
                     <div className={styles.status_pallete_container}>
                       {exercise.questions.map((question, index) => {
@@ -576,6 +613,7 @@ const Popup = ({
                     </div>
                   </div>
                 </div>
+                )}
               </div>
             ) : lecture ? (
               <div className={styles.lecture_video_React_Player}>
