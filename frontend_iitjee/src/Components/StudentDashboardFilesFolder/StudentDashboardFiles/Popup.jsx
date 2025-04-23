@@ -394,7 +394,90 @@ const handleProgress = (state) => {
     localStorage.setItem(`${lecture.orvl_lecture_name_id}:totalTime`, videoDuration);
   }
 };
+const inputRef = useRef(null);
+const handleNatipChange = (value) => {
+  if (answerDisabled) return;
 
+  const inputElement = inputRef.current;
+  // If BACK SPACE is pressed, remove the character left of the caret
+  if (value === "BACK SPACE") {
+    if (!inputElement) return;
+    const start = inputElement.selectionStart;
+    const end = inputElement.selectionEnd;
+
+    // If there is a text selection, remove the selected text
+    if (start !== end) {
+      const newValue = userAnswer.slice(0, start) + userAnswer.slice(end);
+      setUserAnswer(newValue);
+      setTimeout(() => {
+        inputElement.setSelectionRange(start, start);
+        inputElement.focus();
+      }, 0);
+    } else if (start > 0) {
+      // Remove the character immediately to the left of the caret
+      const newValue = userAnswer.slice(0, start - 1) + userAnswer.slice(start);
+      setUserAnswer(newValue);
+      setTimeout(() => {
+        inputElement.setSelectionRange(start - 1, start - 1);
+        inputElement.focus();
+      }, 0);
+    }
+    return;
+  }
+
+  // For all other inputs, insert the new value at the current caret position
+  const cursorPosition = inputElement ? inputElement.selectionStart : userAnswer.length;
+  let newValue =
+    userAnswer.slice(0, cursorPosition) +
+    value +
+    userAnswer.slice(cursorPosition);
+
+  // Allow only numbers, one leading "-", and a single decimal point
+  if (/^-?[0-9]*\.?[0-9]*$/.test(newValue)) {
+    // Ensure "-" appears only at the beginning
+    if (newValue.includes("-") && newValue.indexOf("-") !== 0) return;
+
+    // Remove unnecessary leading zeros (except "0." cases)
+    if (newValue.startsWith("-0") && newValue.length > 2 && newValue[2] !== ".") {
+      newValue = "-" + newValue.slice(2);
+    } else if (newValue.startsWith("0") && newValue.length > 1 && newValue[1] !== ".") {
+      newValue = newValue.slice(1);
+    }
+
+    // Limit length to 10 characters
+    if (newValue.length <= 10) {
+      setUserAnswer(newValue);
+      setTimeout(() => {
+        if (inputElement) {
+          inputElement.setSelectionRange(cursorPosition + value.length, cursorPosition + value.length);
+          inputElement.focus();
+        }
+      }, 0);
+    }
+  }
+};
+const handleArrowClick = (direction) => {
+  if (!inputRef.current) return;
+  const inputElement = inputRef.current;
+  const cursorPosition = inputElement.selectionStart;
+
+  if (direction === "left" && cursorPosition > 0) {
+    inputElement.setSelectionRange(cursorPosition - 1, cursorPosition - 1);
+  } else if (direction === "right" && cursorPosition < inputElement.value.length) {
+    inputElement.setSelectionRange(cursorPosition + 1, cursorPosition + 1);
+  }
+  inputElement.focus();
+};
+
+// Clears the entire answer and refocuses the input
+const handleClearAll = () => {
+  setUserAnswer("");
+  if (inputRef.current) {
+    inputRef.current.focus();
+    // Optionally reset caret position to 0
+    inputRef.current.setSelectionRange(0, 0);
+  }
+};
 // const handleRightClick = (event) => {
 //   event.preventDefault();
 // };
@@ -493,7 +576,12 @@ useEffect(() => {
  
   const handleSubmitAnswer = async () => {
     let submittedAnswer;
-  
+    if (userAnswer.trim() === '' ){
+      // Check if both userAnswer and selectedOptions are empty{
+      // Show a popup message if the answer is empty
+      alert('Please submit an answer before proceeding.');
+      return;
+    }
     if (currentQuestion.exercise_question_type === 'NATD') {
       submittedAnswer = userAnswer;
     } else if (currentQuestion.exercise_question_type === 'MSQ') {
@@ -561,7 +649,9 @@ useEffect(() => {
     return undefined;
   };
  
- 
+  const answeredCount = Object.values(exerciseStatus || {}).filter(status => status === 'answered').length;
+  const unansweredCount = Object.values(exerciseStatus || {}).filter(status => status === 'unanswered').length;
+  const notVisitedCount = Object.values(exerciseStatus || {}).filter(status => status === 'unvisited').length;
   return (
     <div className={styles.popup_overlay}>
       <div className={styles.popup_content}>
@@ -608,11 +698,50 @@ useEffect(() => {
                         <input
                           type="text"
                           value={userAnswer}
-                          onChange={(e) => setUserAnswer(e.target.value)}
+                          ref={inputRef}
                           disabled={answerDisabled}
                           className={styles.inputnat}
                           placeholder="Enter your answer"
                         />{currentQuestion.exercise_answer_unit}
+                           <div className={styles.calcButtonsContainer}>
+                                                                   <button
+                                                                   className={styles.backslash}
+                                                                  
+          
+          onClick={() => handleNatipChange("BACK SPACE")}
+          disabled={answerDisabled}
+        >
+        BACK SPACE
+        </button>      
+                                                                       
+
+    <div  className={styles.keypad}>
+      {[ "7", "8", "9", "4", "5", "6", "1", "2", "3", "0", ".", "-"]
+        .map((key) => (
+          <button
+            key={key}
+            onClick={() => handleNatipChange(key)}
+            disabled={answerDisabled}
+          >
+            {key}
+          </button>
+        ))}
+    </div>
+
+    <div className={styles.calcLeftRightArrows}>
+      <button 
+      disabled={answerDisabled}
+      onClick={() => handleArrowClick("left")}>←</button>
+      <button 
+      disabled={answerDisabled}
+      onClick={() => handleArrowClick("right")}>→</button>
+    </div>
+
+    <div className={styles.clearAll}>
+      <button onClick={handleClearAll}
+      disabled={answerDisabled}>CLEAR ALL</button>
+    </div>   </div>
+ 
                       </div>
                     )}
  
@@ -708,19 +837,19 @@ useEffect(() => {
  
                     <div className={styles.circleWrapper}>
                       <div className={`${styles.circle} ${styles.unanswered}`}>
-                         1
+                        {unansweredCount}
                        </div>
                        <span>Unanswered</span>
                      </div>
                      <div className={styles.circleWrapper}>
                       <div className={`${styles.circle} ${styles.answered}`}>
-                        2
+                      {answeredCount}
                       </div>
                       <span>Answered</span>
                     </div>
                     <div className={styles.circleWrapper}>
                       <div className={`${styles.circle} ${styles.notVisited}`}>
-                        3
+                      {notVisitedCount}
                       </div>
                       <span>Not Visited</span>
                     </div>
