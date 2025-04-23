@@ -85,7 +85,10 @@ const [topicId,setTopicId] = useState("")
   return (
     <>
 <div className={styles.breadcrumbContainer}>
-
+<span className={styles.breadcrumbLink}>
+    My Courses
+  </span>
+  <span className={styles.breadcrumbSeparator}> &gt; </span>
   <span
     className={styles.breadcrumbLink}
     onClick={() => {

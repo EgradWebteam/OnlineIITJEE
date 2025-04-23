@@ -2,10 +2,9 @@ import React, { lazy, useEffect, useState,Suspense, useCallback } from 'react'
 import StudentDashboardHeader from './StudentDashboardHeader.jsx';
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import StudentDashboardLeftSideBar from './StudentDashboardLeftSidebar.jsx';
-import { useLocation, } from 'react-router-dom';
+import { useLocation,useNavigate  } from 'react-router-dom';
 const StudentDashboardBookmarks = lazy(() => import('./StudentDashboardBookmarks.jsx'));
-// import { useStudent } from '../../../ContextFolder/StudentContext.jsx';
-// Lazy loaded components
+import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js'; 
 const StudentDashboardHome = lazy(() => import("./StudentDashboardHome.jsx"));
 const StudentDashboard_MyCourses = lazy(() => import("./StudentDashboard_MyCourses.jsx"));
 const StudentDashboard_BuyCourses = lazy(() => import("./StudentDashboard_BuyCourses.jsx"));
@@ -17,6 +16,7 @@ export default function StudentDashboard() {
   const studentData = JSON.parse(localStorage.getItem('studentData'));
   const studentName = studentData?.userDetails?.candidate_name;
   const studentId = localStorage.getItem('decryptedId');
+  const navigate = useNavigate();
     useEffect(() => {
       const savedSection = localStorage.getItem("activeSection");
       if (savedSection) {
@@ -31,8 +31,6 @@ export default function StudentDashboard() {
     const location = useLocation();
     useEffect(() => {
       const sectionFromRoute = location.state?.activeSection;
-    
-      // Only use route state if it exists AND hasn't been used before
       if (sectionFromRoute && !sessionStorage.getItem("sectionFromRouteUsed")) {
         setActiveSection(sectionFromRoute);
         localStorage.setItem("activeSection", sectionFromRoute);
@@ -44,14 +42,49 @@ export default function StudentDashboard() {
     
       setIsLoading(false);
     }, [location.state]);
+    useEffect(() => {
+      const logoutTimer = setTimeout(() => {
+        console.log("🔒 Auto logout triggered after 4 hours");
+        handleLogout();
+      }, 4 * 60 * 60 * 1000); 
     
-    // useEffect(() => {
-    //   const savedSection = localStorage.getItem("activeSection");
-    //   setActiveSection(savedSection || "dashboard"); // fallback to dashboard
-    //   setIsLoading(false); // always mark as done loading
-    // }, []);
-  
+      return () => clearTimeout(logoutTimer); 
+    }, []);
+    
+    
+    const handleLogout = async () => {
 
+      const sessionId = localStorage.getItem("sessionId");
+    
+      if (!sessionId) {
+        alert("No session found. Please log in again.");
+        navigate("/LoginPage");
+        return;
+      }
+    
+      try {
+        const response = await fetch(`${BASE_URL}/student/studentLogout`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ sessionId }),
+        });
+    
+        const data = await response.json();
+        if (response.ok) {
+          localStorage.clear();  
+          navigate("/LoginPage");
+        } else {
+          alert(data.message || "Logout failed. Please try again.");
+        }
+      } catch (error) {
+        console.error("Logout error:", error);
+        alert("Something went wrong. Please try again.");
+      }
+    };
+    
+    
     const renderStudentDashboardContent = () => {
       switch (activeSection) {
         case "dashboard":
