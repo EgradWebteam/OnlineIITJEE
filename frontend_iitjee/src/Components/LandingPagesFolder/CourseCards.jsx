@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import styles from "../../Styles/CourseCards.module.css";
 
 const CourseCard = React.memo(
@@ -12,6 +12,18 @@ const CourseCard = React.memo(
     // Show Go to Test only on My Courses page
     const showGoToTestSection = context === "myCourses";
     const testButtonLabel = portalId === 3 ? "Start Lecture" : "Go to Test";
+    useEffect(() => {
+      if (
+        !document.querySelector(
+          "script[src='https://checkout.razorpay.com/v1/checkout.js']"
+        )
+      ) {
+        const script = document.createElement("script");
+        script.src = "https://checkout.razorpay.com/v1/checkout.js";
+        script.async = true;
+        document.body.appendChild(script);
+      }
+    }, []);
     return (
       <div>
         <div className={styles.cardMain}>
