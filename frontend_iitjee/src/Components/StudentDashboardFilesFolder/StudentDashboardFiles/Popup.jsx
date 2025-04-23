@@ -612,7 +612,7 @@ useEffect(() => {
                           disabled={answerDisabled}
                           className={styles.inputnat}
                           placeholder="Enter your answer"
-                        />
+                        />{currentQuestion.exercise_answer_unit}
                       </div>
                     )}
  
@@ -685,6 +685,7 @@ useEffect(() => {
                 {/* Status Palette */}
                 <div className={styles.exercise_question_Subcontainer}>
                 <div className={styles.status_pallete}>
+                <div className={styles.status_pallete_container}>
                     {exercise.questions.map((question, index) => {
                       const status = getStatus(question.exercise_question_id);
                       return (
@@ -701,6 +702,29 @@ useEffect(() => {
                       );
                     })}
                   </div>
+                  </div>
+                  <div className={styles.CircleForAllWrapers}>
+                     <div className={styles.HeadingForLegend}>Legend</div>
+ 
+                    <div className={styles.circleWrapper}>
+                      <div className={`${styles.circle} ${styles.unanswered}`}>
+                         1
+                       </div>
+                       <span>Unanswered</span>
+                     </div>
+                     <div className={styles.circleWrapper}>
+                      <div className={`${styles.circle} ${styles.answered}`}>
+                        2
+                      </div>
+                      <span>Answered</span>
+                    </div>
+                    <div className={styles.circleWrapper}>
+                      <div className={`${styles.circle} ${styles.notVisited}`}>
+                        3
+                      </div>
+                      <span>Not Visited</span>
+                    </div>
+                 </div>
               </div>
               </div>
             ) : lecture ? (

@@ -144,7 +144,15 @@ const playedTimeRef = useRef(0);
     }, [topicid, selectedExercise, studentId, courseCreationId]);
     const useranswervalue = async () => {
       const questionid = selectedExercise?.questions?.[currentQuestionIndex]?.exercise_question_id;
-    
+      let correctAns;
+
+      if (selectedExercise?.questions?.[currentQuestionIndex]?.exercise_question_type === "NATD") {
+        correctAns = selectedExercise.questions[currentQuestionIndex].exercise_answer +
+                     selectedExercise.questions[currentQuestionIndex].exercise_answer_unit;
+      } else {
+        correctAns = selectedExercise.questions[currentQuestionIndex].exercise_answer;
+      }
+      
       if (!questionid) return;
     
       try {
@@ -168,7 +176,7 @@ const playedTimeRef = useRef(0);
           } else if (isCorrect) {
             setFeedback('Correct Answer! ✅');
           } else {
-            setFeedback('Incorrect Answer ❌');
+            setFeedback(`Incorrect Answer ❌,correct is ${correctAns} `);
           }
           if(result){
             setAnswerDisabled(true)
