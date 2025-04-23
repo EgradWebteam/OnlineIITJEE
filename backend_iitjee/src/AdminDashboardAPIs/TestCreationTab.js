@@ -314,16 +314,44 @@ GROUP BY
   }
 });
 
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
+
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const sasToken = process.env.AZURE_SAS_TOKEN;
 const containerName = process.env.AZURE_CONTAINER_NAME;
 const testDocumentFolderName = process.env.AZURE_DOCUMENT_FOLDER;
-
+const BackendBASE_URL = process.env.BASE_URL;
 // Helper to get image URL
+
 const getImageUrl = (documentName, folder, fileName) => {
   if (!fileName || !documentName) return null;
-  return `https://${accountName}.blob.core.windows.net/${containerName}/${testDocumentFolderName}/${documentName}/${folder}/${fileName}?${sasToken}`;
+  return `${BackendBASE_URL}/DocumentUpload/QOSImages/${documentName}/${folder}/${fileName}`;
 };
+
+// ✅ Route to serve the actual course card image securely (proxy)
+router.get("/QOSImages/:documentName/:folder/:fileName", async (req, res) => {
+  const { documentName, folder, fileName } = req.params;
+
+  if (!fileName) return res.status(400).send("File name is required");
+
+  const imageUrl = `https://${accountName}.blob.core.windows.net/${containerName}/${testDocumentFolderName}/${documentName}/${folder}/${fileName}?${sasToken}`;
+
+  try {
+    const response = await fetch(imageUrl);
+    if (!response.ok) {
+      return res
+        .status(response.status)
+        .send("Failed to fetch image from Azure");
+    }
+
+    res.setHeader("Content-Type", response.headers.get("Content-Type"));
+    response.body.pipe(res); // Stream the image directly
+  } catch (error) {
+    console.error("Error fetching image from Azure Blob:", error);
+    res.status(500).send("Error fetching image");
+  }
+});
 
 // Transform SQL flat rows into structured question paper format
 const transformTestData = (rows) => {
