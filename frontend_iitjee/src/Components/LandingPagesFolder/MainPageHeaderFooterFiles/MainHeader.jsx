@@ -2,7 +2,7 @@ import React from "react";
 import Styles from "../../../Styles/LandingPageCSS/MainHeader.module.css";
 import { IoMdHome } from "react-icons/io";
 import { IoCall } from "react-icons/io5";
-import logoImg from "../../../assets/EGTLogoExamHeaderCompressed.jpg";
+import logoImg from "../../../assets/EGTLogoExamHeaderCompressed.png";
 import { Link } from "react-router-dom";
 
 export default function                 

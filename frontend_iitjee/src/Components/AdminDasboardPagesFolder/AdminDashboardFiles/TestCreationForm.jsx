@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { RxCross2 } from "react-icons/rx";
 import styles from "../../../Styles/AdminDashboardCSS/TestCreation.module.css";
-import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
+import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import axios from "axios";
 
-const TestCreationForm = ({ setShowAddTestForm, testCreationFormData, editData, onTestSaved }) => {
+const TestCreationForm = ({
+  setShowAddTestForm,
+  testCreationFormData,
+  editData,
+  onTestSaved,
+}) => {
   const isEditMode = !!editData;
 
   const [selectedCourse, setSelectedCourse] = useState("");
@@ -54,7 +59,9 @@ const TestCreationForm = ({ setShowAddTestForm, testCreationFormData, editData, 
         // Fetch & populate subjects for the selected course
         if (editData.course_creation_id) {
           try {
-            const response = await axios.get(`${BASE_URL}/TestCreation/CourseSubjects/${editData.course_creation_id}`);
+            const response = await axios.get(
+              `${BASE_URL}/TestCreation/CourseSubjects/${editData.course_creation_id}`
+            );
             setSubjects(response.data.subjects || []);
           } catch (err) {
             console.error("Error fetching subjects:", err);
@@ -74,7 +81,9 @@ const TestCreationForm = ({ setShowAddTestForm, testCreationFormData, editData, 
           setSubjectSections(mappedSections);
         } else {
           setIncludeSection(false);
-          setSubjectSections([{ selectedSubject: "", sectionName: "", numOfQuestions: "" }]);
+          setSubjectSections([
+            { selectedSubject: "", sectionName: "", numOfQuestions: "" },
+          ]);
         }
       } else {
         // Reset form in Add mode
@@ -93,15 +102,15 @@ const TestCreationForm = ({ setShowAddTestForm, testCreationFormData, editData, 
         });
         setSelectedCourse("");
         setIncludeSection(false);
-        setSubjectSections([{ selectedSubject: "", sectionName: "", numOfQuestions: "" }]);
+        setSubjectSections([
+          { selectedSubject: "", sectionName: "", numOfQuestions: "" },
+        ]);
         setSubjects([]);
       }
     };
 
     loadEditData();
   }, [isEditMode, editData]);
-
-
 
   const handleFormFieldChange = (e) => {
     const { name, value } = e.target;
@@ -133,7 +142,10 @@ const TestCreationForm = ({ setShowAddTestForm, testCreationFormData, editData, 
   };
 
   const addSubjectSection = () => {
-    setSubjectSections([...subjectSections, { selectedSubject: "", sectionName: "", numOfQuestions: "" }]);
+    setSubjectSections([
+      ...subjectSections,
+      { selectedSubject: "", sectionName: "", numOfQuestions: "" },
+    ]);
   };
 
   const removeSubjectSection = () => {
@@ -150,16 +162,20 @@ const TestCreationForm = ({ setShowAddTestForm, testCreationFormData, editData, 
       selectedCourse,
       sections: includeSection
         ? subjectSections.map((section) => ({
-          subjectId: section.selectedSubject,
-          sectionName: section.sectionName,
-          numOfQuestions: section.numOfQuestions,
-        }))
+            subjectId: section.selectedSubject,
+            sectionName: section.sectionName,
+            numOfQuestions: section.numOfQuestions,
+          }))
         : [],
     };
 
     try {
       const response = await fetch(
-        `${BASE_URL}/TestCreation/${isEditMode ? `UpdateTest/${editData.test_creation_table_id}` : "CreateTest"}`,
+        `${BASE_URL}/TestCreation/${
+          isEditMode
+            ? `UpdateTest/${editData.test_creation_table_id}`
+            : "CreateTest"
+        }`,
         {
           method: isEditMode ? "PUT" : "POST",
           headers: {
@@ -169,13 +185,11 @@ const TestCreationForm = ({ setShowAddTestForm, testCreationFormData, editData, 
         }
       );
 
-
       if (response.ok) {
         alert(`Test ${isEditMode ? "updated" : "created"} successfully!`);
         setShowAddTestForm(false);
-        onTestSaved() // Close the form
-      }
-      else {
+        onTestSaved(); // Close the form
+      } else {
         const errorData = await response.json();
         alert(`Error: ${errorData.message}`);
       }
@@ -188,7 +202,6 @@ const TestCreationForm = ({ setShowAddTestForm, testCreationFormData, editData, 
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.testCreationFormContainer}>
-
         <form className={styles.testCreationForm} onSubmit={handleFormSubmit}>
           <div>
             <div className={styles.formHeader}>
@@ -205,15 +218,31 @@ const TestCreationForm = ({ setShowAddTestForm, testCreationFormData, editData, 
             <div className={styles.gridForm}>
               <div className={styles.formGroup}>
                 <label>Test Name *</label>
-                <input type="text" name="testName" className={styles.testFeilds} value={formFields.testName} onChange={handleFormFieldChange} required />
+                <input
+                  type="text"
+                  name="testName"
+                  className={styles.testFeilds}
+                  value={formFields.testName}
+                  onChange={handleFormFieldChange}
+                  required
+                />
               </div>
 
               <div className={styles.formGroup}>
                 <label>Select Course *</label>
-                <select className={styles.testFeilds} name="selectedCourse" value={selectedCourse} onChange={handleCourseChange} required>
+                <select
+                  className={styles.testFeilds}
+                  name="selectedCourse"
+                  value={selectedCourse}
+                  onChange={handleCourseChange}
+                  required
+                >
                   <option value="">Select a course</option>
                   {testCreationFormData?.courses?.map((course) => (
-                    <option key={course.course_creation_id} value={course.course_creation_id}>
+                    <option
+                      key={course.course_creation_id}
+                      value={course.course_creation_id}
+                    >
                       {course.course_name}
                     </option>
                   ))}
@@ -222,10 +251,19 @@ const TestCreationForm = ({ setShowAddTestForm, testCreationFormData, editData, 
 
               <div className={styles.formGroup}>
                 <label>Type of Test *</label>
-                <select className={styles.testFeilds} name="selectedTypeOfTest" value={formFields.selectedTypeOfTest} onChange={handleFormFieldChange} required>
+                <select
+                  className={styles.testFeilds}
+                  name="selectedTypeOfTest"
+                  value={formFields.selectedTypeOfTest}
+                  onChange={handleFormFieldChange}
+                  required
+                >
                   <option value="">Select a test type</option>
                   {testCreationFormData?.testTypes?.map((type) => (
-                    <option key={type.type_of_test_id} value={type.type_of_test_id}>
+                    <option
+                      key={type.type_of_test_id}
+                      value={type.type_of_test_id}
+                    >
                       {type.type_of_test_name}
                     </option>
                   ))}
@@ -234,10 +272,19 @@ const TestCreationForm = ({ setShowAddTestForm, testCreationFormData, editData, 
 
               <div className={styles.formGroup}>
                 <label>Select instructions *</label>
-                <select className={styles.testFeilds} name="selectedInstruction" value={formFields.selectedInstruction} onChange={handleFormFieldChange} required>
+                <select
+                  className={styles.testFeilds}
+                  name="selectedInstruction"
+                  value={formFields.selectedInstruction}
+                  onChange={handleFormFieldChange}
+                  required
+                >
                   <option value="">Select instructions</option>
                   {testCreationFormData?.instructions?.map((inst) => (
-                    <option key={inst.instruction_id} value={inst.instruction_id}>
+                    <option
+                      key={inst.instruction_id}
+                      value={inst.instruction_id}
+                    >
                       {inst.instruction_heading}
                     </option>
                   ))}
@@ -246,30 +293,67 @@ const TestCreationForm = ({ setShowAddTestForm, testCreationFormData, editData, 
 
               <div className={styles.formGroup}>
                 <label>Start Date *</label>
-                <input type="date" name="startDate" className={styles.testFeilds} value={formFields.startDate} onChange={handleFormFieldChange} required />
+                <input
+                  type="date"
+                  name="startDate"
+                  className={styles.testFeilds}
+                  value={formFields.startDate}
+                  onChange={handleFormFieldChange}
+                  required
+                />
               </div>
 
               <div className={styles.formGroup}>
                 <label>End Date *</label>
-                <input className={styles.testFeilds} type="date" name="endDate" value={formFields.endDate} onChange={handleFormFieldChange} required />
+                <input
+                  className={styles.testFeilds}
+                  type="date"
+                  name="endDate"
+                  value={formFields.endDate}
+                  onChange={handleFormFieldChange}
+                  required
+                />
               </div>
 
               <div className={styles.formGroup}>
                 <label>Start Time *</label>
-                <input type="time" name="startTime" className={styles.testFeilds} value={formFields.startTime} onChange={handleFormFieldChange} required />
+                <input
+                  type="time"
+                  name="startTime"
+                  className={styles.testFeilds}
+                  value={formFields.startTime}
+                  onChange={handleFormFieldChange}
+                  required
+                />
               </div>
 
               <div className={styles.formGroup}>
                 <label>End Time *</label>
-                <input type="time" name="endTime" className={styles.testFeilds} value={formFields.endTime} onChange={handleFormFieldChange} required />
+                <input
+                  type="time"
+                  name="endTime"
+                  className={styles.testFeilds}
+                  value={formFields.endTime}
+                  onChange={handleFormFieldChange}
+                  required
+                />
               </div>
 
               <div className={styles.formGroup}>
                 <label>Option Pattern *</label>
-                <select className={styles.testFeilds} name="selectedOptionPattern" value={formFields.selectedOptionPattern} onChange={handleFormFieldChange} required>
+                <select
+                  className={styles.testFeilds}
+                  name="selectedOptionPattern"
+                  value={formFields.selectedOptionPattern}
+                  onChange={handleFormFieldChange}
+                  required
+                >
                   <option value="">Select an option pattern</option>
                   {testCreationFormData?.optionPatterns?.map((pattern) => (
-                    <option key={pattern.options_pattern_id} value={pattern.options_pattern_id}>
+                    <option
+                      key={pattern.options_pattern_id}
+                      value={pattern.options_pattern_id}
+                    >
                       {pattern.options_pattern_name}
                     </option>
                   ))}
@@ -278,66 +362,122 @@ const TestCreationForm = ({ setShowAddTestForm, testCreationFormData, editData, 
 
               <div className={styles.formGroup}>
                 <label>Duration (minutes) *</label>
-                <input className={styles.testFeilds} type="number" name="duration" value={formFields.duration} onChange={handleFormFieldChange} required />
+                <input
+                  className={styles.testFeilds}
+                  type="number"
+                  name="duration"
+                  value={formFields.duration}
+                  onChange={handleFormFieldChange}
+                  required
+                />
               </div>
 
               <div className={styles.formGroup}>
                 <label>Total Questions *</label>
-                <input className={styles.testFeilds} type="number" name="totalQuestions" value={formFields.totalQuestions} onChange={handleFormFieldChange} required />
+                <input
+                  className={styles.testFeilds}
+                  type="number"
+                  name="totalQuestions"
+                  value={formFields.totalQuestions}
+                  onChange={handleFormFieldChange}
+                  required
+                />
               </div>
 
               <div className={styles.formGroup}>
                 <label>Total Marks *</label>
-                <input className={styles.testFeilds} type="number" name="totalMarks" value={formFields.totalMarks} onChange={handleFormFieldChange} required />
+                <input
+                  className={styles.testFeilds}
+                  type="number"
+                  name="totalMarks"
+                  value={formFields.totalMarks}
+                  onChange={handleFormFieldChange}
+                  required
+                />
               </div>
 
               <div>
                 <label>
-                  <input className={styles.testFeilds} type="checkbox" checked={includeSection} onChange={handleCheckboxChange} />
+                  <input
+                    className={styles.testFeilds}
+                    type="checkbox"
+                    checked={includeSection}
+                    onChange={handleCheckboxChange}
+                  />
                   Include section(s) in the test
                 </label>
 
-                {includeSection && subjectSections.map((section, index) => (
-                  <div key={index} style={{ borderBottom: "1px solid #ccc", marginBottom: "10px", display: "grid" }}>
-                    <label>Subject</label>
-                    <select
-                      className={styles.testFeilds}
-                      value={section.selectedSubject}
-                      onChange={(e) => handleSubjectSectionChange(index, "selectedSubject", e.target.value)}
-                      required
+                {includeSection &&
+                  subjectSections.map((section, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        borderBottom: "1px solid #ccc",
+                        marginBottom: "10px",
+                        display: "grid",
+                      }}
                     >
-                      <option value="">Select a subject</option>
-                      {subjects.map((subj) => (
-                        <option key={subj.subject_id} value={subj.subject_id}>
-                          {subj.subject_name}
-                        </option>
-                      ))}
-                    </select>
+                      <label>Subject</label>
+                      <select
+                        className={styles.testFeilds}
+                        value={section.selectedSubject}
+                        onChange={(e) =>
+                          handleSubjectSectionChange(
+                            index,
+                            "selectedSubject",
+                            e.target.value
+                          )
+                        }
+                        required
+                      >
+                        <option value="">Select a subject</option>
+                        {subjects.map((subj) => (
+                          <option key={subj.subject_id} value={subj.subject_id}>
+                            {subj.subject_name}
+                          </option>
+                        ))}
+                      </select>
 
-                    <label>Section Name</label>
-                    <input
-                      type="text"
-                      className={styles.testFeilds}
-                      value={section.sectionName}
-                      onChange={(e) => handleSubjectSectionChange(index, "sectionName", e.target.value)}
-                      required
-                    />
+                      <label>Section Name</label>
+                      <input
+                        type="text"
+                        className={styles.testFeilds}
+                        value={section.sectionName}
+                        onChange={(e) =>
+                          handleSubjectSectionChange(
+                            index,
+                            "sectionName",
+                            e.target.value
+                          )
+                        }
+                        required
+                      />
 
-                    <label>No. of Questions</label>
-                    <input
-                      className={styles.testFeilds}
-                      type="number"
-                      value={section.numOfQuestions}
-                      onChange={(e) => handleSubjectSectionChange(index, "numOfQuestions", e.target.value)}
-                      required
-                    />
-                  </div>
-                ))}
+                      <label>No. of Questions</label>
+                      <input
+                        className={styles.testFeilds}
+                        type="number"
+                        value={section.numOfQuestions}
+                        onChange={(e) =>
+                          handleSubjectSectionChange(
+                            index,
+                            "numOfQuestions",
+                            e.target.value
+                          )
+                        }
+                        required
+                      />
+                    </div>
+                  ))}
 
                 {includeSection && (
                   <div>
-                    <button type="button" onClick={addSubjectSection}>+ Add Section</button>
-                    <button type="button" onClick={removeSubjectSection}>- Remove Section</button>
+                    <button type="button" onClick={addSubjectSection}>
+                      + Add Section
+                    </button>
+                    <button type="button" onClick={removeSubjectSection}>
+                      - Remove Section
+                    </button>
                   </div>
                 )}
               </div>
@@ -347,11 +487,8 @@ const TestCreationForm = ({ setShowAddTestForm, testCreationFormData, editData, 
                 {isEditMode ? "Update Test" : "Create Test"}
               </button>
             </div>
-
           </div>
-
         </form>
-
       </div>
     </div>
   );

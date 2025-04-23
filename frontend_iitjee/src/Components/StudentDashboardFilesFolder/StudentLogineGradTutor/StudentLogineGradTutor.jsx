@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate,Link } from 'react-router-dom';
 import styles from "../../../Styles/StudentDashboardCSS/Student.module.css"; 
 import stdLogo from '../../../assets/logoCap.jpeg';

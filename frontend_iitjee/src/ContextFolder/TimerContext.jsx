@@ -42,6 +42,7 @@ export const TimerProvider = ({ testData, children }) => {
         timeLeft,
         timeSpent,
         formattedTime: timeLeft !== null ? formatTime(timeLeft) : "Loading...",
+      
       }}
     >
       {children}

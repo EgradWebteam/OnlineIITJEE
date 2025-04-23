@@ -5,11 +5,12 @@ import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import {useStudent} from "../../../ContextFolder/StudentContext.jsx";
 import OTSHeader from '../OTSHeaderFolder/OTSHeader.jsx';
-
+import logostudent from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
+import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx';
 const ExamInstructions = () => {
   const { testId, studentId } = useParams();
   const navigate = useNavigate();
-
+  const [studentProfile, setStudentProfile] = useState(logostudent);
   const [realTestId, setRealTestId] = useState('');
   const [realStudentId, setRealStudentId] = useState('');
   const [instructionsData, setInstructionsData] = useState(null);
@@ -18,7 +19,6 @@ const ExamInstructions = () => {
   const { studentData} = useStudent();
 
   const userData = studentData?.userDetails;
-  const studentProfile = userData?.uploaded_photo;
   const studentName = userData?.candidate_name;
   // useEffect(() => {
   //   const token = sessionStorage.getItem("navigationToken");
@@ -60,7 +60,28 @@ const ExamInstructions = () => {
 
   //   decryptAndFetch();
   // }, [testId, studentId, navigate]);
-
+  const AZURE_STORAGE_BASE_URL = `https://${import.meta.env.VITE_AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/${import.meta.env.VITE_AZURE_CONTAINER_NAME}`;
+  const SAS_TOKEN = `?${import.meta.env.VITE_AZURE_SAS_TOKEN}`;
+    useEffect(() => {
+      if (userData?.uploaded_photo) {
+        // Dynamically create the image URL
+        const profileImageUrl = `${AZURE_STORAGE_BASE_URL}/${import.meta.env.VITE_AZURE_DOCUMENT_FOLDER}/${userData.uploaded_photo}${SAS_TOKEN}`;
+        console.log("Generated Profile Image URL:", profileImageUrl); // Log the URL for debugging
+  
+        // Check if the URL is valid
+        fetch(profileImageUrl, { method: 'HEAD' })
+          .then((response) => {
+            if (response.ok) {
+              setStudentProfile(profileImageUrl); // Set the profile image if it's valid
+            } else {
+              console.error("Image URL is invalid or not accessible:", profileImageUrl);
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching the image URL:", error);
+          });
+      }
+    }, [userData]);
   useEffect(() => {
     const token = sessionStorage.getItem("navigationToken");
     if (!token) {
@@ -103,7 +124,7 @@ const ExamInstructions = () => {
   }, [testId, studentId, navigate]);
 
   if (isLoading) {
-    return <div className={styles.loadingText}>Loading Exam Instructions...</div>;
+    return <div className={styles.loadingText}><LoadingSpinner/></div>;
   }
 
 

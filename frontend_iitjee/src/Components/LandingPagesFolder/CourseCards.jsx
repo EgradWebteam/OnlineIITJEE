@@ -2,11 +2,12 @@ import React from "react";
 import styles from "../../Styles/CourseCards.module.css";
 
 const CourseCard = React.memo(
-  ({ title, cardImage, price, context, onBuy, onGoToTest,portalId,type }) => {
- 
+  ({ title, cardImage, price, context, onBuy, onGoToTest, portalId, type }) => {
     // Show Buy Now if on OTS/ORVL landing or Buy Courses page
     const showBuySection =
-      context === "buyCourses" || context === "OTSHomePage" || context === "ORVLHomePage";
+      context === "buyCourses" ||
+      context === "OTSHomePage" ||
+      context === "ORVLHomePage";
 
     // Show Go to Test only on My Courses page
     const showGoToTestSection = context === "myCourses";
@@ -27,15 +28,17 @@ const CourseCard = React.memo(
                 <p>₹{price}/-</p>
               </div>
               <div className={styles.buyNowContainer}>
-                <button className={`${styles.buyButton} ${styles.cardBtnColor}`} onClick={onBuy}>
+                <button
+                  className={`${styles.buyButton} ${styles.cardBtnColor}`}
+                  onClick={onBuy}
+                >
                   Buy Now
                 </button>
               </div>
             </div>
           ) : showGoToTestSection ? (
             <div className={styles.cardBottomGototest}>
-
-<button className={styles.testButton} onClick={onGoToTest}>
+              <button className={styles.testButton} onClick={onGoToTest}>
                 {testButtonLabel} <span>&raquo;</span>
               </button>
             </div>

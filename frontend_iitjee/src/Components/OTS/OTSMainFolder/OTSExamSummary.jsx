@@ -1,14 +1,14 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import { useQuestionStatus } from "../../../ContextFolder/CountsContext.jsx";
-import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
+import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 
 const ExamSummaryComponent = ({
   // userAnswers,
   // testData,
   onCancelSubmit,
   realTestId,
-  realStudentId,
+  realStudentId
 }) => {
   const [showSubmittedPopup, setShowSubmittedPopup] = useState(false);
   const {
@@ -47,12 +47,10 @@ const ExamSummaryComponent = ({
   //   }
   // }, [realTestId]);
 
-
-
   // const handleConfirmSubmit = async () => {
   //   try {
   //     setShowSubmittedPopup(true);
-  
+
   //     const postData = {
   //       studentId: realStudentId,
   //       courseCreationId: courseCreationId,
@@ -60,9 +58,9 @@ const ExamSummaryComponent = ({
   //       test_status: "Completed",
   //       connection_status: "Disconnected",
   //     };
-  
+
   //     console.log("Post data for updating status:", postData);
-  
+
   //     const updateResponse = await fetch(
   //       `${BASE_URL}/OTSExamSummary/UpdateTestAttemptStatus`,
   //       {
@@ -71,28 +69,28 @@ const ExamSummaryComponent = ({
   //         body: JSON.stringify(postData),
   //       }
   //     );
-  
+
   //     if (!updateResponse.ok) {
   //       throw new Error(`Status update failed: ${updateResponse.statusText}`);
   //     }
-  
+
   //     const updateResult = await updateResponse.json();
   //     console.log("Update result:", updateResult);
-  
+
   //     if (updateResult.message && updateResult.message.includes("No records found")) {
   //       alert("Alert: Your test attempt status could not be updated in the database.");
   //       return;
   //     }
-  
+
   //     console.log("Test status updated successfully");
-  
+
   //     // Fetching exam summary and student marks
   //     console.log("Fetching data from API...");
   //     const apiEndpoints = [
   //       `${BASE_URL}/OTSExamSummary/FetchExamSummaryCounts/${realTestId}/${realStudentId}`,
   //       `${BASE_URL}/OTSExamSummary/FetchStudentMarks/${realTestId}/${realStudentId}`,
   //     ];
-  
+
   //     const responses = await Promise.allSettled(
   //       apiEndpoints.map((endpoint) =>
   //         fetch(endpoint).then(async (response) => {
@@ -102,25 +100,25 @@ const ExamSummaryComponent = ({
   //         })
   //       )
   //     );
-  
+
   //     const [examSummary, studentMarks] = responses;
-  
+
   //     // Detailed logging for better debugging
   //     console.log("Exam Summary Status:", examSummary.status);
   //     console.log("Student Marks Status:", studentMarks.status);
-  
+
   //     if (examSummary.status === "rejected") {
   //       console.error("Exam Summary Error:", examSummary.reason);
   //       alert("Error: Failed to fetch exam summary. Please try again.");
   //       return;
   //     }
-  
+
   //     if (studentMarks.status === "rejected") {
   //       console.error("Student Marks Error:", studentMarks.reason);
   //       alert("Error: Failed to fetch student marks. Please try again.");
   //       return;
   //     }
-  
+
   //     console.log("Exam Summary:", examSummary.value);
   //     console.log("Student Marks:", studentMarks.value);
   //   } catch (error) {
@@ -129,14 +127,13 @@ const ExamSummaryComponent = ({
   //   }
   // };
 
-  
   const [courseCreationId, setCourseCreationId] = useState([]);
 
   useEffect(() => {
     const fetchCourseId = async () => {
       try {
         const response = await fetch(
-       `   ${BASE_URL}/OTSExamSummary/OTSTestData/${realTestId}`
+          `   ${BASE_URL}/OTSExamSummary/OTSTestData/${realTestId}`
         );
 
         if (!response.ok) {
@@ -144,12 +141,12 @@ const ExamSummaryComponent = ({
         }
 
         const data = await response.json();
-console.log("DATAAAAAAAA",data)
-if (response.ok) {
-  setCourseCreationId(data.course_creation_id); // Only storing the course_creation_id
-} else {
-  console.error("Failed to fetch:", data.message);
-}
+        console.log("DATAAAAAAAA", data);
+        if (response.ok) {
+          setCourseCreationId(data.course_creation_id); // Only storing the course_creation_id
+        } else {
+          console.error("Failed to fetch:", data.message);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -160,10 +157,15 @@ if (response.ok) {
     }
   }, [realTestId]);
 
-console.log("courseCreationId",courseCreationId)
+console.log("isAutoSubmitted SUMMARY",isAutoSubmitted)
 
   const handleConfirmSubmit = async () => {
-    console.log("realStudentId,courseCreationId,realTestId,",realStudentId,courseCreationId,realTestId)
+    console.log(
+      "realStudentId,courseCreationId,realTestId,",
+      realStudentId,
+      courseCreationId,
+      realTestId
+    );
     try {
       setShowSubmittedPopup(true);
 
@@ -177,36 +179,46 @@ console.log("courseCreationId",courseCreationId)
 
       console.log("Post data for updating status:", postData);
 
-      const updateResponse = await fetch(`${BASE_URL}/OTSExamSummary/UpdateTestAttemptStatus`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(postData),
-      });
+      const updateResponse = await fetch(
+        `${BASE_URL}/OTSExamSummary/UpdateTestAttemptStatus`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(postData),
+        }
+      );
 
       if (!updateResponse.ok) {
         const errorMessage = await updateResponse.text();
         console.error("Error details:", errorMessage);
-        throw new Error('Status update failed: ' + errorMessage);
-
+        throw new Error("Status update failed: " + errorMessage);
       }
 
       const updateResult = await updateResponse.json();
       console.log("Update result:", updateResult);
 
       if (updateResult.message?.includes("No matching")) {
-        alert("Alert: Your test attempt status could not be updated in the database.");
+        alert(
+          "Alert: Your test attempt status could not be updated in the database."
+        );
         return;
       }
 
       console.log("Test status updated successfully");
 
       const [summaryRes, marksRes] = await Promise.allSettled([
-        fetch(`${BASE_URL}/OTSExamSummary/FetchExamSummaryCounts/${realTestId}/${realStudentId}`),
-        fetch(`${BASE_URL}/OTSExamSummary/FetchStudentMarks/${realTestId}/${realStudentId}`),
+        fetch(
+          `${BASE_URL}/OTSExamSummary/FetchExamSummaryCounts/${realTestId}/${realStudentId}`
+        ),
+        fetch(
+          `${BASE_URL}/OTSExamSummary/FetchStudentMarks/${realTestId}/${realStudentId}`
+        ),
       ]);
 
       const examSummary =
-        summaryRes.status === "fulfilled" ? await summaryRes.value.json() : null;
+        summaryRes.status === "fulfilled"
+          ? await summaryRes.value.json()
+          : null;
       const studentMarks =
         marksRes.status === "fulfilled" ? await marksRes.value.json() : null;
 
@@ -279,20 +291,23 @@ console.log("courseCreationId",courseCreationId)
               </tr>
             </tbody>
           </table>
+       
+            <div>
+              <div className={styles.confirmationText}>
+                Are you sure you want to submit? No changes will be allowed
+                after submission.
+              </div>
 
-          <div className={styles.confirmationText}>
-            Are you sure you want to submit? No changes will be allowed after
-            submission.
-          </div>
-
-          <div className={styles.buttonGroup}>
-            <button className={styles.yesBtn} onClick={handleConfirmSubmit}>
-              Yes
-            </button>
-            <button className={styles.noBtn} onClick={onCancelSubmit}>
-              No
-            </button>
-          </div>
+              <div className={styles.buttonGroup}>
+                <button className={styles.yesBtn} onClick={handleConfirmSubmit}>
+                  Yes
+                </button>
+                <button className={styles.noBtn} onClick={onCancelSubmit}>
+                  No
+                </button>
+              </div>
+            </div>
+        
         </>
       ) : (
         <div className={styles.submissionPopup}>

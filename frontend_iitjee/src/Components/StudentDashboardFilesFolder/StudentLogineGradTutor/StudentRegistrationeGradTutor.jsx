@@ -274,6 +274,7 @@ const StudentRegistrationeGradTutor = () => {
       ...prevData,
       uploadedPhoto: null,
     }));
+    navigate("/LoginPage");
   };
 
   // const handleSubmit = async (e) => {
@@ -507,7 +508,31 @@ const StudentRegistrationeGradTutor = () => {
   //   console.log("Form submitted successfully!");
   // };
 
+  const handleEmailBlur = async (event) => {
+    const emailId = event.target.value;  // Getting the value of the email field
 
+    if (emailId) {
+      try {
+        // API request to check if email exists
+        const response = await fetch(`${BASE_URL}/student/checkEmailExists`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ emailId }),
+        });
+
+        const result = await response.json();
+
+        if (result.message === "Your email already exists. Please use a different email.") {
+          setPopupMessage(result.message); // Set the popup message
+          setShowPopup(true); // Show the popup
+        } else {
+          setShowPopup(false); // Hide the popup if email doesn't exist
+        }
+      } catch (error) {
+        console.error('Error checking email:', error);
+      }
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -573,6 +598,13 @@ const StudentRegistrationeGradTutor = () => {
       });
   
       const result = await response.json();
+  
+      if (result.message && result.message === "Your email already exists.") {
+        setPopupMessage(result.message); 
+        setShowPopup(true); 
+    
+        return; 
+      }
   
       if (result.success) {
         const studentId = result.studentId;
@@ -878,6 +910,7 @@ const StudentRegistrationeGradTutor = () => {
                     placeholder="Email ID"
                     value={formData.emailId}
                     onChange={handleChange}
+                    onBlur={handleEmailBlur}
                     required
                   />
                   {errors.emailId && (
@@ -898,6 +931,7 @@ const StudentRegistrationeGradTutor = () => {
                     onChange={handleChange}
                     onCopy={(e) => e.preventDefault()}
                     onPaste={(e) => e.preventDefault()}
+                    onBlur={handleEmailBlur}
                     required
                   />
                   {errors.confirmEmailId && (
