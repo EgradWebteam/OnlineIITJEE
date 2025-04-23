@@ -1,26 +1,24 @@
+import React, { useState, useRef } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import styles from "../../../Styles/StudentDashboardCSS/Student.module.css";
 
-import React, { useState, useRef } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Importing React icons
-import styles from "../../../Styles/StudentDashboardCSS/Student.module.css"; 
-
-export default function StudentLoginFormeGradTutor({ 
-  isForgotPassword, 
-  isResetPassword, 
-  username, 
-  password, 
-  newPassword, 
-  confirmPassword, 
-  resetCode, 
-  setUsername, 
-  setPassword, 
-  setNewPassword, 
-  setConfirmPassword, 
-  setResetCode, 
-  handleLogin, 
-  handleForgotPassword, 
-  handleResetPassword // This is the function that handles the reset password API call
+export default function StudentLoginFormeGradTutor({
+  isForgotPassword,
+  isResetPassword,
+  username,
+  password,
+  newPassword,
+  confirmPassword,
+  resetCode,
+  setUsername,
+  setPassword,
+  setNewPassword,
+  setConfirmPassword,
+  setResetCode,
+  handleLogin,
+  handleForgotPassword,
+  handleResetPassword, // This is the function that handles the reset password API call
 }) {
-
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const [showNewPassword, setShowNewPassword] = useState(false); // State to toggle new password visibility
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State to toggle confirm password visibility
@@ -32,11 +30,11 @@ export default function StudentLoginFormeGradTutor({
   const resetCodeRef = useRef(null);
 
   // Validation function for new password and confirm password
-  const isPasswordValid = newPassword && confirmPassword && newPassword === confirmPassword;
+  const isPasswordValid =
+    newPassword && confirmPassword && newPassword === confirmPassword;
 
   // Function to handle button text change depending on mode
   const getButtonText = () => {
-
     if (isForgotPassword) {
       return isResetPassword ? "Save Password" : "Send Reset Code";
     } else {
@@ -53,10 +51,16 @@ export default function StudentLoginFormeGradTutor({
     }
   };
 
-
   return (
-    <form onSubmit={isForgotPassword ? (isResetPassword ? handleResetPassword : handleForgotPassword) : handleLogin}>
-      
+    <form
+      onSubmit={
+        isForgotPassword
+          ? isResetPassword
+            ? handleResetPassword
+            : handleForgotPassword
+          : handleLogin
+      }
+    >
       {/* Email input for login and forgot password */}
       {!isResetPassword && (
         <div className={styles.studentLoginFormInput}>
@@ -87,8 +91,8 @@ export default function StudentLoginFormeGradTutor({
               ref={passwordRef} // Use ref here
               required
             />
-            <span 
-              className={styles.passwordToggle} 
+            <span
+              className={styles.passwordToggle}
               onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -124,8 +128,8 @@ export default function StudentLoginFormeGradTutor({
                 ref={newPasswordRef} // Use ref here
                 required
               />
-              <span 
-                className={styles.passwordToggle} 
+              <span
+                className={styles.passwordToggle}
                 onClick={() => setShowNewPassword(!showNewPassword)} // Toggle new password visibility
               >
                 {showNewPassword ? <FaEyeSlash /> : <FaEye />}
@@ -144,24 +148,26 @@ export default function StudentLoginFormeGradTutor({
                 ref={confirmPasswordRef} // Use ref here
                 required
               />
-              <span 
-                className={styles.passwordToggle} 
+              <span
+                className={styles.passwordToggle}
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)} // Toggle confirm password visibility
               >
                 {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
             {/* Display error if new password and confirm password do not match */}
-            {newPassword && confirmPassword && newPassword !== confirmPassword && (
-              <p className={styles.passwordError}>Passwords do not match</p>
-            )}
+            {newPassword &&
+              confirmPassword &&
+              newPassword !== confirmPassword && (
+                <p className={styles.passwordError}>Passwords do not match</p>
+              )}
           </div>
         </>
       )}
 
       {/* Submit button */}
       <div className={styles.studentLoginFormSubmit}>
-        <button type="submit" disabled={isButtonDisabled()}> 
+        <button type="submit" disabled={isButtonDisabled()}>
           {getButtonText()} {/* Dynamic button text */}
         </button>
       </div>

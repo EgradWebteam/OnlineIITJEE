@@ -84,6 +84,56 @@ const [topicId,setTopicId] = useState("")
 
   return (
     <>
+<div className={styles.breadcrumbContainer}>
+
+  <span
+    className={styles.breadcrumbLink}
+    onClick={() => {
+      const portal = structuredCourses.find(p => p.portal_name === selectedPortal);
+      const firstExam = portal ? Object.values(portal.exams)[0] : null;
+      setSelectedExam(firstExam?.exam_name || null);
+      setSelectedTestCourse(null);
+      setShowTestContainer(false);
+      setShowTopicContainer(false);
+      setOpenCourseOrvl(false);
+      setShowQuizContainer(true);
+    }}
+  >
+    {selectedPortal}
+  </span>
+
+  <span className={styles.breadcrumbSeparator}> &gt; </span>
+
+  {selectedExam && (
+    <>
+      <span
+        className={styles.breadcrumbLink}
+        onClick={() => {
+          setSelectedTestCourse(null);
+          setShowTestContainer(false);
+          setShowTopicContainer(false);
+          setOpenCourseOrvl(false);
+          setShowQuizContainer(true);
+        }}
+      >
+        {selectedExam}
+      </span>
+
+      {/* Separator */}
+      <span className={styles.breadcrumbSeparator}> &gt; </span>
+    </>
+  )}
+
+  {/* Course Level - e.g. "IIT JEE MAINS COURSE-1" */}
+  {selectedTestCourse && (
+    <span className={styles.breadcrumbCurrent}>
+      {selectedTestCourse.course_name}
+    </span>
+  )}
+</div>
+
+
+
       {showQuizContainer && (
         <div className={styles.studentDashboardMyCoursesMainDiv}>
           <div className={globalCSS.stuentDashboardGlobalHeading}>

@@ -1,13 +1,12 @@
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
+import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import html2canvas from "html2canvas";
 import { FaUser } from "react-icons/fa6";
 import { MdModeEditOutline } from "react-icons/md";
 import styles from "../../../Styles/AdminDashboardCSS/StudentInfo.module.css";
 import AdminDashboardHeader from "./AdminDashboardHeader";
- 
+
 const StudentInfo = () => {
   const [isPopUp, setIsPopUp] = useState(false); // Controls the Add Student form popup
   const [name, setName] = useState("");
@@ -22,26 +21,26 @@ const StudentInfo = () => {
   const [purchasedTimes, setPurchasedTimes] = useState([]);
   const [courses, setCourses] = useState([]); // State to store available courses
   const [selectedCourses, setSelectedCourses] = useState([]); // State for selected courses
- 
+
   const [studentsList, setStudentsList] = useState(() => {
     const saved = localStorage.getItem("studentsList");
     return saved ? JSON.parse(saved) : [];
   });
- 
+
   useEffect(() => {
     localStorage.setItem("studentsList", JSON.stringify(studentsList));
   }, [studentsList]);
- 
+
   useEffect(() => {
     fetchStudents();
   }, []);
-   // Fetch courses from the backend
-   useEffect(() => {
+  // Fetch courses from the backend
+  useEffect(() => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/studentInfo/coursesName`);
         console.log("Fetched courses:", response.data);
-  
+
         if (Array.isArray(response.data)) {
           setCourses(response.data);
         } else {
@@ -53,21 +52,20 @@ const StudentInfo = () => {
         setCourses([]); // fallback
       }
     };
-  
+
     fetchCourses();
   }, []);
-  
- 
+
   const handleAddStudent = async (e) => {
     e.preventDefault();
     let validationErrors = {};
- 
+
     // Email validation regex
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!email || !emailRegex.test(email)) {
       validationErrors.email = "Please enter a valid email address.";
     }
- 
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -75,34 +73,34 @@ const StudentInfo = () => {
       alert("Enter valid email");
       return;
     }
-   
+
     const stdData = {
       name,
       email,
       mobileNumber,
-      courses: selectedCourses
+      courses: selectedCourses,
     };
- 
+
     try {
       const response = await axios.post(
         `${BASE_URL}/studentInfo/StudentInfo`,
         stdData
       );
       alert(response.data.message); // Show success alert
- 
+
       console.log("Student Response Data: ", response.data);
- 
+
       // Check if student data exists and set the state
       if (response.data?.message) {
         alert(response.data.message);
       }
- 
+
       // Set latest student for popup
       setStudentDetails(response.data);
- 
+
       // Refresh list from backend
       await fetchStudents();
- 
+
       // Close form and clear fields
       setIsPopUp(false);
       setName("");
@@ -120,7 +118,7 @@ const StudentInfo = () => {
       }
     }
   };
- 
+
   const fetchStudents = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/studentInfo/StudentInfo`);
@@ -134,7 +132,7 @@ const StudentInfo = () => {
       alert("Failed to fetch students. Please try again.");
     }
   };
- 
+
   const handleMobileChange = (e) => {
     const value = e.target.value;
     if (/^\d{0,10}$/.test(value)) {
@@ -142,12 +140,12 @@ const StudentInfo = () => {
       setMobileNumber(value);
     }
   };
- 
+
   // Handle course selection/unselection
   const handleCourseChange = (courseId) => {
     setSelectedCourses((prevSelectedCourses) => {
       if (prevSelectedCourses.includes(courseId)) {
-        return prevSelectedCourses.filter(id => id !== courseId); // Unselect if already selected
+        return prevSelectedCourses.filter((id) => id !== courseId); // Unselect if already selected
       } else {
         return [...prevSelectedCourses, courseId]; // Add to selected courses
       }
@@ -162,12 +160,12 @@ const StudentInfo = () => {
   };
   const handleDownloadImage = () => {
     const popupContent = document.getElementById("studentDetailsPopup"); // Get the popup element
- 
+
     // Use html2canvas to convert the DOM element to canvas
     html2canvas(popupContent).then((canvas) => {
       // Convert canvas to image URL
       const imgData = canvas.toDataURL("image/png");
- 
+
       // Create a link to download the image
       const link = document.createElement("a");
       link.href = imgData;
@@ -175,20 +173,22 @@ const StudentInfo = () => {
       link.click(); // Trigger the download
     });
   };
- 
+
   const handleClosePopups = () => {
     // Close both popups and keep student details below the Add Student button
     setIsPopUp(false);
     setStudentDetails(null);
     setShowStudentsButton(true);
   };
- 
+
   // ✅ PLACE IT HERE
   const handleEditStudent = async (student) => {
     try {
-      const response = await axios.get(`${BASE_URL}/studentInfo/StudentInfo/${student.id}`); // ✅ fetch by ID
+      const response = await axios.get(
+        `${BASE_URL}/studentInfo/StudentInfo/${student.id}`
+      ); // ✅ fetch by ID
       const fullStudentData = response.data;
-  
+
       setEditingStudent({
         ...student,
         ...fullStudentData, // includes course list
@@ -198,8 +198,7 @@ const StudentInfo = () => {
       alert("Failed to fetch full student data.");
     }
   };
-  
-  
+
   const handleToggleActivation = async (studentId, currentStatus) => {
     try {
       // Toggle activation status (0 -> 1, 1 -> 0)
@@ -207,7 +206,7 @@ const StudentInfo = () => {
         `${BASE_URL}/studentInfo/StudentInfo/${studentId}`,
         { student_activation: currentStatus === 1 ? 0 : 1 } // Toggle status
       );
- 
+
       if (response.status === 200) {
         // Update the student activation status in the UI
         setStudentsList((prevStudents) =>
@@ -217,7 +216,7 @@ const StudentInfo = () => {
               : student
           )
         );
-       
+
         alert(
           `Student ${
             currentStatus === 1 ? "activated" : "deactivated"
@@ -229,7 +228,7 @@ const StudentInfo = () => {
       alert("Error toggling student activation. Please try again.");
     }
   };
- 
+
   const handleSaveEditedStudent = async (stdData) => {
     try {
       const response = await axios.put(
@@ -239,10 +238,10 @@ const StudentInfo = () => {
           email: stdData.email,
           mobileNumber: stdData.mobileNumber,
           student_activation: stdData.student_activation ?? 1, // retain activation status
-        courses: stdData.courses, // 🔁 Send updated courses if your backend supports it
+          courses: stdData.courses, // 🔁 Send updated courses if your backend supports it
         }
       );
- 
+
       if (response.status === 200) {
         setStudentsList((prevStudents) =>
           prevStudents.map((student) =>
@@ -257,13 +256,12 @@ const StudentInfo = () => {
     }
     setEditingStudent(null);
   };
- 
- 
+
   return (
     <div className={styles.AddedstudentsHomePage}>
       <AdminDashboardHeader />
       <div className={styles.StudentInfoHeader}>Student Information</div>
- 
+
       <button className={styles.Addedstudent} onClick={() => setIsPopUp(true)}>
         Add students
       </button>
@@ -282,19 +280,18 @@ const StudentInfo = () => {
             <option value="inactive">Deactivated Students</option>
           </select>
         </div>
- 
+
         {isPopUp && (
           <div className={styles.PopUPContainer}>
             <div className={styles.PopUP}>
-               <button
-                            className={styles.closeBtn}
-                            onClick={() => {
-                              setIsPopUp(false);
-                            }}
-                          >
-                          ❌
-              
-                          </button>
+              <button
+                className={styles.closeBtn}
+                onClick={() => {
+                  setIsPopUp(false);
+                }}
+              >
+                ❌
+              </button>
               <h3 className={styles.HedaingForAddStudents}>Added Student</h3>
               <form className={styles.PopUPForm} onSubmit={handleAddStudent}>
                 <h4 className={styles.SubHEadingForStd}>Student Information</h4>
@@ -335,32 +332,29 @@ const StudentInfo = () => {
                 )}
                 <h4 className={styles.SubHEadingForStd}>Selected Courses</h4>
                 <div className={styles.CoursesInputContainer}>
-                {Array.isArray(courses) && courses.length > 0 ? (
-  courses.map((course) => (
-    <div key={course.id}>
-      <input
-        type="checkbox"
-        checked={selectedCourses.includes(course.id)}
-        onChange={() => handleCourseChange(course.id)}
-      />
-      <label>{course.course_name}</label>
-    </div>
-  ))
-) : (
-  <p>No courses available</p>
-)}
-
-        </div>
-        <div className={styles.SubmitBtnsForPopUpfor}>
-                <button  type="submit">
-                  Submit
-                </button>
+                  {Array.isArray(courses) && courses.length > 0 ? (
+                    courses.map((course) => (
+                      <div key={course.id}>
+                        <input
+                          type="checkbox"
+                          checked={selectedCourses.includes(course.id)}
+                          onChange={() => handleCourseChange(course.id)}
+                        />
+                        <label>{course.course_name}</label>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No courses available</p>
+                  )}
+                </div>
+                <div className={styles.SubmitBtnsForPopUpfor}>
+                  <button type="submit">Submit</button>
                 </div>
               </form>
             </div>
           </div>
         )}
- 
+
         {/* New popup to display the added student details */}
         {studentDetails && (
           <div className={styles.PopUPContainer}>
@@ -404,7 +398,7 @@ const StudentInfo = () => {
             </div>
           </div>
         )}
- 
+
         {/* Displaying the added student details below the "Add students" button */}
         {showStudentsList && studentsList.length > 0 && (
           <div className={styles.StudentDetailsinInterface}>
@@ -423,11 +417,11 @@ const StudentInfo = () => {
                     <div className={styles.ProfileForStdDetails}>
                       <FaUser />
                     </div>
- 
+
                     <div className={styles.HeadingForDetails}>
                       Added Student Information:
                     </div>
- 
+
                     <div key={index} className={styles.StudentItem}>
                       <p className={styles.StudentInfoDetails}>
                         <b>Name:</b> <span>{student.name}</span>
@@ -469,11 +463,11 @@ const StudentInfo = () => {
             </div>
           </div>
         )}
- 
+
         {editingStudent && (
           <div className={styles.PopUPContainer}>
             <div className={styles.PopUP}>
-            <h3 className={styles.HedaingForAddStudents}>Edit Student</h3>
+              <h3 className={styles.HedaingForAddStudents}>Edit Student</h3>
               <form
                 className={styles.PopUPForm}
                 onSubmit={(e) => {
@@ -481,7 +475,7 @@ const StudentInfo = () => {
                   handleSaveEditedStudent(editingStudent);
                 }}
               >
-                 <h4 className={styles.SubHEadingForStd}>Student Information</h4>
+                <h4 className={styles.SubHEadingForStd}>Student Information</h4>
                 <div className={styles.InboxesForForm}>
                   <label>Name:</label>
                   <input
@@ -521,38 +515,42 @@ const StudentInfo = () => {
                     }
                   />
                 </div>
-                  <h4 className={styles.SubHEadingForStd}>Selected Courses</h4>
+                <h4 className={styles.SubHEadingForStd}>Selected Courses</h4>
                 <div className={styles.CoursesInputContainer}>
-                {courses && courses.length > 0 ? (
-            courses.map((course,index) => (
-              <div key={index} className={styles.CoursesInput}>
-                <input
-  type="checkbox"
-  className={styles.customCheckbox}
-  checked={
-    editingStudent.courses &&
-    editingStudent.courses.includes(course.id)
-  }
-  onChange={() => {
-    const isSelected = editingStudent.courses.includes(course.id);
-    const updatedCourses = isSelected
-      ? editingStudent.courses.filter((id) => id !== course.id)
-      : [...editingStudent.courses, course.id];
+                  {courses && courses.length > 0 ? (
+                    courses.map((course, index) => (
+                      <div key={index} className={styles.CoursesInput}>
+                        <input
+                          type="checkbox"
+                          className={styles.customCheckbox}
+                          checked={
+                            editingStudent.courses &&
+                            editingStudent.courses.includes(course.id)
+                          }
+                          onChange={() => {
+                            const isSelected = editingStudent.courses.includes(
+                              course.id
+                            );
+                            const updatedCourses = isSelected
+                              ? editingStudent.courses.filter(
+                                  (id) => id !== course.id
+                                )
+                              : [...editingStudent.courses, course.id];
 
-    setEditingStudent({
-      ...editingStudent,
-      courses: updatedCourses,
-    });
-  }}
-/>
+                            setEditingStudent({
+                              ...editingStudent,
+                              courses: updatedCourses,
+                            });
+                          }}
+                        />
 
-                <label>{course.course_name}</label>
-              </div>
-            ))
-          ) : (
-            <p>No courses available</p>
-          )}
-        </div>
+                        <label>{course.course_name}</label>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No courses available</p>
+                  )}
+                </div>
                 <div className={styles.ButtonsForEdit}>
                   <button type="submit">Save</button>
                   <button onClick={() => setEditingStudent(null)}>
@@ -567,5 +565,5 @@ const StudentInfo = () => {
     </div>
   );
 };
- 
+
 export default StudentInfo;

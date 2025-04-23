@@ -7,11 +7,10 @@ import { MdOutlineDeleteForever } from "react-icons/md";
 
 const StudentDashboardBookmarks = ({ studentId }) => {
   const [testPaperData, setTestPaperData] = useState([]);
-  // const [showSolution, setShowSolution] = useState(false);
-  // const [showVideoSolution, setShowVideoSolution] = useState(false);
+
   const [visibleSolutions, setVisibleSolutions] = useState({});
   const [visibleVideoSolutions, setVisibleVideoSolutions] = useState({});
-  
+
   useEffect(() => {
     const fetchTestPaper = async () => {
       try {
@@ -58,14 +57,14 @@ const StudentDashboardBookmarks = ({ studentId }) => {
       [questionId]: !prev[questionId],
     }));
   };
-  
+
   const toggleVideoSolution = (questionId) => {
     setVisibleVideoSolutions((prev) => ({
       ...prev,
       [questionId]: !prev[questionId],
     }));
   };
-  
+
   const PlayVideoById = (url) => {
     if (typeof url !== "string" || !url || url === "null") {
       console.error("Invalid URL:", url);
@@ -108,10 +107,7 @@ const StudentDashboardBookmarks = ({ studentId }) => {
           <h4>{testPaperData.TestName}</h4>
         </div>
         {testPaperData.subjects?.map((subject) => (
-          <div
-           
-            key={subject.subjectId}
-          >
+          <div key={subject.subjectId}>
             {subject.sections.map((section) => (
               <div key={section.sectionId}>
                 {section.questions.map((question) => (
@@ -119,33 +115,33 @@ const StudentDashboardBookmarks = ({ studentId }) => {
                     key={question.question_id}
                     className={styles.questionsContainerInBookMarks}
                   >
-
                     <div className={styles.bookDeleteConatainer}>
-                    <p>Question No: {question.question_id}</p>
-                    
-                    {/* Delete Icon */}
-                    <MdOutlineDeleteForever
-                    className={styles.deleteIconForBookMarks}
-                      onClick={() =>
-                        handleDelete(studentId, question.question_id)
-                      }
-                      title="Delete Bookmark"
-                    />
+                      <p>Question No: {question.question_id}</p>
+
+                      {/* Delete Icon */}
+                      <MdOutlineDeleteForever
+                        className={styles.deleteIconForBookMarks}
+                        onClick={() =>
+                          handleDelete(studentId, question.question_id)
+                        }
+                        title="Delete Bookmark"
+                      />
                     </div>
 
                     {/* Question Image */}
                     <div className={styles.questionImageDivBookMarks}>
-                    <img
-                      src={question.questionImgName}
-                      alt={`Question ${question.question_id}`}
-                    />
+                      <img
+                        src={question.questionImgName}
+                        alt={`Question ${question.question_id}`}
+                      />
                     </div>
-
 
                     {/* Options */}
                     <div style={{ marginTop: "1rem" }}>
                       {[...question.options]
-                        .sort((a, b) => a.option_index.localeCompare(b.option_index)) // Sort A to Z
+                        .sort((a, b) =>
+                          a.option_index.localeCompare(b.option_index)
+                        ) // Sort A to Z
                         .map((option) => (
                           <div
                             key={option.option_id}
@@ -169,50 +165,68 @@ const StudentDashboardBookmarks = ({ studentId }) => {
                     {question.solution?.solutionImgName && (
                       <div className={styles.solutionButtonsWrapper}>
                         {/* View Solution Button */}
-                        <button onClick={() => toggleSolution(question.question_id)}  className={styles.solutionBtnInBookMarks}>
-                          {visibleSolutions[question.question_id] ? "Hide Solution" : "View Solution"}
+                        <button
+                          onClick={() => toggleSolution(question.question_id)}
+                          className={styles.solutionBtnInBookMarks}
+                        >
+                          {visibleSolutions[question.question_id]
+                            ? "Hide Solution"
+                            : "View Solution"}
                         </button>
 
                         {/* View Video Solution Button */}
                         {question.solution.video_solution_link && (
-                          <button onClick={() => toggleVideoSolution(question.question_id)} className={styles.solutionBtnInBookMarks}>
-                            {visibleVideoSolutions[question.question_id] ? "Hide Video Solution" : "View Video Solution"}
+                          <button
+                            onClick={() =>
+                              toggleVideoSolution(question.question_id)
+                            }
+                            className={styles.solutionBtnInBookMarks}
+                          >
+                            {visibleVideoSolutions[question.question_id]
+                              ? "Hide Video Solution"
+                              : "View Video Solution"}
                           </button>
                         )}
                       </div>
                     )}
 
                     {/* Solution Image */}
-                    {visibleSolutions[question.question_id] && question.solution?.solutionImgName && (
-                      <div className={styles.solutionsMainDivInBookMarks}>
-                        <p><strong>Solution:</strong></p>
+                    {visibleSolutions[question.question_id] &&
+                      question.solution?.solutionImgName && (
                         <div className={styles.solutionsMainDivInBookMarks}>
+                          <p>
+                            <strong>Solution:</strong>
+                          </p>
+                          <div className={styles.solutionsMainDivInBookMarks}>
                             <img
                               src={question.solution.solutionImgName}
                               alt="Solution"
                             />
-                            </div>
-                      </div>
-                    )}
+                          </div>
+                        </div>
+                      )}
 
                     {/*  Video Solution */}
-                    {visibleVideoSolutions[question.question_id] && question.solution?.video_solution_link && (
-                      <div style={{ marginTop: "1rem" }}>
-                        <p><strong>Video Solution:</strong></p>
-                        <iframe
-                          src={PlayVideoById(question.solution.video_solution_link)}
-                          title="Video Solution"
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                          style={{ width: "100%", height: "400px" }}
-                        />
-                      </div>
-                    )}
-     
+                    {visibleVideoSolutions[question.question_id] &&
+                      question.solution?.video_solution_link && (
+                        <div style={{ marginTop: "1rem" }}>
+                          <p>
+                            <strong>Video Solution:</strong>
+                          </p>
+                          <iframe
+                            src={PlayVideoById(
+                              question.solution.video_solution_link
+                            )}
+                            title="Video Solution"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            style={{ width: "100%", height: "400px" }}
+                          />
+                        </div>
+                      )}
                   </div>
                 ))}
-
               </div>
             ))}
           </div>

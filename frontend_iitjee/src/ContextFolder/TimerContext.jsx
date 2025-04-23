@@ -35,13 +35,14 @@ export const TimerProvider = ({ testData, children }) => {
     const s = String(seconds % 60).padStart(2, "0");
     return `${h}:${m}:${s}`;
   };
-
+  const remainingTime = totalDurationInSeconds - timeSpent;
   return (
     <TimerContext.Provider
       value={{
         timeLeft,
         timeSpent,
         formattedTime: timeLeft !== null ? formatTime(timeLeft) : "Loading...",
+        remainingTime,
       }}
     >
       {children}

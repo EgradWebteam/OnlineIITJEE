@@ -46,10 +46,17 @@ const StudentReport = ({ testId, studentId }) => {
     return <div>{error}</div>;
   }
   // Convert HH:MM:SS to seconds
+  // const parseTimeToSeconds = (timeStr) => {
+  //   const [hours, minutes, seconds] = timeStr.split(":").map(Number);
+  //   return hours * 3600 + minutes * 60 + seconds;
+  // };
+
   const parseTimeToSeconds = (timeStr) => {
-    const [hours, minutes, seconds] = timeStr.split(":").map(Number);
+    if (!timeStr || typeof timeStr !== 'string') return 0; // handle invalid input
+    const [hours = 0, minutes = 0, seconds = 0] = timeStr.split(":").map(Number);
     return hours * 3600 + minutes * 60 + seconds;
   };
+  
 
   // Convert seconds to HH:MM:SS
   const formatToHHMMSS = (totalSeconds) => {
