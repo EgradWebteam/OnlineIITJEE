@@ -439,7 +439,7 @@ export default function QuestionNavigationButtons({
     };
   
     setShowExamSummary(true);
-    setIsAutoSubmitted(isAutoSubmit);
+
     console.log("examSummaryData", examSummaryData);
   
     try {

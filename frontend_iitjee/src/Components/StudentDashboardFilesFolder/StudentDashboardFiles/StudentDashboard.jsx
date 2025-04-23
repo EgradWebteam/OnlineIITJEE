@@ -3,6 +3,7 @@ import StudentDashboardHeader from './StudentDashboardHeader.jsx';
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import StudentDashboardLeftSideBar from './StudentDashboardLeftSidebar.jsx';
 import { useLocation,useNavigate  } from 'react-router-dom';
+import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx'
 const StudentDashboardBookmarks = lazy(() => import('./StudentDashboardBookmarks.jsx'));
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js'; 
 const StudentDashboardHome = lazy(() => import("./StudentDashboardHome.jsx"));
@@ -125,7 +126,7 @@ export default function StudentDashboard() {
         </div>
         <div className={styles.StudentDashboardRightSideContentHolder}>
           <div className={styles.StudentDashboardcontentArea}>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div> <LoadingSpinner /></div>}>
               {renderStudentDashboardContent()}
             </Suspense>
           </div>

@@ -711,7 +711,7 @@ height: 100%;
 .breadcrumbLink {
   cursor: pointer;
   color:black;
-  text-decoration: underline;
+  font-weight: 700;
 }
 
 .breadcrumbLink:hover {

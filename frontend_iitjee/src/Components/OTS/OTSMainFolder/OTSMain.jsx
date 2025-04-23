@@ -90,7 +90,7 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
       }));
     }
   };
-  console.log("isAutoSubmitted MAIN",isAutoSubmitted)
+
   
   return (
     <div>

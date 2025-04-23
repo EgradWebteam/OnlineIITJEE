@@ -6,6 +6,8 @@ import styles from "../../../Styles/OTSCSS/OTSMain.module.css"
 import OTSHeader from '../OTSHeaderFolder/OTSHeader.jsx';
 import {useStudent} from "../../../ContextFolder/StudentContext.jsx";
 import logostudent from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
+import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx';
+
 const GeneralInstructions = () => {
     const { testId, studentId } = useParams();
     const navigate = useNavigate();
@@ -121,7 +123,7 @@ const [studentProfile, setStudentProfile] = useState(logostudent);
     if (isDecrypting) {
         return (
             <div>
-                <h2>loading...</h2>
+                <h2> <LoadingSpinner /></h2>
             </div>
         );
     }
