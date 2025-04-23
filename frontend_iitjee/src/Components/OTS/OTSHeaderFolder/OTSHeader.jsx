@@ -1,5 +1,5 @@
 import React from 'react'
-import OTSLogo from "../../../assets/EGTLogoExamHeaderCompressed.jpg";
+import OTSLogo from "../../../assets/EGTLogoExamHeaderCompressed.png";
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css"
 
  const OTSHeader = () => {

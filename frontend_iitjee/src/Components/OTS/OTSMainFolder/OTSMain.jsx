@@ -18,7 +18,6 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
   const [selectedOptionsArray, setSelectedOptionsArray] = useState([]);
   const [natValue, setNatValue] = useState("");
     const [showSidebar, setShowSidebar] = useState(true); 
-    const [isAutoSubmitted,setIsAutoSubmitted]= useState(false); 
 
   // Reset question index when section changes
   useEffect(() => {
@@ -173,8 +172,6 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
             setSelectedOptionsArray={setSelectedOptionsArray}
             setNatValue={setNatValue}
             setSelectedOption={setSelectedOption}
-            setIsAutoSubmitted={setIsAutoSubmitted}
-            isAutoSubmitted={isAutoSubmitted}
           />
           </TimerProvider>
         </QuestionStatusProvider>

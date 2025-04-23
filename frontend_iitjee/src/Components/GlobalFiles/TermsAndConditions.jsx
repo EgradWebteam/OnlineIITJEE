@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../../assets/EGTLogoExamHeaderCompressed.jpg";
+import logo from "../../assets/EGTLogoExamHeaderCompressed.png";
 import styles from '../../Styles/GlobalFilesCSS/TermsAndConditions.module.css'
 
 const TermsAndConditions = ({ isModalOpen, setIsModalOpen }) => {

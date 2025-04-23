@@ -6,7 +6,7 @@ const db = require("./src/config/database.js");
 const app = express();
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-
+const path = require("path");
 // app.use(express.json());
 // const corsOptions = {
 //   origin: [
@@ -38,6 +38,30 @@ app.use(morgan(":method :url :status :response-time ms"));
 app.get("/", (req, res) => {
   res.json({ message: "Backend is working!" });
 });
+app.use(express.static(path.join(__dirname, 'public'), {
+  etag: true, // Enables ETag for change detection
+  lastModified: true, // Uses Last-Modified timestamps
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.png') || filePath.endsWith('.jpg') || filePath.endsWith('.jpeg')) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, must-revalidate'); // 1-year caching
+      res.setHeader('Expires', new Date(Date.now() + 31536000000).toUTCString()); // Fallback for old browsers
+    }
+  }
+}));
+app.get('/images/:filename', (req, res, next) => {
+  const { filename } = req.params;
+  const filePath = path.join(__dirname, 'some-dynamic-folder', filename);
+
+  // Apply headers
+  res.setHeader('Cache-Control', 'public, max-age=31536000, must-revalidate');
+  res.setHeader('Expires', new Date(Date.now() + 31536000000).toUTCString());
+
+  // Serve the image (local or stream from elsewhere)
+  res.sendFile(filePath, err => {
+    if (err) next(err);
+  });
+});
+
 /**UserAuthentication*/
 const adminLogin = require("./src/UserAuthentication/AdminLogin.js");
 app.use("/admin", adminLogin);

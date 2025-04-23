@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
-import headerImage from "../../../assets/EGTLogoExamHeaderCompressed.jpg";
+import headerImage from "../../../assets/EGTLogoExamHeaderCompressed.png";
 import logostudent from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
