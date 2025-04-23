@@ -300,7 +300,7 @@ router.post("/studentLogin", async (req, res) => {
     // 5. Update login status
     const updateSql = `
       UPDATE iit_student_registration
-      SET is_logged_in = TRUE, last_login_time = NOW(), session_id = ?
+      SET is_logged_in = 1, last_login_time = NOW(), session_id = ?
       WHERE student_registration_id = ?
     `;
     await db.query(updateSql, [newSessionId, user.student_registration_id]);
