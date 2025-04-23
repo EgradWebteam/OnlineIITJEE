@@ -4,7 +4,7 @@ import { FaChevronRight } from "react-icons/fa";
 import { FaChevronCircleLeft } from "react-icons/fa";
 import { FaChevronCircleRight } from "react-icons/fa";
 import {useStudent} from "../../../ContextFolder/StudentContext.jsx";
-import logostudent from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
+import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 export default function OTSRightSideBar({
   testData,
   activeSubject,
@@ -17,7 +17,7 @@ export default function OTSRightSideBar({
   showSidebar,
   setShowSidebar
 }) {
- 
+    const { studentData} = useStudent();
   if (!testData || !Array.isArray(testData.subjects)) return null;
 
   // Find active subject
@@ -29,55 +29,13 @@ export default function OTSRightSideBar({
   const section = subject?.sections?.find(
     (sec) => sec.SectionName === activeSection
   );
-
-   const { studentData} = useStudent();
-  const [studentProfile, setStudentProfile] = useState(logostudent);
-    const userData = studentData?.userDetails;
-   
+ 
+ 
+  const userData = studentData?.userDetails;
+  const studentProfile = userData?.uploaded_photo;
     const studentName = userData?.candidate_name;
 
-  // useEffect(() => {
-  //   if (!testData || !Array.isArray(testData.subjects)) return;
-
-  //   const subject = testData.subjects.find(subj => subj.SubjectName === activeSubject);
-  //   const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
-  //   const firstQuestion = section?.questions?.[0];
-
-  //   if (firstQuestion && !userAnswers?.[firstQuestion.question_id]) {
-  //     setUserAnswers(prev => ({
-  //       ...prev,
-  //       [firstQuestion.question_id]: {
-  //         subjectId: subject.subjectId,
-  //         sectionId: section.sectionId,
-  //         questionId: firstQuestion.question_id,
-  //         buttonClass: styles.NotAnsweredBtnCls,
-  //         type: "", // no answer yet
-  //       }
-  //     }));
-  //   }
-  // }, [testData, activeSubject, activeSection]);
-   const AZURE_STORAGE_BASE_URL = `https://${import.meta.env.VITE_AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/${import.meta.env.VITE_AZURE_CONTAINER_NAME}`;
-    const SAS_TOKEN = `?${import.meta.env.VITE_AZURE_SAS_TOKEN}`;
-      useEffect(() => {
-        if (userData?.uploaded_photo) {
-          // Dynamically create the image URL
-          const profileImageUrl = `${AZURE_STORAGE_BASE_URL}/${import.meta.env.VITE_AZURE_DOCUMENT_FOLDER}/${userData.uploaded_photo}${SAS_TOKEN}`;
-          console.log("Generated Profile Image URL:", profileImageUrl); // Log the URL for debugging
-    
-          // Check if the URL is valid
-          fetch(profileImageUrl, { method: 'HEAD' })
-            .then((response) => {
-              if (response.ok) {
-                setStudentProfile(profileImageUrl); // Set the profile image if it's valid
-              } else {
-                console.error("Image URL is invalid or not accessible:", profileImageUrl);
-              }
-            })
-            .catch((error) => {
-              console.error("Error fetching the image URL:", error);
-            });
-        }
-      }, [userData]);
+   
   useEffect(() => {
     if (!testData || !Array.isArray(testData.subjects)) return;
   
@@ -184,7 +142,14 @@ const scrollRight = () => {
       {/* Student Profile */}
       <div className={styles.StudentProfileHolderOTS}>
         <div className={styles.profileImage}>
-          <img src={studentProfile} alt='studentimg' />
+        <img
+  src={studentProfile || defaultImage}
+  alt="Student Profile"
+  onError={(e) => {
+    e.target.onerror = null;
+    e.target.src = defaultImage;
+  }}
+/>
         </div>
         <p>{studentName}</p>
       </div>
