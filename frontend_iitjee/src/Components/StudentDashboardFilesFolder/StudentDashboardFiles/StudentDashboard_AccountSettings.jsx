@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa6";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import logostudent from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard_AccountSettings.module.css";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 const StudentDashboard_AccountSettings = ({ userData }) => {
@@ -13,7 +14,7 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(""); // Error message state
   const [successMessage, setSuccessMessage] = useState(""); // Success message state
-
+const [studentProfile, setStudentProfile] = useState(logostudent);
   useEffect(() => {
     console.log("mysettings");
   }, []);
@@ -24,11 +25,32 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
       [field]: !prevState[field],
     }));
   };
-
+  const AZURE_STORAGE_BASE_URL = `https://${import.meta.env.VITE_AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/${import.meta.env.VITE_AZURE_CONTAINER_NAME}`;
+  const SAS_TOKEN = `?${import.meta.env.VITE_AZURE_SAS_TOKEN}`;
+    useEffect(() => {
+      if (userData?.uploaded_photo) {
+        // Dynamically create the image URL
+        const profileImageUrl = `${AZURE_STORAGE_BASE_URL}/${import.meta.env.VITE_AZURE_DOCUMENT_FOLDER}/${userData.uploaded_photo}${SAS_TOKEN}`;
+        console.log("Generated Profile Image URL:", profileImageUrl); // Log the URL for debugging
+  
+        // Check if the URL is valid
+        fetch(profileImageUrl, { method: 'HEAD' })
+          .then((response) => {
+            if (response.ok) {
+              setStudentProfile(profileImageUrl); // Set the profile image if it's valid
+            } else {
+              console.error("Image URL is invalid or not accessible:", profileImageUrl);
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching the image URL:", error);
+          });
+      }
+    }, [userData]);
   const studentName = userData?.candidate_name;
   const studentEmail = userData?.email_id;
   const studentContact = userData?.mobile_no;
-  const studentProfile = userData?.uploaded_photo;
+
 
   console.log("stuenttProfile:", studentProfile);
   

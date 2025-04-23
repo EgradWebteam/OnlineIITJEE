@@ -573,6 +573,35 @@ height: 100%;
   height: auto;
   margin: 1rem;
 }
+.breadcrumbContainer {
+  margin: 10px 0;
+  font-size: 16px;
+  color: #444;
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumbLink {
+  cursor: pointer;
+  color:black;
+  text-decoration: underline;
+}
+
+.breadcrumbLink:hover {
+  text-decoration: none;
+}
+
+.breadcrumbSeparator {
+  margin: 0 10px;
+  color: #888;
+}
+
+.breadcrumbCurrent {
+  font-weight: 600;
+  color: #222;
+}
+
+
 /* Sidebar Responsive Behavior */
 @media (max-width: 768px) {
   .studentDashboardLeftsidebar {
