@@ -3,7 +3,7 @@ import { FaVideo, FaFileAlt, FaCheckCircle } from 'react-icons/fa';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import styles from '../../../Styles/StudentDashboardCSS/LectureExcerciseList.module.css';
-
+import DisableKeysAndMouseInteractions from '../../../ContextFolder/DisableKeysAndMouseInteractions.jsx';
  
 
 
@@ -22,7 +22,7 @@ const LectureExerciseList = ({ lectures, onLectureClick, onExerciseClick, userSt
   const [pdfpopup, setPdfpopup] = useState(false);
   const [pdfUrl, setPdfUrl] = useState("");
   const [pdf, setPdf] = useState(null);
-
+  DisableKeysAndMouseInteractions();
   // Load PDF when URL changes
   useEffect(() => {
     if (pdfUrl) {
