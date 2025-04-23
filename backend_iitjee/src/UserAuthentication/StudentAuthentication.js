@@ -283,6 +283,47 @@ router.post("/reset-password", async (req, res) => {
     res.status(500).json({ message: "Error resetting password" });
   }
 });
+
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+
+const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
+const sasToken = process.env.AZURE_SAS_TOKEN;
+const containerName = process.env.AZURE_CONTAINER_NAME;
+const StudentImagesFolderName = process.env.AZURE_STUDENT_IMAGES_FOLDER;  
+const BackendBASE_URL = process.env.BASE_URL;
+
+
+
+
+// Helper to return proxy URL instead of exposing SAS token
+const getImageUrl = (fileName) => {
+  console.log("fileName",fileName)
+    if (!fileName) return null;
+    return `${BackendBASE_URL}/student/StudentImage/${fileName}`; // or use your production domain
+  };
+  
+  // ✅ Route to serve the actual course card image securely (proxy)
+  router.get('/StudentImage/:fileName', async (req, res) => {
+    const { fileName } = req.params;
+  console.log("fileName",fileName)
+    if (!fileName) return res.status(400).send("File name is required");
+  
+    const imageUrl = `https://${accountName}.blob.core.windows.net/${containerName}/${StudentImagesFolderName}/${fileName}?${sasToken}`;
+  
+    try {
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        return res.status(response.status).send("Failed to fetch image from Azure");
+      }
+  
+      res.setHeader("Content-Type", response.headers.get("Content-Type"));
+      response.body.pipe(res); // Stream the image directly
+    } catch (error) {
+      console.error("Error fetching image from Azure Blob:", error);
+      res.status(500).send("Error fetching image");
+    }
+  });
+
 router.post("/studentLogin", async (req, res) => {
   let { email, password, sessionId } = req.body;
 
@@ -340,6 +381,7 @@ router.post("/studentLogin", async (req, res) => {
       WHERE student_registration_id = ?
     `;
     await db.query(updateSql, [newSessionId, user.student_registration_id]);
+    console.log("Full image URL:", getImageUrl(user.uploaded_photo));
 
     // 6. Send response
     const responseData = {
@@ -351,7 +393,7 @@ router.post("/studentLogin", async (req, res) => {
         candidate_name: user.candidate_name,
         email_id: user.email_id,
         last_login_time: user.last_login_time,
-        uploaded_photo: user.uploaded_photo,
+        uploaded_photo: getImageUrl(user.uploaded_photo),
         mobile_no: user.mobile_no,
       },
       sessionId: newSessionId,

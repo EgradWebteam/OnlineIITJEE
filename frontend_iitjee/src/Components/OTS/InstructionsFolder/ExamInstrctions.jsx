@@ -5,11 +5,11 @@ import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import {useStudent} from "../../../ContextFolder/StudentContext.jsx";
 import OTSHeader from '../OTSHeaderFolder/OTSHeader.jsx';
-import logostudent from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
+import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 const ExamInstructions = () => {
   const { testId, studentId } = useParams();
   const navigate = useNavigate();
-  const [studentProfile, setStudentProfile] = useState(logostudent);
+
   const [realTestId, setRealTestId] = useState('');
   const [realStudentId, setRealStudentId] = useState('');
   const [instructionsData, setInstructionsData] = useState(null);
@@ -19,68 +19,7 @@ const ExamInstructions = () => {
 
   const userData = studentData?.userDetails;
   const studentName = userData?.candidate_name;
-  // useEffect(() => {
-  //   const token = sessionStorage.getItem("navigationToken");
-  //   if (!token) {
-  //     navigate("/Error");
-  //     return;
-  //   }
-
-  //   const decryptAndFetch = async () => {
-  //     try {
-  //       const [decryptedTestId, decryptedStudentId] = await decryptDataBatch([
-  //         decodeURIComponent(testId),
-  //         decodeURIComponent(studentId)
-  //       ]);
-
-  //       if (!decryptedTestId || !decryptedStudentId) {
-  //         throw new Error("Decryption failed");
-  //       }
-
-  //       setRealTestId(decryptedTestId);
-  //       setRealStudentId(decryptedStudentId);
-
-  //       const response = await fetch(
-  //         `${BASE_URL}/studentmycourses/instructions/${decryptedTestId}`
-  //       );
-
-  //       if (!response.ok) {
-  //         throw new Error("Failed to fetch instructions");
-  //       }
-
-  //       const data = await response.json();
-  //       setInstructionsData(data);
-  //       setIsLoading(false);
-  //     } catch (err) {
-  //       console.error("Error:", err);
-  //       navigate("/Error");
-  //     }
-  //   };
-
-  //   decryptAndFetch();
-  // }, [testId, studentId, navigate]);
-  const AZURE_STORAGE_BASE_URL = `https://${import.meta.env.VITE_AZURE_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/${import.meta.env.VITE_AZURE_CONTAINER_NAME}`;
-  const SAS_TOKEN = `?${import.meta.env.VITE_AZURE_SAS_TOKEN}`;
-    useEffect(() => {
-      if (userData?.uploaded_photo) {
-        // Dynamically create the image URL
-        const profileImageUrl = `${AZURE_STORAGE_BASE_URL}/${import.meta.env.VITE_AZURE_DOCUMENT_FOLDER}/${userData.uploaded_photo}${SAS_TOKEN}`;
-        console.log("Generated Profile Image URL:", profileImageUrl); // Log the URL for debugging
-  
-        // Check if the URL is valid
-        fetch(profileImageUrl, { method: 'HEAD' })
-          .then((response) => {
-            if (response.ok) {
-              setStudentProfile(profileImageUrl); // Set the profile image if it's valid
-            } else {
-              console.error("Image URL is invalid or not accessible:", profileImageUrl);
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching the image URL:", error);
-          });
-      }
-    }, [userData]);
+ const studentProfile = userData?.uploaded_photo;
   useEffect(() => {
     const token = sessionStorage.getItem("navigationToken");
     if (!token) {
@@ -130,21 +69,7 @@ const ExamInstructions = () => {
   const examName = instructionsData[0]?.exam_name || "Exam";
   const instructionPoints = instructionsData[0]?.instruction_points || [];
 
-  // const handleBeginTest = async () => {
-  //   //  Store token before navigation
-  //   sessionStorage.setItem("navigationToken", "valid");
-  //   try {
-  //     const encrypted = await encryptBatch([realTestId, realStudentId]);
-  //     const encryptedTestId = encodeURIComponent(encrypted[0]);
-  //     const encryptedStudentId = encodeURIComponent(encrypted[1]);
-  
-  //     sessionStorage.setItem("navigationToken", "valid"); // Add session token
-  //     navigate(`/OTSRootFile/${encryptedTestId}/${encryptedStudentId}`);
-  //   } catch (error) {
-  //     console.error("Encryption failed:", error);
-  //     navigate("/Error");
-  //   }
-  // };
+
   
   const handleBeginTest = async () => {
     sessionStorage.setItem("navigationToken", "valid");
@@ -187,7 +112,14 @@ const ExamInstructions = () => {
       <div className={styles.userImageDivInst}>
         <div className={styles.userDetailsHolder}>
           <div className={styles.userImageSubDiv}>
-            <img src={studentProfile} alt='studentProfile' />
+            <img
+            src={studentProfile || defaultImage}
+            alt="Student Profile"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = defaultImage;
+            }}
+          />
           </div>
           <p>{studentName}</p>
         </div>
