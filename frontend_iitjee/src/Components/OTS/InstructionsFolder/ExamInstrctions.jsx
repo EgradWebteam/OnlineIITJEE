@@ -6,6 +6,7 @@ import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import {useStudent} from "../../../ContextFolder/StudentContext.jsx";
 import OTSHeader from '../OTSHeaderFolder/OTSHeader.jsx';
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
+import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx'
 const ExamInstructions = () => {
   const { testId, studentId } = useParams();
   const navigate = useNavigate();
@@ -62,7 +63,7 @@ const ExamInstructions = () => {
   }, [testId, studentId, navigate]);
 
   if (isLoading) {
-    return <div className={styles.loadingText}>Loading Exam Instructions...</div>;
+    return <div className={styles.loadingText}><LoadingSpinner/></div>;
   }
 
 

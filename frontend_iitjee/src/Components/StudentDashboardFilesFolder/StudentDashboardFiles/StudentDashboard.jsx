@@ -110,7 +110,7 @@ export default function StudentDashboard() {
 
      // Until we know the correct section to show
   if (isLoading) {
-    return <div>Loading Dashboard...</div>;
+    return <div><LoadingSpinner/></div>;
   }
   
   return (
