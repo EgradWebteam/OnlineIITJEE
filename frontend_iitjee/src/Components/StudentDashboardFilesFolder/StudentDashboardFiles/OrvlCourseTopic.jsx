@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
-import LectureExerciseList from "./LectureExerciseList";
-import Popup from "./Popup";
-import globalCSS from "../../../Styles/Global.module.css";
-import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
-const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
+import React, { useState, useEffect,useRef } from 'react';
+import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js'; // Import the base URL from config
+import LectureExerciseList from './LectureExerciseList';
+import Popup from './Popup';
+import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
+import globalCSS from '../../../Styles/Global.module.css';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+const OrvlCourseTopic = ({ topicid, onBack,studentId ,courseCreationId}) => {
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -262,7 +263,7 @@ const playedTimeRef = useRef(0);
       student_registration_id: studentId,
       course_creation_id: courseCreationId,
     };
-
+  
     try {
       const response = await fetch(`${BASE_URL}/OrvlTopics/ExerciseQuestionstatus`, {
         method: 'POST',
@@ -499,7 +500,7 @@ const handleClosePopup = async () => {
         handleRouteChange();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location, selectedLecture, showExercise]);
+}, [location, selectedLecture, showExercise]);
 const orvlpdf = courseData?.orvl_topic_pdf;
 console.log(orvlpdf)
   if (loading) return <div>Loading...</div>;
