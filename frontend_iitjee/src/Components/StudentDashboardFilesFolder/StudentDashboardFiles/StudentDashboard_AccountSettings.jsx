@@ -108,7 +108,7 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
             }`}
             onClick={() => setActiveSection("profile")}
           >
-            Profile Update
+            Profile Info
           </div>
           <div
             className={`${styles.passwordsButton} ${
