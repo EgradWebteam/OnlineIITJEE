@@ -5,13 +5,17 @@ const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const sasToken = process.env.AZURE_SAS_TOKEN;
 const containerName = process.env.AZURE_CONTAINER_NAME;
 const testDocumentFolderName = process.env.AZURE_DOCUMENT_FOLDER_ORVL;
+const PDFUrl = process.env.AZURE_DOCUMENT_FOLDER_PDF; // Folder name for PDFs
 
 // Helper to get image URL
 const getImageUrl = (documentName, folder, fileName) => {
   if (!fileName || !documentName) return null;
   return `https://${accountName}.blob.core.windows.net/${containerName}/${testDocumentFolderName}/${documentName}/${folder}/${fileName}?${sasToken}`;
 };
-
+const getPDFUrl = (fileName) => {
+  if (!fileName ) return null;
+  return `https://${accountName}.blob.core.windows.net/${containerName}/${testDocumentFolderName}/${PDFUrl}/${fileName}?${sasToken}`;
+}
 router.get('/OrvlTopicForCourse/:student_registration_id/:course_creation_id', async (req, res) => {
   const { student_registration_id, course_creation_id } = req.params;
   let connection;
@@ -184,7 +188,9 @@ router.get('/CourseTopic/:orvl_topic_id', async (req, res) => {
     const result = {
       orvl_topic_id: rows[0].orvl_topic_id,
       orvl_topic_name: rows[0].orvl_topic_name,
-      orvl_topic_pdf: rows[0].orvl_topic_pdf,
+      orvl_topic_pdf:  getPDFUrl(rows[0].orvl_topic_pdf
+     
+      ),
       orvl_document_name: rows[0].orvl_document_name,
       lectures: []
     };

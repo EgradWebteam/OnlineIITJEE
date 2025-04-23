@@ -1,6 +1,6 @@
 import React from 'react'
 import style from '../../../Styles/LandingPageCSS/LogoHomeHeader.module.css'
-import LogoForHeader from '../../../assets/EGTLogoExamHeaderCompressed.jpg'
+import LogoForHeader from '../../../assets/EGTLogoExamHeaderCompressed.png'
 import { IoMdHome } from "react-icons/io";
 import { Link } from 'react-router-dom';
 

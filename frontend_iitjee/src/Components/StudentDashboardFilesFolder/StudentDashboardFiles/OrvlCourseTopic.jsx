@@ -501,7 +501,8 @@ const handleClosePopup = async () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [location, selectedLecture, showExercise]);
-
+const orvlpdf = courseData?.orvl_topic_pdf;
+console.log(orvlpdf)
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
@@ -568,6 +569,7 @@ const handleClosePopup = async () => {
           onLectureClick={handleLectureClick}
           onExerciseClick={handleExerciseClick}
           userStatus={userStatus}
+          orvlpdf = {orvlpdf}
         />
       )}
     </div>
