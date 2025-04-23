@@ -22,8 +22,7 @@ export default function QuestionNavigationButtons({
   setSelectedOption,
   realStudentId,
   realTestId,
-  isAutoSubmitted,
-  setIsAutoSubmitted,
+
 }) {
   const {
     answeredCount,
@@ -35,7 +34,7 @@ export default function QuestionNavigationButtons({
     totalQuestionsInTest,
   } = useQuestionStatus();
   const [showExamSummary, setShowExamSummary] = useState(false);
-  const { timeSpent,remainingTime } = useTimer();  // Get timeSpent in seconds
+  const { timeSpent } = useTimer();  // Get timeSpent in seconds
   // console.log("Time Spent (seconds):", timeSpent);
 
   useEffect(() => {
@@ -415,66 +414,15 @@ export default function QuestionNavigationButtons({
     const s = String(seconds % 60).padStart(2, "0");
     return `${h}:${m}:${s}`;
   };
-  // console.log("remainingTime",remainingTime)
-  // useEffect(() => {
-  //   if (remainingTime === 0) {
-  //     setShowExamSummary(true);
-  //     setIsAutoSubmitted(true);
-  //     console.log("remainingTimeEEEEEEEE",remainingTime)
-  //     const formattedTimeSpent = formatTime(timeSpent);  // Format it into HH:MM:SS
-  //     const attemptedCount = answeredAndMarkedForReviewCount + answeredCount;
-  //     const notAttemptedCount = markedForReviewCount + notAnsweredCount;
-  
-  //     const examSummaryData = {
-  //       studentId: realStudentId,
-  //       test_creation_table_id: realTestId,
-  //       totalQuestions: totalQuestionsInTest,
-  //       totalAnsweredQuestions: answeredCount,
-  //       totalAnsweredMarkForReviewQuestions: answeredAndMarkedForReviewCount,
-  //       totalMarkForReviewQuestions: markedForReviewCount,
-  //       totalNotAnsweredQuestions: notAnsweredCount,
-  //       totalVisitedQuestionQuestions: visitedCount,
-  //       totalNotVisitedQuestions: notVisitedCount,
-  //       totalAttemptedQuestions: attemptedCount,
-  //       totalNotAttemptedQuestions: notAttemptedCount,
-  //       TimeSpent: formattedTimeSpent,
-  //     };
-  
-  //     const saveExamSummary = async () => {
-  //       try {
-  //         const response = await fetch(`${BASE_URL}/OTSExamSummary/SaveExamSummary`, {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //           body: JSON.stringify(examSummaryData),
-  //         });
-  
-  //         console.log("examSummaryData", examSummaryData);
-  
-  //         const result = await response.json();
-  
-  //         if (response.ok) {
-  //           console.log("Success:", result.message);
-  //         } else {
-  //           console.error("Failed:", result.message);
-  //         }
-  //       } catch (error) {
-  //         console.error("Error posting exam summary:", error);
-  //       }
-  //     };
-  
-  //     saveExamSummary(); // Call the inner async function
-  //   }
-  // }, [remainingTime]);
+ 
 
-  const handleSubmitClick = async () => {
-    const formattedTimeSpent = formatTime(timeSpent);  // Format it into HH:MM:SS
-    console.log("timespenthours:", formattedTimeSpent)
-    setShowExamSummary(true);
-    setIsAutoSubmitted(false);
-    const attemptedCount =  answeredAndMarkedForReviewCount+answeredCount;
-   const notAttemptedCount =  markedForReviewCount+notAnsweredCount;
+
+
+  const handleSubmitClick = async (isAutoSubmit) => {
+    const formattedTimeSpent = formatTime(timeSpent); // Format HH:MM:SS
+    const attemptedCount = answeredAndMarkedForReviewCount + answeredCount;
+    const notAttemptedCount = markedForReviewCount + notAnsweredCount;
+
     const examSummaryData = {
       studentId: realStudentId,
       test_creation_table_id: realTestId,
@@ -490,6 +438,10 @@ export default function QuestionNavigationButtons({
       TimeSpent: formattedTimeSpent,
     };
   
+    setShowExamSummary(true);
+    setIsAutoSubmitted(isAutoSubmit);
+    console.log("examSummaryData", examSummaryData);
+  
     try {
       const response = await fetch(`${BASE_URL}/OTSExamSummary/SaveExamSummary`, {
         method: "POST",
@@ -498,7 +450,7 @@ export default function QuestionNavigationButtons({
         },
         body: JSON.stringify(examSummaryData),
       });
-  console.log("examSummaryData",examSummaryData)
+  
       const result = await response.json();
   
       if (response.ok) {
@@ -510,65 +462,6 @@ export default function QuestionNavigationButtons({
       console.error("Error posting exam summary:", error);
     }
   };
-  
-
-
-
-
-
-
-  // console.log("isAutoSubmitted BUTTONS",isAutoSubmitted)
-
-
-  
-  // const handleSubmitClick = () => {
-  //   handleExamSubmit(false); // manually submitted
-  // };
-  
-  // const handleExamSubmit = async (isAutoSubmit) => {
-  //   const formattedTimeSpent = formatTime(timeSpent); // Format HH:MM:SS
-  //   const attemptedCount = answeredAndMarkedForReviewCount + answeredCount;
-  //   const notAttemptedCount = markedForReviewCount + notAnsweredCount;
-  // console.log("isAutoSubmit FROM HANDLE SUBMIT",isAutoSubmit)
-  //   const examSummaryData = {
-  //     studentId: realStudentId,
-  //     test_creation_table_id: realTestId,
-  //     totalQuestions: totalQuestionsInTest,
-  //     totalAnsweredQuestions: answeredCount,
-  //     totalAnsweredMarkForReviewQuestions: answeredAndMarkedForReviewCount,
-  //     totalMarkForReviewQuestions: markedForReviewCount,
-  //     totalNotAnsweredQuestions: notAnsweredCount,
-  //     totalVisitedQuestionQuestions: visitedCount,
-  //     totalNotVisitedQuestions: notVisitedCount,
-  //     totalAttemptedQuestions: attemptedCount,
-  //     totalNotAttemptedQuestions: notAttemptedCount,
-  //     TimeSpent: formattedTimeSpent,
-  //   };
-  
-  //   setShowExamSummary(true);
-  //   setIsAutoSubmitted(isAutoSubmit);
-  //   console.log("examSummaryData", examSummaryData);
-  
-  //   try {
-  //     const response = await fetch(`${BASE_URL}/OTSExamSummary/SaveExamSummary`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(examSummaryData),
-  //     });
-  
-  //     const result = await response.json();
-  
-  //     if (response.ok) {
-  //       console.log("Success:", result.message);
-  //     } else {
-  //       console.error("Failed:", result.message);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error posting exam summary:", error);
-  //   }
-  // };
 
   
   return (
@@ -627,7 +520,7 @@ export default function QuestionNavigationButtons({
                 setUserAnswers={setUserAnswers}
                 realTestId={realTestId}
                 realStudentId={realStudentId}
-                isAutoSubmitted={isAutoSubmitted}
+          
               />
                       </QuestionStatusProvider>
              
