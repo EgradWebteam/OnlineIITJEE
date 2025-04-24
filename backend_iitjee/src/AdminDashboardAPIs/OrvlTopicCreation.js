@@ -439,7 +439,7 @@ router.post(
       if (req.files["topic_pdf"]) {
         const pdfFile = req.files["topic_pdf"][0];
         if (pdfFile.mimetype === "application/pdf") {
-          pdfFileName = `${Date.now()}_${pdfFile.originalname}`;
+          pdfFileName = `${uuidv4()}_${pdfFile.originalname}`;
           await uploadPDFToBlob(pdfFile.buffer, pdfFileName);
         }
       }
@@ -502,7 +502,7 @@ router.post(
             },
           ]);
         } else if (section.startsWith("[EQ]") && imageIndex < images.length) {
-          const imgUrl = await uploadToAzure(images[imageIndex++], `${questionFolder}/question_${questionIndex}.png`);
+          const imgUrl = await uploadToAzure(images[imageIndex++], `${questionFolder}/${uuidv4()}_question.png`);
           [questionId] = await insertBulk(connection, "iit_orvl_exercise_questions", [
             {
               exercise_question_img: imgUrl,
@@ -511,7 +511,7 @@ router.post(
           ]);
           questionIndex++;
         } else if (/^\(a\)/i.test(section) && imageIndex < images.length) {
-          const img = await uploadToAzure(images[imageIndex++], `${optionFolder}/opt_a_${questionIndex - 1}.png`);
+          const img = await uploadToAzure(images[imageIndex++], `${optionFolder}/${uuidv4()}_opt_a.png`);
           await insertBulk(connection, "iit_orvl_exercise_options", [
             {
               exercise_option_img: img,
@@ -520,7 +520,7 @@ router.post(
             },
           ]);
         } else if (/^\(b\)/i.test(section) && imageIndex < images.length) {
-          const img = await uploadToAzure(images[imageIndex++], `${optionFolder}/opt_b_${questionIndex - 1}.png`);
+          const img = await uploadToAzure(images[imageIndex++], `${optionFolder}/${uuidv4()}_opt_b.png`);
           await insertBulk(connection, "iit_orvl_exercise_options", [
             {
               exercise_option_img: img,
@@ -529,7 +529,7 @@ router.post(
             },
           ]);
         } else if (/^\(c\)/i.test(section) && imageIndex < images.length) {
-          const img = await uploadToAzure(images[imageIndex++], `${optionFolder}/opt_c_${questionIndex - 1}.png`);
+          const img = await uploadToAzure(images[imageIndex++], `${optionFolder}/${uuidv4()}_opt_c.png`);
           await insertBulk(connection, "iit_orvl_exercise_options", [
             {
               exercise_option_img: img,
@@ -538,7 +538,7 @@ router.post(
             },
           ]);
         } else if (/^\(d\)/i.test(section) && imageIndex < images.length) {
-          const img = await uploadToAzure(images[imageIndex++], `${optionFolder}/opt_d_${questionIndex - 1}.png`);
+          const img = await uploadToAzure(images[imageIndex++], `${optionFolder}/${uuidv4()}_opt_d.png`);
           await insertBulk(connection, "iit_orvl_exercise_options", [
             {
               exercise_option_img: img,
@@ -599,7 +599,7 @@ router.post(
           if (section.startsWith("[ESOLN]") && imageIndex < images.length) {
             const solutionImgUrl = await uploadToAzure(
               images[imageIndex++],
-              `${solutionFolder}/solution_${questionIndex - 1}.png`
+              `${solutionFolder}/${uuidv4()}_solution.png`
             );
             solutionMap[questionId].exercise_solution_img = solutionImgUrl;
           }
