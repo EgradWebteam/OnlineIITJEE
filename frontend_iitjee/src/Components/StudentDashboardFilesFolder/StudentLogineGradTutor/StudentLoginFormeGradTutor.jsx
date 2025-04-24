@@ -29,9 +29,9 @@ export default function StudentLoginFormeGradTutor({
   const confirmPasswordRef = useRef(null);
   const resetCodeRef = useRef(null);
 
-  // Validation function for new password and confirm password
-  const isPasswordValid =
-    newPassword && confirmPassword && newPassword === confirmPassword;
+
+
+  
 
   // Function to handle button text change depending on mode
   const getButtonText = () => {
@@ -45,11 +45,33 @@ export default function StudentLoginFormeGradTutor({
   // Determine if the button should be disabled
   const isButtonDisabled = () => {
     if (isForgotPassword) {
-      return isResetPassword ? !isPasswordValid : false;
+      return isResetPassword ? !isPasswordValid(passwordCriteria) || newPassword !== confirmPassword : false;
     } else {
       return false;
     }
   };
+
+  const checkPasswordCriteria = (password) => {
+    return {
+      length: password.length >= 8,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /\d/.test(password),
+      specialChar: /[^A-Za-z0-9]/.test(password),
+    };
+  };
+
+  
+  const isPasswordValid = (criteria) => {
+    return (
+      criteria.length &&
+      criteria.uppercase &&
+      criteria.lowercase &&
+      criteria.number &&
+      criteria.specialChar
+    );
+  };
+  const passwordCriteria = checkPasswordCriteria(newPassword);
 
   return (
     <form
@@ -135,6 +157,23 @@ export default function StudentLoginFormeGradTutor({
                 {showNewPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
+                        <ul className={styles.listofMandatory}>
+                          <li className={passwordCriteria.length ? styles.valid : ""}>
+                            At least 8 characters.
+                          </li>
+                          <li className={passwordCriteria.uppercase ? styles.valid : ""}>
+                            At least one uppercase letter.
+                          </li>
+                          <li className={passwordCriteria.lowercase ? styles.valid : ""}>
+                            At least one lowercase letter.
+                          </li>
+                          <li className={passwordCriteria.number ? styles.valid : ""}>
+                            At least one number.
+                          </li>
+                          <li className={passwordCriteria.specialChar ? styles.valid : ""}>
+                            At least one special character.
+                          </li>
+                        </ul>
           </div>
           <div className={styles.studentLoginFormInput}>
             <label>Confirm Password:</label>
@@ -167,7 +206,7 @@ export default function StudentLoginFormeGradTutor({
 
       {/* Submit button */}
       <div className={styles.studentLoginFormSubmit}>
-        <button type="submit" disabled={isButtonDisabled()}>
+        <button type="submit" disabled={isButtonDisabled(passwordCriteria)}>
           {getButtonText()} {/* Dynamic button text */}
         </button>
       </div>

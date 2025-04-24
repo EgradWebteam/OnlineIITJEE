@@ -3,6 +3,7 @@ import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard_AccountSettings.module.css";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
+
 const StudentDashboard_AccountSettings = ({ userData }) => {
   const [activeSection, setActiveSection] = useState("password");
 
@@ -189,13 +190,15 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
 
             <label className={styles.PasswordCreation}>Confirm Password</label>
             <div className={styles.passwordInputContainer}>
-              <input
-                type={showPassword.confirm ? "text" : "password"}
-                className={styles.passwordInput}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
+            <input
+  type={showPassword.confirm ? "text" : "password"}
+  className={styles.passwordInput}
+  value={confirmPassword}
+  onChange={(e) => setConfirmPassword(e.target.value)}
+
+  required
+/>
+
               <span
                 onClick={() => togglePasswordVisibility("confirm")}
                 className={styles.eyeIcon}
@@ -203,7 +206,11 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
                 {showPassword.confirm ? <IoEyeOffOutline /> : <IoEyeOutline />}
               </span>
             </div>
-
+{newPassword &&
+              confirmPassword &&
+              newPassword !== confirmPassword && (
+                <p className={styles.passwordError}>Passwords do not match</p>
+              )}
             {/* Display error or success message */}
             {errorMessage && (
               <div className={styles.errorMessage}>{errorMessage}</div>
