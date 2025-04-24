@@ -37,7 +37,7 @@ const TestCreationForm = ({
     const loadEditData = async () => {
       if (isEditMode && editData) {
         console.log("💡 Edit Mode - Received Edit Data:", editData);
-
+  
         // Pre-fill main test form fields
         setFormFields({
           testName: editData.test_name || "",
@@ -52,10 +52,10 @@ const TestCreationForm = ({
           totalQuestions: editData.number_of_questions || "",
           totalMarks: editData.total_marks || "",
         });
-
+      
         // Pre-select course
         setSelectedCourse(editData.course_creation_id || "");
-
+  
         // Fetch & populate subjects for the selected course
         if (editData.course_creation_id) {
           try {
@@ -67,26 +67,28 @@ const TestCreationForm = ({
             console.error("Error fetching subjects:", err);
           }
         }
-
-        // Pre-fill sections if present
+  
+  
         if (Array.isArray(editData.sections) && editData.sections.length > 0) {
           console.log("🧩 Prefilling sections:", editData.sections);
+  
 
           setIncludeSection(true);
+  
           const mappedSections = editData.sections.map((section) => ({
             selectedSubject: section.subject_id || "",
             sectionName: section.section_name || "",
-            numOfQuestions: section.no_of_questions || "", // Ensure this matches your DB column
+            numOfQuestions: section.no_of_questions || "", 
           }));
           setSubjectSections(mappedSections);
         } else {
-          setIncludeSection(false);
+          setIncludeSection(false); 
           setSubjectSections([
             { selectedSubject: "", sectionName: "", numOfQuestions: "" },
           ]);
         }
       } else {
-        // Reset form in Add mode
+
         setFormFields({
           testName: "",
           selectedTypeOfTest: "",
@@ -101,16 +103,18 @@ const TestCreationForm = ({
           totalMarks: "",
         });
         setSelectedCourse("");
-        setIncludeSection(false);
+        setIncludeSection(false); 
         setSubjectSections([
           { selectedSubject: "", sectionName: "", numOfQuestions: "" },
         ]);
         setSubjects([]);
       }
     };
-
+  
     loadEditData();
-  }, [isEditMode, editData]);
+  }, [isEditMode, editData]);  
+  
+  
 
   const handleFormFieldChange = (e) => {
     const { name, value } = e.target;

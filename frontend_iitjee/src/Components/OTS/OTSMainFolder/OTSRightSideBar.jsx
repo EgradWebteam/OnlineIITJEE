@@ -98,29 +98,34 @@ export default function OTSRightSideBar({
       return savedAnswer?.buttonClass === styles.AnsMarkedForReview;
     }).length || 0;
 
-  const handleQuestionClick = (index) => {
-    autoSaveNATIfNeeded();
-    const question = section?.questions?.[index];
-    if (!question) return;
-
-    const existing = userAnswers?.[question.question_id];
-
-    // Only apply NotAnsweredBtnCls if this question hasn't been touched
-    if (!existing) {
-      setUserAnswers((prev) => ({
-        ...prev,
-        [question.question_id]: {
-          subjectId: subject.subjectId,
-          sectionId: section.sectionId,
-          questionId: question.question_id,
-          buttonClass: styles.NotAnsweredBtnCls,
-          type: "", // no answer yet
-        },
-      }));
-    }
-
-    setActiveQuestionIndex(index);
-  };
+    const handleQuestionClick = async (index) => {
+      await autoSaveNATIfNeeded(); // Make sure current NAT is saved/cleared before switching
+    
+      const subject = testData?.subjects?.find((sub) => sub.SubjectName === activeSubject);
+      const section = subject?.sections?.find((sec) => sec.SectionName === activeSection);
+      const question = section?.questions?.[index];
+      if (!question) return;
+    
+      const existing = userAnswers?.[question.question_id];
+    
+      // Only apply NotAnsweredBtnCls if this question hasn't been touched
+      if (!existing) {
+        setUserAnswers((prev) => ({
+          ...prev,
+          [question.question_id]: {
+            subjectId: subject.subjectId,
+            sectionId: section.sectionId,
+            questionId: question.question_id,
+            buttonClass: styles.NotAnsweredBtnCls,
+            type: "", // no answer yet
+          },
+        }));
+      }
+    
+      setActiveQuestionIndex(index);
+    };
+    
+    
   // const [showSidebar, setShowSidebar] = useState(true);
   // Toggle Sidebar visibility when button is clicked
   const toggleSidebar = () => {

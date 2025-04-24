@@ -284,6 +284,8 @@ const InstructionsTab = () => {
           onDelete={handleDelete}
           showToggle={false}
             setShowInstructionPoints={setShowInstructionPoints} 
+  tableType="instruction"
+        
         />
       </div>
 
