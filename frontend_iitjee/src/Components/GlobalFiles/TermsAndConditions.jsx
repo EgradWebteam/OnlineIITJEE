@@ -1,6 +1,6 @@
 import React from "react";
 import logo from "../../assets/EGTLogoExamHeaderCompressed.png";
-import styles from '../../Styles/GlobalFilesCSS/TermsAndConditions.module.css'
+import styles from "../../Styles/GlobalFilesCSS/TermsAndConditions.module.css";
 
 const TermsAndConditions = ({ isModalOpen, setIsModalOpen }) => {
   const handleCloseTermsAndCond = () => {
@@ -13,9 +13,10 @@ const TermsAndConditions = ({ isModalOpen, setIsModalOpen }) => {
         <div className={styles.CloseBtnForTermsAndCon}>
           <button onClick={handleCloseTermsAndCond}>Close</button>
         </div>
-          <div className={styles.logoForTermsAndCon}>
-            <img src={logo} alt="logoImg" />
-          </div>
+        <div className={styles.logoForTermsAndCon}>
+          <img src={logo} alt="logoImg" />
+        </div>
+        <h3>Terms and Conditions</h3>
         <div className={styles.TermsAdnConditionsContent}>
           <p>
             We at www.egradtutor.in value your trust placed in us by you (”

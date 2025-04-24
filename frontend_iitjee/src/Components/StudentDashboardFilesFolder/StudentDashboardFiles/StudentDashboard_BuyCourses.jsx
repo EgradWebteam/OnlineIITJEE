@@ -15,12 +15,13 @@ export default function StudentDashboard_BuyCourses({
   const [structuredCourses, setStructuredCourses] = useState([]);
   const [selectedExam, setSelectedExam] = useState("");
   const [selectedPortal, setSelectedPortal] = useState("Online Test Series");
-
+  const [loading, setLoading] = useState(true);
   const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
 
   useEffect(() => {
     const fetchCoursesInBuyCourses = async () => {
       try {
+        setLoading(true); // Start loading
         const res = await fetch(
           `${BASE_URL}/studentbuycourses/UnPurchasedcourses/${studentId}`
         );
@@ -33,6 +34,9 @@ export default function StudentDashboard_BuyCourses({
         }
       } catch (err) {
         console.error("Error fetching unpurchased courses:", err);
+      }
+      finally {
+        setLoading(false); // Stop loading regardless of success or failure
       }
     };
 
@@ -252,7 +256,7 @@ export default function StudentDashboard_BuyCourses({
 
       {/* Course Cards */}
       {/* Course Cards or No Courses Message */}
-      {filteredCourses.length > 0 ? (
+      {/* {filteredCourses.length > 0 ? (
         <div className={globalCSS.cardHolderOTSORVLHome}>
           {filteredCourses.map((course) => (
             <CourseCard
@@ -281,7 +285,42 @@ export default function StudentDashboard_BuyCourses({
             No courses available at the moment.
           </p>
         </div>
-      )}
+      )} */}
+      {loading ? (
+  <div className={globalCSS.loadingContainer}>
+    <p className={globalCSS.loadingText}>Loading courses...</p>
+  </div>
+) : filteredCourses.length > 0 ? (
+  <div className={globalCSS.cardHolderOTSORVLHome}>
+    {filteredCourses.map((course) => (
+      <CourseCard
+        key={`${course.portal_id}-${course.course_creation_id}`}
+        title={course.course_name}
+        cardImage={course.card_image}
+        price={course.total_price}
+        context="buyCourses"
+        onBuy={() => {
+          const courseId = course.course_creation_id;
+          if (!courseId) {
+            console.error("Course ID is missing:", course);
+            return;
+          }
+          studentpaymentcreation(courseId, studentId);
+        }}
+        onGoToTest={() =>
+          console.log("Go to Test:", course.course_creation_id)
+        }
+      />
+    ))}
+  </div>
+) : (
+  <div className={globalCSS.noCoursesContainer}>
+    <p className={globalCSS.noCoursesMsg}>
+      No courses available at the moment.
+    </p>
+  </div>
+)}
+
     </div>
   );
 }

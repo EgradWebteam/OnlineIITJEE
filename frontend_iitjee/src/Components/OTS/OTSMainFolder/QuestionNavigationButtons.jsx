@@ -34,8 +34,8 @@ export default function QuestionNavigationButtons({
     totalQuestionsInTest,
   } = useQuestionStatus();
   const [showExamSummary, setShowExamSummary] = useState(false);
-  const { timeSpent } = useTimer();  // Get timeSpent in seconds
-  // console.log("Time Spent (seconds):", timeSpent);
+  const { timeSpent,timeLeft } = useTimer();  // Get timeSpent in seconds
+
 
   useEffect(() => {
     if (!testData || !testData.subjects) return;
@@ -415,14 +415,28 @@ export default function QuestionNavigationButtons({
     return `${h}:${m}:${s}`;
   };
  
+  const [isAutoSubmitted,setIsAutoSubmitted] = useState(false)
+  const [isSubmitClicked,setIsSubmitClicked] = useState(false)
+
+  // Automatically determine when to show the summary
+useEffect(() => {
+  const shouldShowSummary = timeLeft === 0 || isAutoSubmitted || isSubmitClicked;
+  setShowExamSummary(shouldShowSummary);
+}, [timeLeft, isAutoSubmitted, isSubmitClicked]);
 
 
+  useEffect(() => {
+    if (timeLeft === 0) {
+      setIsAutoSubmitted(true);
+    }
+  }, [timeLeft]);
 
-  const handleSubmitClick = async (isAutoSubmit) => {
+
+  const handleSubmitClick = async () => {
     const formattedTimeSpent = formatTime(timeSpent); // Format HH:MM:SS
     const attemptedCount = answeredAndMarkedForReviewCount + answeredCount;
     const notAttemptedCount = markedForReviewCount + notAnsweredCount;
-
+    setIsSubmitClicked(true);
     const examSummaryData = {
       studentId: realStudentId,
       test_creation_table_id: realTestId,
@@ -440,7 +454,7 @@ export default function QuestionNavigationButtons({
   
     setShowExamSummary(true);
 
-    console.log("examSummaryData", examSummaryData);
+
   
     try {
       const response = await fetch(`${BASE_URL}/OTSExamSummary/SaveExamSummary`, {
@@ -516,7 +530,14 @@ export default function QuestionNavigationButtons({
                          <ExamSummaryComponent
                 testData={testData}
                 userAnswers={userAnswers}
-                onCancelSubmit={() => setShowExamSummary(false)}  // Close summary
+             
+                onCancelSubmit={() => {
+                  setShowExamSummary(false);      // Close summary
+                  setIsSubmitClicked(false);      // Reset submit flag
+                  setIsAutoSubmitted(false);      // Reset auto submit flag
+                }}
+                isSubmitClicked={isSubmitClicked}
+                isAutoSubmitted={isAutoSubmitted}
                 setUserAnswers={setUserAnswers}
                 realTestId={realTestId}
                 realStudentId={realStudentId}

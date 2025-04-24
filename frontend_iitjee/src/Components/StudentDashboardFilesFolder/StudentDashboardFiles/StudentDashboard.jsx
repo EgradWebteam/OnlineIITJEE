@@ -13,6 +13,7 @@ const StudentDashboard_MyResults = lazy(() => import("./StudentDashboard_MyResul
 const StudentDashboard_AccountSettings = lazy(() => import("./StudentDashboard_AccountSettings.jsx"));
 export default function StudentDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
+   const [activeSubSection, setActiveSubSection] = useState("profile");
   const [isLoading, setIsLoading] = useState(true);
   const studentData = JSON.parse(localStorage.getItem('studentData'));
   const studentName = studentData?.userDetails?.candidate_name;
@@ -101,7 +102,10 @@ export default function StudentDashboard() {
           case "bokmarks":
             return <StudentDashboardBookmarks userData ={studentData?.userDetails}  studentId = {studentId}/>;
         case "account":
-          return <StudentDashboard_AccountSettings userData ={studentData?.userDetails}/>;
+          return <StudentDashboard_AccountSettings userData ={studentData?.userDetails}
+          activeSubSection={activeSubSection}
+          setActiveSubSection={setActiveSubSection}
+          />;
         default:
           return <StudentDashboardHome 
           handleSectionChange={handleSectionChange}
@@ -116,7 +120,7 @@ export default function StudentDashboard() {
   
   return (
     <div>
-      <StudentDashboardHeader  userData ={studentData?.userDetails} setActiveSection={setActiveSection}/>
+      <StudentDashboardHeader  userData ={studentData?.userDetails} setActiveSection={setActiveSection} setActiveSubSection={setActiveSubSection}/>
       <div className={styles.StudentDashboardContentHolder}>
         <div className={styles.studentDashboardLeftNavHolder}>
           <StudentDashboardLeftSideBar

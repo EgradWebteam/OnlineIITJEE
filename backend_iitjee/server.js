@@ -2,21 +2,12 @@ const express = require("express");
 const cors = require("cors");
 
 require("dotenv").config();
-const db = require("./src/config/database.js");
+
 const app = express();
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const path = require("path");
-// app.use(express.json());
-// const corsOptions = {
-//   origin: [
-//     "https://icy-sand-03dfe2700.6.azurestaticapps.net",
-//     "http://localhost:5173"
-//   ],
-//   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
-//   credentials: true,
-//   allowedHeaders: ["Content-Type", "Authorization", "popup-page-status"]
-// };
+
 app.use(cors({
   origin: [
     "https://icy-sand-03dfe2700.6.azurestaticapps.net",
@@ -26,7 +17,7 @@ app.use(cors({
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization", "popup-page-status"]
 }));
-// app.use(cors(corsOptions));
+
 
 app.use(bodyParser.json({ limit: "10mb" }));
 app.use(express.json());
@@ -117,9 +108,7 @@ const CourseHomePage = require("./src/LandingPageApis/CourseHomePage.js");
 app.use("/CourseHomePage", CourseHomePage);
 /**LandingPageApis */
 
-app.get("/", (req, res) => {
-  res.json({ message: "Backend is working!" });
-});
+
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
