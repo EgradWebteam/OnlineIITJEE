@@ -95,7 +95,7 @@ const InstructionsTab = () => {
   const [instructionImage, setInstructionImage] = useState(null);
 
   const handleOpen = async (row) => {
-    debugger
+    
     try {
       const res = await fetch(
         `${BASE_URL}/Instructions/GetInstructionPoints/${row.instruction_id}`
@@ -284,6 +284,8 @@ const InstructionsTab = () => {
           onDelete={handleDelete}
           showToggle={false}
             setShowInstructionPoints={setShowInstructionPoints} 
+  type="instruction"
+        
         />
       </div>
 

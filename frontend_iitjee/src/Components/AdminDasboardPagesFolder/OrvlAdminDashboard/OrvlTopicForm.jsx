@@ -11,6 +11,7 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
   const [topicName, setTopicName] = useState(topic ? topic.orvl_topic_name : '');
   const [topicPdf, setTopicPdf] = useState(null); // now stores file instead of just name
   const [topicDoc, setTopicDoc] = useState(null);
+  const [loading, setLoading] = useState(false); // Loading state
 
   useEffect(() => {
     const fetchExams = async () => {
@@ -19,6 +20,7 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
         setExams(response.data);
       } catch (error) {
         console.error("Error fetching exams:", error);
+        alert("Error fetching exams.");
       }
     };
 
@@ -34,6 +36,7 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
         setSubjects(response.data.subjects);
       } catch (error) {
         console.error("Error fetching subjects:", error);
+        alert("Error fetching subjects.");
       }
     };
 
@@ -42,6 +45,7 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);  // Set loading to true when submitting the form
 
     const formData = new FormData();
     formData.append("topic_name", topicName);
@@ -53,7 +57,7 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
 
     try {
       const response = topic
-        ? await axios.post(`${BASE_URL}/OrvlTopicCreation/updateTopic/${topic.orvl_topic_id}`, formData, {
+        ? await axios.put(`${BASE_URL}/OrvlTopicCreation/updateTopic/${topic.orvl_topic_id}`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
@@ -65,10 +69,14 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
           });
 
       console.log("Topic submitted successfully:", response.data);
+      setLoading(false);
+      alert(topic ? "Topic updated successfully!" : "Topic created successfully!"); // Alert on success
       onSuccess();
       onClose();
     } catch (error) {
       console.error("Error submitting topic:", error.response?.data || error.message);
+      setLoading(false);
+      alert("Error submitting the topic. Please try again."); // Alert on error
     }
   };
 
@@ -76,6 +84,8 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
     <div className={styles.backdrop}>
       <div className={styles.popup}>
         <h3 className={styles.heading}>{topic ? "Edit Topic" : "Create a New Topic"}</h3>
+
+        {/* Form */}
         <form onSubmit={handleSubmit} className={styles.topicForm}>
           <div className={styles.flex}>
             <label>Topic Name:</label>
@@ -141,8 +151,8 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
           </div>
 
           <div className={styles.buttonContainer}>
-            <button type="submit" className={`${styles.submitBtn} button`}>
-              {topic ? "Update" : "Submit"}
+            <button type="submit" className={`${styles.submitBtn} button`} disabled={loading}>
+              {loading ? "Submitting..." : topic ? "Update" : "Submit"}
             </button>
             <button type="button" className={`${styles.closeBtn} button`} onClick={onClose}>
               Close
