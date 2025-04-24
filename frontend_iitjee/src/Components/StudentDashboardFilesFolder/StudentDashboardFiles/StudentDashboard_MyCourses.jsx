@@ -1,13 +1,12 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from "react";
 import globalCSS from "../../../Styles/Global.module.css";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
-import CourseCard from '../../LandingPagesFolder/CourseCards.jsx';
-import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
-import TestDetailsContainer from './TestDetailsContainer.jsx';
+import CourseCard from "../../LandingPagesFolder/CourseCards.jsx";
+import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
+import TestDetailsContainer from "./TestDetailsContainer.jsx";
 import OrvlTopicCards from "./OrvlTopicCards.jsx";
-import OrvlCourseTopic from "./OrvlCourseTopic.jsx"; 
+import OrvlCourseTopic from "./OrvlCourseTopic.jsx";
 export default function StudentDashboard_MyCourses({ studentId }) {
-
   const [structuredCourses, setStructuredCourses] = useState([]);
   const [selectedPortal, setSelectedPortal] = useState(null);
   const [selectedExam, setSelectedExam] = useState(null);
@@ -17,12 +16,14 @@ export default function StudentDashboard_MyCourses({ studentId }) {
   const [showQuizContainer, setShowQuizContainer] = useState(true);
   const [showTestContainer, setShowTestContainer] = useState(false);
   const [showTopicContainer, setShowTopicContainer] = useState(false);
-const [topicId,setTopicId] = useState("")
+  const [topicId, setTopicId] = useState("");
   useEffect(() => {
     const fetchPurchasedCourses = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${BASE_URL}/studentmycourses/Purchasedcourses/${studentId}`);
+        const res = await fetch(
+          `${BASE_URL}/studentmycourses/Purchasedcourses/${studentId}`
+        );
         const data = await res.json();
 
         if (Array.isArray(data) && data.length > 0) {
@@ -46,7 +47,7 @@ const [topicId,setTopicId] = useState("")
   }, [studentId]);
 
   const portalData = useMemo(() => {
-    return structuredCourses.find(p => p.portal_name === selectedPortal);
+    return structuredCourses.find((p) => p.portal_name === selectedPortal);
   }, [structuredCourses, selectedPortal]);
 
   const examsForSelectedPortal = useMemo(() => {
@@ -55,13 +56,15 @@ const [topicId,setTopicId] = useState("")
 
   const filteredCourses = useMemo(() => {
     if (!portalData || !selectedExam) return null;
-    const exam = Object.values(portalData.exams).find(e => e.exam_name === selectedExam);
+    const exam = Object.values(portalData.exams).find(
+      (e) => e.exam_name === selectedExam
+    );
     if (!exam) return [];
-    return exam.courses.map(course => ({
+    return exam.courses.map((course) => ({
       ...course,
       exam_name: exam.exam_name,
       portal_name: portalData.portal_name,
-      portal_id: portalData.portal_id
+      portal_id: portalData.portal_id,
     }));
   }, [portalData, selectedExam]);
 
@@ -84,58 +87,56 @@ const [topicId,setTopicId] = useState("")
 
   return (
     <>
-<div className={styles.breadcrumbContainer}>
-<span className={styles.breadcrumbLink}>
-    My Courses
-  </span>
-  <span className={styles.breadcrumbSeparator}> &gt; </span>
-  <span
-    className={styles.breadcrumbLink}
-    onClick={() => {
-      const portal = structuredCourses.find(p => p.portal_name === selectedPortal);
-      const firstExam = portal ? Object.values(portal.exams)[0] : null;
-      setSelectedExam(firstExam?.exam_name || null);
-      setSelectedTestCourse(null);
-      setShowTestContainer(false);
-      setShowTopicContainer(false);
-      setOpenCourseOrvl(false);
-      setShowQuizContainer(true);
-    }}
-  >
-    {selectedPortal}
-  </span>
+      <div className={styles.breadcrumbContainer}>
+        <span className={styles.breadcrumbLink}>My Courses</span>
+        <span className={styles.breadcrumbSeparator}> &gt; </span>
+        <span
+          className={styles.breadcrumbLink}
+          onClick={() => {
+            const portal = structuredCourses.find(
+              (p) => p.portal_name === selectedPortal
+            );
+            const firstExam = portal ? Object.values(portal.exams)[0] : null;
+            setSelectedExam(firstExam?.exam_name || null);
+            setSelectedTestCourse(null);
+            setShowTestContainer(false);
+            setShowTopicContainer(false);
+            setOpenCourseOrvl(false);
+            setShowQuizContainer(true);
+          }}
+        >
+          {selectedPortal}
+        </span>
 
-  <span className={styles.breadcrumbSeparator}> &gt; </span>
+        <span className={styles.breadcrumbSeparator}> &gt; </span>
 
-  {selectedExam && (
-    <>
-      <span
-        className={styles.breadcrumbLink}
-        onClick={() => {
-          setSelectedTestCourse(null);
-          setShowTestContainer(false);
-          setShowTopicContainer(false);
-          setOpenCourseOrvl(false);
-          setShowQuizContainer(true);
-        }}
-      >
-        {selectedExam}
-      </span>
+        {selectedExam && (
+          <>
+            <span
+              className={styles.breadcrumbLink}
+              onClick={() => {
+                setSelectedTestCourse(null);
+                setShowTestContainer(false);
+                setShowTopicContainer(false);
+                setOpenCourseOrvl(false);
+                setShowQuizContainer(true);
+              }}
+            >
+              {selectedExam}
+            </span>
 
-      {/* Separator */}
-      <span className={styles.breadcrumbSeparator}> &gt; </span>
-    </>
-  )}
+            {/* Separator */}
+            <span className={styles.breadcrumbSeparator}> &gt; </span>
+          </>
+        )}
 
-  {/* Course Level - e.g. "IIT JEE MAINS COURSE-1" */}
-  {selectedTestCourse && (
-    <span className={styles.breadcrumbCurrent}>
-      {selectedTestCourse.course_name}
-    </span>
-  )}
-</div>
-
-
+        {/* Course Level - e.g. "IIT JEE MAINS COURSE-1" */}
+        {selectedTestCourse && (
+          <span className={styles.breadcrumbCurrent}>
+            {selectedTestCourse.course_name}
+          </span>
+        )}
+      </div>
 
       {showQuizContainer && (
         <div className={styles.studentDashboardMyCoursesMainDiv}>
@@ -148,7 +149,9 @@ const [topicId,setTopicId] = useState("")
             {structuredCourses.map((portal, index) => (
               <button
                 key={index}
-                className={`${styles.toggleBtn} ${selectedPortal === portal.portal_name ? styles.active : ""}`}
+                className={`${styles.toggleBtn} ${
+                  selectedPortal === portal.portal_name ? styles.active : ""
+                }`}
                 onClick={() => {
                   setSelectedPortal(portal.portal_name);
                   const firstExam = Object.values(portal.exams)[0];
@@ -165,7 +168,9 @@ const [topicId,setTopicId] = useState("")
             {examsForSelectedPortal.map((exam, idx) => (
               <button
                 key={idx}
-                className={`${globalCSS.examButtons} ${selectedExam === exam.exam_name ? globalCSS.examActiveBtn : ""}`}
+                className={`${globalCSS.examButtons} ${
+                  selectedExam === exam.exam_name ? globalCSS.examActiveBtn : ""
+                }`}
                 onClick={() => setSelectedExam(exam.exam_name)}
               >
                 {exam.exam_name}
@@ -174,9 +179,36 @@ const [topicId,setTopicId] = useState("")
           </div>
 
           {/* Loading or Not Ready */}
-          {(!structuredCourses.length || !selectedPortal || !selectedExam || filteredCourses.length === 0) ? (
+          {/* {(!structuredCourses.length || !selectedPortal || !selectedExam || filteredCourses.length === 0) ? (
             <div className={globalCSS.noCoursesContainer}>
               <p className={globalCSS.noCoursesMsg}>YOU HAVE NO ACTIVE COURSES</p>
+            </div>
+          ) : (
+            <div className={globalCSS.cardHolderOTSORVLHome}>
+              {filteredCourses.map((course) => (
+                <CourseCard
+                  key={course.course_creation_id}
+                  title={course.course_name}
+                  cardImage={course.card_image}
+                  context="myCourses"
+                  portalId={course.portal_id}
+                  onGoToTest={() => handleGoToTest(course)}
+                />
+              ))}
+            </div>
+          )} */}
+          {loading ? (
+            <div className={globalCSS.loadingContainer}>
+              <p className={globalCSS.loadingText}>Loading your courses...</p>
+            </div>
+          ) : !structuredCourses.length ||
+            !selectedPortal ||
+            !selectedExam ||
+            filteredCourses.length === 0 ? (
+            <div className={globalCSS.noCoursesContainer}>
+              <p className={globalCSS.noCoursesMsg}>
+                YOU HAVE NO ACTIVE COURSES
+              </p>
             </div>
           ) : (
             <div className={globalCSS.cardHolderOTSORVLHome}>
@@ -211,23 +243,23 @@ const [topicId,setTopicId] = useState("")
           context="myCourses"
           setTopicId={setTopicId}
           topicId={topicId}
-          setShowQuizContainer = {setShowQuizContainer}
-          setOpenCourseOrvl= {setOpenCourseOrvl}
+          setShowQuizContainer={setShowQuizContainer}
+          setOpenCourseOrvl={setOpenCourseOrvl}
           setSelectedTestCourse={setSelectedTestCourse}
-          setShowTestContainer = { setShowTestContainer}
-          setShowTopicContainer = {setShowTopicContainer}
+          setShowTestContainer={setShowTestContainer}
+          setShowTopicContainer={setShowTopicContainer}
           onBack={handleBackToCourses}
         />
       )}
-            {openCourseOrvl &&  (
+      {openCourseOrvl && (
         <OrvlCourseTopic
           studentId={studentId}
-          setOpenCourseOrvl= {setOpenCourseOrvl}
+          setOpenCourseOrvl={setOpenCourseOrvl}
           setSelectedTestCourse={setSelectedTestCourse}
-          setShowTestContainer = { setShowTestContainer}
-          setShowTopicContainer = {setShowTopicContainer}
+          setShowTestContainer={setShowTestContainer}
+          setShowTopicContainer={setShowTopicContainer}
           courseCreationId={selectedTestCourse.course_creation_id}
-           topicid = { topicId}
+          topicid={topicId}
           onBack={() => {
             setOpenCourseOrvl(false);
             setShowTopicContainer(true); // When going back, show topic container again

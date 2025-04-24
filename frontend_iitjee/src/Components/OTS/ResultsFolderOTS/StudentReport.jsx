@@ -90,14 +90,14 @@ const StudentReport = ({ testId, studentId }) => {
     sumStatus1,
     sumStatus0,
   } = data;
-  console.log("data", data);
+
   const timeLeftSec = parseTimeToSeconds(TimeLeft);
   const totalDurationSec = duration * 60;
   const timeSpentSec = totalDurationSec - timeLeftSec;
 
   const timeSpentPercentage = (timeSpentSec / totalDurationSec) * 100;
   const timeLeftPercentage = 100 - timeSpentPercentage;
-  console.log("totalQuestions", totalQuestions);
+
   // const notAttempted = totalQuestions - totalCorrect - totalWrong;
 
   const notAttempted =
@@ -111,7 +111,8 @@ const StudentReport = ({ testId, studentId }) => {
     { name: "Not Attempted", value: notAttempted },
   ];
 
-  const pieChart1COLORS = ["#28a745", "#dc3545", "#77878a3d"];
+  // const pieChart1COLORS = ["#28a745", "#dc3545", "#77878a3d"];
+  const pieChart1COLORS = ["#28a745", "#dc3545", "rgb(119 135 138 / 72%)"];
 
   // Parse the marks data
   const correctMarks = parseInt(sumStatus1) || 0; // Marks for correct answers

@@ -10,7 +10,7 @@ export default function StudentDashboard_MyResults({ studentId,userData }) {
   const [testData, setTestData] = useState([]);
   const [selectedExam, setSelectedExam] = useState(null);
   const navigate = useNavigate();
-console.log("userData",userData)
+
   const handleViewReportClick = (testId,test) => {
     navigate(`/StudentReport/${testId}`, {
       state: {
@@ -64,7 +64,7 @@ console.log("userData",userData)
   }
 
   const examNames = Object.keys(groupedByExam);
-console.log("examNames",examNames)
+
   return (
     <div className={styles.StudentDashboardMyCoursesMainDiv}>
       <div className={globalCSS.stuentDashboardGlobalHeading}>

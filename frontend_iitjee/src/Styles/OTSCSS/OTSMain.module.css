@@ -746,6 +746,13 @@ padding: 3rem;
   justify-content: space-between;
   margin: 1.5rem;
 }
+.tcPopup {
+  color: #2d9ffb;
+  text-decoration: underline;
+  text-transform: capitalize;
+  font-weight: 500;
+  cursor: pointer;
+}
 .readyBeginBtn{
   padding: 0.5rem;
   font-weight: 600;

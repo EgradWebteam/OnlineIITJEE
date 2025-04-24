@@ -17,6 +17,8 @@ const DynamicTable = ({
   onToggle,
   onAssign,
   onDownload,
+  onOpen,
+  setShowInstructionPoints,
   showEdit = true,
   showToggle = true,
   tableType, 
@@ -25,9 +27,7 @@ const DynamicTable = ({
   const [popupType, setPopupType] = useState(""); 
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    console.log("Selected Row", selectedRow);
-  }, [selectedRow]);
+
 
   const handleOptionSelect = (e, row) => {
     const selectedOption = e.target.value;
@@ -98,8 +98,10 @@ const DynamicTable = ({
   };
 
   const handleOpenModal = (row) => {
+    onOpen?.(row);
     setSelectedRow(row);
-    setShowModal(true); 
+    setShowModal(false); 
+    setShowInstructionPoints(true)
   };
 
   const handleCloseModal = () => {

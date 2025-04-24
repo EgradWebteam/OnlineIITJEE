@@ -8,9 +8,7 @@ export default function SubjectsAndSectionsContainer(
   activeSection,
   setActiveSection,
   autoSaveNATIfNeeded ,
-  setShowSidebar,
   showSidebar,
-  activeQuestionIndex,
   setActiveQuestionIndex
 }) {
 
@@ -30,9 +28,7 @@ export default function SubjectsAndSectionsContainer(
   const sections = getSections(activeSubject).filter(
     (section) => section?.SectionName && section.SectionName.trim() !== ""
   );
-  console.log("Raw Sections:", getSections(activeSubject));
-  console.log("Filtered Sections:", sections);
-  console.log("Filtered Sections Length:", sections.length);
+ 
     
 
   // Set default active subject and section on mount
