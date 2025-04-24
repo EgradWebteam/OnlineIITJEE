@@ -84,7 +84,7 @@
     border-radius: 5px;
     border: none;
     font-weight: 600;
-    margin: 1rem;
+    margin: 10px;
   }
 
 
@@ -121,6 +121,9 @@
   align-items: center;
     justify-content: center;
 }
+.OrvlCourseTopicHeader{
+  font-size: 25px;
+}
 }
 
 @media (max-width:425px) {
@@ -142,4 +145,11 @@
   align-items: center;
   justify-content: center;
 }
+ .OrvlCourseTopicHeader{
+  font-size: 25px;
+}
+.OrvlCourseTopicbtn button{
+  margin: 7px 0px;
+}
+
 }
