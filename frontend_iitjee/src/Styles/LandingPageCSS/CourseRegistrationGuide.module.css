@@ -1,0 +1,54 @@
+.courseGuideWrapper {
+    padding: 2rem;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fdfdfd;
+  }
+  
+  .generalGuideSection,
+  .purchaseGuideSection {
+    margin-bottom: 3rem;
+    padding: 1.5rem;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .headingWrapper {
+    margin-bottom: 1rem;
+  }
+  
+  .mainHeading {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid #17bddf;
+    padding-bottom: 0.5rem;
+  }
+  
+  .stepsWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .step {
+    background: #fafafa;
+    padding: 1rem;
+    border-left: 4px solid #17bddf;
+    border-radius: 5px;
+  }
+  
+  .stepHeading {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 0.3rem;
+  }
+  
+  .stepText {
+    font-size: 0.95rem;
+    color: #666;
+    margin: 0;
+  }
+  
