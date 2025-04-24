@@ -27,6 +27,7 @@
 .StudentAccountProfile2 img{
 width: 100%;
 height: 100%;
+border-radius: 50%;
 }
 .StudentAccountProfile svg{
  font-size: 40px;

@@ -10,6 +10,7 @@ const ExamSummaryComponent = ({
   realStudentId,
   isSubmitClicked,
   isAutoSubmitted,
+  setShowExamSummary
 }) => {
   const [showSubmittedPopup, setShowSubmittedPopup] = useState(false);
   const {
@@ -26,6 +27,35 @@ const ExamSummaryComponent = ({
   
 
   const [courseCreationId, setCourseCreationId] = useState([]);
+
+  // useEffect(() => {
+  //   // Check if the exam summary flag is set in localStorage
+  //   const enteredSummary = localStorage.getItem("examSummaryEntered") === "true";
+  //   if (enteredSummary) {
+  //     setShowExamSummary(true); // Show exam summary if flag is set
+  //   } else {
+  //     // Logic to handle case when the user directly accesses this page
+  //     // If they haven't already entered the exam summary, ensure the interface is correct
+  //     setShowExamSummary(false);
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      const enteredSummary = localStorage.getItem("examSummaryEntered") === "true";
+      if (enteredSummary) {
+        e.preventDefault();
+        e.returnValue = ""; // This line triggers the popup
+      }
+    };
+  
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+  
+  
 
   useEffect(() => {
     const fetchCourseId = async () => {
@@ -59,6 +89,8 @@ const ExamSummaryComponent = ({
 
     try {
       setShowSubmittedPopup(true);
+      localStorage.setItem("examSubmitted", "true"); // ✅ Only set when confirmed
+
 
       const postData = {
         studentId: realStudentId,
@@ -132,6 +164,9 @@ const ExamSummaryComponent = ({
   };
 
   const handleViewReport = () => {
+    localStorage.removeItem("examSummaryEntered");
+    localStorage.removeItem("examSubmitted");
+
     // Pass 'results' section via URL param (for immediate effect)
     const destinationURL = `/StudentDashboard/6?section=results`;
 
