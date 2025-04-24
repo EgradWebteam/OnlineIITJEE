@@ -7,6 +7,7 @@ import QuestionNavigationButtons from "./QuestionNavigationButtons.jsx";
 import { QuestionStatusProvider } from "../../../ContextFolder/CountsContext.jsx";
 import { TimerProvider } from "../../../ContextFolder/TimerContext.jsx";
 import OtsTimer from "./OTSTimer.jsx";
+import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 
 export default function OTSMain({ testData, realStudentId, realTestId }) {
   const [activeSubject, setActiveSubject] = useState(null);
@@ -55,43 +56,148 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
   //   }
   // };
 
-  const autoSaveNATIfNeeded = () => {
-    const subject = testData?.subjects?.find(
-      (sub) => sub.SubjectName === activeSubject
-    );
-    const section = subject?.sections?.find(
-      (sec) => sec.SectionName === activeSection
-    );
-    const question = section?.questions?.[activeQuestionIndex];
-    const qTypeId = question?.questionType?.quesionTypeId;
+    const saveUserResponse = async ({
+      realStudentId,
+      realTestId,
+      subject_id,
+      section_id,
+      question_id,
+      question_type_id,
+      optionIndexes1 = "",
+      optionIndexes2 = "",
+      optionIndexes1CharCodes = [],
+      optionIndexes2CharCodes = [],
+      calculatorInputValue = "",
+      answered = "1", // default to '1' for answered, pass '2' for review
+    }) => {
+      try {
+        const payload = {
+          realStudentId,
+          realTestId,
+          subject_id,
+          section_id,
+          questionId: question_id,
+          questionTypeId: question_type_id,
+          optionIndexes1,
+          optionIndexes2,
+          optionIndexes1CharCodes,
+          optionIndexes2CharCodes,
+          calculatorInputValue,
+          answered,
+        };
+   
+        const res = await fetch(`${BASE_URL}/OTS/SaveResponse`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+   
+        const data = await res.json();
+        console.log("SaveResponse API result:", data);
+   
+        return data;
+      } catch (error) {
+        console.error("Error in saveUserResponse:", error);
+        return { success: false, message: "Network error" };
+      }
+    };
   
-    if ([5, 6].includes(qTypeId) && natValue?.trim() !== "") {
+    const autoSaveNATIfNeeded = async () => {
+      const subject = testData?.subjects?.find(
+        (sub) => sub.SubjectName === activeSubject
+      );
+      const section = subject?.sections?.find(
+        (sec) => sec.SectionName === activeSection
+      );
+      const question = section?.questions?.[activeQuestionIndex];
+      const qTypeId = question?.questionType?.quesionTypeId;
+    
+      if (!question || ![5, 6].includes(qTypeId)) return;
+    
       const qid = question.question_id;
       const subjectId = subject.subjectId;
       const sectionId = section.sectionId;
-  
-      //  Check previous answer's buttonClass
+    
       const prevAnswer = userAnswers?.[qid];
-      const wasMarkedForReview = prevAnswer?.buttonClass === styles.AnsMarkedForReview;
-  
-      const savedData = {
-        subjectId,
-        sectionId,
-        questionId: qid,
-        natAnswer: natValue,
-        type: "NAT",
-        //  Preserve Marked for Review if previously set
-        buttonClass: wasMarkedForReview ? styles.AnsMarkedForReview : styles.AnswerdBtnCls,
-      };
-  
-      setUserAnswers((prev) => ({
-        ...prev,
-        [qid]: savedData,
-      }));
-    }
-  };
- 
-  
+      const wasPreviouslyAnswered = prevAnswer?.type === "NAT" && prevAnswer?.natAnswer?.trim();
+    
+      // ✅ Case 1: NAT has a value → Save
+      if (natValue?.trim() !== "") {
+        const wasMarkedForReview = prevAnswer?.buttonClass === styles.AnsMarkedForReview;
+    
+        const savedData = {
+          subjectId,
+          sectionId,
+          questionId: qid,
+          natAnswer: natValue,
+          type: "NAT",
+          buttonClass: wasMarkedForReview ? styles.AnsMarkedForReview : styles.AnswerdBtnCls,
+        };
+    
+        // Save locally
+        setUserAnswers((prev) => ({
+          ...prev,
+          [qid]: savedData,
+        }));
+    
+        // Save to backend
+        try {
+          await saveUserResponse({
+            realStudentId,
+            realTestId,
+            subject_id: subjectId,
+            section_id: sectionId,
+            question_id: qid,
+            question_type_id: qTypeId,
+            optionIndexes1: "",
+            optionIndexes1CharCodes: [],
+            calculatorInputValue: natValue,
+            answered: "1",
+          });
+        } catch (error) {
+          console.error("Auto-save NAT failed:", error);
+        }
+    
+      // ✅ Case 2: NAT is cleared → Only DELETE if it was previously answered
+      } else if (wasPreviouslyAnswered) {
+        setUserAnswers((prev) => ({
+          ...prev,
+          [qid]: {
+            subjectId,
+            sectionId,
+            questionId: qid,
+            type: "",
+            buttonClass: styles.NotAnsweredBtnCls,
+          },
+        }));
+    
+        try {
+          const response = await fetch(
+            `${BASE_URL}/OTS/ClearResponse/${realStudentId}/${realTestId}/${qid}`,
+            {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+    
+          const data = await response.json();
+          if (!data.success) {
+            console.warn('Delete API response:', data.message);
+          } else {
+            console.log('Response deleted from DB');
+          }
+        } catch (err) {
+          console.error('Error deleting user response:', err);
+        }
+      }
+    };
+    
+    
+    
   return (
     <div>
       <div className={`${styles.OTSMainFileMainContainer} ${styles.OTSWaterMark}`}>

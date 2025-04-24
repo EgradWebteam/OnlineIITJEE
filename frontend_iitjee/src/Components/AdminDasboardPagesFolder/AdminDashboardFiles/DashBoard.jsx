@@ -5,7 +5,7 @@ import { FaBook, FaFileAlt, FaUserGraduate, FaQuestionCircle } from 'react-icons
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 
 const DashBoard = () => {
-    console.log("Dashboard called");
+   
 
     // State variables to store the values from the API
     const [totalCourses, setTotalCourses] = useState(0);

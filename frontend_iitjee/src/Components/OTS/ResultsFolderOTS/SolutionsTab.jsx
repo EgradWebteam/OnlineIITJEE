@@ -9,7 +9,8 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
   const [selectedSubjectSection, setSelectedSubjectSection] = useState(null);
   const studentContact = userData?.mobile_no;
   const [visibleSolutions, setVisibleSolutions] = useState({});
-  const [showVideoSolution, setShowVideoSolution] = useState(false);
+  const [videoVisible, setVideoVisible] = useState({});
+  const [videoPopup, setVideoPopup] = useState(null); // null or question_id
 
   useEffect(() => {
     const fetchTestPaper = async () => {
@@ -70,6 +71,23 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
       ...prev,
       [questionId]: !prev[questionId],
     }));
+
+    // If hiding the solution, also hide video
+    if (visibleSolutions[questionId]) {
+      setVideoVisible((prev) => ({
+        ...prev,
+        [questionId]: false,
+      }));
+    }
+  };
+
+  const openVideoPopup = (questionId) => {
+    setVideoPopup(questionId);
+    setVisibleSolutions(false)
+  };
+
+  const closeVideoPopup = () => {
+    setVideoPopup(null);
   };
 
   const [bookmarkedQuestions, setBookmarkedQuestions] = useState([]);
@@ -108,10 +126,6 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
       console.error("Error:", error);
       alert("An error occurred while bookmarking");
     }
-  };
-
-  const toggleVideoSolution = () => {
-    setShowVideoSolution((prev) => !prev);
   };
 
   const PlayVideoById = (url) => {
@@ -201,13 +215,14 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                     <p>Question No: {question.question_id}</p>
                     <button
                       onClick={() => toggleBookmark(question.question_id)}
-                      className={`${styles.bookmarkButton} ${bookmarkedQuestions.includes(question.question_id)
+                      className={`${styles.bookmarkButton} ${
+                        bookmarkedQuestions.includes(question.question_id)
                           ? styles.bookmarked
                           : ""
-                        }`}
+                      }`}
                     >
                       {question.bookMark_Qid === null &&
-                        !bookmarkedQuestions.includes(question.question_id) ? (
+                      !bookmarkedQuestions.includes(question.question_id) ? (
                         <FaRegBookmark />
                       ) : (
                         <FaBookmark />
@@ -353,16 +368,38 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                       });
                     })()}
 
-                    <button
-                      onClick={() =>
-                        toggleSolutionVisibility(question.question_id)
-                      }
-                      className={styles.showSolutionButton}
-                    >
-                      {visibleSolutions[question.question_id]
-                        ? "Hide Solution"
-                        : "Show Solution"}
-                    </button>
+                    {question.solution?.solutionImgName && (
+                      <div className={styles.solutionButtonsContainer}>
+                        <div className={styles.showSolutionButton}>
+                          {/* View Solution Button */}
+                          <button
+                            onClick={() =>
+                              toggleSolutionVisibility(question.question_id)
+                            }
+                            className={styles.solutionBtnInBookMarks}
+                          >
+                            {visibleSolutions[question.question_id]
+                              ? "Hide Solution"
+                              : "View Solution"}
+                          </button>
+                        </div>
+                        {/* View Video Solution Button */}
+                        {question.solution?.solutionImgName &&
+                          question.solution?.video_solution_link !== "" && (
+                            <div className={styles.showSolutionButton}>
+                              <button
+                                onClick={() =>
+                                  openVideoPopup(question.question_id)
+                                }
+                              >
+                                                  {videoPopup === question.question_id
+                                  ? "Hide Video Solution"
+                                  : "View Video Solution"}
+                              </button>
+                            </div>
+                          )}
+                      </div>
+                    )}
 
                     {visibleSolutions[question.question_id] &&
                       question.solution?.solutionImgName && (
@@ -370,50 +407,49 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                           <p className={styles.solutionTag}>
                             Answer: {question.answer}
                           </p>
-
-                          <span className={styles.solutionTag}>Solution: </span>
-                          <div className={styles.solutionImageDivInSolutionTab}>
-                            <img
-                              src={question.solution.solutionImgName}
-                              alt={`Solution for question ${question.question_id}`}
-                            />
-                          </div>
+                          {question.solution?.solutionImgName && (
+                            <>
+                              <span className={styles.solutionTag}>
+                                Solution:{" "}
+                              </span>
+                              <div
+                                className={styles.solutionImageDivInSolutionTab}
+                              >
+                                <img
+                                  src={question.solution.solutionImgName}
+                                  alt={`Solution for question ${question.question_id}`}
+                                />
+                              </div>
+                            </>
+                          )}
                         </div>
                       )}
 
                     {/* Check for video solution link and display button if available */}
-                    {question.solution?.solutionImgName &&
-                      question.solution?.video_solution_link !== "" && (
-                        <div style={{ marginTop: "1rem" }}>
-                          <button
-                            className={styles.showSolutionButton}
-                            onClick={toggleVideoSolution}
-                          >
-                            {" "}
-                            {showVideoSolution
-                              ? "Hide Video Solution"
-                              : "View Video Solution"}
-                          </button>
 
-                          {showVideoSolution && (
-                            <div style={{ marginTop: "1rem" }}>
-                              <p>
-                                <strong>Video Solution:</strong>
-                                <iframe
-                                  src={PlayVideoById(
-                                    question.solution.video_solution_link
-                                  )}
-                                  title="Video Solution"
-                                  frameBorder="0"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                  allowFullScreen
-                                  style={{ width: "100%", height: "400px" }} // Add styling to ensure it fits well in the page
-                                />
-                              </p>
-                            </div>
-                          )}
+                    {videoPopup === question.question_id && (
+                      <div className={styles.videoModalOverlay}>
+                        <div className={styles.videoModalContent}>
+                          <p className={styles.solutionTag}>Video Solution:</p>
+                          <button
+                            className={styles.closeVideoModalBtn}
+                            onClick={closeVideoPopup}
+                          >
+                            ✖
+                          </button>
+                          <iframe
+                            src={PlayVideoById(
+                              question.solution.video_solution_link
+                            )}
+                            title="Video Solution"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            style={{ width: "100%", height: "400px" }} // Add styling to ensure it fits well in the page
+                          />
                         </div>
-                      )}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}

@@ -8,16 +8,6 @@ const cheerio = require("cheerio");
 const cors = require("cors");
 router.use(cors());
 
-router.get("/InstructionsFormData", async (req, res) => {
-  try {
-    const [exams] = await db.query("SELECT exam_id, exam_name FROM iit_exams");
-
-    res.json({ exams });
-  } catch (err) {
-    console.error("Error fetching IIT data:", err);
-    res.status(500).json({ error: "Failed to fetch IIT data" });
-  }
-});
 
 const upload = multer({ dest: "uploads/" });
 
