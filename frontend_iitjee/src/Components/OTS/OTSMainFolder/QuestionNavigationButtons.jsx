@@ -59,7 +59,33 @@ export default function QuestionNavigationButtons({
     setUserAnswers(updatedAnswers);
   }, [testData]);
   
-
+  useEffect(() => {
+    const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
+    const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
+    const question = section?.questions?.[activeQuestionIndex];
+    if (!question) return;
+  
+    const qid = question.question_id;
+    const answer = userAnswers?.[qid];
+  
+    if (!answer) return;
+  
+    // Restore MCQ
+    if (answer?.type === "MCQ") {
+      setSelectedOption({ option_index: answer.optionIndex });
+    }
+  
+    // Restore MSQ
+    else if (answer?.type === "MSQ") {
+      setSelectedOptionsArray(answer.selectedOptions || []);
+    }
+  
+    // Restore NAT
+    else if (answer?.type === "NAT") {
+      setNatValue(answer.natAnswer || "");
+    }
+  }, [activeSubject, activeSection, activeQuestionIndex]);
+  
  
 
   const navigateToNext = (subject, section, activeQuestionIndex) => {
@@ -160,7 +186,9 @@ export default function QuestionNavigationButtons({
     const sectionId = section.sectionId;
     const qTypeId = question?.questionType?.quesionTypeId;
 
-    let buttonClass = styles.NotAnsweredBtnCls;
+    const existingAnswer = userAnswers?.[qid];
+    let buttonClass = existingAnswer?.buttonClass || styles.NotAnsweredBtnCls;
+
     let savedData = { subjectId, sectionId, questionId: qid, type: "", buttonClass };
   
     let optionIndexesStr = "";
@@ -205,6 +233,19 @@ export default function QuestionNavigationButtons({
         natAnswer: natValue,
         buttonClass: styles.AnswerdBtnCls,
         type: "NAT"
+      };
+    }
+
+    // Explicit fallback to NotAnswered if nothing valid is selected
+    if (
+      !([1, 2].includes(qTypeId) && selectedOption?.option_index) &&
+      !([3, 4].includes(qTypeId) && Array.isArray(selectedOptionsArray) && selectedOptionsArray.length > 0) &&
+      !([5, 6].includes(qTypeId) && natValue?.trim() !== "")
+    ) {
+      savedData = {
+        ...savedData,
+        buttonClass: styles.NotAnsweredBtnCls,
+        type: ""
       };
     }
   
@@ -428,15 +469,26 @@ useEffect(() => {
   useEffect(() => {
     if (timeLeft === 0) {
       setIsAutoSubmitted(true);
+      localStorage.setItem("examSummaryEntered", "true"); //  LOCK as soon as time up
     }
   }, [timeLeft]);
 
+  useEffect(() => {
+    const enteredSummary = localStorage.getItem("examSummaryEntered") === "true";
+    const alreadySubmitted = localStorage.getItem("examSubmitted") === "true";
+  
+    if (enteredSummary || alreadySubmitted) {
+      setShowExamSummary(true);
+    }
+  }, []);
+  
 
   const handleSubmitClick = async () => {
     const formattedTimeSpent = formatTime(timeSpent); // Format HH:MM:SS
     const attemptedCount = answeredAndMarkedForReviewCount + answeredCount;
     const notAttemptedCount = markedForReviewCount + notAnsweredCount;
     setIsSubmitClicked(true);
+    localStorage.setItem("examSummaryEntered", "true"); 
     const examSummaryData = {
       studentId: realStudentId,
       test_creation_table_id: realTestId,
@@ -535,12 +587,15 @@ useEffect(() => {
                   setShowExamSummary(false);      // Close summary
                   setIsSubmitClicked(false);      // Reset submit flag
                   setIsAutoSubmitted(false);      // Reset auto submit flag
+                  localStorage.removeItem("examSummaryEntered"); // ❌ unlock summary lock
+                  localStorage.removeItem("examSubmitted"); // ❌ ensure test not marked submitted
                 }}
                 isSubmitClicked={isSubmitClicked}
                 isAutoSubmitted={isAutoSubmitted}
                 setUserAnswers={setUserAnswers}
                 realTestId={realTestId}
                 realStudentId={realStudentId}
+                setShowExamSummary={setShowExamSummary}
           
               />
                       </QuestionStatusProvider>

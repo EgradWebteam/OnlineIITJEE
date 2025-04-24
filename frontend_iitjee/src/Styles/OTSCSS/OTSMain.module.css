@@ -1118,23 +1118,22 @@ margin-left: 10px;
   width: 20px;
   margin-right: 10px;
 }
-.showSolutionButton{
-      width: fit-content;
-      font-size: 17px;
-      color: white;
-      font-weight: 500;
-      margin-left: 20px;
-      padding: 8px 15px;
-      background-color: rgb(7, 174, 240);
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
+.solutionButtonsContainer{
+  display: flex;
+
+  gap: 1rem;
+}
+.showSolutionButton button{
+  background-color: rgb(7, 174, 240);
+  color: white;
 }
 .solutionImageInSolutionTab{
   margin: 1rem;
   padding: 2rem;
   gap: 7px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  width: 100%;
+  background-color: white;
 }
 .solutionImageInSolutionTab img{
   width: 100%;
@@ -1148,6 +1147,38 @@ margin-left: 10px;
 .solutionImageDivInSolutionTab{
   width: 400px;
 }
+.videoModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.7);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.videoModalContent {
+  background: white;
+    padding: 37px;
+    border-radius: 8px;
+    position: relative;
+    max-width: 800px;
+    width: 100%;
+}
+
+.closeVideoModalBtn {
+  position: absolute;
+  top: -10px;
+  right: -13px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
 .watermarkForSolution{
   position: relative;
   background-repeat: no-repeat;
@@ -1653,18 +1684,8 @@ padding: 3px;
   touch-action: manipulation;
   cursor: pointer;
 }
-.showSolutionButton{
-  width: fit-content;
-  font-size: 12px;
-  color: white;
-  font-weight: 500;
-  margin-left: 8px;
-  padding: 7px 15px;
-  background-color: rgb(7, 174, 240);
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-}
+
+
 .solutionTag{
   font-size: 13px;
   font-weight: 600;

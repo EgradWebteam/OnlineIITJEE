@@ -291,8 +291,8 @@ button.backslash {
 
 .studentLogo img {
   width: 100%;
-
   height: 100%;
+  border-radius: 50%;
 }
 .toggleTypeButtons {
   display: flex;
@@ -939,7 +939,7 @@ height: 100%;
     cursor: pointer;
   }
   .optionImageDivInBookMarks img{
-width: 100%;
+width: auto;
 height: 100%;
   }
   .optionImageDivInBookMarks{
