@@ -90,14 +90,14 @@ const StudentReport = ({ testId, studentId }) => {
     sumStatus1,
     sumStatus0,
   } = data;
-  console.log("data", data);
+
   const timeLeftSec = parseTimeToSeconds(TimeLeft);
   const totalDurationSec = duration * 60;
   const timeSpentSec = totalDurationSec - timeLeftSec;
 
   const timeSpentPercentage = (timeSpentSec / totalDurationSec) * 100;
   const timeLeftPercentage = 100 - timeSpentPercentage;
-  console.log("totalQuestions", totalQuestions);
+
   // const notAttempted = totalQuestions - totalCorrect - totalWrong;
 
   const notAttempted =
