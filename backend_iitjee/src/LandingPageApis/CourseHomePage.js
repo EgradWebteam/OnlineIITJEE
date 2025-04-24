@@ -127,12 +127,12 @@ const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const sasToken = process.env.AZURE_SAS_TOKEN;
 const containerName = process.env.AZURE_CONTAINER_NAME;
 const CourseCardImagesFolderName = process.env.AZURE_COURSECARDS_FOLDER;
-const BackendBASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.BASE_URL;
 
 // Helper to return proxy URL instead of exposing SAS token
 const getImageUrl = (fileName) => {
   if (!fileName) return null;
-  return `${BackendBASE_URL}/CourseHomePage/CourseImage/${fileName}`; // or use your production domain
+  return `${BASE_URL}/CourseHomePage/CourseImage/${fileName}`; // or use your production domain
 };
 
 // ✅ Route to serve the actual course card image securely (proxy)
