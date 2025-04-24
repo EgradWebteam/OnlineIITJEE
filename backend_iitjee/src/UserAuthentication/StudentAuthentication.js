@@ -324,87 +324,84 @@ const getImageUrl = (fileName) => {
     }
   });
 
-router.post("/studentLogin", async (req, res) => {
-  let { email, password, sessionId } = req.body;
-
-  email = email.trim();
-  password = password.trim();
-
-  try {
-    // 1. Fetch student by email
-    const sql = `
-      SELECT student_registration_id, candidate_name, password, email_id,
-             last_login_time, is_logged_in, session_id, uploaded_photo, mobile_no
-      FROM iit_student_registration
-      WHERE email_id = ?
-    `;
-    const [users] = await db.query(sql, [email]);
-
-    if (users.length === 0) {
-      return res.status(400).json({ message: "Invalid email or password" });
+  router.post("/studentLogin", async (req, res) => {
+    let { email, password } = req.body;
+  
+    email = email.trim();
+    password = password.trim();
+  
+    try {
+      // 1. Fetch student by email
+      const sql = `
+        SELECT student_registration_id, candidate_name, password, email_id,
+               last_login_time, is_logged_in, session_id, uploaded_photo, mobile_no
+        FROM iit_student_registration
+        WHERE email_id = ?
+      `;
+      const [users] = await db.query(sql, [email]);
+  
+      if (users.length === 0) {
+        return res.status(400).json({ message: "Invalid email or password" });
+      }
+  
+      const user = users[0];
+  
+      // 2. Block login if already logged in
+      if (user.is_logged_in) {
+        return res.status(403).json({
+          message: "You are already logged in. Please log out before logging in again.",
+        });
+      }
+  
+      // 3. Compare password
+      const isMatch = await bcryptjs.compare(password, user.password);
+  
+      if (!isMatch) {
+        return res.status(400).json({ message: "Invalid email or password" });
+      }
+  
+      // 4. Generate new session and access token
+      const newSessionId = crypto.randomBytes(16).toString("hex");
+      const accessToken = jwt.sign(
+        { user_Id: user.student_registration_id },
+        process.env.JWT_SECRET,
+        { expiresIn: "24h" }
+      );
+  
+      const encryptedUserId = encryptDataWithAN(user.student_registration_id.toString());
+  
+      // 5. Update login status
+      const updateSql = `
+        UPDATE iit_student_registration
+        SET is_logged_in = TRUE, last_login_time = NOW(), session_id = ?
+        WHERE student_registration_id = ?
+      `;
+      await db.query(updateSql, [newSessionId, user.student_registration_id]);
+  
+      // 6. Send response
+      const responseData = {
+        user_Id: encryptedUserId,
+        decryptedId: user.student_registration_id,
+        accessToken,
+        userDetails: {
+          student_registration_id: user.student_registration_id,
+          candidate_name: user.candidate_name,
+          email_id: user.email_id,
+          last_login_time: user.last_login_time,
+          uploaded_photo: getImageUrl(user.uploaded_photo),
+          mobile_no: user.mobile_no,
+        },
+        sessionId: newSessionId,
+      };
+  
+      res.json(responseData);
+    } catch (error) {
+      console.error("Error during login:", error);
+      res.status(500).json({ message: "Server error" });
     }
-
-    const user = users[0];
-    const newSessionId = crypto.randomBytes(16).toString("hex");
-
-    // 2. Check session conflict
-    if (user.is_logged_in && user.session_id && user.session_id !== sessionId) {
-      return res.status(403).json({ message: "You are already logged in on another device." });
-    }
-
-    // 3. Compare password
-    console.log("Comparing input password:", password);
-    console.log("With stored hashed password:", user.password);
-
-    const isMatch = await bcryptjs.compare(password, user.password);
-    const hashedPassword = bcryptjs.hash(password, 10); // Store the hashed password for debugging
-    console.log(hashedPassword, user.password); // Log the password comparison for debugging
-    console.log("Password match result:", isMatch);
-
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid email or password" });
-    }
-
-    // 4. Generate access token
-    const accessToken = jwt.sign(
-      { user_Id: user.student_registration_id },
-      process.env.JWT_SECRET,
-      { expiresIn: "24h" }
-    );
-
-    const encryptedUserId = encryptDataWithAN(user.student_registration_id.toString());
-
-    // 5. Update login status
-    const updateSql = `
-      UPDATE iit_student_registration
-      SET is_logged_in = TRUE, last_login_time = NOW(), session_id = ?
-      WHERE student_registration_id = ?
-    `;
-    await db.query(updateSql, [newSessionId, user.student_registration_id]);
-    console.log("Full image URL:", getImageUrl(user.uploaded_photo));
-
-    // 6. Send response
-    const responseData = {
-      user_Id: encryptedUserId,
-      decryptedId: user.student_registration_id,
-      accessToken,
-      userDetails: {
-        student_registration_id: user.student_registration_id,
-        candidate_name: user.candidate_name,
-        email_id: user.email_id,
-        last_login_time: user.last_login_time,
-        uploaded_photo: getImageUrl(user.uploaded_photo),
-        mobile_no: user.mobile_no,
-      },
-      sessionId: newSessionId,
-    };
-
-    res.json(responseData);
-  } catch (error) {
-    console.error("Error during login:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-});
+  });
+  
+  
 router.post("/studentLogout", async (req, res) => {
   const { sessionId } = req.body; // Assume sessionId is passed in the request body
 

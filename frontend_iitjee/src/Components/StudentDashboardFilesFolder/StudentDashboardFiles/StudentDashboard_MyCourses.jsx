@@ -6,7 +6,7 @@ import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import TestDetailsContainer from "./TestDetailsContainer.jsx";
 import OrvlTopicCards from "./OrvlTopicCards.jsx";
 import OrvlCourseTopic from "./OrvlCourseTopic.jsx";
-export default function StudentDashboard_MyCourses({ studentId }) {
+export default function StudentDashboard_MyCourses({ studentId,userData }) {
   const [structuredCourses, setStructuredCourses] = useState([]);
   const [selectedPortal, setSelectedPortal] = useState(null);
   const [selectedExam, setSelectedExam] = useState(null);
@@ -87,17 +87,35 @@ export default function StudentDashboard_MyCourses({ studentId }) {
 
   return (
     <>
-      <div className={styles.breadcrumbContainer}>
-        <span className={styles.breadcrumbLink}>My Courses</span>
-        <span className={styles.breadcrumbSeparator}> &gt; </span>
+     {(!showQuizContainer || selectedTestCourse) && (
+  <div className={styles.breadcrumbContainer}>
+    <span className={styles.breadcrumbLink}>My Courses</span>
+    <span className={styles.breadcrumbSeparator}> &gt; </span>
+    <span
+      className={styles.breadcrumbLink}
+      onClick={() => {
+        const portal = structuredCourses.find(
+          (p) => p.portal_name === selectedPortal
+        );
+        const firstExam = portal ? Object.values(portal.exams)[0] : null;
+        setSelectedExam(firstExam?.exam_name || null);
+        setSelectedTestCourse(null);
+        setShowTestContainer(false);
+        setShowTopicContainer(false);
+        setOpenCourseOrvl(false);
+        setShowQuizContainer(true);
+      }}
+    >
+      {selectedPortal}
+    </span>
+
+    <span className={styles.breadcrumbSeparator}> &gt; </span>
+
+    {selectedExam && (
+      <>
         <span
           className={styles.breadcrumbLink}
           onClick={() => {
-            const portal = structuredCourses.find(
-              (p) => p.portal_name === selectedPortal
-            );
-            const firstExam = portal ? Object.values(portal.exams)[0] : null;
-            setSelectedExam(firstExam?.exam_name || null);
             setSelectedTestCourse(null);
             setShowTestContainer(false);
             setShowTopicContainer(false);
@@ -105,38 +123,20 @@ export default function StudentDashboard_MyCourses({ studentId }) {
             setShowQuizContainer(true);
           }}
         >
-          {selectedPortal}
+          {selectedExam}
         </span>
-
         <span className={styles.breadcrumbSeparator}> &gt; </span>
+      </>
+    )}
 
-        {selectedExam && (
-          <>
-            <span
-              className={styles.breadcrumbLink}
-              onClick={() => {
-                setSelectedTestCourse(null);
-                setShowTestContainer(false);
-                setShowTopicContainer(false);
-                setOpenCourseOrvl(false);
-                setShowQuizContainer(true);
-              }}
-            >
-              {selectedExam}
-            </span>
+    {selectedTestCourse && (
+      <span className={styles.breadcrumbCurrent}>
+        {selectedTestCourse.course_name}
+      </span>
+    )}
+  </div>
+)}
 
-            {/* Separator */}
-            <span className={styles.breadcrumbSeparator}> &gt; </span>
-          </>
-        )}
-
-        {/* Course Level - e.g. "IIT JEE MAINS COURSE-1" */}
-        {selectedTestCourse && (
-          <span className={styles.breadcrumbCurrent}>
-            {selectedTestCourse.course_name}
-          </span>
-        )}
-      </div>
 
       {showQuizContainer && (
         <div className={styles.studentDashboardMyCoursesMainDiv}>
@@ -232,6 +232,7 @@ export default function StudentDashboard_MyCourses({ studentId }) {
           course={selectedTestCourse}
           onBack={handleBackToCourses}
           studentId={studentId}
+          userData={userData}
         />
       )}
 

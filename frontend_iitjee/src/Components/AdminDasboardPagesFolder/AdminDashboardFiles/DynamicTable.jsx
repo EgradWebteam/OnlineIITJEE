@@ -98,10 +98,16 @@ const DynamicTable = ({
   };
 
   const handleOpenModal = (row) => {
-    onOpen?.(row);
+    onOpen?.(row);  
     setSelectedRow(row);
-    setShowModal(false); 
-    setShowInstructionPoints(true)
+    
+    if (type === "document") {
+      setPopupType("viewDocument"); 
+      setShowInstructionPoints(false)
+    } else {
+      setShowModal(false); 
+      setShowInstructionPoints(true);
+    }
   };
 
   const handleCloseModal = () => {
@@ -252,6 +258,16 @@ const DynamicTable = ({
           <AssignToTest data={selectedRow} onClose={handleClosePopup} />
         </div>
       )}
+       {popupType === "viewDocument" && selectedRow && (
+      <div className={styles.modalBackdrop} onClick={handleCloseModal}>
+        <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+          <h3>Document for {selectedRow.name}</h3>
+          <p>{selectedRow.documentText || "This is the content of the document."}</p>
+        
+          <ViewDocumentData data={selectedRow} onClose={handleClosePopup} />
+        </div>
+      </div>
+    )}
     </div>
   )
 }

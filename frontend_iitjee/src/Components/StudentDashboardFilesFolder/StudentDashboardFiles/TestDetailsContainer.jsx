@@ -5,7 +5,7 @@ import { encryptBatch } from '../../../utils/cryptoUtils.jsx';
 import { useNavigate } from 'react-router-dom';
 import { FaBookReader } from "react-icons/fa";
 
-export default function TestDetailsContainer({ course, onBack, studentId }) {
+export default function TestDetailsContainer({ course, onBack, studentId,userData }) {
   const [groupedTests, setGroupedTests] = useState({});
   const [courseName, setCourseName] = useState('');
   const [selectedTestType, setSelectedTestType] = useState('Select Type Of Test');
@@ -95,8 +95,18 @@ export default function TestDetailsContainer({ course, onBack, studentId }) {
     }
   };
 
-  const handleViewReportClickMycourses = (testId) => {
-    navigate(`/StudentReport/${testId}`);
+  const handleViewReportClickMycourses = (testId,test) => {
+    console.log("test",test)
+    navigate(`/StudentReport/${testId}`, {
+      state: {
+        studentId: studentId,
+        test_name: test.test_name,
+        total_marks: test.total_marks,
+        duration: test.duration,
+        userData:userData
+      }
+      
+    });
   };
 
   return (
@@ -142,7 +152,7 @@ export default function TestDetailsContainer({ course, onBack, studentId }) {
                   {test.test_attempt_status?.toLowerCase().trim() === 'completed' ? (
                     <button
                       className={styles.viewReportBtn}
-                      onClick={() => handleViewReportClickMycourses(test.test_creation_table_id)}
+                      onClick={() => handleViewReportClickMycourses(test.test_creation_table_id,test)}
                     >
                       View Report &gt;&gt;
                     </button>
@@ -176,7 +186,7 @@ export default function TestDetailsContainer({ course, onBack, studentId }) {
                 {test.test_attempt_status?.toLowerCase().trim() === 'completed' ? (
                   <button
                     className={styles.viewReportBtn}
-                    onClick={() => handleViewReportClickMycourses(test.test_creation_table_id)}
+                    onClick={() => handleViewReportClickMycourses(test.test_creation_table_id,test)}
                   >
                     View Report &gt;&gt;
                   </button>
