@@ -18,7 +18,7 @@ export default function LandingPageNavbar() {
           navigate("/");
         }
         if (btnName === "REGISTRATION") {
-          navigate("/registration");
+          navigate("/CourseRegistrationGuide");
         }
       }
     };
