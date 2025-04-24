@@ -22,7 +22,7 @@ const LectureExerciseList = ({ lectures, onLectureClick, onExerciseClick, userSt
   const [pdfpopup, setPdfpopup] = useState(false);
   const [pdfUrl, setPdfUrl] = useState("");
   const [pdf, setPdf] = useState(null);
-  DisableKeysAndMouseInteractions();
+  // DisableKeysAndMouseInteractions();
   // Load PDF when URL changes
   useEffect(() => {
     if (pdfUrl) {
@@ -154,7 +154,11 @@ const LectureExerciseList = ({ lectures, onLectureClick, onExerciseClick, userSt
            {orvlpdf && (
         <div className={styles.VideoIcon}>
           <button className={styles.PdfBtn} onClick={() => handleOpenPdf(orvlpdf)}>
-            📄 {decodeURIComponent(orvlpdf.split('/').pop()?.replace(/^\d+_/, '').replace(/\.pdf.*$/i, ''))}
+            📄 {
+        decodeURIComponent(orvlpdf.split('/').pop() || '')
+          .replace(/^(?:[0-9]+_|[a-f0-9-]{36}_)?/, '') // remove UUID or timestamp with underscore
+          .replace(/\.pdf.*$/i, '') // remove .pdf extension
+      }
           </button>
         </div>
       )}

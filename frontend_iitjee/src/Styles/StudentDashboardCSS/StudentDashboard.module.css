@@ -421,8 +421,8 @@ color: black;
   cursor: pointer;
 }
 .StudentDashboardRightSideContentHolder {
-  width: 90%;
-margin: 1rem 1rem auto;
+  width: 80%;
+margin: 1rem auto;
 }
 .LectureHeader {
   display: flex;

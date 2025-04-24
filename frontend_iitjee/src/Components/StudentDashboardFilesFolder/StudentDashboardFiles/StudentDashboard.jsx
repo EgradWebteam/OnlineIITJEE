@@ -95,7 +95,7 @@ export default function StudentDashboard() {
           handleSectionChange={handleSectionChange}
           />;
         case "myCourses":
-          return <StudentDashboard_MyCourses studentId = {studentId}/>;
+          return <StudentDashboard_MyCourses userData ={studentData?.userDetails} studentId = {studentId}/>;
         case "buyCourses":
           return <StudentDashboard_BuyCourses setActiveSection = {setActiveSection} studentId = {studentId}/>;
         case "results":
