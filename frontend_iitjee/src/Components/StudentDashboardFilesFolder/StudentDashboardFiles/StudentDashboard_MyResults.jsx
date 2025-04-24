@@ -64,7 +64,7 @@ console.log("userData",userData)
   }
 
   const examNames = Object.keys(groupedByExam);
-
+console.log("examNames",examNames)
   return (
     <div className={styles.StudentDashboardMyCoursesMainDiv}>
       <div className={globalCSS.stuentDashboardGlobalHeading}>
@@ -72,6 +72,7 @@ console.log("userData",userData)
       </div>
 
       {/* Exam Buttons */}
+      
       <div className={globalCSS.examButtonsDiv}>
         {examNames.map((exam, idx) => (
           <button

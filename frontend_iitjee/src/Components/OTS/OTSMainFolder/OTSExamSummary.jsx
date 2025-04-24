@@ -157,7 +157,7 @@ const ExamSummaryComponent = ({
     }
   }, [realTestId]);
 
-console.log("isAutoSubmitted SUMMARY",isAutoSubmitted)
+
 
   const handleConfirmSubmit = async () => {
     console.log(

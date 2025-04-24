@@ -53,11 +53,12 @@ const StudentReport = ({ testId, studentId }) => {
   // };
 
   const parseTimeToSeconds = (timeStr) => {
-    if (!timeStr || typeof timeStr !== 'string') return 0; // handle invalid input
-    const [hours = 0, minutes = 0, seconds = 0] = timeStr.split(":").map(Number);
+    if (!timeStr || typeof timeStr !== "string") return 0; // handle invalid input
+    const [hours = 0, minutes = 0, seconds = 0] = timeStr
+      .split(":")
+      .map(Number);
     return hours * 3600 + minutes * 60 + seconds;
   };
-  
 
   // Convert seconds to HH:MM:SS
   const formatToHHMMSS = (totalSeconds) => {
@@ -69,7 +70,12 @@ const StudentReport = ({ testId, studentId }) => {
       .join(":");
   };
 
-  if (!data) return <p><LoadingSpinner/></p>;
+  if (!data)
+    return (
+      <p>
+        <LoadingSpinner />
+      </p>
+    );
 
   const {
     duration,
@@ -78,24 +84,30 @@ const StudentReport = ({ testId, studentId }) => {
     totalAttemptedStudents,
     test_total_marks,
     totalQuestions,
+    test_total_Questions,
     totalCorrect,
     totalWrong,
     sumStatus1,
     sumStatus0,
   } = data;
-
+  console.log("data", data);
   const timeLeftSec = parseTimeToSeconds(TimeLeft);
   const totalDurationSec = duration * 60;
   const timeSpentSec = totalDurationSec - timeLeftSec;
 
   const timeSpentPercentage = (timeSpentSec / totalDurationSec) * 100;
   const timeLeftPercentage = 100 - timeSpentPercentage;
+  console.log("totalQuestions", totalQuestions);
+  // const notAttempted = totalQuestions - totalCorrect - totalWrong;
 
-  const notAttempted = totalQuestions - totalCorrect - totalWrong;
+  const notAttempted =
+    (totalQuestions ?? test_total_Questions ?? 0) -
+    (totalCorrect ?? 0) -
+    (totalWrong ?? 0);
 
   const pieChartData1 = [
-    { name: "Correct", value: totalCorrect },
-    { name: "Wrong", value: totalWrong },
+    { name: "Correct", value: totalCorrect ?? 0 },
+    { name: "Wrong", value: totalWrong ?? 0 },
     { name: "Not Attempted", value: notAttempted },
   ];
 
@@ -123,6 +135,30 @@ const StudentReport = ({ testId, studentId }) => {
   ];
 
   const pieChart2COLORS = ["#3e98c7", "#ffe9e9"]; // Green for score, grey for remaining
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      const item = payload[0];
+      return (
+        <div
+          style={{
+            backgroundColor: "#fff",
+            border: "1px solid #ccc",
+            padding: "5px",
+            borderRadius: "8px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+            fontSize: "14px",
+          }}
+        >
+          <strong style={{ color: item.payload.fill || item.color }}>
+            {item.name}
+          </strong>
+          <div>Value: {item.value}</div>
+        </div>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <div className={styles.studentPerformanceReportMain}>
@@ -130,13 +166,12 @@ const StudentReport = ({ testId, studentId }) => {
         <div className={styles.airRankSubDiv}>
           AIR:{" "}
           <b>
-            {rank_position}/{totalAttemptedStudents}
+            {rank_position ?? 0}/{totalAttemptedStudents}
           </b>
         </div>
         <div className={styles.timeSpentContainer}>
           <p className={styles.timeProgressPara}>Time Progress</p>
           <div className={styles.timeProgressContainer}>
-            
             <div className={styles.timeLeftContainer}>
               <p className={styles.timeLeftData}>
                 {formatToHHMMSS(timeSpentSec)}
@@ -157,34 +192,34 @@ const StudentReport = ({ testId, studentId }) => {
             </div>
           </div>
           <div
+            style={{
+              width: "100%",
+              backgroundColor: "#ccc",
+              position: "relative",
+            }}
+          >
+            <div
               style={{
-                width: "100%",
-                backgroundColor: "#ccc",
-                position: "relative",
+                width: `${timeSpentPercentage}%`,
+                height: "20px",
+                backgroundColor: "rgba(255, 0, 0, 0.5)",
+                transition: "width 1s",
               }}
-            >
-              <div
-                style={{
-                  width: `${timeSpentPercentage}%`,
-                  height: "20px",
-                  backgroundColor: "rgba(255, 0, 0, 0.5)",
-                  transition: "width 1s",
-                }}
-                title={`Time Spent: ${formatToHHMMSS(timeSpentSec)} mins`}
-              />
-              <div
-                style={{
-                  width: `${timeLeftPercentage}%`,
-                  height: "20px",
-                  backgroundColor: "rgba(0, 0, 255, 0.5)",
-                  position: "absolute",
-                  top: 0,
-                  left: `${timeSpentPercentage}%`,
-                  transition: "width 1s",
-                }}
-                title={`Time Left: ${formatToHHMMSS(timeLeftSec)} mins`}
-              />
-            </div>
+              title={`Time Spent: ${formatToHHMMSS(timeSpentSec)} mins`}
+            />
+            <div
+              style={{
+                width: `${timeLeftPercentage}%`,
+                height: "20px",
+                backgroundColor: "rgba(0, 0, 255, 0.5)",
+                position: "absolute",
+                top: 0,
+                left: `${timeSpentPercentage}%`,
+                transition: "width 1s",
+              }}
+              title={`Time Left: ${formatToHHMMSS(timeLeftSec)} mins`}
+            />
+          </div>
         </div>
       </div>
 
@@ -209,18 +244,17 @@ const StudentReport = ({ testId, studentId }) => {
               </tr>
             </thead>
             <tbody>
-           
-    {subjectMarks.map((subject) => (
-            <tr key={subject.subject_id}  className={styles.tableTr}>
-              <td className={styles.tableTd}>{subject.subject_name}</td>
-              <td className={styles.tableTd}>{subject.total_questions}</td>
-              <td className={styles.tableTd}>{subject.total_correct}</td>
-              <td className={styles.tableTd}>{subject.total_incorrect}</td>
-              <td className={styles.tableTd}>{subject.positive_marks}</td>
-              <td className={styles.tableTd}>{subject.negative_marks}</td>
-              <td className={styles.tableTd}>{subject.total_marks}</td>
-            </tr>
-          ))}
+              {subjectMarks.map((subject) => (
+                <tr key={subject.subject_id} className={styles.tableTr}>
+                  <td className={styles.tableTd}>{subject.subject_name}</td>
+                  <td className={styles.tableTd}>{subject.total_questions}</td>
+                  <td className={styles.tableTd}>{subject.total_correct}</td>
+                  <td className={styles.tableTd}>{subject.total_incorrect}</td>
+                  <td className={styles.tableTd}>{subject.positive_marks}</td>
+                  <td className={styles.tableTd}>{subject.negative_marks}</td>
+                  <td className={styles.tableTd}>{subject.total_marks}</td>
+                </tr>
+              ))}
               <tr className={styles.tableTrTotalMarks}>
                 <td>
                   <strong>Total</strong>
@@ -271,18 +305,22 @@ const StudentReport = ({ testId, studentId }) => {
         </div>
       </div>
       <div className={styles.pieChartsMainDiv}>
-        <div className={styles.widthForPiechart}> 
+        <div className={styles.widthForPiechart}>
           <h3 className={styles.pieChartHeadings}>Answer Evaluation</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <PieChart style={{ transform: "scale(1.4)", transformOrigin: "center", marginTop: "5rem" }}>
+            <PieChart
+              style={{
+                transform: "scale(1.4)",
+                transformOrigin: "center",
+                marginTop: "5rem",
+              }}
+            >
               <Pie
                 data={pieChartData1}
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, percent }) =>
-                  `${name}: ${(percent * 100).toFixed(0)}%`
-                }
+                // label={({ name, value }) => `${name}: ${value}`}
                 outerRadius={100}
                 fill="#8884d8"
                 dataKey="value"
@@ -294,15 +332,57 @@ const StudentReport = ({ testId, studentId }) => {
                   />
                 ))}
               </Pie>
-              <Tooltip />
-              <Legend verticalAlign="bottom" height={36} />
+              <Tooltip content={<CustomTooltip />} />
+              {/* <Legend verticalAlign="bottom" height={36} /> */}
+              <Legend
+                verticalAlign="bottom"
+                height={36}
+                content={() => (
+                  <ul
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      listStyle: "none",
+                      padding: 0,
+                    }}
+                  >
+                    {pieChartData1.map((entry, index) => (
+                      <li
+                        key={`item-${index}`}
+                        style={{
+                          margin: "0 1rem",
+                          color: pieChart1COLORS[index],
+                        }}
+                      >
+                        <span
+                          style={{
+                            display: "inline-block",
+                            width: 10,
+                            height: 10,
+                            backgroundColor: pieChart1COLORS[index],
+                            marginRight: 6,
+                            borderRadius: "50%",
+                          }}
+                        />
+                        {entry.name}: {entry.value}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              />
             </PieChart>
           </ResponsiveContainer>
         </div>
         <div style={{ width: "100%", maxWidth: 400, margin: "0 auto" }}>
           <h3 className={styles.pieChartHeadings}>Total Percentage</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <PieChart style={{ transform: "scale(1.6)", transformOrigin: "center", marginTop: "2rem" }}>
+            <PieChart
+              style={{
+                transform: "scale(1.6)",
+                transformOrigin: "center",
+                marginTop: "2rem",
+              }}
+            >
               <Pie
                 data={pieChartData2}
                 cx="50%"
@@ -326,7 +406,7 @@ const StudentReport = ({ testId, studentId }) => {
                   fill="#333"
                 />
               </Pie>
-              <Tooltip />
+              {/* <Tooltip /> */}
             </PieChart>
           </ResponsiveContainer>
         </div>

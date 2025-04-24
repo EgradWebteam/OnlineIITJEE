@@ -3,6 +3,7 @@ import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.
 import globalCSS from "../../../Styles/Global.module.css";
 import OrvlTopicCardSub from "./OrvlTopicCardSub.jsx";
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
+import LoadingSpinner from "../../../ContextFolder/LoadingSpinner.jsx";
 
 export default function OrvlTopicCards({
   studentId,
@@ -42,7 +43,7 @@ export default function OrvlTopicCards({
   }, [studentId, courseCreationId]);
 
   if (!courseData) {
-    return <div>Loading...</div>;
+    return <div> <LoadingSpinner /></div>;
   }
 
   const selectedSubject = courseData.subjects.find(
