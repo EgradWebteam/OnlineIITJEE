@@ -29,6 +29,45 @@ input[type="password"]::-webkit-textfield-decoration-container {
     margin: 0 auto;
     box-shadow: 0px 0px 3px 3px rgb(201, 198, 198);
   }
+  .listofMandatory li{
+    color: red;
+    list-style-type: disc;
+  margin: 0 1rem;
+  font-size: 12px;
+}
+.ChangewPwdButton{
+    background-color: rgb(130 99 231);
+    color: white;
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    margin: auto;
+    padding: 0.5rem;
+    margin-top: 10px;
+}
+.passwordInputContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .passwordInput {
+    padding: 8px 40px 8px 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .eyeIcon {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    color: black;
+    transition: color 0.3s ease;
+  }
+  .listofMandatory li.valid {
+    color: green;
+  }
   /* Centering the login page */
   .studentLoginPage {
     display: flex;
@@ -149,10 +188,19 @@ input[type="password"]::-webkit-textfield-decoration-container {
     cursor: pointer;
     transition: background-color 0.3s;
   }
-  
-  .studentLoginFormSubmit button:hover {
-    background-color: #0056b3;
+  .studentLoginFormSubmit button:disabled {
+
+    opacity: 0.5;
+    background-color: #3091f8;
+    color: white;
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: not-allowed;
+    margin: auto;
+    padding: 0.5rem;
+    margin-top: 10px;
   }
+
   
   /* Links */
   .studentLoginLinks p {

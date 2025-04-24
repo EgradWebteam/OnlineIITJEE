@@ -31,7 +31,15 @@
   background-repeat: no-repeat;
   background-size: 10%;
 }
-
+.listofMandatoryadmin li{
+  color: red;
+  list-style-type: disc;
+margin: 0 1rem;
+font-size: 12px;
+}
+.listofMandatoryadmin li.valid {
+  color: green;
+}
 .AdminLoginPage {
   width: 400px;
   height: auto;
