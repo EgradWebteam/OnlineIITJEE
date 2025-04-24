@@ -18,7 +18,7 @@ export default function StudentDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const studentData = JSON.parse(localStorage.getItem('studentData'));
   const studentName = studentData?.userDetails?.candidate_name;
-  const studentId = localStorage.getItem('decryptedId');
+  const studentId = sessionStorage.getItem('decryptedId');
   const navigate = useNavigate();
     useEffect(() => {
       const savedSection = localStorage.getItem("activeSection");
