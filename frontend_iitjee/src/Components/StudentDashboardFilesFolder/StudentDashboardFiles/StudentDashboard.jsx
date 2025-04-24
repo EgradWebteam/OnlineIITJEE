@@ -11,6 +11,7 @@ const StudentDashboard_MyCourses = lazy(() => import("./StudentDashboard_MyCours
 const StudentDashboard_BuyCourses = lazy(() => import("./StudentDashboard_BuyCourses.jsx"));
 const StudentDashboard_MyResults = lazy(() => import("./StudentDashboard_MyResults.jsx"));
 const StudentDashboard_AccountSettings = lazy(() => import("./StudentDashboard_AccountSettings.jsx"));
+import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx'
 export default function StudentDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
    const [activeSubSection, setActiveSubSection] = useState("profile");
