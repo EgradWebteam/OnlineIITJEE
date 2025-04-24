@@ -3,6 +3,7 @@ import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.
 import globalCSS from "../../../Styles/Global.module.css";
 import OrvlTopicCardSub from "./OrvlTopicCardSub.jsx";
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
+import LoadingSpinner from "../../../ContextFolder/LoadingSpinner.jsx";
 
 export default function OrvlTopicCards({
   studentId,
@@ -42,7 +43,7 @@ export default function OrvlTopicCards({
   }, [studentId, courseCreationId]);
 
   if (!courseData) {
-    return <div>Loading...</div>;
+    return <div> <LoadingSpinner /></div>;
   }
 
   const selectedSubject = courseData.subjects.find(
@@ -61,7 +62,7 @@ export default function OrvlTopicCards({
       <div className={styles.goBackInTestContainerDiv}>
         <button className={styles.goBackBtn} onClick={onBack}>Go Back</button>
       </div>
-
+    <h2 className={styles.course_nameh2}>{courseData.course_name}</h2> 
       {/* Subject Buttons */}
       <div className={globalCSS.examButtonsDiv}>
         {courseData.subjects.map((subject) => (

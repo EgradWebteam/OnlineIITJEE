@@ -1,26 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { decryptBatch as decryptDataBatch, encryptBatch } from '../../../utils/cryptoUtils.jsx';
-import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  decryptBatch as decryptDataBatch,
+  encryptBatch,
+} from "../../../utils/cryptoUtils.jsx";
+import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
-import {useStudent} from "../../../ContextFolder/StudentContext.jsx";
-import OTSHeader from '../OTSHeaderFolder/OTSHeader.jsx';
+import { useStudent } from "../../../ContextFolder/StudentContext.jsx";
+import OTSHeader from "../OTSHeaderFolder/OTSHeader.jsx";
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx'
+import adminCapImg from '../../../assets/logoCap.jpeg';
 const ExamInstructions = () => {
   const { testId, studentId } = useParams();
   const navigate = useNavigate();
-
-  const [realTestId, setRealTestId] = useState('');
-  const [realStudentId, setRealStudentId] = useState('');
+const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
+  const [realTestId, setRealTestId] = useState("");
+  const [realStudentId, setRealStudentId] = useState("");
   const [instructionsData, setInstructionsData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [acceptedTerms, setAcceptedTerms] = useState(false); // 👈 Track checkbox
-  const { studentData} = useStudent();
+  const { studentData } = useStudent();
 
   const userData = studentData?.userDetails;
   const studentName = userData?.candidate_name;
  const studentProfile = userData?.uploaded_photo;
+
+  //  Read adminInfo from localStorage
+  const adminInfo = JSON.parse(localStorage.getItem("adminInfo"));
+  const isAdmin = adminInfo?.role === "admin";
+
   useEffect(() => {
     const token = sessionStorage.getItem("navigationToken");
     if (!token) {
@@ -30,8 +39,8 @@ const ExamInstructions = () => {
 
     const decryptAndFetch = async () => {
       try {
-        let decryptedTestId = '';
-        let decryptedStudentId = '';
+        let decryptedTestId = "";
+        let decryptedStudentId = "";
 
         if (studentId) {
           const [testIdDecrypted, studentIdDecrypted] = await decryptDataBatch([
@@ -41,13 +50,17 @@ const ExamInstructions = () => {
           decryptedTestId = testIdDecrypted;
           decryptedStudentId = studentIdDecrypted;
         } else {
-          [decryptedTestId] = await decryptDataBatch([decodeURIComponent(testId)]);
+          [decryptedTestId] = await decryptDataBatch([
+            decodeURIComponent(testId),
+          ]);
         }
 
         setRealTestId(decryptedTestId);
         setRealStudentId(decryptedStudentId); // empty string if admin
 
-        const response = await fetch(`${BASE_URL}/studentmycourses/instructions/${decryptedTestId}`);
+        const response = await fetch(
+          `${BASE_URL}/studentmycourses/instructions/${decryptedTestId}`
+        );
         if (!response.ok) throw new Error("Failed to fetch instructions");
 
         const data = await response.json();
@@ -63,15 +76,16 @@ const ExamInstructions = () => {
   }, [testId, studentId, navigate]);
 
   if (isLoading) {
-    return <div className={styles.loadingText}><LoadingSpinner/></div>;
+    return (
+      <div className={styles.loadingText}>
+        <LoadingSpinner />
+      </div>
+    );
   }
-
 
   const examName = instructionsData[0]?.exam_name || "Exam";
   const instructionPoints = instructionsData[0]?.instruction_points || [];
 
-
-  
   const handleBeginTest = async () => {
     sessionStorage.setItem("navigationToken", "valid");
 
@@ -81,7 +95,9 @@ const ExamInstructions = () => {
         : await encryptBatch([realTestId]);
 
       const encryptedTestId = encodeURIComponent(encrypted[0]);
-      const encryptedStudentId = studentId ? encodeURIComponent(encrypted[1]) : null;
+      const encryptedStudentId = studentId
+        ? encodeURIComponent(encrypted[1])
+        : null;
 
       const route = studentId
         ? `/OTSRootFile/${encryptedTestId}/${encryptedStudentId}`
@@ -95,9 +111,9 @@ const ExamInstructions = () => {
   };
   return (
     <div className={styles.examInstructionsContainer}>
-       <div>
-            <OTSHeader />
-        </div>
+      <div>
+        <OTSHeader />
+      </div>
       <div className={styles.instrcutionstudentProfileDiv}>
       <div className={styles.examinstructionSubdiv}>
         <h2 className={styles.instrctionMianHeading}>{examName}</h2>
@@ -110,44 +126,68 @@ const ExamInstructions = () => {
         </ul>
       </div>
 
-      <div className={styles.userImageDivInst}>
-        <div className={styles.userDetailsHolder}>
-          <div className={styles.userImageSubDiv}>
-            <img
-            src={studentProfile || defaultImage}
-            alt="Student Profile"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = defaultImage;
-            }}
-          />
+        <div className={styles.userImageDivInst}>
+          <div className={styles.userDetailsHolder}>
+            <div className={styles.userImageSubDiv}>
+              {isAdmin ? (
+                // Admin Profile
+                <img
+                  src={adminCapImg}
+                  alt="Admin Cap"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = defaultImage;
+                  }}
+                />
+              ) : (
+                //  Student Profile
+                <img
+                  src={studentProfile || defaultImage}
+                  alt="Student Profile"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = defaultImage;
+                  }}
+                />
+              )}
+            </div>
+            <p>{isAdmin ? "Admin" : studentName}</p>
           </div>
-          <p>{studentName}</p>
         </div>
       </div>
-      </div>
       <div className={styles.termandConditionsMainDiv}>
-      <div className={styles.termsandConditionsDiv}>
-        <input
-          type="checkbox"
-          checked={acceptedTerms}
-          onChange={() => setAcceptedTerms(prev => !prev)}
-        />
-        <span className={styles.spanAccept}>I accept all terms & conditions</span>
-      </div>
+        <div className={styles.termsandConditionsDiv}>
+          <input
+            type="checkbox"
+            checked={acceptedTerms}
+            onChange={() => setAcceptedTerms((prev) => !prev)}
+          />
+          <span className={styles.spanAccept}>
+            I accept all{" "}
+            <span className={styles.tcPopup} onClick={() => setOpenTermsAndConditions(true)}>
+              terms & conditions
+            </span>
+          </span>
+        </div>
 
-      <div className={styles.readytoBeginDiv}>
-        <button className={styles.previuosBtn} onClick={() => navigate(-1)}>
-          <span className={styles.previosBtnArrow}>&lt;</span> Previous
-        </button>
-        <button
-          className={`${styles.readyBeginBtn} ${!acceptedTerms ? styles.disabledBtn : ''}`}
-          disabled={!acceptedTerms} //  Disable until accepted
-          onClick={handleBeginTest}
-        >
-          I am ready to begin <span className={styles.nextBtnArrow}>&rarr;</span>
-        </button>
-      </div>
+        <div className={styles.readytoBeginDiv}>
+          <button className={styles.previuosBtn} onClick={() => navigate(-1)}>
+            <span className={styles.previosBtnArrow}>&lt;</span> Previous
+          </button>
+          <button
+            className={`${styles.readyBeginBtn} ${
+              !acceptedTerms ? styles.disabledBtn : ""
+            }`}
+            disabled={!acceptedTerms} //  Disable until accepted
+            onClick={handleBeginTest}
+          >
+            I am ready to begin{" "}
+            <span className={styles.nextBtnArrow}>&rarr;</span>
+          </button>
+        </div>
+        {openTermsAndConditions && (
+            <TermsAndConditions setIsModalOpen={setOpenTermsAndConditions} />
+          )}
       </div>
     </div>
   );

@@ -11,7 +11,11 @@
   display: flex;
 }
 /* Calculator.module.css */
+.course_nameh2{
 
+  text-align: center;
+
+}
 .containerclosepopup {
   display: flex;
   justify-content: flex-end;
@@ -417,8 +421,8 @@ color: black;
   cursor: pointer;
 }
 .StudentDashboardRightSideContentHolder {
-  width: 100%;
-margin: 1.5rem;
+  width: 90%;
+margin: 1rem auto;
 }
 .LectureHeader {
   display: flex;
@@ -477,17 +481,21 @@ margin: 1.5rem;
 }
 .QuestionTypeAndID {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   margin: 1rem 0;
   border-bottom: 1px solid whitesmoke;
  padding: 5px;
+}
+.popup_overlay {
+  position: relative;
 }
 .popup_body {
   display: flex;
   justify-content: center; 
   align-items: center; 
   width: 100%; 
-  height: 60vh; 
+  height: 60vh;
+  
 }
 
 .QuestionsAndImgScrollContainer {
@@ -497,7 +505,6 @@ height: 80%;
   padding-right: 10px;
   overflow-x: hidden;
 }
-
 .img_container img {
   max-width: 100%; 
   height: auto;
@@ -576,13 +583,29 @@ height: 80%;
   height: 100%;
 }
 .ExerciseQuestionContainers {
-  width: 70%; /* Full width */
+  width: 90%; 
   padding: 20px;
   border-right: 1px solid #dbdada;
 }
+.hamburgerIcon{
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+  user-select: none;
+  color: black;
+}
+.closeIcon{
+  font-size: 24px;
+  cursor: pointer;
+  user-select: none;
+  color: black;
+}
+
 .exercise_question_Subcontainer{
-  width: 30%; /* Full width */
-  padding: 10px;
+  display: block !important;
+    position: static;
+    padding: 10px;
+    box-shadow: none;
 }
 .QuestionImgForExercise{
   height: 400px;
@@ -601,6 +624,8 @@ height: 80%;
   margin: 1rem;
   border-top: 1px solid rgb(192, 191, 191);
   padding: 1rem 0;
+  align-items: center;
+  justify-content: center;
 }
 .navigation_buttons button{
   color:white;
@@ -627,13 +652,15 @@ height: 80%;
 .HeadingForLegend {
   font-size: 20px;
   color: #1a1818;
-  padding: 1rem 0;
+
 }
 .circleWrapper {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 10px;
   padding: 5px 0;
+  width: 100%;
+
 }
 
 .circle {
@@ -711,7 +738,7 @@ height: 100%;
 .breadcrumbLink {
   cursor: pointer;
   color:black;
-  text-decoration: underline;
+  font-weight: 700;
 }
 
 .breadcrumbLink:hover {
@@ -730,42 +757,6 @@ height: 100%;
 
 
 /* Sidebar Responsive Behavior */
-@media (max-width: 768px) {
-  .studentDashboardLeftsidebar {
-    position: absolute;
-    top: 80px;
-    left: 33px;
-    width: 220px;
-    height: 100vh;
-    background-color: rgba(94, 93, 93,);
-    z-index: 1000;
-    /* transition: transform 0.3s ease-in-out; */
-  }
-  .headingForLectures{
-    font-size: 15px;
-  }
-  .sidebarHidden {
-    transform: translateX(-133%);
-  }
-
-  .sidebarVisible {
-    transform: translateX(0%);
-  }
-
-  .studentDashboardHamburgerMenu {
-    display: block;
-    position: absolute;
-    top: 76px;
-    left: -2rem;
-    z-index: 1100;
-    background-color: white;
-  }
-
-  /* .StudentDashboardcontentArea {
-    margin-top: 50px;
-    padding-left: 10px;
-  } */
-}
 
 /* student dashboard test  container css */
 .testDetailsConatinerMainDiv {
@@ -984,6 +975,13 @@ height: 100%;
     font-size: 18px;
     font-weight: 500;
 }
+.navigation_buttons {
+  gap: 1rem;
+}
+.navigation_buttons button{
+  font-size: 12px;
+  padding: 5px;
+}
   }
   @media(max-width:768px){
     .myResultsSubContainer{
@@ -994,6 +992,100 @@ height: 100%;
     gap: 2rem;
     margin: 1rem;
     }
+    .exercise_question_Subcontainer {
+      display: none;
+      position: absolute;
+      background: white;
+      box-shadow: 0px 0px 2px 2px whitesmoke;
+      border-radius: 10px;
+      z-index:1;
+      padding: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      height: 48vh;
+      right: 87px;
+        top: 177px;
+    }
+    .showPalette {
+      display: block;
+    }
+    
+    .hamburgerIcon {
+      display: block;
+      text-align: right;
+      justify-self: end;
+    }
+    .ExerciseQuestionContainers {
+      width: 100%; /* Full width */
+      padding: 10px;
+    
+    }
+    .navigation_buttons button{
+      font-size: 10px;
+      padding: 5px;
+    }
+ 
+      .studentDashboardLeftsidebar {
+        position: absolute;
+        top: 80px;
+        left: 33px;
+        width: 220px;
+        height: 100vh;
+        background-color: rgba(94, 93, 93,);
+        z-index: 1000;
+        /* transition: transform 0.3s ease-in-out; */
+      }
+      .headingForLectures{
+        font-size: 15px;
+      }
+      .sidebarHidden {
+        transform: translateX(-133%);
+      }
+    
+      .sidebarVisible {
+        transform: translateX(0%);
+      }
+    
+      .studentDashboardHamburgerMenu {
+        display: block;
+        position: absolute;
+        top: 76px;
+        left: -2rem;
+        z-index: 1100;
+      }
+    }
+
+  
+  @media (max-width:600px) {
+    .breadcrumbContainer {
+      font-size:10px ;
+      margin: 1.5rem;
+    }
+    .status_pallete{
+  min-height: 55%;
+    }
+    .exercise_question_Subcontainer {
+      height: 38vh;
+      right: 34px;
+      top: 209px;
+    }
+   .popup_body {
+      margin: 3rem auto;
+      height: 50vh;
+    } 
+    .side_nav_button {
+      position: absolute;
+    margin: auto;
+    }
+    .previousBtn {
+      top: 86px;
+        left: 215px;
+    }
+    
+    .nextBtn {
+      bottom: 10px;
+      left: 215px;
+    }
+   
   }
   @media (max-width:425px) {
     .testContainerSub{
@@ -1051,6 +1143,15 @@ height: 100%;
   padding: 0.5rem;
   font-size: 13px;
   cursor: pointer;
+}
+.previousBtn {
+  top: 86px;
+    left: 120px;
+}
+
+.nextBtn {
+  bottom: 10px;
+  left: 120px;
 }
   }
   @media (max-width:375px) {

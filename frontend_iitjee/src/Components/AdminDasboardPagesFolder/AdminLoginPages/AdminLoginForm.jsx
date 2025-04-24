@@ -51,6 +51,7 @@ const AdminLoginForm = () => {
       if (response.ok) {
         const loginAuth={
           token:data.token,
+          role:data.role,
           adminName:data.name,
           admin_id: data.admin_id,
           adminEmail:data.email

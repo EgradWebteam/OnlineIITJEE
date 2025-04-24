@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "../../../Styles/AdminDashboardCSS/AdminDashboard.module.css";
 import ArrangeQuestions from "./ArrangeQuestion.jsx";
 import ViewQuestions from "./ViewQuestions.jsx";
+import ViewDocumentData from './ViewDocumentData.jsx'
 import ViewResults from "./ViewResults.jsx"; 
 import { encryptBatch } from '../../../utils/cryptoUtils.jsx';
 import AssignToTest from "./AssignToTest.jsx";
@@ -218,7 +219,8 @@ const DynamicTable = ({
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <h3>Document for {selectedRow.name}</h3> {/* Example title */}
             <p>{selectedRow.documentText || "This is the content of the document."}</p>
-            <button className={styles.closeModalBtn} onClick={handleCloseModal}>Close</button>
+          
+            <ViewDocumentData data={selectedRow} onClose={handleClosePopup} />
           </div>
         </div>
       )}
