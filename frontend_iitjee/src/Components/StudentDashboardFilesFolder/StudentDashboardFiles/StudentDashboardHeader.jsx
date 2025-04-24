@@ -5,13 +5,12 @@ import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.pn
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 
-const StudentDashboardHeader = ({ userData, setActiveSection }) => {
+const StudentDashboardHeader = ({ userData, setActiveSection, setActiveSubSection }) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const navigate = useNavigate(); 
 
 const studentProfile = userData?.uploaded_photo;
-console.log("studentProfile",studentProfile)
   // Handle mouse events to show/hide profile menu
   const handleMouseEnter = () => {
     setShowProfileMenu(true);
@@ -85,8 +84,14 @@ console.log("studentProfile",studentProfile)
 
           {showProfileMenu && (
             <div className={styles.onHoverOFstudent}>
-              <div onClick={() => setActiveSection("account")}>Profile</div>
-              <div onClick={() => setActiveSection("account")}>
+              <div onClick={() => {
+                setActiveSection("account");
+                setActiveSubSection("profile");
+              }}>Profile</div>
+              <div onClick={() => {
+                setActiveSection("account");
+                setActiveSubSection("password");
+              }}>
                 Change Password
               </div>
               <div className={styles.LogoutBtnDivStudent}>

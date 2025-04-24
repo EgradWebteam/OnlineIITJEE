@@ -15,53 +15,65 @@ export default function OTSRootFile() {
   const [realTestId, setRealTestId] = useState("");
   const [realStudentId, setRealStudentId] = useState("");
 
+
   useEffect(() => {
     const token = sessionStorage.getItem("navigationToken");
     if (!token) {
       navigate("/Error");
       return;
     }
-
-    const decryptParams = async () => {
+  
+    const decryptAndFetchTestPaper = async () => {
       try {
+        let testIdValue = '';
+        let studentIdValue = '';
+  
         if (studentId) {
           const [decryptedTestId, decryptedStudentId] = await decryptBatch([
             decodeURIComponent(testId),
             decodeURIComponent(studentId),
           ]);
-          setRealTestId(decryptedTestId);
-          setRealStudentId(decryptedStudentId);
+          testIdValue = decryptedTestId;
+          studentIdValue = decryptedStudentId;
         } else {
-          const [decryptedTestId] = await decryptBatch([
-            decodeURIComponent(testId),
-          ]);
-          setRealTestId(decryptedTestId);
+          [testIdValue] = await decryptBatch([decodeURIComponent(testId)]);
         }
+  
+        setRealTestId(testIdValue);
+        setRealStudentId(studentIdValue);
+  
+        //  Move fetchTestPaper logic here
+        const response = await axios.get(`${BASE_URL}/OTS/QuestionPaper/${testIdValue}`);
+        setTestPaperData(response.data);
       } catch (error) {
-        console.error("Decryption failed:", error);
+        console.error("Error during decryption or fetch:", error);
         navigate("/Error");
       }
     };
-
-    decryptParams();
+  
+    decryptAndFetchTestPaper();
   }, [testId, studentId, navigate]);
+  
 
   const [testPaperData, setTestPaperData] = useState([]);
 
-  useEffect(() => {
-    const fetchTestPaper = async () => {
-      try {
-        const response = await axios.get(
-          `${BASE_URL}/OTS/QuestionPaper/${realTestId}`
-        );
-        setTestPaperData(response.data);
-      } catch (err) {
-        console.error("Error fetching test paper:", err);
-      }
-    };
-
-    fetchTestPaper();
-  }, [realTestId]);
+  // useEffect(() => {
+  //   const fetchTestPaper = async () => {
+  //     if (!realTestId) return; //  Avoid call if ID is missing
+  
+  //     try {
+  //       const response = await axios.get(
+  //         `${BASE_URL}/OTS/QuestionPaper/${realTestId}`
+  //       );
+  //       setTestPaperData(response.data);
+  //     } catch (err) {
+  //       console.error("Error fetching test paper:", err);
+  //     }
+  //   };
+  
+  //   fetchTestPaper();
+  // }, [realTestId]);
+  
 
   const testName = testPaperData.TestName;
 

@@ -3,8 +3,8 @@ import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard_AccountSettings.module.css";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
-const StudentDashboard_AccountSettings = ({ userData }) => {
-  const [activeSection, setActiveSection] = useState("password");
+const StudentDashboard_AccountSettings = ({ userData, setActiveSubSection, activeSubSection }) => {
+  // const [activeSubSection, setActiveSubSection] = useState("profile");
 
   const [showPassword, setShowPassword] = useState({
     new: false,
@@ -14,10 +14,6 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(""); // Error message state
   const [successMessage, setSuccessMessage] = useState(""); // Success message state
-
-  useEffect(() => {
-    console.log("mysettings");
-  }, []);
 
   const togglePasswordVisibility = (field) => {
     setShowPassword((prevState) => ({
@@ -30,7 +26,6 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
   const studentEmail = userData?.email_id;
   const studentContact = userData?.mobile_no;
  const studentProfile= userData?.uploaded_photo || defaultImage;
-  console.log("stuenttProfile:", studentProfile);
 
   const handlePasswordChange = async (e) => {
     e.preventDefault();
@@ -68,7 +63,7 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
         setSuccessMessage("Password changed successfully.");
         setErrorMessage("");
 
-        // ✅ Clear input fields after successful password change
+        // Clear input fields after successful password change
         setNewPassword("");
         setConfirmPassword("");
       } else {
@@ -117,23 +112,23 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
         <div className={styles.StudentAccountPwds}>
           <div
             className={`${styles.passwordsButton} ${
-              activeSection === "profile" ? styles.active : ""
+              activeSubSection === "profile" ? styles.active : ""
             }`}
-            onClick={() => setActiveSection("profile")}
+            onClick={() => setActiveSubSection("profile")}
           >
             Profile Info
           </div>
           <div
             className={`${styles.passwordsButton} ${
-              activeSection === "password" ? styles.active : ""
+              activeSubSection === "password" ? styles.active : ""
             }`}
-            onClick={() => setActiveSection("password")}
+            onClick={() => setActiveSubSection("password")}
           >
             Change Password
           </div>
         </div>
 
-        {activeSection === "profile" && (
+        {activeSubSection === "profile" && (
           <div className={styles.StudentAccountDetails}>
             <div className={styles.StudentDetails}>Name: {studentName}</div>
             <div className={styles.StudentDetails}>Email: {studentEmail}</div>
@@ -143,7 +138,7 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
           </div>
         )}
 
-        {activeSection === "password" && (
+        {activeSubSection === "password" && (
           <form
             className={styles.StudentResetPassword}
             onSubmit={handlePasswordChange}

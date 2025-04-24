@@ -5,6 +5,7 @@ import { FaChevronCircleLeft } from "react-icons/fa";
 import { FaChevronCircleRight } from "react-icons/fa";
 import {useStudent} from "../../../ContextFolder/StudentContext.jsx";
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
+import adminCapImg from '../../../assets/logoCap.jpeg';
 export default function OTSRightSideBar({
   testData,
   activeSubject,
@@ -34,6 +35,11 @@ export default function OTSRightSideBar({
   const userData = studentData?.userDetails;
   const studentProfile = userData?.uploaded_photo;
     const studentName = userData?.candidate_name;
+
+    
+    //  Read adminInfo from localStorage
+  const adminInfo = JSON.parse(localStorage.getItem("adminInfo"));
+  const isAdmin = adminInfo?.role === "admin";
 
    
   useEffect(() => {
@@ -142,16 +148,37 @@ const scrollRight = () => {
       {/* Student Profile */}
       <div className={styles.StudentProfileHolderOTS}>
         <div className={styles.profileImage}>
-        <img
-  src={studentProfile || defaultImage}
-  alt="Student Profile"
-  onError={(e) => {
-    e.target.onerror = null;
-    e.target.src = defaultImage;
-  }}
-/>
+          {/* <img
+            src={studentProfile || defaultImage}
+            alt="Student Profile"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = defaultImage;
+            }}
+          /> */}
+          {isAdmin ? (
+            // Admin Profile
+            <img
+              src={adminCapImg}
+              alt="Admin Cap"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = defaultImage;
+              }}
+            />
+          ) : (
+            //  Student Profile
+            <img
+              src={studentProfile || defaultImage}
+              alt="Student Profile"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = defaultImage;
+              }}
+            />
+          )}
         </div>
-        <p>{studentName}</p>
+        <p>{isAdmin ? "Admin" : studentName}</p>
       </div>
 
       <div 
