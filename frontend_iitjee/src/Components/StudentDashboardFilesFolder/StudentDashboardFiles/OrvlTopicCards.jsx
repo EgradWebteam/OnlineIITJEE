@@ -62,7 +62,7 @@ export default function OrvlTopicCards({
       <div className={styles.goBackInTestContainerDiv}>
         <button className={styles.goBackBtn} onClick={onBack}>Go Back</button>
       </div>
-
+    <h2 className={styles.course_nameh2}>{courseData.course_name}</h2> 
       {/* Subject Buttons */}
       <div className={globalCSS.examButtonsDiv}>
         {courseData.subjects.map((subject) => (

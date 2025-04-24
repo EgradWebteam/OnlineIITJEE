@@ -11,7 +11,11 @@
   display: flex;
 }
 /* Calculator.module.css */
+.course_nameh2{
 
+  text-align: center;
+
+}
 .containerclosepopup {
   display: flex;
   justify-content: flex-end;

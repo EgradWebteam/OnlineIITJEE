@@ -5,12 +5,10 @@ import { encryptBatch } from '../../../utils/cryptoUtils.jsx';
 import { useNavigate } from 'react-router-dom';
 import { FaBookReader } from "react-icons/fa";
 
-
 export default function TestDetailsContainer({ course, onBack, studentId }) {
   const [groupedTests, setGroupedTests] = useState({});
   const [courseName, setCourseName] = useState('');
   const [selectedTestType, setSelectedTestType] = useState('Select Type Of Test');
-  const [encryptedStudentId, setEncryptedStudentId] = useState('');
 
   const course_creation_id = course?.course_creation_id;
   const navigate = useNavigate();
@@ -24,28 +22,17 @@ export default function TestDetailsContainer({ course, onBack, studentId }) {
         const tests = data.test_details.tests;
         const type = data.test_details.type_of_test_name;
 
-        const testIds = tests.map(test => test.test_creation_table_id);
-        const combinedToEncrypt = [...testIds, studentId]; // Single encryption call
-
-        const encryptedArray = await encryptBatch(combinedToEncrypt);
-        const encryptedTestIds = encryptedArray.slice(0, testIds.length);
-        const encryptedStudent = encryptedArray[testIds.length];
-
         const grouped = {};
-        tests.forEach((test, index) => {
+        tests.forEach(test => {
           const testType = type;
           if (!grouped[testType]) grouped[testType] = [];
-          grouped[testType].push({
-            ...test,
-            encryptedTestId: encryptedTestIds[index],
-          });
+          grouped[testType].push(test);
         });
 
-        setEncryptedStudentId(encryptedStudent);
         setGroupedTests(grouped);
         setCourseName(data.course_name);
       } catch (err) {
-        console.error("Failed to fetch or encrypt test details", err);
+        console.error("Failed to fetch test details", err);
       }
     };
 
@@ -58,25 +45,27 @@ export default function TestDetailsContainer({ course, onBack, studentId }) {
 
   function getCurrentLocalMySQLTime() {
     const now = new Date();
-    const offset = now.getTimezoneOffset() * 60000; // offset in ms
+    const offset = now.getTimezoneOffset() * 60000;
     const localTime = new Date(now - offset).toISOString().slice(0, 19).replace('T', ' ');
     return localTime;
   }
 
   const formattedTime = getCurrentLocalMySQLTime();
 
-  const handleStartTestClick = async (testCreationTableId, encryptedTestId) => {
-    const testStatusData = {
-      studentregistrationId: studentId,
-      courseCreationId: course_creation_id,
-      testCreationTableId: testCreationTableId,
-      studentTestStartTime: formattedTime,
-      testAttemptStatus: 'started',
-      testConnectionStatus: 'active',
-      testConnectionTime: formattedTime
-    };
-
+  const handleStartTestClick = async (testCreationTableId) => {
     try {
+      const [encryptedTestId, encryptedStudentId] = await encryptBatch([testCreationTableId, studentId]);
+
+      const testStatusData = {
+        studentregistrationId: studentId,
+        courseCreationId: course_creation_id,
+        testCreationTableId: testCreationTableId,
+        studentTestStartTime: formattedTime,
+        testAttemptStatus: 'started',
+        testConnectionStatus: 'active',
+        testConnectionTime: formattedTime
+      };
+
       const response = await fetch(`${BASE_URL}/studentmycourses/InsertOrUpdateTestAttemptStatus`, {
         method: 'POST',
         headers: {
@@ -136,59 +125,20 @@ export default function TestDetailsContainer({ course, onBack, studentId }) {
           Object.entries(groupedTests).map(([type, tests]) => (
             <div key={type} className={styles.testContainerDivForflex}>
               <h3 style={{ textAlign: 'center', margin: '1rem 0', color: '#0f172a' }}>{type}</h3>
-              {tests.map(test => {
-                console.log(`Test ID: ${test.test_creation_table_id}, Attempt Status: ${test.test_attempt_status}`);
-                return (
-                  <div key={test.test_creation_table_id} className={styles.testCard}>
-                    <div className={styles.testContainerSub}>
-                      <div className={styles.testContainerIcon}><FaBookReader /></div>
-                      <div className={styles.testInfoBox}>
-                        <h4>{test.test_name}</h4>
-                        <div className={styles.durationHolderdiv}>
-                          <p>{type}</p>
-                          <p>Total Marks: {test.total_marks} Marks</p>
-                          <p>Duration: {test.duration} Minutes</p>
-                        </div>
-                      </div>
-                    </div>
-                   
-                    {test.test_attempt_status?.toLowerCase().trim() === 'completed' ? (
-                      <button
-                        className={styles.viewReportBtn}
-                        onClick={() => handleViewReportClickMycourses(test.test_creation_table_id)}
-                      >
-                        View Report &gt;&gt;
-                      </button>
-                    ) : (
-                      <button
-                        className={styles.startTestBtn}
-                        onClick={() => handleStartTestClick(test.test_creation_table_id, test.encryptedTestId)}
-                      >
-                        Start Test &gt;&gt;
-                      </button>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          ))
-        ) : (
-          <div className={styles.testContainerDivForflex}>
-            <h3 style={{ textAlign: 'center', margin: '1rem 0', color: '#0f172a' }}>{selectedTestType}</h3>
-            {groupedTests[selectedTestType]?.map(test => {
-              console.log(`Test ID: ${test.test_creation_table_id}, Attempt Status: ${test.test_attempt_status}`);
-              return (
+              {tests.map(test => (
                 <div key={test.test_creation_table_id} className={styles.testCard}>
                   <div className={styles.testContainerSub}>
-                      <div className={styles.testContainerIcon}><FaBookReader /></div>
-                      <div className={styles.testInfoBox}>
-                        <h4>{test.test_name}</h4>
-                        <div className={styles.durationHolderdiv}>
-                          <p>Total Marks: {test.total_marks} Marks</p>
-                          <p>Duration: {test.duration} Minutes</p>
-                        </div>
+                    <div className={styles.testContainerIcon}><FaBookReader /></div>
+                    <div className={styles.testInfoBox}>
+                      <h4>{test.test_name}</h4>
+                      <div className={styles.durationHolderdiv}>
+                        <p>{type}</p>
+                        <p>Total Marks: {test.total_marks} Marks</p>
+                        <p>Duration: {test.duration} Minutes</p>
                       </div>
                     </div>
+                  </div>
+
                   {test.test_attempt_status?.toLowerCase().trim() === 'completed' ? (
                     <button
                       className={styles.viewReportBtn}
@@ -199,14 +149,47 @@ export default function TestDetailsContainer({ course, onBack, studentId }) {
                   ) : (
                     <button
                       className={styles.startTestBtn}
-                      onClick={() => handleStartTestClick(test.test_creation_table_id, test.encryptedTestId)}
+                      onClick={() => handleStartTestClick(test.test_creation_table_id)}
                     >
                       Start Test &gt;&gt;
                     </button>
                   )}
                 </div>
-              );
-            })}
+              ))}
+            </div>
+          ))
+        ) : (
+          <div className={styles.testContainerDivForflex}>
+            <h3 style={{ textAlign: 'center', margin: '1rem 0', color: '#0f172a' }}>{selectedTestType}</h3>
+            {groupedTests[selectedTestType]?.map(test => (
+              <div key={test.test_creation_table_id} className={styles.testCard}>
+                <div className={styles.testContainerSub}>
+                  <div className={styles.testContainerIcon}><FaBookReader /></div>
+                  <div className={styles.testInfoBox}>
+                    <h4>{test.test_name}</h4>
+                    <div className={styles.durationHolderdiv}>
+                      <p>Total Marks: {test.total_marks} Marks</p>
+                      <p>Duration: {test.duration} Minutes</p>
+                    </div>
+                  </div>
+                </div>
+                {test.test_attempt_status?.toLowerCase().trim() === 'completed' ? (
+                  <button
+                    className={styles.viewReportBtn}
+                    onClick={() => handleViewReportClickMycourses(test.test_creation_table_id)}
+                  >
+                    View Report &gt;&gt;
+                  </button>
+                ) : (
+                  <button
+                    className={styles.startTestBtn}
+                    onClick={() => handleStartTestClick(test.test_creation_table_id)}
+                  >
+                    Start Test &gt;&gt;
+                  </button>
+                )}
+              </div>
+            ))}
           </div>
         )}
       </div>

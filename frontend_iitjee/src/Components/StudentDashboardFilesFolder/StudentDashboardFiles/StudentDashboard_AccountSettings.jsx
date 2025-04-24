@@ -44,7 +44,10 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
       setErrorMessage("Passwords do not match.");
       return;
     }
-
+    if (!isPasswordValid(passwordCriteria)) {
+      setErrorMessage("Password does not meet the required criteria.");
+      return;
+    }
     const resetPasswordData = {
       email: studentEmail,
       newPassword: newPassword,
@@ -89,6 +92,16 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
       specialChar: /[^A-Za-z0-9]/.test(password),
     };
   };
+  const isPasswordValid = (criteria) => {
+    return (
+      criteria.length &&
+      criteria.uppercase &&
+      criteria.lowercase &&
+      criteria.number &&
+      criteria.specialChar
+    );
+  };
+  
 
   const passwordCriteria = checkPasswordCriteria(newPassword);
 
@@ -154,13 +167,7 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
               </span>
             </div>
 
-            {/* <ul className={styles.listofMandatory}>
-              <li>At least 8 characters.</li>
-              <li>At least one uppercase letter.</li>
-              <li>At least one lowercase letter.</li>
-              <li>At least one number.</li>
-              <li>At least one special character.</li>
-            </ul> */}
+          
 
             <ul className={styles.listofMandatory}>
               <li className={passwordCriteria.length ? styles.valid : ""}>
@@ -205,7 +212,7 @@ const StudentDashboard_AccountSettings = ({ userData }) => {
               <div className={styles.successMessage}>{successMessage}</div>
             )}
 
-            <button type="submit" className={styles.ChangewPwdButton}>
+            <button type="submit" className={styles.ChangewPwdButton} disabled={!isPasswordValid(passwordCriteria) || newPassword !== confirmPassword}>
               Change Password
             </button>
           </form>
