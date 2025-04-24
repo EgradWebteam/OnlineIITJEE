@@ -3,6 +3,7 @@ import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import { FaChevronRight } from "react-icons/fa";
 import { useStudent } from "../../../ContextFolder/StudentContext.jsx";
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
+import adminCapImg from '../../../assets/logoCap.jpeg';
 export default function OTSRightSideBar({
   testData,
   activeSubject,
@@ -32,6 +33,12 @@ export default function OTSRightSideBar({
   const studentProfile = userData?.uploaded_photo;
   const studentName = userData?.candidate_name;
 
+    
+    //  Read adminInfo from localStorage
+  const adminInfo = JSON.parse(localStorage.getItem("adminInfo"));
+  const isAdmin = adminInfo?.role === "admin";
+
+   
   useEffect(() => {
     if (!testData || !Array.isArray(testData.subjects)) return;
 
@@ -127,16 +134,37 @@ export default function OTSRightSideBar({
       {/* Student Profile */}
       <div className={styles.StudentProfileHolderOTS}>
         <div className={styles.profileImage}>
-          <img
+          {/* <img
             src={studentProfile || defaultImage}
             alt="Student Profile"
             onError={(e) => {
               e.target.onerror = null;
               e.target.src = defaultImage;
             }}
-          />
+          /> */}
+          {isAdmin ? (
+            // Admin Profile
+            <img
+              src={adminCapImg}
+              alt="Admin Cap"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = defaultImage;
+              }}
+            />
+          ) : (
+            //  Student Profile
+            <img
+              src={studentProfile || defaultImage}
+              alt="Student Profile"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = defaultImage;
+              }}
+            />
+          )}
         </div>
-        <p>{studentName}</p>
+        <p>{isAdmin ? "Admin" : studentName}</p>
       </div>
 
       <div

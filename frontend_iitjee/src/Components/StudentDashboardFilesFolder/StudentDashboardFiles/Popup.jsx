@@ -372,7 +372,7 @@ const Popup = ({
           {/* Previous Lecture Button */}
           <button
             onClick={previousLectureOrExercise}
-            className={styles.side_nav_button}
+            className={`${styles.side_nav_button} ${styles.previousBtn}`}
           >
             <GrPrevious />
           </button>
@@ -652,7 +652,7 @@ showPalette ? styles.showPaletteMobile : ""
           {/* Next Lecture Button */}
           <button
             onClick={nextLectureOrExercise}
-            className={styles.side_nav_button}
+            className={`${styles.side_nav_button} ${styles.nextBtn}`}
           >
             <GrNext />
           </button>

@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import headerImage from "../../../assets/EGTLogoExamHeaderCompressed.png";
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 
-const StudentDashboardHeader = ({ userData, setActiveSection }) => {
+const StudentDashboardHeader = ({ userData, setActiveSection, setActiveSubSection }) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const navigate = useNavigate(); 
 
 const studentProfile = userData?.uploaded_photo;
-
   // Handle mouse events to show/hide profile menu
   const handleMouseEnter = () => {
     setShowProfileMenu(true);
@@ -85,8 +84,14 @@ const studentProfile = userData?.uploaded_photo;
 
           {showProfileMenu && (
             <div className={styles.onHoverOFstudent}>
-              <div onClick={() => setActiveSection("account")}>Profile</div>
-              <div onClick={() => setActiveSection("account")}>
+              <div onClick={() => {
+                setActiveSection("account");
+                setActiveSubSection("profile");
+              }}>Profile</div>
+              <div onClick={() => {
+                setActiveSection("account");
+                setActiveSubSection("password");
+              }}>
                 Change Password
               </div>
               <div className={styles.LogoutBtnDivStudent}>

@@ -86,6 +86,9 @@
     font-weight: 600;
     margin: 1rem;
   }
+
+
+
   .OrvlCourseTopicHeader{
     display: flex;
     align-items: center;
@@ -94,9 +97,6 @@
     text-align: center;
     font-size: 35px;
     font-weight: 600;
-    padding: 10px;
-
-   
   }
   .completionInfo{
     width: 10%;

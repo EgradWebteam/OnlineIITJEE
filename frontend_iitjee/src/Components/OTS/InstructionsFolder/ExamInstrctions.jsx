@@ -9,10 +9,8 @@ import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import { useStudent } from "../../../ContextFolder/StudentContext.jsx";
 import OTSHeader from "../OTSHeaderFolder/OTSHeader.jsx";
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
-import LoadingSpinner from "../../../ContextFolder/LoadingSpinner.jsx";
-import TermsAndConditions from '../../GlobalFiles/TermsAndConditions.jsx'
-
-
+import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx'
+import adminCapImg from '../../../assets/logoCap.jpeg';
 const ExamInstructions = () => {
   const { testId, studentId } = useParams();
   const navigate = useNavigate();
@@ -26,7 +24,12 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
 
   const userData = studentData?.userDetails;
   const studentName = userData?.candidate_name;
-  const studentProfile = userData?.uploaded_photo;
+ const studentProfile = userData?.uploaded_photo;
+
+  //  Read adminInfo from localStorage
+  const adminInfo = JSON.parse(localStorage.getItem("adminInfo"));
+  const isAdmin = adminInfo?.role === "admin";
+
   useEffect(() => {
     const token = sessionStorage.getItem("navigationToken");
     if (!token) {
@@ -112,30 +115,43 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
         <OTSHeader />
       </div>
       <div className={styles.instrcutionstudentProfileDiv}>
-        <div className={styles.examinstructionSubdiv}>
-          <h2 className={styles.instrctionMianHeading}>{examName}</h2>
-          <ul className={styles.instructionList}>
-            {instructionPoints.map((point, idx) => (
-              <li key={idx} className={styles.instructionPointItem}>
-                {point}
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div className={styles.examinstructionSubdiv}>
+        <h2 className={styles.instrctionMianHeading}>{examName}</h2>
+        <ul className={styles.instructionList}>
+          {instructionPoints.map((point, idx) => (
+            <li key={idx} className={styles.instructionPointItem}>
+              {point}
+            </li>
+          ))}
+        </ul>
+      </div>
 
         <div className={styles.userImageDivInst}>
           <div className={styles.userDetailsHolder}>
             <div className={styles.userImageSubDiv}>
-              <img
-                src={studentProfile || defaultImage}
-                alt="Student Profile"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = defaultImage;
-                }}
-              />
+              {isAdmin ? (
+                // Admin Profile
+                <img
+                  src={adminCapImg}
+                  alt="Admin Cap"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = defaultImage;
+                  }}
+                />
+              ) : (
+                //  Student Profile
+                <img
+                  src={studentProfile || defaultImage}
+                  alt="Student Profile"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = defaultImage;
+                  }}
+                />
+              )}
             </div>
-            <p>{studentName}</p>
+            <p>{isAdmin ? "Admin" : studentName}</p>
           </div>
         </div>
       </div>
