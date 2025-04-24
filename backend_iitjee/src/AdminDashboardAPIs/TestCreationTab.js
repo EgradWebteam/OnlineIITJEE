@@ -271,48 +271,66 @@ router.post("/toggleTestStatus", async (req, res) => {
   }
 });
 router.get("/FetchTestDataFortable", async (req, res) => {
-  const sql = `
-    SELECT 
-    tct.test_creation_table_id,
-    tct.test_name,
-    cct.course_name,
-    tct.test_start_date,
-    tct.test_end_date,
-    tct.test_start_time,
-    tct.test_end_time,
-    tct.total_questions AS number_of_questions,
-    COUNT(DISTINCT q.question_id) AS uploaded_questions,
-    tct.status AS test_activation,
-    tct.total_marks,
-    tct.duration
-FROM iit_test_creation_table tct
-LEFT JOIN iit_course_creation_table cct 
-    ON tct.course_creation_id = cct.course_creation_id
-LEFT JOIN iit_questions q 
-    ON tct.test_creation_table_id = q.test_creation_table_id
-GROUP BY 
-    tct.test_creation_table_id,
-    tct.test_name,
-    cct.course_name,
-    tct.test_start_date,
-    tct.test_end_date,
-    tct.test_start_time,
-    tct.test_end_time,
-    tct.total_questions,
-    tct.status,
-    tct.total_marks,
-    tct.duration;
-
-    `;
-
   try {
-    const [rows] = await db.query(sql); // db is a promise-based pool
-    res.json(rows);
+    const [tests] = await db.query(`
+      SELECT 
+        tct.test_creation_table_id,
+        tct.test_name,
+        cct.course_name,
+        cct.course_creation_id,
+        tct.test_start_date,
+        tct.test_end_date,
+        tct.test_start_time,
+        tct.test_end_time,
+        tct.total_questions AS number_of_questions,
+        COUNT(DISTINCT q.question_id) AS uploaded_questions,
+        tct.status AS test_activation,
+        tct.total_marks,
+        tct.duration,
+        tt.type_of_test_id,
+        tt.type_of_test_name,
+        op.options_pattern_id,
+        op.options_pattern_name,
+        i.instruction_id,
+        i.exam_id,
+        i.instruction_heading,
+        i.document_name,
+        i.instruction_img
+      FROM iit_test_creation_table tct
+      LEFT JOIN iit_course_creation_table cct ON tct.course_creation_id = cct.course_creation_id
+      LEFT JOIN iit_questions q ON tct.test_creation_table_id = q.test_creation_table_id
+      LEFT JOIN iit_type_of_test tt ON tt.type_of_test_id = tct.course_type_of_test_id
+      LEFT JOIN iit_options_pattern op ON tct.options_pattern_id = op.options_pattern_id
+      LEFT JOIN iit_instructions i ON tct.instruction_id = i.instruction_id
+      GROUP BY 
+        tct.test_creation_table_id, cct.course_name, cct.course_creation_id, tt.type_of_test_id,
+        tt.type_of_test_name, op.options_pattern_id, op.options_pattern_name,
+        i.instruction_id, i.exam_id, i.instruction_heading, i.document_name, i.instruction_img
+    `);
+
+    const [sections] = await db.query(`
+      SELECT 
+        section_id,
+        test_creation_table_id,
+        section_name,
+        no_of_questions,
+        subject_id
+      FROM iit_sections
+    `);
+
+    const testDataWithSections = tests.map(test => ({
+      ...test,
+      sections: sections 
+    }));
+
+    res.json(testDataWithSections);
   } catch (err) {
-    console.error("Error fetching test details:", err);
+    console.error("Error fetching test data:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+
 
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));

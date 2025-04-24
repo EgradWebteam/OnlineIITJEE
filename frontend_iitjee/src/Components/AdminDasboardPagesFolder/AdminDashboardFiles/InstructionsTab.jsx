@@ -3,6 +3,7 @@ import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import styles from "../../../Styles/AdminDashboardCSS/Instruction.module.css";
 import DynamicTable from "../AdminDashboardFiles/DynamicTable.jsx";
 
+
 const InstructionsTab = () => {
   const isOpen=true
   const [showForm, setShowForm] = useState(false);
@@ -13,6 +14,7 @@ const InstructionsTab = () => {
   const [instructionDetails, setInstructionDetails] = useState(null);
   const [instructionPoints, setInstructionPoints] = useState([]);
   const [isReadOnly, setIsReadOnly] = useState(false);
+  const [showInstructionPoints, setShowInstructionPoints] = useState(false); 
 
   const columns = [
     { header: "S.NO", accessor: "sno" },
@@ -35,6 +37,7 @@ const InstructionsTab = () => {
   // Fetch instruction table data
   useEffect(() => {
     const fetchInstructionDetails = async () => {
+  
       try {
         const res = await fetch(
           `${BASE_URL}/Instructions/GetInstructionDetails`
@@ -92,15 +95,16 @@ const InstructionsTab = () => {
   const [instructionImage, setInstructionImage] = useState(null);
 
   const handleOpen = async (row) => {
+    
     try {
       const res = await fetch(
         `${BASE_URL}/Instructions/GetInstructionPoints/${row.instruction_id}`
       );
       if (!res.ok) throw new Error("Failed to fetch instruction points");
-
       const data = await res.json();
       setInstructionPoints(data.points || []);
-      setInstructionImage(data.instructionImg || null); // <-- new
+      setInstructionImage(data.instructionImg || null); 
+    
       setSelectedExam(row.exam_id);
       setHeading(row.heading);
       setIsReadOnly(true);
@@ -109,7 +113,6 @@ const InstructionsTab = () => {
     }
   };
 
-  const handleToggle = (row) => console.log("Toggle", row);
 
   const data = instructionDetails?.instructions
     ? instructionDetails.instructions.map((instruction, index) => ({
@@ -117,31 +120,27 @@ const InstructionsTab = () => {
         examName: instruction.exam_name,
         heading: instruction.instruction_heading,
         docName: instruction.document_name,
-        isActive: true, // or use instruction.is_active if present
+        isActive: true, 
         instruction_id: instruction.instruction_id,
         exam_id: instruction.exam_id || null, // only if exam_id is needed
       }))
     : [];
 
-  const instructionId = instructionDetails?.instructions?.[0]?.instruction_id;
 
-  const handleUpdate = async () => {
-    console.log("Updating instructionId:", instructionId);
+
+  const handleUpdate = async (pointId, updatedPointText) => {
+   
+    
     try {
-      const formattedPoints = instructionPoints
-        .filter((point) => point.trim() !== "")
-        .map((point) => point)
-        .join("\n");
-
       const payload = {
         exam_id: selectedExam,
         instruction_heading: heading,
-        instruction_points: formattedPoints,
-        instruction_img: instructionImage, // full base64 string
+        instruction_points:String(updatedPointText),  // Send the updated point's text
+        instruction_img: instructionImage,
       };
-
+ 
       const res = await fetch(
-        `${BASE_URL}/Instructions/UpdateInstruction/${instructionId}`,
+        `${BASE_URL}/Instructions/UpdateInstruction/${pointId}`,
         {
           method: "PUT",
           headers: {
@@ -150,19 +149,21 @@ const InstructionsTab = () => {
           body: JSON.stringify(payload),
         }
       );
-
+  
       const result = await res.json();
       if (res.ok) {
-        alert("Instruction updated successfully!");
+        alert("Instruction point updated successfully!");
         setIsReadOnly(true);
       } else {
-        alert(result.message || "Failed to update instruction.");
+        alert(result.message || "Failed to update instruction point.");
       }
     } catch (error) {
       console.error("Update error:", error);
-      alert("An error occurred while updating.");
+      alert("An error occurred while updating instruction point.");
     }
   };
+  
+  
 
   const handleDelete = async (row) => {
     const confirmDelete = window.confirm(
@@ -200,6 +201,7 @@ const InstructionsTab = () => {
 
   return (
     <div className={styles.InstructionContainer}>
+   
       <div className={styles.pageHeading}>INSTRUCTION PAGE</div>
 
       <div className={styles.addButtonContainer}>
@@ -280,83 +282,107 @@ const InstructionsTab = () => {
           showEdit={false}
           onOpen={handleOpen}
           onDelete={handleDelete}
-          // onToggle={handleToggle}
           showToggle={false}
+            setShowInstructionPoints={setShowInstructionPoints} 
+  type="instruction"
+        
         />
       </div>
 
-      {instructionPoints.length > 0 && (
-        <div className={styles.instructionPoints}>
-          <h4>Instruction Points:</h4>
+      {showInstructionPoints && (
+        <div className={styles.modalBackdrop} onClick={() => setShowInstructionPoints(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <h4>Instruction Points:</h4>
 
-          {instructionImage && (
-            <div className={styles.instructionImage}>
-              <img
-                src={`data:image/png;base64,${instructionImage}`}
-                alt="Instruction"
-                style={{
-                  maxWidth: "100%",
-                  height: "auto",
-                  marginBottom: "1rem",
-                }}
-              />
-            </div>
-          )}
-
-          <ol>
-            {instructionPoints.map((point, index) => (
-              <li key={index}>
-                {isReadOnly ? (
-                  point
-                ) : (
-                  <input
-                    type="text"
-                    value={point}
-                    onChange={(e) => {
-                      const updated = [...instructionPoints];
-                      updated[index] = e.target.value;
-                      setInstructionPoints(updated);
-                    }}
-                    style={{ width: "100%", height: "10rem" }}
-                  />
-                )}
-              </li>
-            ))}
-          </ol>
-          {!isReadOnly && (
-            <div style={{ marginBottom: "1rem" }}>
-              <label htmlFor="imageUpload">
-                <strong>Upload New Instruction Image:</strong>
-              </label>
-
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  const reader = new FileReader();
-                  reader.onloadend = () => {
-                    setInstructionImage(reader.result); // full base64 string with mime
-                  };
-                  if (file) reader.readAsDataURL(file);
-                }}
-              />
-            </div>
-          )}
-          {isReadOnly ? (
+            {/* Close button to hide the section */}
             <button
-              onClick={() => setIsReadOnly(false)}
-              className={styles.editBtn}
+              className={styles.closeFormBtn}
+              onClick={() => setShowInstructionPoints(false)} // Close the modal
             >
-              Edit
+              Close
             </button>
-          ) : (
-            <button onClick={handleUpdate} className={styles.updateBtn}>
-              Update
-            </button>
-          )}
+
+            {instructionImage && (
+              <div className={styles.instructionImage}>
+                <img
+                  src={`data:image/png;base64,${instructionImage}`}
+                  alt="Instruction"
+                  style={{
+                    maxWidth: '100%',
+                    height: 'auto',
+                    marginBottom: '1rem',
+                  }}
+                />
+              </div>
+            )}
+
+<ol>
+  {instructionPoints.map((point, index) => (
+    <li key={point.id}>
+      {/* Show the point text if it's in read-only mode */}
+      {isReadOnly ? (
+        <>
+          {point.point} 
+          <button 
+            onClick={() => setIsReadOnly(false)} 
+            style={{ marginLeft: '10px', cursor: 'pointer' }}
+          >
+            Edit
+          </button>
+        </>
+      ) : (
+        <>
+          <input
+            type="text"
+            value={point.point}
+            onChange={(e) => {
+              const updated = [...instructionPoints];
+              updated[index].point = e.target.value;
+              setInstructionPoints(updated);
+            }}
+            style={{ width: '100%', height: '10rem' }}
+          />
+          <button 
+            onClick={() => handleUpdate(point.id, point.point)}  
+            style={{ marginTop: '10px', cursor: 'pointer' }}
+          >
+            Save
+          </button>
+        </>
+      )}
+    </li>
+  ))}
+</ol>
+
+
+
+
+            {!isReadOnly && (
+              <div style={{ marginBottom: '1rem' }}>
+                <label htmlFor="imageUpload">
+                  <strong>Upload New Instruction Image:</strong>
+                </label>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      setInstructionImage(reader.result);
+                    };
+                    if (file) reader.readAsDataURL(file);
+                  }}
+                />
+              </div>
+            )}
+
+          
+          </div>
         </div>
       )}
+
     </div>
   );
 };

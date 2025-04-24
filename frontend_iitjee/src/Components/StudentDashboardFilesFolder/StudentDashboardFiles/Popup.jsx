@@ -4,7 +4,7 @@ import { IoClose } from "react-icons/io5";
 import { GrPrevious, GrNext } from "react-icons/gr";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css"; // Import the CSS file
-import DisableKeysAndMouseInteractions from "../../../ContextFolder/DisableKeysAndMouseInteractions.jsx";
+// import DisableKeysAndMouseInteractions from "../../../ContextFolder/DisableKeysAndMouseInteractions.jsx";
 export const MemoizedIoClose = memo(IoClose);
 export const MemoizedGrPrevious = memo(GrPrevious);
 export const MemoizedGrNext = memo(GrNext);
@@ -41,7 +41,7 @@ const Popup = ({
   const playerRef = useRef(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [showPalette, setShowPalette] = useState(window.innerWidth >= 768);
-  DisableKeysAndMouseInteractions();
+  // DisableKeysAndMouseInteractions();
 
   useEffect(() => {
     const handleResize = () => {

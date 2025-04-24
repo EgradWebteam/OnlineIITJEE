@@ -635,26 +635,29 @@ router.get("/GetAllCourses", async (req, res) => {
     // Query to get all courses with related subjects and test types
     const query = `
    SELECT 
-    c.course_creation_id,
-    c.course_name,
-    c.course_year,
-    c.exam_id,
-    c.course_start_date,
-    c.course_end_date,
-    c.cost,
-    c.discount,
-    c.total_price,
-    c.portal_id,
-    c.active_course,
-    c.card_image,
-    GROUP_CONCAT(DISTINCT s.subject_id) AS subject_ids, 
-    GROUP_CONCAT(DISTINCT c.exam_id) AS exam_ids,
-    GROUP_CONCAT(DISTINCT t.orvl_course_type_id) AS course_type_ids -- Corrected join and column
+  c.course_creation_id,
+  c.course_name,
+  c.course_year,
+  c.exam_id,
+  c.course_start_date,
+  c.course_end_date,
+  c.cost,
+  c.discount,
+  c.total_price,
+  c.portal_id,
+  c.active_course,
+  c.card_image,
+  GROUP_CONCAT(DISTINCT s.subject_id) AS subject_ids, 
+  GROUP_CONCAT(DISTINCT c.exam_id) AS exam_ids,
+  GROUP_CONCAT(DISTINCT t.type_of_test_id) AS test_type_ids,
+  GROUP_CONCAT(DISTINCT tt.type_of_test_name) AS test_type_names
 FROM iit_db.iit_course_creation_table c
 LEFT JOIN iit_db.iit_course_subjects cs ON cs.course_creation_id = c.course_creation_id
 LEFT JOIN iit_db.iit_subjects s ON s.subject_id = cs.subject_id
-LEFT JOIN iit_db.iit_orvl_course_type_for_course t ON t.course_creation_id = c.course_creation_id
+LEFT JOIN iit_db.iit_course_type_of_tests t ON t.course_creation_id = c.course_creation_id
+LEFT JOIN iit_db.iit_type_of_test tt ON tt.type_of_test_id = t.type_of_test_id
 GROUP BY c.course_creation_id;
+
 
     `;
 
