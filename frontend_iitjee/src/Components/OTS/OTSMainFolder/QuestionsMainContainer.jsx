@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import QuestionOptionsContainer from './QuestionOptionsContainer';
 import { FaChevronLeft } from 'react-icons/fa';
@@ -23,9 +23,7 @@ export default function QuestionsMainContainer({
   const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
   const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
   const question = section?.questions?.[activeQuestionIndex] || null;
-  // console.log("question:", question)
-  console.log("Current question ID:", question?.question_id);
- console.log("All userAnswers:", userAnswers);
+ 
 
   useEffect(() => {
     const saved = userAnswers?.[String(question?.question_id)];
@@ -39,32 +37,9 @@ export default function QuestionsMainContainer({
   }, [question?.question_id, userAnswers, setSelectedOption]);
 
   const savedAnswer = userAnswers?.[String(question?.question_id)];
-  console.log("savedanswers for checked:", savedAnswer);
 
-  // useEffect(() => {
-  //   const saved = userAnswers?.[String(question?.question_id)];
-  
-  //   // Reset MCQ selection
-  //   setSelectedOption(null);
-  //   if (saved?.type === "MCQ" && saved.optionId) {
-  //     setSelectedOption({
-  //       option_id: saved.optionId,
-  //       option_index: saved.optionIndex,
-  //     });
-  //   }
-  
-  //   // Reset MSQ selection
-  //   setSelectedOptionsArray([]);
-  //   if (saved?.type === "MSQ" && saved.selectedOptions) {
-  //     setSelectedOptionsArray(saved.selectedOptions);
-  //   }
-  
-  //   // Reset NAT input
-  //   setNatValue("");
-  //   if (saved?.type === "NAT" && saved.natAnswer) {
-  //     setNatValue(saved.natAnswer);
-  //   }
-  // }, [question?.question_id, userAnswers]);
+
+
 
   useEffect(() => {
     setSelectedOption(null);
@@ -132,23 +107,17 @@ export default function QuestionsMainContainer({
   const renderQuestion = (question) => {
     if (!question) return <p>No question available.</p>;
 
-    const imageExtensions = [".jpg", ".jpeg", ".png", ".webp", ".svg"];
-    const isImageQuestion = imageExtensions.some(ext =>
-      question?.questionImgName?.toLowerCase().endsWith(ext)
-    );
 
     return (
       <>
-        {/* {isImageQuestion ? ( */}
+       
           <div className={styles.QuestionImage}>
             <img
               src={question.questionImgName}
               alt="Question"
             />
           </div>
-        {/* ) : (
-          <p className={styles.QuestionParaNow}>{question.questionImgName}</p>
-        )} */}
+      
       </>
     );
   };

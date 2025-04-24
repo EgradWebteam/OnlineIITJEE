@@ -111,7 +111,8 @@ const StudentReport = ({ testId, studentId }) => {
     { name: "Not Attempted", value: notAttempted },
   ];
 
-  const pieChart1COLORS = ["#28a745", "#dc3545", "#77878a3d"];
+  // const pieChart1COLORS = ["#28a745", "#dc3545", "#77878a3d"];
+  const pieChart1COLORS = ["#28a745", "#dc3545", "rgb(119 135 138 / 72%)"];
 
   // Parse the marks data
   const correctMarks = parseInt(sumStatus1) || 0; // Marks for correct answers

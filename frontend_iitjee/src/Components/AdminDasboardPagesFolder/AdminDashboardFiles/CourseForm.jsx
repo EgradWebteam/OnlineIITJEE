@@ -29,8 +29,16 @@ const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,on
   const [discount, setDiscount] = useState("");
   const [discountAmount, setDiscountAmount] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [selectedTestTypes, setSelectedTestTypes] = useState([]);
 
-
+  useEffect(() => {
+    if (courseData && courseData.test_type_ids) {
+   
+      const ids = courseData.test_type_ids.split(',').map(id => id.trim());
+      setSelectedTestTypes(ids);
+    }
+  }, [courseData]);
+  
   // Fetch dropdown data on mount
   useEffect(() => {
     fetch(`${BASE_URL}/CourseCreation/CourseCreationFormData`)
@@ -343,19 +351,25 @@ const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,on
             <div className={styles.SelectBoxForCourses}>
             <div className={styles.HeadingForSubjectsSelectCourse}> 
             <label>Type of Test:</label></div>
-              {types.map((type) => (
-                <div key={type.type_of_test_id} className={styles.SelectOptionsForCourses}>
-                  <label>  {type.type_of_test_name}
-                  </label>
-                    <input
-                      type="checkbox"
-                      value={type.type_of_test_id}
-                      checked={selectedTypes.includes(type.type_of_test_id)}
-                      onChange={handleTypeCheckboxChange}
-                    />
-                   
-                </div>
-              ))}
+            {types.map((testType) => (
+  <label key={testType.type_of_test_id}>
+    <input
+      type="checkbox"
+      value={testType.type_of_test_id}
+      checked={selectedTestTypes.includes(testType.type_of_test_id.toString())}
+      onChange={(e) => {
+        const value = e.target.value;
+        if (e.target.checked) {
+          setSelectedTestTypes([...selectedTestTypes, value]);
+        } else {
+          setSelectedTestTypes(selectedTestTypes.filter((id) => id !== value));
+        }
+      }}
+    />
+    {testType.type_of_test_name}
+  </label>
+))}
+
             </div>
 
             {/* Image */}

@@ -108,10 +108,8 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
             autoSaveNATIfNeeded={autoSaveNATIfNeeded}
             setUserAnswers={setUserAnswers}
             userAnswers={userAnswers}
-            activeQuestionIndex={activeQuestionIndex}
             setActiveQuestionIndex={setActiveQuestionIndex}
             showSidebar={showSidebar}
-            setShowSidebar={setShowSidebar}
           />
           <QuestionsMainContainer
             testData={testData}

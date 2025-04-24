@@ -200,6 +200,7 @@ ON
   }
 });
 
+
 router.get("/GetInstructionPoints/:instruction_id", async (req, res) => {
   const instructionId = req.params.instruction_id;
 
@@ -207,6 +208,7 @@ router.get("/GetInstructionPoints/:instruction_id", async (req, res) => {
     const [pointsResults] = await db.query(
       `SELECT 
           ip.instruction_point, 
+          ip.instruction_point_id,
           i.instruction_img
         FROM 
           iit_db.iit_instruction_points ip
@@ -218,9 +220,11 @@ router.get("/GetInstructionPoints/:instruction_id", async (req, res) => {
       [instructionId]
     );
 
-    const points = pointsResults.map((p) => p.instruction_point);
+    const points = pointsResults.map((p) => ({
+      point: p.instruction_point,
+      id: p.instruction_point_id,
+    }));
 
-    // Assuming the image is same for all rows (based on join), we take it from the first one
     const instructionImgBuffer = pointsResults[0]?.instruction_img;
     const instructionImgBase64 = instructionImgBuffer
       ? instructionImgBuffer.toString("base64")
@@ -236,56 +240,76 @@ router.get("/GetInstructionPoints/:instruction_id", async (req, res) => {
   }
 });
 
+
 // // PUT: Update Instruction by ID
 router.put(
-  "/UpdateInstruction/:instruction_id",
+  "/UpdateInstruction/:instruction_point_id",
   express.json({ limit: "50mb" }),
   async (req, res) => {
-    const { instruction_id } = req.params;
-    const { exam_id, instruction_points, instruction_img } = req.body;
+    const { instruction_id, instruction_point_id } = req.params;
+    let { instruction_points, instruction_img } = req.body;
 
+    // Log the received params and request body
+    console.log("Received request parameters:");
+    console.log("Instruction ID:", instruction_id);
+    console.log("Instruction Point ID:", instruction_point_id);
+
+    console.log("Received request body:");
+    console.log("Instruction Points:", instruction_points);
+    console.log("Instruction Image:", instruction_img);
+  
     if (typeof instruction_points !== "string") {
+      console.error("Error: Instruction points must be a string");
       return res
         .status(400)
         .json({ message: "Instruction points must be a string" });
     }
 
     try {
-      // 1. Update points
+      // 1. Update the instruction point
       const updatePointsQuery = `
         UPDATE iit_instruction_points
-        SET exam_id = ?, instruction_point = ?
-        WHERE instruction_id = ?
+        SET instruction_point = ?
+        WHERE instruction_point_id = ?
       `;
+      
+      console.log("Executing update points query with data:");
+      console.log("Instruction Point:", instruction_points);
+      console.log("Instruction Point ID:", instruction_point_id);
+      
       await db.query(updatePointsQuery, [
-        exam_id,
-        instruction_points,
-        instruction_id,
+        instruction_points, // Directly use the string
+        instruction_point_id, // Point ID for the specific instruction point
       ]);
 
-      // 2. Update image as buffer
+      // 2. Handle image only if provided
       let imgBuffer = null;
       if (instruction_img && instruction_img.includes(",")) {
         const base64Data = instruction_img.split(",")[1];
         imgBuffer = Buffer.from(base64Data, "base64");
+        console.log("Processing base64 image data...");
       }
 
-      const updateImageQuery = `
-        UPDATE iit_instructions
-        SET instruction_img = ?
-        WHERE instruction_id = ?
-      `;
-      await db.query(updateImageQuery, [imgBuffer, instruction_id]);
+      if (imgBuffer) {
+        const updateImageQuery = `
+          UPDATE iit_instructions
+          SET instruction_img = ?
+          WHERE instruction_id = ?
+        `;
+        console.log("Executing update image query with Instruction ID:", instruction_id);
+        await db.query(updateImageQuery, [imgBuffer, instruction_id]);
+      }
 
-      res
-        .status(200)
-        .json({ message: "Instruction and image updated successfully" });
+      // Success response
+      console.log("Instruction and image (if any) updated successfully.");
+      res.status(200).json({ message: "Instruction and image updated successfully" });
     } catch (error) {
       console.error("Error updating instruction:", error);
       res.status(500).json({ message: "Failed to update instruction" });
     }
   }
 );
+
 
 router.delete("/DeleteInstruction/:instruction_id", async (req, res) => {
   const { instruction_id } = req.params;

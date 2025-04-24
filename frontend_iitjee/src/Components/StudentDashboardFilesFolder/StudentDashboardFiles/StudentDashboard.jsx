@@ -4,15 +4,17 @@ import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.
 import StudentDashboardLeftSideBar from './StudentDashboardLeftSidebar.jsx';
 import { useLocation,useNavigate  } from 'react-router-dom';
 import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx'
-const StudentDashboardBookmarks = lazy(() => import('./StudentDashboardBookmarks.jsx'));
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js'; 
+const StudentDashboardBookmarks = lazy(() => import('./StudentDashboardBookmarks.jsx'));
 const StudentDashboardHome = lazy(() => import("./StudentDashboardHome.jsx"));
 const StudentDashboard_MyCourses = lazy(() => import("./StudentDashboard_MyCourses.jsx"));
 const StudentDashboard_BuyCourses = lazy(() => import("./StudentDashboard_BuyCourses.jsx"));
 const StudentDashboard_MyResults = lazy(() => import("./StudentDashboard_MyResults.jsx"));
 const StudentDashboard_AccountSettings = lazy(() => import("./StudentDashboard_AccountSettings.jsx"));
+
 export default function StudentDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
+   const [activeSubSection, setActiveSubSection] = useState("profile");
   const [isLoading, setIsLoading] = useState(true);
   const studentData = JSON.parse(localStorage.getItem('studentData'));
   const studentName = studentData?.userDetails?.candidate_name;
@@ -101,7 +103,10 @@ export default function StudentDashboard() {
           case "bokmarks":
             return <StudentDashboardBookmarks userData ={studentData?.userDetails}  studentId = {studentId}/>;
         case "account":
-          return <StudentDashboard_AccountSettings userData ={studentData?.userDetails}/>;
+          return <StudentDashboard_AccountSettings userData ={studentData?.userDetails}
+          activeSubSection={activeSubSection}
+          setActiveSubSection={setActiveSubSection}
+          />;
         default:
           return <StudentDashboardHome 
           handleSectionChange={handleSectionChange}
@@ -116,7 +121,7 @@ export default function StudentDashboard() {
   
   return (
     <div>
-      <StudentDashboardHeader  userData ={studentData?.userDetails} setActiveSection={setActiveSection}/>
+      <StudentDashboardHeader  userData ={studentData?.userDetails} setActiveSection={setActiveSection} setActiveSubSection={setActiveSubSection}/>
       <div className={styles.StudentDashboardContentHolder}>
         <div className={styles.studentDashboardLeftNavHolder}>
           <StudentDashboardLeftSideBar
