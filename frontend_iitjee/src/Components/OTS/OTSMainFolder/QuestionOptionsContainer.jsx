@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {  useEffect, useRef } from 'react';
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
-import { FaChevronRight } from "react-icons/fa";
+
 export default function QuestionOptionsContainer({
   options,
   optPatternId,
@@ -15,8 +15,7 @@ export default function QuestionOptionsContainer({
   setNatValue
 }) {
   const imageExtensions = [".jpg", ".jpeg", ".png", ".webp", ".svg"];
-console.log("saved answer:", savedAnswer);
-console.log("questionId", questionId);
+
   // Sync saved NAT answer when revisiting
   useEffect(() => {
     if ([5, 6].includes(questionTypeId) && savedAnswer?.natAnswer) {
@@ -78,9 +77,19 @@ console.log("questionId", questionId);
       const numericPart = currentValue.startsWith("-") ? currentValue.slice(1) : currentValue;
       if (numericPart.includes(".")) return;
   
-      val = currentValue === "" || currentValue === "-" ? "0." : "."; // Handle . and - cases
-    }
+      // Prevent inserting dot before minus (e.g., .-29)
+      if (currentValue.startsWith("-") && cursorPos <= 0) return;
   
+      // Also block dot if it's inserted before minus
+      const minusIndex = currentValue.indexOf("-");
+      if (minusIndex !== -1 && cursorPos <= minusIndex) return;
+  
+      // Handle special cases
+      if (currentValue === "" || currentValue === "-") {
+        val = "0.";
+      }
+    }
+
     // Insert at cursor position
     const updatedValue = currentValue.slice(0, cursorPos) + val + currentValue.slice(cursorPos);
     const newCursorPos = cursorPos + val.length;

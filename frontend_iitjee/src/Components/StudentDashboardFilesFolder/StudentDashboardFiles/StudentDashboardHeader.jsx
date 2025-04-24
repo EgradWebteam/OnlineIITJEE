@@ -11,7 +11,7 @@ const StudentDashboardHeader = ({ userData, setActiveSection }) => {
   const navigate = useNavigate(); 
 
 const studentProfile = userData?.uploaded_photo;
-console.log("studentProfile",studentProfile)
+
   // Handle mouse events to show/hide profile menu
   const handleMouseEnter = () => {
     setShowProfileMenu(true);
