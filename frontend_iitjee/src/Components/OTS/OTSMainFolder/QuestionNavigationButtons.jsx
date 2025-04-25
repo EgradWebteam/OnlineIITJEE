@@ -562,6 +562,8 @@ useEffect(() => {
         <div className={styles.navigationBtnHolderSubContainer}>
           <button className={styles.markedForReviewNavigationBtn} onClick={handleMarkedForReview}>Marked For Review & Next</button>
           <button className={styles.clearResponseBtn} onClick={handleClearResponse}>Clear Response</button>
+        </div>
+        <div className={styles.navigationBtnHolderSubContainerForSubmit}>
           {!(
             activeQuestionIndex === 0 &&
             testData?.subjects?.[0]?.SubjectName === activeSubject &&
@@ -569,31 +571,17 @@ useEffect(() => {
           ) && (
               <button className={styles.previousBtn} onClick={handlePrevious}>Previous</button>
             )}
+          <button className={`${styles.saveandnextNavigationBtn} ${styles.BtnSaveandNextForDisplayBlock}`} onClick={handleSaveAndNext}>Save & Next</button>
         </div>
-        <div className={styles.navigationBtnHolderSubContainerForSubmit}>
-          {/* {!(
-            activeQuestionIndex === 0 &&
-            testData?.subjects?.[0]?.SubjectName === activeSubject &&
-            testData?.subjects?.[0]?.sections?.[0]?.SectionName === activeSection
-          ) && (
-              <button className={styles.previousBtn} onClick={handlePrevious}>Previous</button>
-            )} */}
-          <button className={styles.saveandnextNavigationBtn} onClick={handleSaveAndNext}>Save & Next</button>
-          <button
+      </div>
+      <div className={styles.submitBtnCls}>
+        <button
           className={styles.submitNavigationBtn}
           onClick={handleSubmitClick}
         >
           Submit
         </button>
-        </div>
-      </div>
-      <div className={styles.submitBtnCls}>
-        {/* <button
-          className={styles.submitNavigationBtn}
-          onClick={handleSubmitClick}
-        >
-          Submit
-        </button> */}
+        <button className={`${styles.saveandnextNavigationBtn} ${styles.BtnSaveandNextForDisplayNone}`} onClick={handleSaveAndNext}>Save & Next</button>
       </div>
       <div>
       {showExamSummary && (

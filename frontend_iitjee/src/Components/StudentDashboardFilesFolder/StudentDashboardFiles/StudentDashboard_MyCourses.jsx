@@ -164,7 +164,7 @@ export default function StudentDashboard_MyCourses({ studentId,userData }) {
           </div>
 
           {/* Exam Buttons */}
-          <div className={globalCSS.examButtonsDiv}>
+          <div className={globalCSS.examButtonsDiv}  style={{margin:"0rem 1rem"}}>
             {examsForSelectedPortal.map((exam, idx) => (
               <button
                 key={idx}
@@ -211,6 +211,7 @@ export default function StudentDashboard_MyCourses({ studentId,userData }) {
               </p>
             </div>
           ) : (
+            <div className={styles.StduentDashboardRightSideBarForBggg}>
             <div className={globalCSS.cardHolderOTSORVLHome}>
               {filteredCourses.map((course) => (
                 <CourseCard
@@ -222,6 +223,7 @@ export default function StudentDashboard_MyCourses({ studentId,userData }) {
                   onGoToTest={() => handleGoToTest(course)}
                 />
               ))}
+            </div>
             </div>
           )}
         </div>

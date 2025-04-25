@@ -20,7 +20,13 @@
   display: flex;
   justify-content: flex-end;
 }
-
+.StduentDashboardRightSideBarForBggg{
+  background-color: gainsboro;
+  margin: 0rem 1rem;
+}
+.examBtnForMarginInBuyCourses{
+  margin: 0rem 1rem;
+}
 .calcContainer {
   width: 250px;
   padding: 15px 10px;
@@ -278,7 +284,7 @@ button.backslash {
 .MainDivStudentDasboard {
   background: white;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  height: 70px;
+  height: 7vh;
   padding: 5px;
 }
 .studentLogo {
@@ -311,6 +317,7 @@ button.backslash {
 color: black;
   cursor: pointer;
   background-color: white;
+  border: 1px solid;
 }
 .toggleTypeButtons button.active {
   background-color: rgb(7, 174, 240);/* Green when active */
@@ -360,13 +367,14 @@ color: black;
 .StudentDashboardContentHolder {
   display: flex;
   flex-direction: row;
+  height: calc(100vh - 7vh);
 }
 .studentDashboardLeftNavHolder {
   display: flex;
 }
 .stuentDashboardMainContentContainer {
   display: flex;
-  height: 100vh;
+  /* height: 100vh; */
 }
 .studentDashboardLeftsidebar {
   width: 280px;
@@ -422,7 +430,8 @@ color: black;
 }
 .StudentDashboardRightSideContentHolder {
   width: 80%;
-margin: 1rem auto;
+margin: 1rem 1rem auto;
+overflow-y: scroll;
 }
 .LectureHeader {
   display: flex;
@@ -1049,7 +1058,7 @@ height: 100%;
       .studentDashboardHamburgerMenu {
         display: block;
         position: absolute;
-        top: 42px;
+        top: 55px;
         left: -1rem;
         z-index: 1100;
       }

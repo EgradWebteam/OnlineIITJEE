@@ -1,7 +1,18 @@
 /* OTS HEADER CSS */
 
+
+
+/* ots test interface styles(unique to this fiel only) */
+.OTSPC{
+  height: 100vh;
+  width: 100vw;
+}
+.OTSTestForCalcHeight{
+  height: calc(100vh - 20vh);
+}
 .OTSMainHeader{
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    height: 6vh;
 }
 .OTSlogoHolder img{
  width: 100%;
@@ -69,6 +80,7 @@
     justify-content: space-between;
     background-color: black;
     padding: 6px;
+    height: 5vh;
 }
 .OTSTestNameHolder p{
 color: #dddd64; 
@@ -323,6 +335,7 @@ height: 100%;
     background-color: white;
     width: 285px;
     top: 0;
+    /* height: calc(100vh - 20vh); */
   }
   .StudentProfileHolderOTS{
     display: flex;
@@ -426,7 +439,7 @@ height: 100%;
   .OTSMainFileMainContainer{
     width: 100%;
     position: relative;
-    height: 80vh;
+    /* height: 80vh; */
   }
   .OTSMainFileSubContainer{
     display: flex;
@@ -436,6 +449,7 @@ height: 100%;
   }
   .AllQuestionRenderBox{
     padding: 10px;
+    overflow-y: scroll;
   }
   .QuestionsBtnsConatiner{
     margin-top: 5px;
@@ -472,7 +486,11 @@ height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  border: 1px solid rgb(204, 204, 204);
+  width: 100vw;
+  height: 6vh;
+  position: fixed;
+  bottom: 0;
 }
 .markedForReviewNavigationBtn,.clearResponseBtn, .previousBtn,.saveandnextNavigationBtn,.submitNavigationBtn{
   border: 1px solid rgb(153, 151, 151);
@@ -484,13 +502,23 @@ height: 100%;
   color: white;
   border: none;
 }
+.BtnSaveandNextForDisplayNone{
+  display: none;
+}
+.BtnSaveandNextForDisplayBlock{
+  display: block;
+}
 .QuestionNavigationBTns{
   border: 1px solid rgb(204, 204, 204);
+  /* display: flex;
+  align-items: center;
+  justify-content: space-between; */
   padding: 10px;
-  position: sticky;
-  width: 100%;
+  width: 100vw;
   margin-top: 20px;
   height: 6vh;
+  position: fixed;
+  bottom: 0;
 }
 .navigationBtnHolderSubContainer{
   display: flex;
@@ -498,7 +526,7 @@ height: 100%;
 }
 .navigationBtnHolderSubContainerForSubmit{
   display: flex;
-  gap: 8rem;
+  gap: 1.5rem;
 }
 .AnswerdBtnCls, .NotAnsweredBtnCls, .MarkedForReview, .AnsMarkedForReview{
   height: 45px;
@@ -529,15 +557,19 @@ height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  width: calc(100vw - 300px);
+  margin: 10px;
 }
-/* .submitBtnCls{
+.submitBtnCls{
+  width: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 200px;
-  background-color: rgb(94, 135, 163);
-} */
+  background-color: #e5f6fb;
+  height: 100%;
+  border-right: 1px solid gainsboro;
+  border-left: 1px solid gainsboro;
+}
 
 /* OTS EXAM SUMMARY CSS */
 .examSummaryContainer {
@@ -769,7 +801,7 @@ height: 100%;
   font-weight: 700;
 }
 .instructionList{
-padding: 3rem;
+padding: 1rem 3rem;
 }
 .instructionList li{
   list-style: disc;
@@ -883,8 +915,13 @@ background-color: #04c7f8;
     width: 100%;
     max-width: 1200px;
     max-height: 90%;
-    overflow-y: auto;
     position: relative;
+}
+.OTSQuestionPaperSubDiv{
+  overflow-y: auto;
+}
+.OTSInstrcutionsSubDiv{
+  max-height: 92%;
 }
 .QuestionOptionsDIV{
   margin: 20px 0;
@@ -1317,15 +1354,14 @@ display: none;
   .OTSMainFileMainContainer{
     width: 100%;
     position: relative;
-    height: 70vh;
+    /* height: 70vh; */
 }
 .QuestionNavigationBTns{
   border: 1px solid rgb(204, 204, 204);
   padding: 7px;
-  position: sticky;
   width: 100%;
   margin-top: 30px;
-  height: 8vh;
+  height: 6vh;
 }
 .instructionSubdiv{
   display: flex;
@@ -1360,16 +1396,78 @@ display: none;
   padding-top: 10px;
   padding-left: 4px;
   overflow-y: scroll;
-  height: 165px;
+  /* height: 165px; */
 }
 .OTSQuestionOptionsContainerForScroll{
   overflow-y: scroll;
   height: 35vh;
 }
+.OTSMainHeader{
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  height: 9vh;
 }
+.OTSNavbarMainContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: black;
+  padding: 6px;
+  height: 7vh;
+}
+.OTSTestForCalcHeight{
+  height: calc(100vh - 23vh);
+}
+.AllQuestionRenderBox{
+  padding: 0px;
+  overflow-y: scroll;
+  height: 200px;
+}
+.QuestionNavigationButtonsMainContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgb(204, 204, 204);
+  width: 100vw;
+  height: 9vh;
+  position: fixed;
+  bottom: 0;
+}
+}
+
 @media (max-width:1024px) {
   .testDetailsContainerSub li {
     font-size: 15px;
+}
+.QuestionTypeHolderContainer, .QuestionNumberHolderContainer{
+  font-weight: 600;
+  font-size: 16px;
+}
+.QuestionTypeHolderContainer{
+  padding: 4px 12px;
+}
+.btnsSubContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(100vw - 200px);
+  margin: 10px;
+}
+.submitBtnCls{
+  width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e5f6fb;
+  height: 100%;
+  border-right: 1px solid gainsboro;
+  border-left: 1px solid gainsboro;
+}
+.navigationBtnHolderSubContainerForSubmit{
+  display: flex;
+  gap: 1rem;
+}
+.ExamSummarysubDiv{
+  width: 90%;
 }
 }
 @media (max-width:800px) {
@@ -1386,7 +1484,29 @@ display: none;
     -webkit-overflow-scrolling: touch;
     padding-top: 10px;
     padding-left: 4px;
-    height: auto;
+    /* height: auto; */
+}
+.btnsSubContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(100vw - 120px);
+  margin: 10px;
+}
+.submitBtnCls{
+  width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e5f6fb;
+  height: 100%;
+  border-right: 1px solid gainsboro;
+  border-left: 1px solid gainsboro;
+}
+.AllQuestionRenderBox{
+  padding: 0px;
+  overflow-y: scroll;
+  height: auto;
 }
 .OTSRightSideBarMainContainer{
   position: absolute;
@@ -1409,12 +1529,11 @@ display: none;
 .OTSMainFileMainContainer{
   width: 100%;
   position: relative;
-  height: 80vh;
+  /* height: 80vh; */
 }
 .QuestionNavigationBTns{
   border: 1px solid rgb(204, 204, 204);
   padding: 10px;
-  position: sticky;
   width: 100%;
   margin-top: 30px;
   height: 6vh;
@@ -1443,6 +1562,46 @@ display: none;
     border-left: 1px solid gray;
     width: 190px;
     display: none;
+}
+.OTSlogoHolder{
+  width: 220px;
+}
+.BtnSaveandNextForDisplayNone{
+  display: block;
+}
+.BtnSaveandNextForDisplayBlock{
+  display: none;
+}
+.QuestionNavigationButtonsMainContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgb(204, 204, 204);
+  width: 100vw;
+  height: 13vh;
+  position: fixed;
+  bottom: 0;
+  flex-direction: column;
+}
+.btnsSubContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-direction: row;
+  gap: 5px;
+  margin-top: 5px;
+}
+.submitBtnCls{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  height: 100%;
+  border-right: none;
+  border-left: none;
+  gap: 1rem;
 }
 .tableOFbtns{
   display: flex;
@@ -1565,22 +1724,14 @@ display: none;
 .OTSInstrctionsDivHolder button{
 padding: 3px;
 }
-.QuestionNavigationButtonsMainContainer{
+/* .QuestionNavigationButtonsMainContainer{
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   flex-direction: column;
-  /* gap: 1rem; */
-}
-.btnsSubContainer{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 85%;
-  flex-direction: column;
-  gap: 7px;
-}
+  /* gap: 1rem; 
+} */
 .navigationBtnHolderSubContainer{
   display: flex;
   gap: 0.5rem;
@@ -1589,29 +1740,27 @@ padding: 3px;
   border: 1px solid rgb(153, 151, 151);
   padding: 8px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 11px;
 }
 .submitNavigationBtn{
   border: 1px solid rgb(153, 151, 151);
-  padding: 10px;
+  padding: 7px;
   cursor: pointer;
-  font-size: 13px;
-  width: 170px;
+  font-size: 12px;
+  width: 150px;
 }
 .saveandnextNavigationBtn{
   width: 170px;
 }
 .navigationBtnHolderSubContainerForSubmit{
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 ._QuestionNavigationBTns_8o7gq_863 {
   border: 1px solid rgb(204, 204, 204);
   padding: 10px;
-  position: sticky;
   width: 100%;
   margin-top: 30px;
-  height: 0vh;
 }
 .QuestionTypeHolderContainer{
   gap: 0px;
@@ -1619,7 +1768,6 @@ padding: 3px;
 .QuestionNavigationBTns{
   border: 1px solid rgb(204, 204, 204);
   padding: 10px;
-  position: sticky;
   width: 100%;
   margin-top: 30px;
   height: 17vh;
@@ -1627,7 +1775,7 @@ padding: 3px;
 .OTSMainFileMainContainer{
   width: 100%;
   position: relative;
-  height: 63vh;
+  /* height: 63vh; */
 }
 .QuestionsBtnsConatiner{
   display: flex;
@@ -1642,6 +1790,7 @@ padding: 3px;
   scroll-behavior: smooth;
   max-width: 100%;
   flex-wrap: nowrap;
+  display: none;
 }
 .OTSRightSideBarMainContainer{
   position: absolute;
@@ -1651,16 +1800,17 @@ padding: 3px;
   top: 9rem;
 }
  .QuestionTypeHolderContainer{
-  margin-top: 3rem;
+  margin-top: 0rem;
  }
  .AllQuestionRenderBox{
   padding: 0px;
   display: flex;
   /* left: 34.2rem; */
-  overflow: scroll;
+  overflow-y: scroll;
   /* position: relative; Needed for absolute chevrons */
   /* right: 0rem; */
-  width: 390px;
+  /* width: 390px; */
+  height: 200px;
 }
 .OTSQuestionOptionsContainerForScroll{
   height: 22vh;
@@ -1751,6 +1901,21 @@ padding: 3px;
 }
 .solutionImageDivInSolutionTab{
   width:200px;
+}
+.summaryTable{
+  display: flex;
+}
+.summaryTable tr{
+display: flex;
+flex-direction: column;
+}
+.summaryTable th {
+  border: 1px solid #ccc;
+  padding: 10px 5px;
+}
+.summaryTable td {
+  border: 1px solid #ccc;
+  padding: 11.7px 5px;
 }
 }
 @media (max-width:375px) {

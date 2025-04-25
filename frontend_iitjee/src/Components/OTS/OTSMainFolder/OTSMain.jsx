@@ -199,8 +199,9 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
     
     
   return (
-    <div>
-      <div className={`${styles.OTSMainFileMainContainer} ${styles.OTSWaterMark}`}>
+    <div className={`${styles.OTSMainFileMainContainer}`}>
+      <div className={` 
+      ${styles.OTSWaterMark} ${styles.OTSTestForCalcHeight}`}>
         <div className={styles.OTSMainFileSubContainer}>
           <TimerProvider testData={testData}>
             <OtsTimer testData={testData}/>
@@ -250,7 +251,7 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
        
         </div>
       </div>
-      <div className={styles.QuestionNavigationBTns}>
+      <div className={styles.QuestionNavigationBTns1}>
         <QuestionStatusProvider
           testData={testData}
           activeSubject={activeSubject}

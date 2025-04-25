@@ -240,7 +240,7 @@ export default function StudentDashboard_BuyCourses({
       </div>
 
       {/* Exam Filter Buttons */}
-      <div className={globalCSS.examButtonsDiv}>
+      <div className={globalCSS.examButtonsDiv} style={{margin:"0rem 1rem"}}>
         {examNames.map((exam, idx) => (
           <button
             key={idx}
@@ -291,6 +291,7 @@ export default function StudentDashboard_BuyCourses({
     <p className={globalCSS.loadingText}>Loading courses...</p>
   </div>
 ) : filteredCourses.length > 0 ? (
+  <div className={styles.StduentDashboardRightSideBarForBggg}>
   <div className={globalCSS.cardHolderOTSORVLHome}>
     {filteredCourses.map((course) => (
       <CourseCard
@@ -312,6 +313,7 @@ export default function StudentDashboard_BuyCourses({
         }
       />
     ))}
+  </div>
   </div>
 ) : (
   <div className={globalCSS.noCoursesContainer}>
