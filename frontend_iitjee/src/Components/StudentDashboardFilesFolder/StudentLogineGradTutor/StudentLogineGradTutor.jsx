@@ -19,21 +19,20 @@ export default function StudentLogineGradTutor() {
   const navigate = useNavigate();
   const { setStudentData } = useStudent();
 
-
   const handleLogin = async (e) => {
+    const sessionId = uuidv4();
     e.preventDefault();
     if (!username || !password) {
       alert("Please enter both username and password");
       return;
     }
-  
-    const sessionId = uuidv4(); 
+ 
     const loginData = {
-      email: username,
+      email: username,  // Use 'email' field for student login
       password: password,
-      sessionId: sessionId,
+      sessionId: sessionId
     };
-  
+ 
     try {
       const response = await fetch(`${BASE_URL}/student/studentLogin`, {
         method: "POST",
@@ -42,20 +41,30 @@ export default function StudentLogineGradTutor() {
         },
         body: JSON.stringify(loginData),
       });
-  
       const data = await response.json();
-  
+// debugger
       if (response.ok) {
-        const { decryptedId, accessToken, user_Id } = data;
-  
-
-        sessionStorage.setItem('sessionId', sessionId);
-        sessionStorage.setItem('decryptedId', decryptedId);
-        sessionStorage.setItem('accessToken', accessToken);
-        sessionStorage.setItem('userId', user_Id);
-  
-        setStudentData(data);
-        navigate(`/StudentDashboard/${user_Id}`);
+        if (response.ok) {
+          const decryptedId = data.decryptedId;
+          const accessToken = data.accessToken;
+          const sessionId = data.sessionId;
+          const userId = data.user_Id;
+          const studentInfo = data
+       
+          // Save basic stuff in localStorage
+          localStorage.setItem('decryptedId', decryptedId);
+          localStorage.setItem('accessToken', accessToken);
+          localStorage.setItem('sessionId', sessionId);
+          localStorage.setItem('userId', userId); 
+          sessionStorage.setItem('sessionId', sessionId);
+          sessionStorage.setItem('decryptedId', decryptedId);
+          sessionStorage.setItem('accessToken', accessToken);
+          sessionStorage.setItem('userId', userId);
+          setStudentData(studentInfo);
+          console.log(studentInfo)
+          navigate(`/StudentDashboard/${userId}`);
+        }
+       
       } else {
         alert(data.message || "Login failed. Please try again.");
       }
@@ -63,7 +72,8 @@ export default function StudentLogineGradTutor() {
       console.error("Error during login:", error);
       alert("Something went wrong. Please try again later.");
     }
-  };
+};
+
   
 
   const handleForgotPassword = async (e) => {

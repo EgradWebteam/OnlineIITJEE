@@ -233,7 +233,7 @@ const StudentRegistrationeGradTutor = () => {
           }
           break;
 
-        case "college name":
+        case "nameOfCollege":
           if (!/^[A-Za-z\s]*$/.test(value)) {
             error = `${name} must only contain alphabets and spaces.`;
           } else if (value.length > 50) {
@@ -365,7 +365,7 @@ const StudentRegistrationeGradTutor = () => {
   //     formDataToSend.append("districts", formData.districts);
   //     formDataToSend.append("pincode", formData.pincode);
   //     formDataToSend.append("qualifications", formData.qualifications);
-  //     formDataToSend.append("college_name", formData.nameOfCollege);
+  //     formDataToSend.append("nameOfCollege", formData.nameOfCollege);
   //     formDataToSend.append("passingYear", formData.passingYear);
   //     formDataToSend.append("marks", formData.marks);
 
@@ -675,7 +675,7 @@ if (message) {
     formDataToSend.append("districts", formData.districts);
     formDataToSend.append("pincode", formData.pincode);
     formDataToSend.append("qualifications", formData.qualifications);
-    formDataToSend.append("college_name", formData.nameOfCollege);
+    formDataToSend.append("nameOfCollege", formData.nameOfCollege);
     formDataToSend.append("passingYear", formData.passingYear);
     formDataToSend.append("marks", formData.marks);
   
@@ -1263,8 +1263,8 @@ if (message) {
                     required
                   />
                   {errors.passingYear && (
-                    <p className={Styles.error}>{errors.passingYear}</p>
-                  )}
+  <p className={Styles.error}>{errors.passingYear}</p>
+)}
                 </div>
 
                 <div>

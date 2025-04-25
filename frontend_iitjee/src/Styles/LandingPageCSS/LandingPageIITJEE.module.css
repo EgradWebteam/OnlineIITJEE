@@ -40,7 +40,7 @@
   }
   
   .coursesDropDownMenu li {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0rem;
   }
   
   .coursesDropDownMenu li button {
@@ -234,6 +234,11 @@
         border-radius: 10px;
         font-size: 15px;
     }
+    .exploreCoursesHeader h3 {
+      font-size: 1.4rem;
+      font-weight: bolder;
+      margin: 0px;
+  }
   }
   @media (max-width:425px) {
     .navBarBtn{
@@ -248,7 +253,7 @@
         padding: 5px;
     }
     .exploreCoursesHeader h3 {
-        font-size: 2rem;
+        font-size: 1rem;
         font-weight: bolder;
         margin: 0px;
     }

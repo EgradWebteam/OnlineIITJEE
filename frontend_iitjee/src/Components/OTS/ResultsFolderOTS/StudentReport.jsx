@@ -178,17 +178,19 @@ const StudentReport = ({ testId, studentId }) => {
                 {formatToHHMMSS(timeSpentSec)}
               </p>
               <p className={styles.timeLeftSpentPara}>
-                <span className={styles.timeSpentIcon}></span>
-                <span>Time Spent</span>
+              <span className={styles.timeSpentIcon}></span>
+          
+                <span>Time Left</span>
               </p>
+             
             </div>
             <div className={styles.timeLeftContainer}>
               <p className={styles.timeLeftData}>
                 {formatToHHMMSS(timeLeftSec)}
               </p>
               <p className={styles.timeLeftSpentPara}>
-                <span className={styles.timeLeftIcon}></span>
-                <span>Time Left</span>
+              <span className={styles.timeLeftIcon}></span>
+                <span>Time Spent</span>
               </p>
             </div>
           </div>
