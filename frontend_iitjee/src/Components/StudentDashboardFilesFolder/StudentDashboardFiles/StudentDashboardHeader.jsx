@@ -21,29 +21,27 @@ const studentProfile = userData?.uploaded_photo;
   };
 
   const handleLogout = async () => {
-    const sessionId = localStorage.getItem("sessionId"); 
-
+    const sessionId = sessionStorage.getItem("sessionId"); 
+  
     if (!sessionId) {
       alert("No session found. Please log in again.");
       return;
     }
-
+  
     try {
       const response = await fetch(`${BASE_URL}/student/studentLogout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ sessionId }), 
+        body: JSON.stringify({ sessionId }),
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
-       
+        sessionStorage.clear(); 
         localStorage.clear(); 
-
-        // Redirect the user to the login page or home page after logout
         navigate("/LoginPage");
       } else {
         alert(data.message || "Logout failed. Please try again.");
@@ -53,7 +51,7 @@ const studentProfile = userData?.uploaded_photo;
       alert("Something went wrong. Please try again later.");
     }
   };
-
+  
   return (
     <div className={styles.MainDivStudentDasboard}>
       <div className={styles.studentDashboardHeaderMain}>

@@ -21,7 +21,7 @@ const DocumentUpload = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [documentList, setDocumentList] = useState([]); // State to store documents
 
-  // Fetch test details
+ 
   useEffect(() => {
     const fetchTestDetails = async () => {
       try {
@@ -40,7 +40,7 @@ const DocumentUpload = () => {
     fetchTestDetails();
   }, []);
 
-  // Fetch documents for the table
+
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
@@ -49,7 +49,7 @@ const DocumentUpload = () => {
         );
         const data = await response.json();
         if (data.documents) {
-          setDocumentList(data.documents[0]); // Store the fetched documents in state
+          setDocumentList(data.documents[0]); 
         }
       } catch (error) {
         console.error("Error fetching documents:", error);
@@ -57,7 +57,7 @@ const DocumentUpload = () => {
     };
 
     fetchDocuments();
-  }, []); // Fetch documents when the component mounts
+  }, []); 
 
   const columns = useMemo(
     () => [
@@ -83,7 +83,7 @@ const DocumentUpload = () => {
       },
       {
         header: "document_id",
-        accessor: "document_id", // assuming you use this as serial number
+        accessor: "document_id", 
       },
       {
         header: "Test Name",
@@ -97,7 +97,7 @@ const DocumentUpload = () => {
     [selectedRows, documentList]
   );
 
-  // Fetch subjects based on selected test
+  
   useEffect(() => {
     if (selectedTest) {
       const fetchSubjects = async () => {
@@ -116,7 +116,7 @@ const DocumentUpload = () => {
 
       fetchSubjects();
     }
-  }, [selectedTest]); // Run this effect whenever the selectedTest changes
+  }, [selectedTest]); 
 
   useEffect(() => {
     if (selectedTest && selectedSubject) {
@@ -138,7 +138,7 @@ const DocumentUpload = () => {
     }
   }, [selectedTest, selectedSubject]);
 
-  // Toggle single row selection
+ 
   const handleSelectRow = (documentId) => {
     setSelectedRows((prev) =>
       prev.includes(documentId)
@@ -148,7 +148,7 @@ const DocumentUpload = () => {
   };
   const handleOpen = (row) => {
     console.log("Open clicked for:", row);
-    // Add logic to open your modal or do whatever you need with the `row`
+    
   };
 
   const handleSelectAll = (isChecked) => {
@@ -259,8 +259,8 @@ const DocumentUpload = () => {
   };
 
   return (
-    <div className={styles.documentContent}>
-      <h2>DOCUMENT UPLOAD</h2>
+    <div className={styles.InstructionContainer}>
+      <div className={styles.pageHeading}>DOCUMENT UPLOAD</div>
 
       {!showForm && (
         <div className={styles.flex}>

@@ -19,22 +19,20 @@ export default function StudentLogineGradTutor() {
   const navigate = useNavigate();
   const { setStudentData } = useStudent();
 
-
-  // Handle login form submission
   const handleLogin = async (e) => {
-    const sessionId = uuidv4(); 
+    const sessionId = uuidv4();
     e.preventDefault();
     if (!username || !password) {
       alert("Please enter both username and password");
       return;
     }
-
+ 
     const loginData = {
       email: username,  // Use 'email' field for student login
       password: password,
       sessionId: sessionId
     };
-
+ 
     try {
       const response = await fetch(`${BASE_URL}/student/studentLogin`, {
         method: "POST",
@@ -52,17 +50,21 @@ export default function StudentLogineGradTutor() {
           const sessionId = data.sessionId;
           const userId = data.user_Id;
           const studentInfo = data
-        
+       
           // Save basic stuff in localStorage
           localStorage.setItem('decryptedId', decryptedId);
           localStorage.setItem('accessToken', accessToken);
           localStorage.setItem('sessionId', sessionId);
-          localStorage.setItem('userId', userId);
+          localStorage.setItem('userId', userId); 
+          sessionStorage.setItem('sessionId', sessionId);
+          sessionStorage.setItem('decryptedId', decryptedId);
+          sessionStorage.setItem('accessToken', accessToken);
+          sessionStorage.setItem('userId', userId);
           setStudentData(studentInfo);
           console.log(studentInfo)
           navigate(`/StudentDashboard/${userId}`);
         }
-        
+       
       } else {
         alert(data.message || "Login failed. Please try again.");
       }
@@ -72,7 +74,8 @@ export default function StudentLogineGradTutor() {
     }
 };
 
-  // Handle forgot password form submission
+  
+
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     if (!username) {
