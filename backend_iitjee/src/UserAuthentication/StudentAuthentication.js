@@ -27,16 +27,27 @@ function encryptDataWithAN(data) {
 }
 
 // Upload file to Azure using SAS token
-async function uploadToAzureWithSAS(file) {
+async function uploadToAzureWithSAS(file, options = {}) {
   const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
   const sasToken = process.env.AZURE_SAS_TOKEN;
   const containerName = process.env.AZURE_CONTAINER_NAME;
-  const STUDENT_PHOTO_FOLDER = "student-data/"; // ← folder path with trailing slash
+  const STUDENT_PHOTO_FOLDER = "student-data/";
 
-  // 1. Clean original filename (optional)
-  const sanitizedFilename = file.originalname.replace(/\s+/g, "_"); // replaces spaces with _
-  const uniqueFilename = `${Date.now()}-${sanitizedFilename}`;      // generates a unique name
-  const blobName = `${STUDENT_PHOTO_FOLDER}${uniqueFilename}`;      // full path to blob
+  const sanitizedFilename = file.originalname.replace(/\s+/g, "_");
+
+  let customPrefix = `${Date.now()}`; // Default unique name for photo
+
+  // Only modify name for "proof" file
+  if (options.type === "proof" && options.email && options.name && options.phone) {
+    const last4Digits = options.phone.slice(-4);
+    const emailSanitized = options.email.replace(/[^a-zA-Z0-9]/g, "_");
+    const nameSanitized = options.name.replace(/\s+/g, "_");
+
+    customPrefix = `${emailSanitized}-${nameSanitized}-${last4Digits}`;
+  }
+console.log("customPrefix",customPrefix)
+  const uniqueFilename = `${customPrefix}-${sanitizedFilename}`;
+  const blobName = `${STUDENT_PHOTO_FOLDER}${uniqueFilename}`;
 
   const blobServiceClient = new BlobServiceClient(
     `https://${accountName}.blob.core.windows.net?${sasToken}`
@@ -52,12 +63,8 @@ async function uploadToAzureWithSAS(file) {
     const fileUrl = blockBlobClient.url;
 
     console.log(`✅ File saved at: ${fileUrl}`);
-    console.log(
-      `Upload block blob ${file.originalname} successfully`,
-      uploadBlobResponse.requestId
-    );
+    console.log(`Upload block blob ${file.originalname} successfully`, uploadBlobResponse.requestId);
 
-    // 2. Return only the unique filename for DB and full URL optionally
     return {
       fileUrl,
       uniqueName: uniqueFilename,
@@ -67,6 +74,7 @@ async function uploadToAzureWithSAS(file) {
     throw error;
   }
 }
+
 const generateResetCode = () => {
   return Math.floor(100000 + Math.random() * 900000);
 };
@@ -102,17 +110,17 @@ router.post("/checkEmailExists", async (req, res) => {
 
 router.post(
   "/studentRegistration",
-  upload.fields([{ name: "uploadedPhoto" }]), // Handling file upload (for the uploaded photo)
+  upload.fields([{ name: "uploadedPhoto" },, { name: "proof" }]), // Handling file upload (for the uploaded photo)
   async (req, res) => {
     const form = req.body;  // Extract form data from the request body
     const files = req.files;  // Extract uploaded files (if any)
 
     // Log the form data and uploaded files
     console.log("Form Data:", form);
-    if (files?.uploadedPhoto) {
-      console.log("Uploaded Photo Data:", files.uploadedPhoto[0]);
+    if (files?.uploadedPhoto && files?.proof) {
+      console.log("Uploaded Photo Data and proof:", files.uploadedPhoto[0] , files.proof[0]);
     } else {
-      console.log("No photo uploaded.");
+      console.log("No photo uploaded or proof.");
     }
 
     try {
@@ -136,8 +144,16 @@ router.post(
       const uploadPhotoPromise = files?.uploadedPhoto
         ? uploadToAzureWithSAS(files.uploadedPhoto[0]) // Function to upload photo to Azure
         : Promise.resolve(null); // If no photo, resolve to null
-
-      const [hashedPasswordResult, uploadedPhotoData] = await Promise.all([
+        const uploadProofPromise = files?.proof
+        ? uploadToAzureWithSAS(files.proof[0], {
+            type: "proof",
+            email: form.emailId,
+            name: form.candidateName,
+            phone: form.contactNo,
+          })
+        : Promise.resolve(null);
+      
+      const [hashedPasswordResult, uploadedPhotoData,] = await Promise.all([
         hashedPassword,
         uploadPhotoPromise,
       ]);
