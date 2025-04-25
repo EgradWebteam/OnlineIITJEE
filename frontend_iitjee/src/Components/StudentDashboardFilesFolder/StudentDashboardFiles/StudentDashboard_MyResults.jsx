@@ -71,35 +71,42 @@ export default function StudentDashboard_MyResults({ studentId,userData }) {
         <h3>My Results</h3>
       </div>
 
-      {/* Exam Buttons */}
-      
-      <div className={globalCSS.examButtonsDiv}>
-        {examNames.map((exam, idx) => (
-          <button
-            key={idx}
-            className={`${globalCSS.examButtons} ${selectedExam === exam ? globalCSS.examActiveBtn : ""}`}
-            onClick={() => setSelectedExam(exam)}
-          >
-            {exam}
-          </button>
-        ))}
-      </div>
-
-      {/* Tests for Selected Exam */}
-      <div className={styles.myResultsSubContainer}>
-        {selectedExam && groupedByExam[selectedExam]?.map((test, idx) => (
-          <div key={idx} className={styles.resultsMainDiv}>
-            <div className={styles.resultsSubDiv}>
-              <p className={styles.testNameInResults}>{test.test_name}</p>
-              <div className={styles.resultsViewReportBtn}>
-                <button onClick={() => handleViewReportClick(test.test_creation_table_id,test)}>
-                  VIEW REPORT <span className={styles.resultsBtnIcon}><MdKeyboardDoubleArrowRight /></span>
-                </button>
-              </div>
-            </div>
+      {testData.length === 0 ? (
+        <div className={globalCSS.noCoursesContainer}>
+          <p className={globalCSS.noCoursesMsg}>You have not attempted any test yet.</p>
+        </div>
+      ) : (
+        <>
+          {/* Exam Buttons */}
+          <div className={globalCSS.examButtonsDiv}>
+            {examNames.map((exam, idx) => (
+              <button
+                key={idx}
+                className={`${globalCSS.examButtons} ${selectedExam === exam ? globalCSS.examActiveBtn : ""}`}
+                onClick={() => setSelectedExam(exam)}
+              >
+                {exam}
+              </button>
+            ))}
           </div>
-        ))}
-      </div>
+
+          {/* Tests for Selected Exam */}
+          <div className={styles.myResultsSubContainer}>
+            {selectedExam && groupedByExam[selectedExam]?.map((test, idx) => (
+              <div key={idx} className={styles.resultsMainDiv}>
+                <div className={styles.resultsSubDiv}>
+                  <p className={styles.testNameInResults}>{test.test_name}</p>
+                  <div className={styles.resultsViewReportBtn}>
+                    <button onClick={() => handleViewReportClick(test.test_creation_table_id, test)}>
+                      VIEW REPORT <span className={styles.resultsBtnIcon}><MdKeyboardDoubleArrowRight /></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
