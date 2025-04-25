@@ -201,7 +201,7 @@ const StudentRegistrationeGradTutor = () => {
           }
           break;
 
-        case "college name":
+        case "nameOfCollege":
           if (!/^[A-Za-z\s]*$/.test(value)) {
             error = `${name} must only contain alphabets and spaces.`;
           } else if (value.length > 50) {
@@ -235,13 +235,17 @@ const StudentRegistrationeGradTutor = () => {
           }
           break;
 
-        case "passingYear":
-          if (/[^0-9]/.test(value)) {
-            error = "Only numbers are allowed for Passing Year.";
-          } else if (value.length > 4) {
-            error = "Passing Year must be exactly 4 digits.";
-          }
-          break;
+          case "passingYear":
+            if (/[^0-9]/.test(value)) {
+              error = "Only numbers are allowed for passingYear.";
+            } else if (value.length !== 4) {
+              error = "Passing Year must be exactly 4 digits.";
+            } else if (parseInt(value) < 2000) {
+              error = "Year must be 2000 or later.";
+            }
+            break;
+          
+          
 
         case "marks":
           if (value < 0 || value > 100 || isNaN(value) || value.length > 3) {
@@ -324,7 +328,7 @@ const StudentRegistrationeGradTutor = () => {
   //     formDataToSend.append("districts", formData.districts);
   //     formDataToSend.append("pincode", formData.pincode);
   //     formDataToSend.append("qualifications", formData.qualifications);
-  //     formDataToSend.append("college_name", formData.nameOfCollege);
+  //     formDataToSend.append("nameOfCollege", formData.nameOfCollege);
   //     formDataToSend.append("passingYear", formData.passingYear);
   //     formDataToSend.append("marks", formData.marks);
 
@@ -576,7 +580,7 @@ const StudentRegistrationeGradTutor = () => {
     formDataToSend.append("districts", formData.districts);
     formDataToSend.append("pincode", formData.pincode);
     formDataToSend.append("qualifications", formData.qualifications);
-    formDataToSend.append("college_name", formData.nameOfCollege);
+    formDataToSend.append("nameOfCollege", formData.nameOfCollege);
     formDataToSend.append("passingYear", formData.passingYear);
     formDataToSend.append("marks", formData.marks);
   
@@ -1158,8 +1162,8 @@ const StudentRegistrationeGradTutor = () => {
                     required
                   />
                   {errors.passingYear && (
-                    <p className={Styles.error}>{errors.passingYear}</p>
-                  )}
+  <p className={Styles.error}>{errors.passingYear}</p>
+)}
                 </div>
 
                 <div>
