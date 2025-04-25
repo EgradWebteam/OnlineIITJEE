@@ -11,6 +11,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
   const [visibleSolutions, setVisibleSolutions] = useState({});
   const [videoVisible, setVideoVisible] = useState({});
   const [videoPopup, setVideoPopup] = useState(null); // null or question_id
+  const [bookmarkedQuestions, setBookmarkedQuestions] = useState([]);
 
   useEffect(() => {
     const fetchTestPaper = async () => {
@@ -41,6 +42,19 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
             });
           }
         }
+
+        // Extract and store only the bookMark_Qid values in the array
+        const bookmarkedQuestions = data.subjects.flatMap((subject) =>
+          subject.sections.flatMap(
+            (section) =>
+              section.questions
+                .filter((question) => question.bookMark_Qid !== null) // Filter questions with non-null bookMark_Qid
+                .map((question) => question.bookMark_Qid) // Map to just the bookMark_Qid values
+          )
+        );
+
+        // Set the bookmarked question IDs in state
+        setBookmarkedQuestions(bookmarkedQuestions);
       } catch (err) {
         console.error("Error fetching test paper:", err);
       }
@@ -83,14 +97,12 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
 
   const openVideoPopup = (questionId) => {
     setVideoPopup(questionId);
-    setVisibleSolutions(false)
+    setVisibleSolutions(false);
   };
 
   const closeVideoPopup = () => {
     setVideoPopup(null);
   };
-
-  const [bookmarkedQuestions, setBookmarkedQuestions] = useState([]);
 
   // Handle bookmark toggle
   const toggleBookmark = async (questionId) => {
@@ -158,6 +170,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
     console.error("Unrecognized URL format:", url); // Log for debugging
     return "";
   };
+
   return (
     <div className={styles.solutionContainerMain}>
       <div className={styles.subjectDropDownContainer}>
@@ -221,8 +234,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                           : ""
                       }`}
                     >
-                      {question.bookMark_Qid === null &&
-                      !bookmarkedQuestions.includes(question.question_id) ? (
+                      {!bookmarkedQuestions.includes(question.question_id) ? (
                         <FaRegBookmark />
                       ) : (
                         <FaBookmark />
@@ -236,23 +248,6 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                     />
                   </div>
                   <div style={{ marginTop: "1rem" }}>
-                    {/* Bookmark Button */}
-                    {/* <button
-                      onClick={() => toggleBookmark(question.question_id)}
-                      className={`${styles.bookmarkButton} ${
-                        bookmarkedQuestions.includes(question.question_id)
-                          ? styles.bookmarked
-                          : ""
-                      }`}
-                    >
-                      {question.bookMark_Qid === null &&
-                      !bookmarkedQuestions.includes(question.question_id) ? (
-                        <FaRegBookmark />
-                      ) : (
-                        <FaBookmark />
-                      )}
-                    </button> */}
-
                     {(() => {
                       const qTypeId = question.questionType?.quesionTypeId;
 
@@ -392,7 +387,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                                   openVideoPopup(question.question_id)
                                 }
                               >
-                                                  {videoPopup === question.question_id
+                                {videoPopup === question.question_id
                                   ? "Hide Video Solution"
                                   : "View Video Solution"}
                               </button>
