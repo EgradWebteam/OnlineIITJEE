@@ -717,12 +717,26 @@ useEffect(() => {
 }, [timeLeft, isAutoSubmitted, isSubmitClicked]);
  
  
+  // useEffect(() => {
+  //   if (timeLeft === 0) {
+  //     setIsAutoSubmitted(true);
+  //     localStorage.setItem("examSummaryEntered", "true"); //  LOCK as soon as time up
+      
+  //   }
+  // }, [timeLeft]);
+
   useEffect(() => {
     if (timeLeft === 0) {
-      setIsAutoSubmitted(true);
-      localStorage.setItem("examSummaryEntered", "true"); //  LOCK as soon as time up
+      const autoSubmit = async () => {
+        setIsAutoSubmitted(true);
+        localStorage.setItem("examSummaryEntered", "true"); // LOCK as soon as time up
+  
+        await handleSubmitClick(); // <<<<<<<<<<<<<<< Call handleSubmitClick here
+      };
+      autoSubmit();
     }
   }, [timeLeft]);
+  
  
   useEffect(() => {
     const enteredSummary = localStorage.getItem("examSummaryEntered") === "true";
