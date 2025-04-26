@@ -83,7 +83,7 @@ const StudentInfo = () => {
 
     try {
       const response = await axios.post(
-        `${BASE_URL}/studentInfo/StudentInfo`,
+        `${BASE_URL}/studentInfo/addStudentByadmin`,
         stdData
       );
       alert(response.data.message); // Show success alert
@@ -121,7 +121,7 @@ const StudentInfo = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/studentInfo/StudentInfo`);
+      const response = await axios.get(`${BASE_URL}/studentInfo/getStudentsInfo`);
       if (response.status === 200 && Array.isArray(response.data)) {
         setStudentsList(response.data);
         setShowStudentsList(true);
@@ -185,7 +185,7 @@ const StudentInfo = () => {
   const handleEditStudent = async (student) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/studentInfo/StudentInfo/${student.id}`
+        `${BASE_URL}/studentInfo/getStudentInfo/${student.id}`
       ); // ✅ fetch by ID
       const fullStudentData = response.data;
 
@@ -203,7 +203,7 @@ const StudentInfo = () => {
     try {
       // Toggle activation status (0 -> 1, 1 -> 0)
       const response = await axios.put(
-        `${BASE_URL}/studentInfo/StudentInfo/${studentId}`,
+        `${BASE_URL}/studentInfo/togglestudentstatus/${studentId}`,
         { student_activation: currentStatus === 1 ? 0 : 1 } // Toggle status
       );
 
@@ -232,7 +232,7 @@ const StudentInfo = () => {
   const handleSaveEditedStudent = async (stdData) => {
     try {
       const response = await axios.put(
-        `${BASE_URL}/studentInfo/StudentInfo/${stdData.id}`,
+        `${BASE_URL}/studentInfo/updateStudentInfo/${stdData.id}`,
         {
           name: stdData.name,
           email: stdData.email,
@@ -276,8 +276,8 @@ const StudentInfo = () => {
             }}
           >
             <option value="all">Show All Students</option>
-            <option value="active">Activated Students</option>
-            <option value="inactive">Deactivated Students</option>
+            <option value="active">Dectivated Students</option>
+            <option value="inactive">Activated Students</option>
           </select>
         </div>
 
@@ -436,7 +436,9 @@ const StudentInfo = () => {
                     </div>
                     <div className={styles.ButtonsForStdEditDetails}>
                       <button
-                        className={styles.ButtonsForDeactive}
+                        className={student.student_activation === 1
+                          ? styles.ButtonsForDeactive  // when active → show "Deactivate" style
+                          : styles.ButtonsForActive  }
                         onClick={() =>
                           handleToggleActivation(
                             student.id,
@@ -445,8 +447,8 @@ const StudentInfo = () => {
                         }
                       >
                         {student.student_activation === 1
-                          ? "Activate"
-                          : "Deactivate"}
+                          ? "Deactivate"
+                          : "Activate"}
                       </button>
                       <div className={styles.EditBtnIcon}>
                         <button

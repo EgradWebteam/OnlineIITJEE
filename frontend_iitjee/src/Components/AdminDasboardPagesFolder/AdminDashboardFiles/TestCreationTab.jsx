@@ -4,11 +4,15 @@ import styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css"
 import TestCreationForm from "./TestCreationForm.jsx";
 import axios from "axios";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
-
+import { FaSearch } from 'react-icons/fa';
 const TestCreationTab = () => {
   const [showAddTestForm, setShowAddTestForm] = useState(false);
   const [selectedTestData, setSelectedTestData] = useState(null);
   const [testCreationFormData, setTestCreationFormData] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+const itemsPerPage = 5;
+
   const fetchFormData = async () => {
     try {
       const response = await axios.get(
@@ -19,7 +23,11 @@ const TestCreationTab = () => {
       console.error("Error fetching form data:", error);
     }
   };
-
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+    setCurrentPage(1);
+  };
+  
   const handleActivationToggle = async (row) => {
     const {
       test_creation_table_id,
@@ -63,7 +71,6 @@ const TestCreationTab = () => {
   };
   const handleEdit = (testData) => {
     console.log("Selected Test Data for Edit:", testData);
-    
     setSelectedTestData(testData);
     fetchFormData();
     setShowAddTestForm(true);
@@ -117,16 +124,38 @@ const TestCreationTab = () => {
   useEffect(() => {
     fetchTestTableData();
   }, []);
-
+  const filteredTests = testTableData.filter(testTableData => {
+    return Object.values(testTableData).some(value => 
+      value != null && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentTestData = filteredTests.slice(indexOfFirstItem, indexOfLastItem);
+  
+ 
   return (
     <div className={styles.dashboardContent}>
       <div className={styles.pageHeading}>TEST CREATION</div>
-
-      <button className={styles.addCourseBtn} onClick={handleAddTestClick}>
+<div
+        style={{ display: "flex", justifyContent: "end" }}
+>  <button className={styles.addCourseBtn} onClick={handleAddTestClick}>
         Add Test
-      </button>
+      </button></div>
+    
 
-      {/* Conditionally render the Add Test Form */}
+    <div className={styles.searchBarContainer}>
+          <FaSearch className={styles.searchIcon} />
+           <input 
+             type="text" 
+             placeholder="Search courses..." 
+             className={styles.searchInput}
+             value={searchTerm}
+             onChange={handleSearchChange} 
+           />
+      
+   
+         </div>
       {showAddTestForm && (
         <TestCreationForm
           setShowAddTestForm={setShowAddTestForm}
@@ -151,13 +180,25 @@ const TestCreationTab = () => {
             { header: "Total Questions", accessor: "number_of_questions" },
             { header: "Questions Uploaded", accessor: "uploaded_questions" },
           ]}
-          data={testTableData}
+          data={currentTestData}
           onEdit={handleEdit}
           onDelete={handleDelete}
           onToggle={handleActivationToggle}
           onDownload={handleDownload}
         />
       </div>
+      <div className={styles.pagination}>
+  {Array.from({ length: Math.ceil(filteredTests.length / itemsPerPage) }, (_, i) => (
+    <button
+      key={i + 1}
+      onClick={() => setCurrentPage(i + 1)}
+      className={currentPage === i + 1 ? styles.pageButtonActive : styles.pageButton}
+    >
+      {i + 1}
+    </button>
+  ))}
+</div>
+
     </div>
   );
 };

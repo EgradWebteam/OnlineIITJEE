@@ -73,6 +73,9 @@ const TestCreationTab = require("./src/AdminDashboardAPIs/TestCreationTab.js");
 app.use("/TestCreation", TestCreationTab);
 const TestPaperDocumentUpload = require("./src/AdminDashboardAPIs/TestPaperDocumentUpload.js");
 app.use("/DocumentUpload", TestPaperDocumentUpload);
+const ViewResults = require("./src/AdminDashboardAPIs/ViewResults.js");
+app.use("/ViewResults", ViewResults);
+
 /**AdminDashborad API's */
 
 /**StudentDashborad API's */
