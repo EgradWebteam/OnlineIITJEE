@@ -469,7 +469,7 @@ router.post("/SaveResponse", async (req, res) => {
       answered = "",
     } = req.body;
 
-    console.log("SaveResponse request received:", req.body);
+    // console.log("SaveResponse request received:", req.body);
 
     connection = await db.getConnection();
 
@@ -498,15 +498,15 @@ router.post("/SaveResponse", async (req, res) => {
 
     if (exists) {
       await updateResponse(connection, data);
-      console.log("Data to be inserted/updated:", data);
-      console.log("Response updated");
+      // console.log("Data to be inserted/updated:", data);
+      // console.log("Response updated");
       return res
         .status(200)
         .json({ success: true, message: "Response updated successfully" });
     } else {
       await insertResponse(connection, data);
-      console.log("Data to be inserted/updated:", data);
-      console.log("Response inserted");
+      // console.log("Data to be inserted/updated:", data);
+      // console.log("Response inserted");
       return res
         .status(200)
         .json({ success: true, message: "Response inserted successfully" });
@@ -552,7 +552,7 @@ router.delete(
           });
       }
 
-      console.log("Response cleared successfully");
+      // console.log("Response cleared successfully");
       res
         .status(200)
         .json({ success: true, message: "Response cleared successfully" });

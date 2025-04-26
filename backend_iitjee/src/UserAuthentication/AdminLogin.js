@@ -16,7 +16,7 @@ router.post("/adminLogin", async (req, res) => {
       return res.status(400).json({ message: "Email and password are required" });
     }
   
-    console.log("Received login request:", { email });
+    // console.log("Received login request:", { email });
   
     let connection;
   
@@ -31,16 +31,16 @@ router.post("/adminLogin", async (req, res) => {
       );
   
       if (rows.length === 0) {
-        console.log("Invalid email or password");
+        // console.log("Invalid email or password");
         return res.status(401).json({ message: "Invalid email or password" });
       }
   
       const user = rows[0];
-      console.log("User found:", { email, role: user.role });
+      // console.log("User found:", { email, role: user.role });
   
       const isMatch = await bcryptjs.compare(password, user.password);
       if (!isMatch) {
-        console.log("Password mismatch");
+        // console.log("Password mismatch");
         return res.status(401).json({ message: "Invalid email or password" });
       }
   
@@ -50,7 +50,7 @@ router.post("/adminLogin", async (req, res) => {
         { expiresIn: "3h" }
       );
   
-      console.log("Login successful, sending JWT token");
+      // console.log("Login successful, sending JWT token");
   
       res.status(200).json({
         message: "Login successful",
@@ -80,7 +80,7 @@ router.post("/forgot-passwordadmin", async (req, res) => {
        
         return res.status(400).json({ message: "Email is required." });
     }
-    console.log("Received forgot password request:", { email });
+    // console.log("Received forgot password request:", { email });
     let connection;
     try {
       
@@ -88,13 +88,13 @@ router.post("/forgot-passwordadmin", async (req, res) => {
         connection = await db.getConnection();
         const [userRows] = await connection.query("SELECT admin_email_id FROM iit_admin_data WHERE admin_email_id = ?", [email]);
         if (userRows.length === 0) {
-            console.log("Email not found in database");
+            // console.log("Email not found in database");
             return res.status(404).json({ message: "Email not found" });
         }
 
         // Generate a 6-character reset code (e.g., 'a1b2c3')
         const resetCode = generateResetCode();
-        console.log("Generated reset code:", resetCode);
+        // console.log("Generated reset code:", resetCode);
         const updateQuery =
         "UPDATE iit_admin_data SET reset_code = ? WHERE admin_email_id = ?";
       await connection.query(updateQuery, [resetCode, email]);
@@ -104,7 +104,7 @@ router.post("/forgot-passwordadmin", async (req, res) => {
         sendMail(email, subject, text);
       
 
-        console.log("Password reset email will be sent asynchronously");
+        // console.log("Password reset email will be sent asynchronously");
 
         // Respond to the client immediately after processing
         res.status(200).json({ message: "Password reset email sent" });
@@ -122,10 +122,10 @@ router.post("/forgot-passwordadmin", async (req, res) => {
 router.post("/reset-passwordadmin", async (req, res) => {
     const { resetCode, newPassword , email} = req.body;
     if (!resetCode || !newPassword || !email) {
-        console.log("No reset code or new password or email  provided.");
+        // console.log("No reset code or new password or email  provided.");
         return res.status(400).json({ message: "Reset code,email and  new password is required." });
     }
-    console.log("Received reset code verification request:", { resetCode ,newPassword});
+    // console.log("Received reset code verification request:", { resetCode ,newPassword});
     let connection;
     try {
         connection = await db.getConnection();
@@ -134,14 +134,14 @@ router.post("/reset-passwordadmin", async (req, res) => {
             [email]
           );
           if (rows.length === 0) {
-            console.log("Email not found in database");
+            // console.log("Email not found in database");
             return res.status(404).json({ message: "Email not found" });
         }
-        console.log("Rows fetched:", rows[0].reset_code);
+        // console.log("Rows fetched:", rows[0].reset_code);
         // Check if the reset code is valid
         const isResetCodeMatch = Number(rows[0].reset_code) === Number(resetCode);
         if (!isResetCodeMatch) {
-            console.log("Invalid reset code");
+            // console.log("Invalid reset code");
             return res.status(401).json({ message: "Invalid reset code" });
         }
         const hashedPassword = await bcryptjs.hash(newPassword, 10);
@@ -151,7 +151,7 @@ router.post("/reset-passwordadmin", async (req, res) => {
         "UPDATE iit_admin_data SET password = ? WHERE admin_email_id = ?";
       await connection.query(updateQuery, [hashedPassword, email]);
 
-        console.log("Password updated successfully for user");
+        // console.log("Password updated successfully for user");
 
         res.status(200).json({ message: "Password updated successfully" });
 

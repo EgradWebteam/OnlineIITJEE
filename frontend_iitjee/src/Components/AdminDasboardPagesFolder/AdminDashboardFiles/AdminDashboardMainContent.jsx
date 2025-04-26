@@ -7,8 +7,6 @@ import DocumentUpload from '../AdminDashboardFiles/DocumentUpload.jsx';
 import InstructionsTab from '../AdminDashboardFiles/InstructionsTab.jsx';
 
 const AdminDashboardMainContent = ({ activeComponent }) => {
-  console.log("AdminDashboardMainContent")
-  console.log("activeComponent", activeComponent)
   const renderMainContent = () => {
     switch (activeComponent) {
       case 'dashboard':

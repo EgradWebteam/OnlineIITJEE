@@ -30,7 +30,7 @@ router.post("/razorpay-create-order", async (req, res) => {
       receipt: `receipt_${Math.random().toString(36).substr(2, 9)}`,
     };
 
-    console.log("Creating Razorpay order with options:", options);
+    // console.log("Creating Razorpay order with options:", options);
     const orderData = await razorpay.orders.create(options);
     res.json({ success: true, orderData });
   } catch (error) {
@@ -49,7 +49,7 @@ router.post("/paymentsuccess", async (req, res) => {
     courseId,
   } = req.body;
 
-  console.log("Payment success data:", req.body);
+  // console.log("Payment success data:", req.body);
 
   if (
     !razorpay_payment_id ||
@@ -101,7 +101,7 @@ router.post("/paymentsuccess", async (req, res) => {
 router.post("/paymentfailure", async (req, res) => {
   const { email, name, course_name ,studentId,courseId } = req.body;
 
-  console.log("Payment failure data:", req.body);
+  // console.log("Payment failure data:", req.body);
   if (!email || !name || !course_name || !studentId || !courseId) {
     return res.status(400).json({ message: "All fields are required" });
   }

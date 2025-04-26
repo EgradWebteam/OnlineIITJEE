@@ -163,7 +163,7 @@ router.get('/CourseImage/:fileName', async (req, res) => {
 // ✅ Route to get available courses
 router.get("/AvailableCourse/:portal_id", async (req, res) => {
     const { portal_id } = req.params;
-    console.log("Received request for available courses");
+    // console.log("Received request for available courses");
   
     let connection;
   
@@ -190,7 +190,7 @@ router.get("/AvailableCourse/:portal_id", async (req, res) => {
       );
   
       if (rows.length === 0) {
-        console.log("No courses found");
+        // console.log("No courses found");
         return res.status(404).json({ message: "No courses found" });
       }
   
@@ -223,7 +223,7 @@ router.get("/AvailableCourse/:portal_id", async (req, res) => {
   
       const structuredCourses = Object.values(coursesByPortalAndExam);
       res.status(200).json(structuredCourses);
-      console.log("Courses grouped by portal and exam:", structuredCourses);
+      // console.log("Courses grouped by portal and exam:", structuredCourses);
     } catch (error) {
       console.error("Error fetching available courses:", error);
       res.status(500).json({ message: "Internal server error" });

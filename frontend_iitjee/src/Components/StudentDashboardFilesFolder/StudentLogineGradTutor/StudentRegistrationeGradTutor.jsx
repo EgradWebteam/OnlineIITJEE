@@ -41,9 +41,10 @@ const StudentRegistrationeGradTutor = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
-  const photoInputRef = useRef(null); // at the top in your component
+  const photoInputRef = useRef(null);
+  const proofInputRef = useRef(null);
 
-  console.log(courseid);
+  // console.log(courseid);
 
   const validateForm = () => {
     const validationErrors = {};
@@ -69,6 +70,7 @@ const StudentRegistrationeGradTutor = () => {
       "passingYear",
       "marks",
       "uploadedPhoto",
+      "proof",
     ];
 
     requiredFields.forEach((field) => {
@@ -81,8 +83,26 @@ const StudentRegistrationeGradTutor = () => {
     if (formData.emailId !== formData.confirmEmailId) {
       validationErrors.confirmEmailId = "Email and Confirm Email must match.";
     }
+  // Mobile No and Contact No must be 10 digits
+  if (formData.mobileNo && formData.mobileNo.length !== 10) {
+    validationErrors.mobileNo = "Mobile number must be exactly 10 digits.";
+  }
 
-    // Additional validations can be added here as needed
+  if (formData.contactNo && formData.contactNo.length !== 10) {
+    validationErrors.contactNo = "Contact number must be exactly 10 digits.";
+  }
+
+  // Pincode must be 6 digits
+  if (formData.pincode && formData.pincode.length !== 6) {
+    validationErrors.pincode = "Pincode must be exactly 6 digits.";
+  }
+
+ // Passing year must be 4 digits between 2000 and 2100
+ if (formData.passingYear && (formData.passingYear < 2000 || formData.passingYear > 2100)) {
+  validationErrors.passingYear = "Passing Year must be between 2000 and 2100.";
+}
+    
+ 
 
     return validationErrors;
   };
@@ -91,18 +111,20 @@ const StudentRegistrationeGradTutor = () => {
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
+        if(courseCreationId){
         const response = await axios.get(
           `${BASE_URL}/studentbuycourses/ActiveCourses/${courseCreationId}`
         );
 
         setCourseid(response.data); // Store data in state
+      }
       } catch (error) {
         console.error("Failed to fetch course data"); // Handle error
       }
     };
 
     fetchCourseData();
-  }, []);
+  }, [courseCreationId]);
   // const validateForm = () => {
   //   const validationErrors = {};
 
@@ -144,35 +166,45 @@ const StudentRegistrationeGradTutor = () => {
 
   //   return validationErrors;
   // };
+  const FILE_SIZE_RULES = {
+    uploadedPhoto: { min: 50, max: 200, message: "Uploaded Photo must be between 50KB and 200KB." },
+    proof: { min: 100, max: 500, message: "Proof must be between 100KB and 500KB." }
+  };
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     let error = "";
 
     if (type === "file") {
       const file = files[0];
-      const fileSizeKB = file.size / 1024; // Convert size to KB
-      let errorMessage = "";
+  
 
-      if (name === "uploadedPhoto") {
-        if (fileSizeKB < 50 || fileSizeKB > 200) {
-          errorMessage = "Uploaded Photo must be between 50KB and 200KB.";
-          // Show custom popup message
-          setPopupMessage(errorMessage);
+      if (FILE_SIZE_RULES[name]) {
+        const { min, max, message } = FILE_SIZE_RULES[name];
+        const fileSizeKB = file.size / 1024;
+  
+        if (fileSizeKB < min || fileSizeKB > max) {
+          // Set popup and error
+          setPopupMessage(message);
           setShowPopup(true);
-
-          // Clear formData for uploadedPhoto
+  
+          // Clear file input reference
+          if (name === "uploadedPhoto" && photoInputRef?.current) {
+            photoInputRef.current.value = "";
+          }
+          if (name === "proof" && proofInputRef?.current) {
+            proofInputRef.current.value = "";
+          }
+  
+          // Clear file in form data and set error
           setFormData((prevData) => ({
             ...prevData,
-            [name]: null, // Do not set the invalid file
+            [name]: null,
           }));
-
-          // Set error for this field
           setErrors((prevErrors) => ({
             ...prevErrors,
-            [name]: errorMessage,
+            [name]: message,
           }));
-
-          return; // STOP here, prevent updating formData with invalid file
+          return;
         }
       }
 
@@ -208,7 +240,7 @@ const StudentRegistrationeGradTutor = () => {
             error = `${name} cannot be more than 50 characters.`;
           }
           break;
-        case "line1":
+        
         case "state":
         case "districts":
           if (!/^[A-Za-z\s]*$/.test(value)) {
@@ -235,23 +267,28 @@ const StudentRegistrationeGradTutor = () => {
           }
           break;
 
-          case "passingYear":
-            if (/[^0-9]/.test(value)) {
-              error = "Only numbers are allowed for passingYear.";
-            } else if (value.length !== 4) {
-              error = "Passing Year must be exactly 4 digits.";
-            } else if (parseInt(value) < 2000) {
-              error = "Year must be 2000 or later.";
-            }
-            break;
-          
-          
+        case "passingYear":
+          if (/[^0-9]/.test(value)) {
+            error = "Only numbers are allowed for Passing Year.";
+          } else if (value.length > 4) {
+            error = "Passing Year must be exactly 4 digits.";
+          } else {
+            const year = parseInt(value, 10);
+            if (year > 2100) {
+              error = "Passing Year must be between 2000 and 2100.";
+            }}
+          break;
 
         case "marks":
           if (value < 0 || value > 100 || isNaN(value) || value.length > 3) {
             error = "Percentage must be between 0 and 100.";
           }
           break;
+          case "line1":
+             if (value.length > 60) {
+              error = `${name} cannot be more than 50 characters.`;
+            }
+            break;
 
         default:
           break;
@@ -269,16 +306,16 @@ const StudentRegistrationeGradTutor = () => {
     setPopupMessage("");
 
     // Clear the file input visually
-    if (photoInputRef.current) {
-      photoInputRef.current.value = "";
-    }
+    // if (photoInputRef.current) {
+    //   photoInputRef.current.value = "";
+    // }
 
     // Also clear the formData field
-    setFormData((prevData) => ({
-      ...prevData,
-      uploadedPhoto: null,
-    }));
-    navigate("/LoginPage");
+    // setFormData((prevData) => ({
+    //   ...prevData,
+    //   uploadedPhoto: null,
+    // }));
+    // navigate("/LoginPage");
   };
 
   // const handleSubmit = async (e) => {
@@ -511,12 +548,38 @@ const StudentRegistrationeGradTutor = () => {
   //   // Log completion of form submission
   //   console.log("Form submitted successfully!");
   // };
-
+const handleLogin = () => {
+  navigate("/LoginPage");
+}
   const handleEmailBlur = async (event) => {
     const emailId = event.target.value;  // Getting the value of the email field
-
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (emailId) {
       try {
+
+        let message = "";
+
+if (
+  formData.emailId && !emailRegex.test(formData.emailId) &&
+  formData.confirmEmailId && !emailRegex.test(formData.confirmEmailId)
+) {
+  message = `Both Email "${formData.emailId}" and Confirm Email "${formData.confirmEmailId}" fields have an invalid format.`;
+} else if (formData.emailId && !emailRegex.test(formData.emailId)) {
+  message = `Email "${formData.emailId}" field has an invalid format.`;
+} else if (formData.confirmEmailId && !emailRegex.test(formData.confirmEmailId)) {
+  message = `Confirm Email "${formData.confirmEmailId}" field has an invalid format.`;
+}
+
+if (message) {
+  setPopupMessage(
+    <div className={Styles.popupMessageemailpopup}>
+      <span>{message}</span>
+    </div>
+  );
+  setShowPopup(true);
+  return;
+}
+
         // API request to check if email exists
         const response = await fetch(`${BASE_URL}/student/checkEmailExists`, {
           method: 'POST',
@@ -527,12 +590,32 @@ const StudentRegistrationeGradTutor = () => {
         const result = await response.json();
 
         if (result.message === "Your email already exists. Please use a different email.") {
-          setPopupMessage(result.message); // Set the popup message
-          setShowPopup(true); // Show the popup
+          setPopupMessage(
+           
+              <div className={Styles.popupMessageemailpopup}>
+                <span>Your email "<strong>{formData.emailId || formData.confirmEmailId}</strong>" already exists. Please use a different email  or Login</span>
+                <button className={Styles.loginbtn} onClick={handleLogin}>Login</button>
+              </div>
+          );
+          // Set the popup message
+          setShowPopup(true); 
+          formData.emailId = ""; 
+          formData.confirmEmailId = "";
         } else {
-          setShowPopup(false); // Hide the popup if email doesn't exist
+          // ✅ Corrected misplaced "else" and added closing bracket
+          if (formData.emailId && formData.confirmEmailId && formData.emailId !== formData.confirmEmailId) {
+            setPopupMessage(
+              <div className={Styles.popupMessageemailpopup}>
+                <span>Email ({formData.emailId}) and Confirm Email ({formData.confirmEmailId }) do not match. Please recheck both fields.</span>
+              </div>
+            );
+            setShowPopup(true);
+            return;
+          } else {
+            setShowPopup(false);
+          }
         }
-      } catch (error) {
+      }  catch (error) {
         console.error('Error checking email:', error);
       }
     }
@@ -550,18 +633,30 @@ const StudentRegistrationeGradTutor = () => {
         return;
       }
     }
+  if(formData.proof) {
+      const fileSizeKB = formData.proof.size / 1024;
+      if (fileSizeKB < 100 || fileSizeKB > 500) {
+        setPopupMessage("Proof must be between 100KB and 500KB.");
+        setShowPopup(true);
+        return;
+      }
+    }
   
     // Step 1: Validate the form
     const validationErrors = validateForm();
-  
+
+  // console.log(validationErrors)
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       let errorMessage = "Please fill in the following required fields:\n";
       Object.keys(validationErrors).forEach((key) => {
         errorMessage += `- ${key}\n`;
       });
-      alert(errorMessage);
+       setPopupMessage(errorMessage);
+       setShowPopup(true);
       return;
+    }  else{
+      setErrors("");
     }
   
     const formDataToSend = new FormData();
@@ -604,7 +699,13 @@ const StudentRegistrationeGradTutor = () => {
       const result = await response.json();
   
       if (result.message && result.message === "Your email already exists.") {
-        setPopupMessage(result.message); 
+        setPopupMessage(
+           
+          <div className={Styles.popupMessageemailpopup}>
+            <span>Your email "<strong>{formData.emailId || formData.confirmEmailId}</strong>" already exists. Please use a different email  or Login</span>
+            <button className={Styles.loginbtn} onClick={handleLogin}>Login</button>
+          </div>
+      );
         setShowPopup(true); 
     
         return; 
@@ -1200,7 +1301,7 @@ const StudentRegistrationeGradTutor = () => {
                       type="file"
                       name="uploadedPhoto"
                       onChange={handleChange}
-                      accept="image/png, image/jpeg"
+                      accept="image/png, image/jpeg,image/jpg"
                       ref={photoInputRef}
                       required
                     />
@@ -1210,13 +1311,41 @@ const StudentRegistrationeGradTutor = () => {
                       and 200KB. Only JPG, JPEG, or PNG allowed.{" "}
                     </p>
                   </div>
+                  <div>
+                  <label>
+                    Upload Proof:
+                    <span className={Styles.SRImportantField}>*</span>
+                  </label>
+                  <div className={Styles.SRFormImage}>
+                    <img src={SRFormImage} alt="no img" />
+                    </div>
+                    <input
+                      type="file"
+                      name="proof"
+                      onChange={handleChange}
+                      accept="image/png, image/jpeg,image/jpg"
+                      ref={proofInputRef}
+                      required
+                    />
+                    <p className={Styles.SRNotPoint}>
+                      <strong> *Note : </strong>File size must be between 100KB
+                      and 500KB. Only JPG, JPEG, or PNG allowed.{" "}
+                    </p>
+                    </div>
                 </div>
+            
+                 
+
+                
               </div>
               {showPopup && (
                 <div className={Styles.popupOverlay}>
                   <div className={Styles.popupContent}>
+                    <div className={Styles.popupHeaderclose}>
+                  <button className={Styles.popupclosebtn} onClick={handleClosePopup}>Close</button>
+                  </div>
                     <p>{popupMessage}</p>
-                    <button onClick={handleClosePopup}>Close</button>
+                   
                   </div>
                 </div>
               )}
@@ -1235,6 +1364,7 @@ const StudentRegistrationeGradTutor = () => {
                           termsAccepted: !prevData.termsAccepted,
                         }))
                       }
+                      required
                     />
                     I accept all the{" "}
                     <span

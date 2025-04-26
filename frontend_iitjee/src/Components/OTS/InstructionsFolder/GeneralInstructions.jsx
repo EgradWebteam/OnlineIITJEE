@@ -203,23 +203,6 @@ const GeneralInstructions = () => {
                     </div>
 
                 </div>
-                {/* <div className={styles.userImageDivInst}>
-                    <div className={styles.userDetailsHolder}>
-                        <div className={styles.userImageSubDiv}>
-                        
-                                  <img
-                          src={studentProfile || defaultImage}
-                          alt="Student Profile"
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = defaultImage;
-                          }}
-                        />
-                        
-                        </div>
-                        <p>{studentName}</p>
-                    </div>    
-                </div> */}
                 <div className={styles.userImageDivInst}>
                     <div className={styles.userDetailsHolder}>
                         <div className={styles.userImageSubDiv}>

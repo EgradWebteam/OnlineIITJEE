@@ -139,14 +139,6 @@ export default function OTSRightSideBar({
       {/* Student Profile */}
       <div className={styles.StudentProfileHolderOTS}>
         <div className={styles.profileImage}>
-          {/* <img
-            src={studentProfile || defaultImage}
-            alt="Student Profile"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = defaultImage;
-            }}
-          /> */}
           {isAdmin ? (
             // Admin Profile
             <img

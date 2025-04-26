@@ -464,7 +464,7 @@ router.get('/TestSubjectWiseStudentMarks/:studentId/:testId', async (req, res) =
   let connection;
 
   try {
-    console.log("Fetching data for studentId:", studentId, "testId:", testId);
+    // console.log("Fetching data for studentId:", studentId, "testId:", testId);
 
     connection = await db.getConnection();
 
@@ -490,7 +490,7 @@ router.get('/TestSubjectWiseStudentMarks/:studentId/:testId', async (req, res) =
       [studentId, testId]
     );
 
-    console.log("Rows fetched:", rows);  // Log the fetched data
+    // console.log("Rows fetched:", rows);  // Log the fetched data
 
     if (!rows.length) {
       return res.status(404).json({ message: "No data found" });
@@ -538,7 +538,7 @@ router.post('/bookmark/:question_id/:test_creation_table_id/:student_registratio
         'DELETE FROM iit_bookmark_questions WHERE question_id = ? AND test_creation_table_id = ? AND student_registration_id = ?',
         [question_id, test_creation_table_id, student_registration_id]
       );
-      console.log("Bookmark removed")
+      // console.log("Bookmark removed")
       return res.status(200).json({ message: 'Bookmark removed' });
     } else {
       // If not, insert (bookmark)
@@ -546,7 +546,7 @@ router.post('/bookmark/:question_id/:test_creation_table_id/:student_registratio
         'INSERT INTO iit_bookmark_questions (question_id, test_creation_table_id, student_registration_id) VALUES (?, ?, ?)',
         [question_id, test_creation_table_id, student_registration_id]
       );
-      console.log("Bookmarked successfully")
+      // console.log("Bookmarked successfully")
       return res.status(201).json({ message: 'Bookmarked successfully' });
     }
   } catch (err) {

@@ -21,7 +21,7 @@ async function uploadToAzure(fileBuffer, blobName) {
   try {
     const blockBlobClient = containerClient.getBlockBlobClient(blobName);
     await blockBlobClient.upload(fileBuffer, fileBuffer.length);
-    console.log(`✅ Uploaded ${blobName} successfully`);
+    // console.log(`✅ Uploaded ${blobName} successfully`);
     // Return only the blob name (you could return the URL if preferred)
     return path.basename(blobName);
   } catch (error) {
@@ -38,17 +38,17 @@ async function deleteFromAzure(blobNameOrPrefix) {
     }
 
     if (blobsToDelete.length === 0) {
-      console.log(`⚠️ No blobs found under: ${blobNameOrPrefix}`);
+      // console.log(`⚠️ No blobs found under: ${blobNameOrPrefix}`);
       return;
     }
 
     for (const blobName of blobsToDelete) {
       const blobClient = containerClient.getBlockBlobClient(blobName);
       await blobClient.deleteIfExists();
-      console.log(`🗑️ Deleted: ${blobName}`);
+      // console.log(`🗑️ Deleted: ${blobName}`);
     }
 
-    console.log(`✅ Deleted ${blobsToDelete.length} blob(s) from Azure`);
+    // console.log(`✅ Deleted ${blobsToDelete.length} blob(s) from Azure`);
   } catch (err) {
     console.error("❌ Error deleting blobs:", err.message);
     throw err;
@@ -60,7 +60,7 @@ async function uploadPDFToBlob(buffer, blobName) {
     const blobPath = `exam-resources-orvl/orvl-topic-pdfs/${blobName}`; // <- correct virtual path
     const blockBlobClient = containerClient.getBlockBlobClient(blobPath);
     await blockBlobClient.upload(buffer, buffer.length);
-    console.log(`✅ Uploaded PDF ${blobPath} successfully`);
+    // console.log(`✅ Uploaded PDF ${blobPath} successfully`);
     return path.basename(blobName);
   } catch (error) {
     console.error("❌ Error uploading PDF to Azure:", error);
@@ -81,9 +81,9 @@ const storeRecordsInBulk = async (connection, tableName, records) => {
   )}) VALUES ${placeholders}`;
   try {
     const [result] = await connection.execute(query, values.flat());
-    console.log(
-      `✅ Inserted into ${tableName}, Rows Affected: ${result.affectedRows}`
-    );
+    // console.log(
+    //   `✅ Inserted into ${tableName}, Rows Affected: ${result.affectedRows}`
+    // );
     return result.insertId
       ? Array.from(
           { length: result.affectedRows },
@@ -732,7 +732,7 @@ router.put("/updateTopic/:topicId", upload.fields([
       if (topic.orvl_topic_pdf) {
         const pdfBlobPath = `exam-resources-orvl/orvl-topic-pdfs/${topic.orvl_topic_pdf}`;
         await deleteFromAzure(pdfBlobPath); // Delete old PDF from Azure
-        console.log(`✅ PDF Deleted: ${pdfBlobPath}`);
+        // console.log(`✅ PDF Deleted: ${pdfBlobPath}`);
       }
 
       // Upload the new PDF file
@@ -774,7 +774,7 @@ router.put("/updateTopic/:topicId", upload.fields([
       if (topic.orvl_document_name) {
         const oldDocPath = `exam-resources-orvl/${topic.orvl_document_name}/`;
         await deleteFromAzure(oldDocPath); // Delete old document folder from Azure
-        console.log(`✅ Document Deleted: ${oldDocPath}`);
+        // console.log(`✅ Document Deleted: ${oldDocPath}`);
       }
 
       // Step 7: Upload new document to Azure Blob Storage
@@ -825,7 +825,7 @@ router.delete("/deleteTopic/:topicId", async (req, res) => {
     if (topic?.orvl_topic_pdf) {
       const pdfBlobPath = `exam-resources-orvl/orvl-topic-pdfs/${topic.orvl_topic_pdf}`;
       await deleteFromAzure(pdfBlobPath); // Delete PDF from Azure
-      console.log(`✅ PDF Deleted: ${pdfBlobPath}`);
+      // console.log(`✅ PDF Deleted: ${pdfBlobPath}`);
     }
 
     // 3. Delete all related DB records (lectures, exercises, questions, etc.)

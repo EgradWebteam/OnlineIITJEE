@@ -115,7 +115,7 @@ export default function QuestionNavigationButtons({
           setActiveSection(nextSubject.sections?.[0]?.SectionName || null);
           setActiveQuestionIndex(0);
         } else {
-          console.log("All subjects and sections completed!");
+          // console.log("All subjects and sections completed!");
           setActiveSubject(testData.subjects[0]?.SubjectName);
           setActiveSection(
             testData.subjects[0]?.sections?.[0]?.SectionName || null
@@ -165,7 +165,7 @@ export default function QuestionNavigationButtons({
       });
  
       const data = await res.json();
-      console.log("SaveResponse API result:", data);
+      // console.log("SaveResponse API result:", data);
  
       return data;
     } catch (error) {
@@ -665,7 +665,7 @@ export default function QuestionNavigationButtons({
           buttonClass: styles.NotAnsweredBtnCls,
         },
       };
-      console.log("Cleared and updated Answer:", updated[qid]);
+      // console.log("Cleared and updated Answer:", updated[qid]);
       return updated;
     });
  
@@ -694,9 +694,6 @@ export default function QuestionNavigationButtons({
   const handlePrevious = () => {
     if (activeQuestionIndex > 0) {
       setActiveQuestionIndex(prev => prev - 1);
-    } else {
-      // Optionally handle the case when there's no previous question (e.g., disable the button or show a message).
-      console.log("This is the first question.");
     }
   };
  
@@ -801,6 +798,8 @@ useEffect(() => {
         <div className={styles.navigationBtnHolderSubContainer}>
           <button className={styles.markedForReviewNavigationBtn} onClick={handleMarkedForReview}>Marked For Review & Next</button>
           <button className={styles.clearResponseBtn} onClick={handleClearResponse}>Clear Response</button>
+        </div>
+        <div className={styles.navigationBtnHolderSubContainerForSubmit}>
           {!(
             activeQuestionIndex === 0 &&
             testData?.subjects?.[0]?.SubjectName === activeSubject &&
@@ -808,31 +807,17 @@ useEffect(() => {
           ) && (
               <button className={styles.previousBtn} onClick={handlePrevious}>Previous</button>
             )}
+          <button className={`${styles.saveandnextNavigationBtn} ${styles.BtnSaveandNextForDisplayBlock}`} onClick={handleSaveAndNext}>Save & Next</button>
         </div>
-        <div className={styles.navigationBtnHolderSubContainerForSubmit}>
-          {/* {!(
-            activeQuestionIndex === 0 &&
-            testData?.subjects?.[0]?.SubjectName === activeSubject &&
-            testData?.subjects?.[0]?.sections?.[0]?.SectionName === activeSection
-          ) && (
-              <button className={styles.previousBtn} onClick={handlePrevious}>Previous</button>
-            )} */}
-          <button className={styles.saveandnextNavigationBtn} onClick={handleSaveAndNext}>Save & Next</button>
-          <button
+      </div>
+      <div className={styles.submitBtnCls}>
+        <button
           className={styles.submitNavigationBtn}
           onClick={handleSubmitClick}
         >
           Submit
         </button>
-        </div>
-      </div>
-      <div className={styles.submitBtnCls}>
-        {/* <button
-          className={styles.submitNavigationBtn}
-          onClick={handleSubmitClick}
-        >
-          Submit
-        </button> */}
+        <button className={`${styles.saveandnextNavigationBtn} ${styles.BtnSaveandNextForDisplayNone}`} onClick={handleSaveAndNext}>Save & Next</button>
       </div>
       <div>
       {showExamSummary && (
@@ -852,8 +837,8 @@ useEffect(() => {
                   setShowExamSummary(false);      // Close summary
                   setIsSubmitClicked(false);      // Reset submit flag
                   setIsAutoSubmitted(false);      // Reset auto submit flag
-                  localStorage.removeItem("examSummaryEntered"); // ❌ unlock summary lock
-                  localStorage.removeItem("examSubmitted"); // ❌ ensure test not marked submitted
+                  localStorage.removeItem("examSummaryEntered"); //  unlock summary lock
+                  localStorage.removeItem("examSubmitted"); //  ensure test not marked submitted
                 }}
                 isSubmitClicked={isSubmitClicked}
                 isAutoSubmitted={isAutoSubmitted}

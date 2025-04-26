@@ -232,6 +232,7 @@ export default function OTSRootFile() {
 
   return (
     <div className={styles.OTSRootMainContainer}>
+      <div className={styles.OTSPC}>
       <OTSHeader />
       <OTSNavbar
         realTestId={realTestId}
@@ -262,6 +263,7 @@ export default function OTSRootFile() {
           </div>
         </>
       )}
+    </div>
     </div>
   );
 }
