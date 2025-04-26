@@ -64,38 +64,44 @@
 }
 
 /* Apply the blinking effect to the warning message */
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 .warning_message {
-  position: fixed; 
-  top: 0;
-  left: 0;
-  width: 100%; 
-  color: red;
-  font-weight: bold;
-  font-size: 15px;
-  animation: blink 2s infinite;
-  padding: 10px;
-  background-color: white; 
-  text-align: center;
-  z-index: 9999; 
-  border-bottom: 2px solid red;
+  border: 2px solid red;
   pointer-events: none;
+  font-weight: bold;
+  font-size: 15px; 
+  animation: blink 2s infinite; /* 1 second interval, repeat indefinitely */
+  padding: 10px;
+  background-color: rgba(255, 0, 0, 0.1); 
+  border-radius: 5px; 
+  text-align: center;
+  width: calc(100vw - 300px);
+  color: red;
 }
 
 @media (max-width: 690px) {
   .warning_message  {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    color: red;
+    border: 2px solid red;
+    pointer-events: none;
     font-weight: bold;
-    font-size: 15px;
-    animation: blink 2s infinite;
+    font-size: 15px; 
+    animation: blink 2s infinite; /* 1 second interval, repeat indefinitely */
     padding: 10px;
-    border-bottom: 2px solid red;
-    background-color: white;
+    background-color: rgba(255, 0, 0, 0.1); 
+    border-radius: 5px; 
     text-align: center;
-    z-index: 9999;
+    /* width: calc(100vw - 200px); */
+    color: red;
   }
 }
 
