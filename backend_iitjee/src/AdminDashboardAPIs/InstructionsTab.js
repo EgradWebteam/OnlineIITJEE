@@ -240,13 +240,13 @@ router.put(
     let { instruction_points, instruction_img } = req.body;
 
     // Log the received params and request body
-    console.log("Received request parameters:");
-    console.log("Instruction ID:", instruction_id);
-    console.log("Instruction Point ID:", instruction_point_id);
+    // console.log("Received request parameters:");
+    // console.log("Instruction ID:", instruction_id);
+    // console.log("Instruction Point ID:", instruction_point_id);
 
-    console.log("Received request body:");
-    console.log("Instruction Points:", instruction_points);
-    console.log("Instruction Image:", instruction_img);
+    // console.log("Received request body:");
+    // console.log("Instruction Points:", instruction_points);
+    // console.log("Instruction Image:", instruction_img);
   
     if (typeof instruction_points !== "string") {
       console.error("Error: Instruction points must be a string");
@@ -263,9 +263,9 @@ router.put(
         WHERE instruction_point_id = ?
       `;
       
-      console.log("Executing update points query with data:");
-      console.log("Instruction Point:", instruction_points);
-      console.log("Instruction Point ID:", instruction_point_id);
+      // console.log("Executing update points query with data:");
+      // console.log("Instruction Point:", instruction_points);
+      // console.log("Instruction Point ID:", instruction_point_id);
       
       await db.query(updatePointsQuery, [
         instruction_points, // Directly use the string
@@ -277,7 +277,7 @@ router.put(
       if (instruction_img && instruction_img.includes(",")) {
         const base64Data = instruction_img.split(",")[1];
         imgBuffer = Buffer.from(base64Data, "base64");
-        console.log("Processing base64 image data...");
+        // console.log("Processing base64 image data...");
       }
 
       if (imgBuffer) {
@@ -286,12 +286,12 @@ router.put(
           SET instruction_img = ?
           WHERE instruction_id = ?
         `;
-        console.log("Executing update image query with Instruction ID:", instruction_id);
+        // console.log("Executing update image query with Instruction ID:", instruction_id);
         await db.query(updateImageQuery, [imgBuffer, instruction_id]);
       }
 
       // Success response
-      console.log("Instruction and image (if any) updated successfully.");
+      // console.log("Instruction and image (if any) updated successfully.");
       res.status(200).json({ message: "Instruction and image updated successfully" });
     } catch (error) {
       console.error("Error updating instruction:", error);

@@ -98,7 +98,7 @@ export default function QuestionsMainContainer({
   };
   // const [isCollapsed, setIsCollapsed] = useState(false);
   const handleLeftClickMain = () => {
-    console.log("in handle left click in main page");
+    // console.log("in handle left click in main page");
     setShowSidebar((prev) => !prev);
   };
   const { questionType, marks, negativeMarks } = getQuestionMeta();

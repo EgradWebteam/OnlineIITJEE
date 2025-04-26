@@ -263,6 +263,15 @@ text-decoration: none;
     font-weight: 600;
     border-radius: 5px;
 }
+.ButtonsForActive{
+  color: white;
+    background-color: rgb(5, 102, 5);
+    padding: 8px 15px;
+    font-size: 15px;
+    border: none;
+    font-weight: 600;
+    border-radius: 5px;
+}
 .ButtonsForEdit {
   display: flex;
   flex-direction: row;

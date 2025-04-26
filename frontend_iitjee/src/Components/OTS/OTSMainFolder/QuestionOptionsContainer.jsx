@@ -153,11 +153,7 @@ export default function QuestionOptionsContainer({
                 
               />
               <span className={styles.OptionIndex}>{getLabel(index, option.option_index)}</span>
-              {/* {isImage ? ( */}
                 <img src={option.optionImgName} alt={`Option ${option.option_index}`} className={styles.OptionImage} />
-              {/* ) : (
-                <span className={styles.OptionText}>{option.optionImgName}</span>
-              )} */}
             </label>
           </div>
         );
@@ -191,11 +187,9 @@ export default function QuestionOptionsContainer({
                 onChange={toggleOption}
               />
               <span className={styles.OptionIndex}>{getLabel(index, option.option_index)}</span>
-              {/* {isImage ? ( */}
+
                 <img src={option.optionImgName} alt={`Option ${option.option_index}`} className={styles.OptionImage} />
-              {/* ) : (
-                <span className={styles.OptionText}>{option.optionImgName}</span>
-              )} */}
+
             </label>
           </div>
         );

@@ -145,11 +145,11 @@ const OTSandORVLBannerComponent = () => {
                   : "ORVLHomePage"
               }
               onBuy={() => {
-                console.log("Navigating to Student Registration with Course ID:", course.course_creation_id); // Log the course ID
+                // console.log("Navigating to Student Registration with Course ID:", course.course_creation_id); // Log the course ID
                 navigate('/StudentRegistrationPage', { state: { courseCreationId: course.course_creation_id } });
                 }
               }
-              onGoToTest={() => console.log("Go to Test:", course.course_creation_id)}
+              // onGoToTest={() => console.log("Go to Test:", course.course_creation_id)}
             />
           ))
           
