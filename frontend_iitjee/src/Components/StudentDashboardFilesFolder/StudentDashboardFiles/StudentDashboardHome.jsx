@@ -6,9 +6,6 @@ export default function StudentDashboardHome({
   handleSectionChange,
   studentName,
 }) {
-  useEffect(() => {
-    console.log("dashboardhome");
-  }, []);
   return (
     <div>
       <div className={styles.gretingContainer}>

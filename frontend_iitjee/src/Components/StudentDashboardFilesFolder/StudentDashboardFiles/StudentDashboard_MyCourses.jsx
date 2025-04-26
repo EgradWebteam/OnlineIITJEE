@@ -177,26 +177,6 @@ export default function StudentDashboard_MyCourses({ studentId,userData }) {
               </button>
             ))}
           </div>
-
-          {/* Loading or Not Ready */}
-          {/* {(!structuredCourses.length || !selectedPortal || !selectedExam || filteredCourses.length === 0) ? (
-            <div className={globalCSS.noCoursesContainer}>
-              <p className={globalCSS.noCoursesMsg}>YOU HAVE NO ACTIVE COURSES</p>
-            </div>
-          ) : (
-            <div className={globalCSS.cardHolderOTSORVLHome}>
-              {filteredCourses.map((course) => (
-                <CourseCard
-                  key={course.course_creation_id}
-                  title={course.course_name}
-                  cardImage={course.card_image}
-                  context="myCourses"
-                  portalId={course.portal_id}
-                  onGoToTest={() => handleGoToTest(course)}
-                />
-              ))}
-            </div>
-          )} */}
           {loading ? (
             <div className={globalCSS.loadingContainer}>
               <p className={globalCSS.loadingText}>Loading your courses...</p>

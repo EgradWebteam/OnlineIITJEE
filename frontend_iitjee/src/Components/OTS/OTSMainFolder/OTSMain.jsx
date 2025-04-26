@@ -25,37 +25,6 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
     setActiveQuestionIndex(0); // This resets to 1st question when section changes
   }, [activeSection]);
 
-  // const autoSaveNATIfNeeded = () => {
-  //   const subject = testData?.subjects?.find(
-  //     (sub) => sub.SubjectName === activeSubject
-  //   );
-  //   const section = subject?.sections?.find(
-  //     (sec) => sec.SectionName === activeSection
-  //   );
-  //   const question = section?.questions?.[activeQuestionIndex];
-  //   const qTypeId = question?.questionType?.quesionTypeId;
-
-  //   if ([5, 6].includes(qTypeId) && natValue?.trim() !== "") {
-  //     const qid = question.question_id;
-  //     const subjectId = subject.subjectId;
-  //     const sectionId = section.sectionId;
-
-  //     const savedData = {
-  //       subjectId,
-  //       sectionId,
-  //       questionId: qid,
-  //       natAnswer: natValue,
-  //       type: "NAT",
-  //       buttonClass: styles.AnswerdBtnCls,
-  //     };
-
-  //     setUserAnswers((prev) => ({
-  //       ...prev,
-  //       [qid]: savedData,
-  //     }));
-  //   }
-  // };
-
     const saveUserResponse = async ({
       realStudentId,
       realTestId,
@@ -95,7 +64,7 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
         });
    
         const data = await res.json();
-        console.log("SaveResponse API result:", data);
+        // console.log("SaveResponse API result:", data);
    
         return data;
       } catch (error) {
@@ -123,7 +92,7 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
       const prevAnswer = userAnswers?.[qid];
       const wasPreviouslyAnswered = prevAnswer?.type === "NAT" && prevAnswer?.natAnswer?.trim();
     
-      // ✅ Case 1: NAT has a value → Save
+      //  Case 1: NAT has a value → Save
       if (natValue?.trim() !== "") {
         const wasMarkedForReview = prevAnswer?.buttonClass === styles.AnsMarkedForReview;
     
@@ -160,7 +129,7 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
           console.error("Auto-save NAT failed:", error);
         }
     
-      // ✅ Case 2: NAT is cleared → Only DELETE if it was previously answered
+      // Case 2: NAT is cleared → Only DELETE if it was previously answered
       } else if (wasPreviouslyAnswered) {
         setUserAnswers((prev) => ({
           ...prev,

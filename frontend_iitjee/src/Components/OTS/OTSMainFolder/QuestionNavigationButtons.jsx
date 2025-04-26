@@ -115,7 +115,7 @@ export default function QuestionNavigationButtons({
           setActiveSection(nextSubject.sections?.[0]?.SectionName || null);
           setActiveQuestionIndex(0);
         } else {
-          console.log("All subjects and sections completed!");
+          // console.log("All subjects and sections completed!");
           setActiveSubject(testData.subjects[0]?.SubjectName);
           setActiveSection(
             testData.subjects[0]?.sections?.[0]?.SectionName || null
@@ -165,7 +165,7 @@ export default function QuestionNavigationButtons({
       });
  
       const data = await res.json();
-      console.log("SaveResponse API result:", data);
+      // console.log("SaveResponse API result:", data);
  
       return data;
     } catch (error) {
@@ -665,7 +665,7 @@ export default function QuestionNavigationButtons({
           buttonClass: styles.NotAnsweredBtnCls,
         },
       };
-      console.log("Cleared and updated Answer:", updated[qid]);
+      // console.log("Cleared and updated Answer:", updated[qid]);
       return updated;
     });
  
@@ -694,9 +694,6 @@ export default function QuestionNavigationButtons({
   const handlePrevious = () => {
     if (activeQuestionIndex > 0) {
       setActiveQuestionIndex(prev => prev - 1);
-    } else {
-      // Optionally handle the case when there's no previous question (e.g., disable the button or show a message).
-      console.log("This is the first question.");
     }
   };
  
@@ -826,8 +823,8 @@ useEffect(() => {
                   setShowExamSummary(false);      // Close summary
                   setIsSubmitClicked(false);      // Reset submit flag
                   setIsAutoSubmitted(false);      // Reset auto submit flag
-                  localStorage.removeItem("examSummaryEntered"); // ❌ unlock summary lock
-                  localStorage.removeItem("examSubmitted"); // ❌ ensure test not marked submitted
+                  localStorage.removeItem("examSummaryEntered"); //  unlock summary lock
+                  localStorage.removeItem("examSubmitted"); //  ensure test not marked submitted
                 }}
                 isSubmitClicked={isSubmitClicked}
                 isAutoSubmitted={isAutoSubmitted}
