@@ -109,7 +109,7 @@ async function uploadToAzure(fileBuffer, blobName) {
   try {
     const blockBlobClient = containerClient.getBlockBlobClient(blobName);
     await blockBlobClient.upload(fileBuffer, fileBuffer.length);
-    console.log(`✅ Uploaded ${blobName} successfully`);
+    // console.log(`✅ Uploaded ${blobName} successfully`);
     return path.basename(blobName);
   } catch (error) {
     console.error("❌ Error uploading to Azure:", error);
@@ -131,9 +131,9 @@ const storeRecordsInBulk = async (connection, tableName, records) => {
 
   try {
     const [result] = await connection.execute(query, values.flat());
-    console.log(
-      `✅ Inserted into ${tableName}, Rows Affected: ${result.affectedRows}`
-    );
+    // console.log(
+    //   `✅ Inserted into ${tableName}, Rows Affected: ${result.affectedRows}`
+    // );
     return result.insertId
       ? Array.from(
           { length: result.affectedRows },
@@ -353,7 +353,7 @@ router.post(
       await storeRecordsInBulk(connection, "iit_solutions", finalSolutions);
 
       await connection.commit();
-      console.log(`✅ Document uploaded successfully.`);
+      // console.log(`✅ Document uploaded successfully.`);
       res.status(200).json({ message: "Document uploaded successfully." });
     } catch (err) {
       await connection.rollback();
@@ -403,7 +403,7 @@ router.get("/getUploadedDocuments", async (req, res) => {
 
     await connection.commit();
 
-    console.log(`✅ Fetched documents successfully.`);
+    // console.log(`✅ Fetched documents successfully.`);
     res.status(200).json({ documents: result });
 
   } catch (err) {

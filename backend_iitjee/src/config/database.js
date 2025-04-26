@@ -16,9 +16,9 @@ const db = mysql.createPool({
 
 db.getConnection()
   .then(async connection => {
-    console.log("Connected to MySQL DB");
+    // console.log("Connected to MySQL DB");
     await connection.query('SELECT 1');
-    console.log("Database is responsive");
+    // console.log("Database is responsive");
     connection.release(); // ✅ Release the connection after test
   })
   .catch(err => {
