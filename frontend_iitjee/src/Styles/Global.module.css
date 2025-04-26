@@ -4,6 +4,7 @@
     border: none;
     padding: 0.7rem;
     cursor: pointer;
+    border: 1px solid;
 }
 .examActiveBtn,.portalActiveBtn{
     background-color: #09bffc;

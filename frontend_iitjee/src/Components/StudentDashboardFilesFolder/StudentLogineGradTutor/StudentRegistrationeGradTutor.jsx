@@ -44,7 +44,7 @@ const StudentRegistrationeGradTutor = () => {
   const photoInputRef = useRef(null);
   const proofInputRef = useRef(null);
 
-  console.log(courseid);
+  // console.log(courseid);
 
   const validateForm = () => {
     const validationErrors = {};
@@ -645,7 +645,7 @@ if (message) {
     // Step 1: Validate the form
     const validationErrors = validateForm();
 
-  console.log(validationErrors)
+  // console.log(validationErrors)
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       let errorMessage = "Please fill in the following required fields:\n";

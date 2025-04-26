@@ -27,8 +27,10 @@ const CourseCard = React.memo(
     return (
       <div>
         <div className={styles.cardMain}>
+          <div className={styles.courseCardHeaderDivvv}>
           <h3 className={styles.Cardheader}>{title}</h3>
-
+          </div>
+          
           <div className={styles.imageSectionCard}>
             <img src={cardImage} alt={title} />
           </div>

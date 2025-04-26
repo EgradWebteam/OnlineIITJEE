@@ -170,7 +170,7 @@ WHERE bq.student_registration_id = ?
 router.delete("/DeleteBookmark/:studentId/:questionId", async (req, res) => {
   const questionId = req.params.questionId;
   const studentId = req.params.studentId;
-  console.log("questionId,studentId", questionId, studentId);
+  // console.log("questionId,studentId", questionId, studentId);
   try {
     const sql =
       "DELETE FROM iit_bookmark_questions WHERE student_registration_id = ? AND question_id = ?";
@@ -179,7 +179,7 @@ router.delete("/DeleteBookmark/:studentId/:questionId", async (req, res) => {
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Bookmark not found" });
     }
-    console.log("Bookmark deleted successfully");
+    // console.log("Bookmark deleted successfully");
     res.status(200).json({ message: "Bookmark deleted successfully" });
   } catch (error) {
     console.error("Error deleting bookmark:", error);

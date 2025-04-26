@@ -42,11 +42,11 @@ const generatePassword = (length = 12) => {
   
       const fileUrl = blockBlobClient.url;
   
-      console.log(`✅ File saved at: ${fileUrl}`);
-      console.log(
-        `Upload block blob ${file.originalname} successfully`,
-        uploadBlobResponse.requestId
-      );
+    //   console.log(`✅ File saved at: ${fileUrl}`);
+    //   console.log(
+    //     `Upload block blob ${file.originalname} successfully`,
+    //     uploadBlobResponse.requestId
+    //   );
   
       // 2. Return only the unique filename for DB and full URL optionally
       return {
@@ -97,7 +97,7 @@ const getImageUrl = (fileName) => {
   
 router.get("/UnPurchasedcourses/:studentregisterationid",async (req,res) => {
     const { studentregisterationid } = req.params;
-    console.log("Received request for unpurchased courses:", { studentregisterationid });
+    // console.log("Received request for unpurchased courses:", { studentregisterationid });
  
     let connection;
  
@@ -141,11 +141,11 @@ WHERE
        
  
         if (rows.length === 0) {
-            console.log("No unpurchased courses found for this student.");
+            // console.log("No unpurchased courses found for this student.");
             return res.status(404).json({ message: "No unpurchased courses found" });
         }
  
-        console.log("Unpurchased courses found:", rows);
+        // console.log("Unpurchased courses found:", rows);
         // res.status(200).json(rows);
         const coursesByPortalAndExam = {};
  
@@ -182,7 +182,7 @@ WHERE
         // Convert the structure to an array for easier handling on the frontend
         const structuredCourses = Object.values(coursesByPortalAndExam);
         res.status(200).json(structuredCourses);
-        console.log("Unpurchased courses grouped by portal and exam:", structuredCourses);
+        // console.log("Unpurchased courses grouped by portal and exam:", structuredCourses);
     } catch (error) {
         console.error("Error fetching unpurchased courses:", error);
         res.status(500).json({ message: "Internal server error" });
@@ -192,9 +192,9 @@ WHERE
 })
 router.get("/studentpaymentcreation/:studentregisterationid/:coursecreationid", async (req, res) => {
     const { studentregisterationid, coursecreationid } = req.params;
-    console.log("Received request for student payment creation:", { studentregisterationid, coursecreationid });
+    // console.log("Received request for student payment creation:", { studentregisterationid, coursecreationid });
 if(!studentregisterationid || !coursecreationid) {
-    console.log("Missing student registration ID or course creation ID.");
+    // console.log("Missing student registration ID or course creation ID.");
     return res.status(400).json({ message: "Student registration ID and course creation ID are required." });
 }
     let connection;
@@ -220,7 +220,7 @@ if(!studentregisterationid || !coursecreationid) {
         );
 
         if (rows.length === 0) {
-            console.log("No courses found for this student and course creation ID.");
+            // console.log("No courses found for this student and course creation ID.");
             return res.status(404).json({ message: "No courses found for this student and course creation ID" });
         }
 
@@ -257,7 +257,7 @@ if(!studentregisterationid || !coursecreationid) {
 
 router.get("/ActiveCourses/:coursecreationid", async (req, res) => {
     const { coursecreationid } = req.params;
-    console.log("Received request for active course:", { coursecreationid });
+    // console.log("Received request for active course:", { coursecreationid });
 
     let connection;
 
@@ -279,11 +279,11 @@ router.get("/ActiveCourses/:coursecreationid", async (req, res) => {
         );
 
         if (rows.length === 0) {
-            console.log("No active courses found for this course creation ID.");
+            // console.log("No active courses found for this course creation ID.");
             return res.status(404).json({ message: "No active course found for this course creation ID" });
         }
 
-        console.log("Active course found:", rows);
+        // console.log("Active course found:", rows);
         res.status(200).json(rows);
     } catch (error) {
         console.error("Error fetching active course:", error);

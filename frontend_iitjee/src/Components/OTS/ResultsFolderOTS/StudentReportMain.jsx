@@ -15,11 +15,6 @@ const StudentReportMain = () => {
   const { testId } = useParams();
   const location = useLocation();
   const { studentId,userData, test_name, total_marks, duration } = location.state || {};
-
-
-
-  
-
   return (
     <div className={styles.StudentReportMainDiv}>
       <div className={styles.StudentReportSubDiv}>

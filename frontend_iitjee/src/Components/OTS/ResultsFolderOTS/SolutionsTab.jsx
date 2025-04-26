@@ -121,7 +121,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
       );
 
       const data = await response.json();
-      console.log("data", data);
+      // console.log("data", data);
       if (response.ok) {
         // Update the bookmarked questions state
         if (bookmarkedQuestions.includes(questionId)) {
@@ -163,7 +163,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
 
     // If a valid video ID is found, return the embed link
     if (videoId) {
-      console.log("Extracted Video ID:", videoId);
+      // console.log("Extracted Video ID:", videoId);
       return `https://www.youtube.com/embed/${videoId}?rel=0`;
     }
 

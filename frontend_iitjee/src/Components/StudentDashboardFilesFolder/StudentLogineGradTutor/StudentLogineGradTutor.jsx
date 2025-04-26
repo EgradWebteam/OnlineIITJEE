@@ -61,7 +61,7 @@ export default function StudentLogineGradTutor() {
           sessionStorage.setItem('accessToken', accessToken);
           sessionStorage.setItem('userId', userId);
           setStudentData(studentInfo);
-          console.log(studentInfo)
+          // console.log(studentInfo)
           navigate(`/StudentDashboard/${userId}`);
         }
        
