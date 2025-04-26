@@ -5,6 +5,13 @@ import ExamSummaryComponent from './OTSExamSummary';
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import { useQuestionStatus,QuestionStatusProvider } from '../../../ContextFolder/CountsContext.jsx';
 import { useTimer } from '../../../ContextFolder/TimerContext.jsx';
+import { useNavigate } from "react-router-dom";
+import {
+  decryptBatch as decryptDataBatch,
+  encryptBatch,
+} from "../../../utils/cryptoUtils.jsx";
+
+
 export default function QuestionNavigationButtons({
   testData,
   activeSubject,
@@ -34,9 +41,10 @@ export default function QuestionNavigationButtons({
     visitedCount,
     totalQuestionsInTest,
   } = useQuestionStatus();
-  const [showExamSummary, setShowExamSummary] = useState(false);
+  // const [showExamSummary, setShowExamSummary] = useState(false);
   const { timeSpent,timeLeft } = useTimer();  // Get timeSpent in seconds
- 
+ // inside your component:
+const navigate = useNavigate();
  
   useEffect(() => {
     if (!testData || !testData.subjects) return;
@@ -115,7 +123,7 @@ export default function QuestionNavigationButtons({
           setActiveSection(nextSubject.sections?.[0]?.SectionName || null);
           setActiveQuestionIndex(0);
         } else {
-          // console.log("All subjects and sections completed!");
+          console.log("All subjects and sections completed!");
           setActiveSubject(testData.subjects[0]?.SubjectName);
           setActiveSection(
             testData.subjects[0]?.sections?.[0]?.SectionName || null
@@ -165,7 +173,7 @@ export default function QuestionNavigationButtons({
       });
  
       const data = await res.json();
-      // console.log("SaveResponse API result:", data);
+      console.log("SaveResponse API result:", data);
  
       return data;
     } catch (error) {
@@ -665,7 +673,7 @@ export default function QuestionNavigationButtons({
           buttonClass: styles.NotAnsweredBtnCls,
         },
       };
-      // console.log("Cleared and updated Answer:", updated[qid]);
+      console.log("Cleared and updated Answer:", updated[qid]);
       return updated;
     });
  
@@ -694,6 +702,9 @@ export default function QuestionNavigationButtons({
   const handlePrevious = () => {
     if (activeQuestionIndex > 0) {
       setActiveQuestionIndex(prev => prev - 1);
+    } else {
+      // Optionally handle the case when there's no previous question (e.g., disable the button or show a message).
+      console.log("This is the first question.");
     }
   };
  
@@ -704,39 +715,107 @@ export default function QuestionNavigationButtons({
     return `${h}:${m}:${s}`;
   };
  
-  const [isAutoSubmitted,setIsAutoSubmitted] = useState(false)
-  const [isSubmitClicked,setIsSubmitClicked] = useState(false)
+  // const [isAutoSubmitted,setIsAutoSubmitted] = useState(false)
+  // const [isSubmitClicked,setIsSubmitClicked] = useState(false)
  
-  // Automatically determine when to show the summary
-useEffect(() => {
-  const shouldShowSummary = timeLeft === 0 || isAutoSubmitted || isSubmitClicked;
-  setShowExamSummary(shouldShowSummary);
-}, [timeLeft, isAutoSubmitted, isSubmitClicked]);
+//   // Automatically determine when to show the summary
+// useEffect(() => {
+//   const shouldShowSummary = timeLeft === 0 || isAutoSubmitted || isSubmitClicked;
+//   setShowExamSummary(shouldShowSummary);
+// }, [timeLeft, isAutoSubmitted, isSubmitClicked]);
  
  
+  // useEffect(() => {
+  //   if (timeLeft === 0) {
+  //     setIsAutoSubmitted(true);
+  //     localStorage.setItem("examSummaryEntered", "true"); //  LOCK as soon as time up
+  //   }
+  // }, [timeLeft]);
+ 
+  // useEffect(() => {
+  //   const enteredSummary = localStorage.getItem("examSummaryEntered") === "true";
+  //   const alreadySubmitted = localStorage.getItem("examSubmitted") === "true";
+ 
+  //   if (enteredSummary || alreadySubmitted) {
+  //     setShowExamSummary(true);
+  //   }
+  // }, []);
+
+
+  // When time runs out, auto-submit and navigate
   useEffect(() => {
-    if (timeLeft === 0) {
-      setIsAutoSubmitted(true);
-      localStorage.setItem("examSummaryEntered", "true"); //  LOCK as soon as time up
-    }
+    const handleAutoSubmit = async () => {
+      if (timeLeft === 0) {
+        // setIsAutoSubmitted(true);
+        // localStorage.setItem("examSummaryEntered", "true"); // Lock as soon as time up
+  
+        const encrypted = realStudentId
+          ? await encryptBatch([realTestId, realStudentId])
+          : await encryptBatch([realTestId]);
+  
+        const encryptedTestId = encodeURIComponent(encrypted[0]);
+        const encryptedStudentId = realStudentId
+          ? encodeURIComponent(encrypted[1])
+          : null;
+  
+        navigate(`/OTSExamSummary/${encryptedTestId}/${encryptedStudentId}`, {
+          state: {
+            testData,
+            userAnswers,
+            isSubmitClicked: false,
+            isAutoSubmitted: true,
+            realTestId,
+            realStudentId,
+          },
+        });
+      }
+    };
+  
+    handleAutoSubmit(); // call the async function
   }, [timeLeft]);
- 
-  useEffect(() => {
-    const enteredSummary = localStorage.getItem("examSummaryEntered") === "true";
-    const alreadySubmitted = localStorage.getItem("examSubmitted") === "true";
- 
+  
+
+// On component load, check if already submitted/entered and directly navigate
+useEffect(() => {
+  const checkSummaryStatus = async () => {
+    // const enteredSummary = localStorage.getItem("examSummaryEntered") === "true";
+    // const alreadySubmitted = localStorage.getItem("examSubmitted") === "true";
+
     if (enteredSummary || alreadySubmitted) {
-      setShowExamSummary(true);
+      const encrypted = realStudentId
+        ? await encryptBatch([realTestId, realStudentId])
+        : await encryptBatch([realTestId]);
+
+      const encryptedTestId = encodeURIComponent(encrypted[0]);
+      const encryptedStudentId = realStudentId
+        ? encodeURIComponent(encrypted[1])
+        : null;
+
+      navigate(`/OTSExamSummary/${encryptedTestId}/${encryptedStudentId}`, {
+        state: {
+          testData,
+          userAnswers,
+          isSubmitClicked: true,
+          isAutoSubmitted: false,
+          realTestId,
+          realStudentId,
+        },
+      });
     }
-  }, []);
+  };
+
+  checkSummaryStatus(); // call the async function
+}, []);
+
+
  
  
   const handleSubmitClick = async () => {
     const formattedTimeSpent = formatTime(timeSpent); // Format HH:MM:SS
     const attemptedCount = answeredAndMarkedForReviewCount + answeredCount;
     const notAttemptedCount = markedForReviewCount + notAnsweredCount;
-    setIsSubmitClicked(true);
-    localStorage.setItem("examSummaryEntered", "true");
+    // setIsSubmitClicked(true);
+    // localStorage.setItem("examSummaryEntered", "true");
     const examSummaryData = {
       studentId: realStudentId,
       test_creation_table_id: realTestId,
@@ -752,10 +831,9 @@ useEffect(() => {
       TimeSpent: formattedTimeSpent,
     };
  
-    setShowExamSummary(true);
+    // setShowExamSummary(true);
  
- 
- 
+
     try {
       const response = await fetch(`${BASE_URL}/OTSExamSummary/SaveExamSummary`, {
         method: "POST",
@@ -769,6 +847,28 @@ useEffect(() => {
  
       if (response.ok) {
         console.log("Success:", result.message);
+        const encrypted = realStudentId
+        ? await encryptBatch([realTestId, realStudentId])
+        : await encryptBatch([realTestId]);
+
+      const encryptedTestId = encodeURIComponent(encrypted[0]);
+      const encryptedStudentId = realStudentId
+        ? encodeURIComponent(encrypted[1])
+        : null;
+
+      const route = realStudentId
+        ? `/OTSExamSummary/${encryptedTestId}/${encryptedStudentId}`
+        : `/OTSExamSummary/${encryptedTestId}`; // <-- Use a route for admin preview
+
+      navigate(route,{ state: {
+        testData,
+        userAnswers,
+        isSubmitClicked: true,
+        isAutoSubmitted: false,
+        realTestId,
+        realStudentId,
+      },});
+      
       } else {
         console.error("Failed:", result.message);
       }
@@ -784,8 +884,6 @@ useEffect(() => {
         <div className={styles.navigationBtnHolderSubContainer}>
           <button className={styles.markedForReviewNavigationBtn} onClick={handleMarkedForReview}>Marked For Review & Next</button>
           <button className={styles.clearResponseBtn} onClick={handleClearResponse}>Clear Response</button>
-        </div>
-        <div className={styles.navigationBtnHolderSubContainerForSubmit}>
           {!(
             activeQuestionIndex === 0 &&
             testData?.subjects?.[0]?.SubjectName === activeSubject &&
@@ -793,52 +891,34 @@ useEffect(() => {
           ) && (
               <button className={styles.previousBtn} onClick={handlePrevious}>Previous</button>
             )}
-          <button className={`${styles.saveandnextNavigationBtn} ${styles.BtnSaveandNextForDisplayBlock}`} onClick={handleSaveAndNext}>Save & Next</button>
         </div>
-      </div>
-      <div className={styles.submitBtnCls}>
-        <button
+        <div className={styles.navigationBtnHolderSubContainerForSubmit}>
+          {/* {!(
+            activeQuestionIndex === 0 &&
+            testData?.subjects?.[0]?.SubjectName === activeSubject &&
+            testData?.subjects?.[0]?.sections?.[0]?.SectionName === activeSection
+          ) && (
+              <button className={styles.previousBtn} onClick={handlePrevious}>Previous</button>
+            )} */}
+          <button className={styles.saveandnextNavigationBtn} onClick={handleSaveAndNext}>Save & Next</button>
+          <button
           className={styles.submitNavigationBtn}
           onClick={handleSubmitClick}
         >
           Submit
         </button>
-        <button className={`${styles.saveandnextNavigationBtn} ${styles.BtnSaveandNextForDisplayNone}`} onClick={handleSaveAndNext}>Save & Next</button>
+        </div>
+      </div>
+      <div className={styles.submitBtnCls}>
+        {/* <button
+          className={styles.submitNavigationBtn}
+          onClick={handleSubmitClick}
+        >
+          Submit
+        </button> */}
       </div>
       <div>
-      {showExamSummary && (
-          <div className={styles.ExamSummaryMainDiv}>
-            <div className={styles.ExamSummarysubDiv}>
-                 <QuestionStatusProvider
-                        testData={testData}
-                        activeSubject={activeSubject}
-                        activeSection={activeSection}
-                        userAnswers={userAnswers}
-                      >
-                         <ExamSummaryComponent
-                testData={testData}
-                userAnswers={userAnswers}
-             
-                onCancelSubmit={() => {
-                  setShowExamSummary(false);      // Close summary
-                  setIsSubmitClicked(false);      // Reset submit flag
-                  setIsAutoSubmitted(false);      // Reset auto submit flag
-                  localStorage.removeItem("examSummaryEntered"); //  unlock summary lock
-                  localStorage.removeItem("examSubmitted"); //  ensure test not marked submitted
-                }}
-                isSubmitClicked={isSubmitClicked}
-                isAutoSubmitted={isAutoSubmitted}
-                setUserAnswers={setUserAnswers}
-                realTestId={realTestId}
-                realStudentId={realStudentId}
-                setShowExamSummary={setShowExamSummary}
-         
-              />
-                      </QuestionStatusProvider>
-             
-            </div>
-          </div>
-        )}
+   
       </div>
  
  
