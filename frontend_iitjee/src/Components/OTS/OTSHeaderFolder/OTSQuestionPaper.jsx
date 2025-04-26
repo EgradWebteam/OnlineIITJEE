@@ -12,7 +12,7 @@ const OTSQuestionPaper = ({ testName,realTestId, closeQuestionPaper }) => {
     const fetchQuestions = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/OTS/QuestionPaper/${realTestId}`);
-        console.log("response",response.data)
+        // console.log("response",response.data)
         setQuestionData(response.data);
       } catch (err) {
         console.error("Error fetching courses:", err);

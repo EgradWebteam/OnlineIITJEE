@@ -77,7 +77,7 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
       const result = await response.json();
 
       if (response.ok) {
-        console.log(result.message);
+        // console.log(result.message);
 
         sessionStorage.setItem('navigationToken', 'valid');
 
@@ -96,7 +96,7 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
   };
 
   const handleViewReportClickMycourses = (testId,test) => {
-    console.log("test",test)
+    // console.log("test",test)
     navigate(`/StudentReport/${testId}`, {
       state: {
         studentId: studentId,

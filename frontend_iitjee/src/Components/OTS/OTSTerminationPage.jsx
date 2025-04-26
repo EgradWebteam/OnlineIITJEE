@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 // import React from "react";
-import warning from "./otsimages/warning_img.png";
-
-import styles from '../../Styles/OTSCSS/OTSMain.module.css';
+import warning from "../../assets/warning_img.png";
+import styles from "../../Styles/OTSCSS/OTSTerminationPage.module.css";
 
 const OTSTerminationPage = () => {
 

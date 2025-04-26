@@ -11,6 +11,8 @@ import OTSHeader from "../OTSHeaderFolder/OTSHeader.jsx";
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx'
 import adminCapImg from '../../../assets/logoCap.jpeg';
+import TermsAndConditions from "../../GlobalFiles/TermsAndConditions.jsx";
+
 const ExamInstructions = () => {
   const { testId, studentId } = useParams();
   const navigate = useNavigate();
