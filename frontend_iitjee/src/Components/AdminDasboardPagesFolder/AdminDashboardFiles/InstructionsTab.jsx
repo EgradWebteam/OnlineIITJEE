@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import styles from "../../../Styles/AdminDashboardCSS/Instruction.module.css";
 import DynamicTable from "../AdminDashboardFiles/DynamicTable.jsx";
-
-
+import { FaSearch } from 'react-icons/fa';
 const InstructionsTab = () => {
   const isOpen=true
   const [showForm, setShowForm] = useState(false);
@@ -15,7 +14,9 @@ const InstructionsTab = () => {
   const [instructionPoints, setInstructionPoints] = useState([]);
   const [isReadOnly, setIsReadOnly] = useState(false);
   const [showInstructionPoints, setShowInstructionPoints] = useState(false); 
-
+ const [currentPage, setCurrentPage] = useState(1);
+const itemsPerPage = 5;
+  const [searchTerm, setSearchTerm] = useState("");
   const columns = [
     { header: "S.NO", accessor: "sno" },
     { header: "Exam Name", accessor: "examName" },
@@ -54,7 +55,9 @@ const InstructionsTab = () => {
   const handleExamChange = (e) => setSelectedExam(e.target.value);
   const handleHeadingChange = (e) => setHeading(e.target.value);
   const handleFileChange = (e) => setFile(e.target.files[0]);
-
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
   const handleUpload = async () => {
     if (!selectedExam || !heading || !file) {
       alert("Please fill all fields and select a file.");
@@ -125,12 +128,17 @@ const InstructionsTab = () => {
         exam_id: instruction.exam_id || null, // only if exam_id is needed
       }))
     : [];
-
+    const filteredInstructions = data.filter(data => {
+      return Object.values(data).some(value => 
+        value != null && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    });
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentData = filteredInstructions.slice(indexOfFirstItem, indexOfLastItem);
 
 
   const handleUpdate = async (pointId, updatedPointText) => {
-   
-    
     try {
       const payload = {
         exam_id: selectedExam,
@@ -183,7 +191,6 @@ const InstructionsTab = () => {
 
       if (response.ok) {
         alert("Instruction deleted successfully");
-        // Refresh the data or filter it out from the current state
         setInstructionDetails((prev) => ({
           ...prev,
           instructions: prev.instructions.filter(
@@ -209,7 +216,7 @@ const InstructionsTab = () => {
           className={styles.addButton}
           onClick={() => {
             setShowForm(!showForm);
-            setIsReadOnly(false); // enable inputs when manually adding
+            setIsReadOnly(false); 
             setSelectedExam("");
             setHeading("");
             setFile(null);
@@ -219,7 +226,18 @@ const InstructionsTab = () => {
           {showForm && !isReadOnly ? "Close Form" : "Add Instruction"}
         </button>
       </div>
+ <div className={styles.searchBarContainer}>
+       <FaSearch className={styles.searchIcon} />
+        <input 
+          type="text" 
+          placeholder="Search courses..." 
+          className={styles.searchInput}
+          value={searchTerm}
+          onChange={handleSearchChange} 
+        />
+   
 
+      </div>
       {showForm && (
         <div className={styles.uploadForm}>
           <label>
@@ -278,7 +296,7 @@ const InstructionsTab = () => {
         <DynamicTable
         isOpen={isOpen}
           columns={columns}
-          data={data}
+          data={currentData}
           showEdit={false}
           onOpen={handleOpen}
           onDelete={handleDelete}
@@ -288,7 +306,17 @@ const InstructionsTab = () => {
         
         />
       </div>
-
+    <div className={styles.pagination}>
+  {Array.from({ length: Math.ceil(filteredInstructions.length / itemsPerPage) }, (_, i) => (
+    <button
+      key={i + 1}
+      onClick={() => setCurrentPage(i + 1)}
+      className={currentPage === i + 1 ? styles.pageButtonActive : styles.pageButton}
+    >
+      {i + 1}
+    </button>
+  ))}
+</div>
       {showInstructionPoints && (
         <div className={styles.modalBackdrop} onClick={() => setShowInstructionPoints(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>

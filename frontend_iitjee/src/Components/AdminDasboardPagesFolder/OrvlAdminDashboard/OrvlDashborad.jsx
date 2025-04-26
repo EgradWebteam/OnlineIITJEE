@@ -1,9 +1,11 @@
 import React from 'react'
-
+import Styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css";
 const OrvlDashborad = () => {
   return (
-    <div>
-      Dashborad
+    <div
+     className={Styles.pageHeading}
+      >
+      DASHBOARD
     </div>
   )
 }

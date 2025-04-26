@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
-import CourseForm from "./CourseForm.jsx"; // updated component name
+import CourseForm from "./CourseForm.jsx"; 
 import DynamicTable from "./DynamicTable.jsx";
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import Styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css";
+import { FaSearch } from 'react-icons/fa';
 const CourseCreationTab = () => {
   const [courses, setCourses] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); 
-  const [itemsPerPage, setItemsPerPage] = useState(6); 
+  const [itemsPerPage, setItemsPerPage] = useState(4); 
   const [editCourseData, setEditCourseData] = useState(null); 
-  // Fetch courses data from the new API
+  const [searchTerm, setSearchTerm] = useState("");
   const fetchCourses = () => {
 
     fetch(`${BASE_URL}/CourseCreation/GetAllCourses`)
@@ -25,15 +26,15 @@ const CourseCreationTab = () => {
       .catch((err) => console.error("Error loading courses", err));
   };
 
-  // Fetch courses when the component mounts
+
   useEffect(() => {
     fetchCourses();
   }, []);
 
-  // Callback when a course is created
+
   const handleCourseCreated = () => {
     setShowForm(false);
-    fetchCourses(); // Refresh courses after a new course is added
+    fetchCourses(); 
   };
 
   const handleEdit = (course) => {
@@ -42,12 +43,11 @@ const CourseCreationTab = () => {
   };
   
 
-  // Handle opening a course (e.g., view more details)
   const handleOpen = (course) => {
     alert(`Opening: ${course.course_name}`);
   };
 
-  // Handle deleting a course
+
   const handleDelete = (course) => {
     if (window.confirm(`Delete course "${course.course_name}"?`)) {
       fetch(`${BASE_URL}/CourseCreation/delete/${course.course_creation_id}`, {
@@ -57,14 +57,16 @@ const CourseCreationTab = () => {
         .then((result) => {
           if (result.success) {
             alert("Deleted.");
-            fetchCourses(); // Refresh courses after deletion
+            fetchCourses(); 
           } else {
             alert("Failed to delete.");
           }
         });
     }
   };
-
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
   const handleToggle = async (course) => {
     const newStatus = course.active_course === "active" ? "inactive" : "active"; 
   
@@ -101,15 +103,16 @@ const CourseCreationTab = () => {
         }))
     : [];
 
-  // Get current courses for the current page
+    const filteredCourses = courses.filter(course => {
+      return Object.values(course).some(value => 
+        value != null && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    });
+    
   const indexOfLastCourse = currentPage * itemsPerPage;
   const indexOfFirstCourse = indexOfLastCourse - itemsPerPage;
-  const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
-
-  // Change page
+  const currentCourses = filteredCourses.slice(indexOfFirstCourse, indexOfLastCourse);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  // Total pages
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(courses.length / itemsPerPage); i++) {
     pageNumbers.push(i);
@@ -118,22 +121,30 @@ const CourseCreationTab = () => {
 
   return (
     <div>
-      <h2>Course Management</h2>
-
-      {/* Button to add a new course */}
+   <div className={Styles.pageHeading}>COURSE CREATION</div>
       {!showForm && (
         <div className={Styles.flex}>
           <button className={Styles.addCourseBtn} onClick={() => setShowForm(true)}> Add Course</button>
           </div>
         
       )}
+       <div className={Styles.searchBarContainer}>
+       <FaSearch className={Styles.searchIcon} />
+        <input 
+          type="text" 
+          placeholder="Search courses..." 
+          className={Styles.searchInput}
+          value={searchTerm}
+          onChange={handleSearchChange} 
+        />
+   
 
-      {/* Show the course form if showForm is true */}
+      </div>
+
+   
       {showForm && (
   <div className={Styles.modal}>
     <div className={Styles.modalContent}>
-      
-   
       <CourseForm
         onCourseCreated={handleCourseCreated}
         courseData={editCourseData}    
@@ -144,16 +155,14 @@ const CourseCreationTab = () => {
     </div>
   </div>
 )}
-
-
-      {/* Display courses in a dynamic table */}
-      <div style={{ padding: "2%" }}>
+   {/* Display courses in a dynamic table */}
+      <div style={{ padding: "2%", backgroundColor:" #f9fafc" }}>
   {courses.length === 0 ? (
     <div>No courses available. Please add some courses.</div>
   ) : (
     <DynamicTable
       columns={columns}
-      data={currentCourses} // Show paginated courses
+      data={currentCourses} 
       onEdit={handleEdit}
       onOpen={handleOpen}
       onDelete={handleDelete}

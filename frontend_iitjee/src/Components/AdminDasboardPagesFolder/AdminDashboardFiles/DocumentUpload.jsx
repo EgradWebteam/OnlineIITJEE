@@ -4,7 +4,7 @@ import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import JSZip from "jszip";
 import mammoth from "mammoth";
 import DynamicTable from "./DynamicTable.jsx";
-
+import { FaSearch } from 'react-icons/fa';
 const DocumentUpload = () => {
   const [showForm, setShowForm] = useState(false);
   const [testDetails, setTestDetails] = useState([]);
@@ -20,7 +20,10 @@ const DocumentUpload = () => {
   const [loading, setLoading] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [documentList, setDocumentList] = useState([]); // State to store documents
-
+  const [currentPage, setCurrentPage] = useState(1);
+   const [searchTerm, setSearchTerm] = useState("");
+  const itemsPerPage = 5;
+  
  
   useEffect(() => {
     const fetchTestDetails = async () => {
@@ -138,7 +141,11 @@ const DocumentUpload = () => {
     }
   }, [selectedTest, selectedSubject]);
 
- 
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
+  
   const handleSelectRow = (documentId) => {
     setSelectedRows((prev) =>
       prev.includes(documentId)
@@ -162,14 +169,10 @@ const DocumentUpload = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Validate if all fields are selected before submitting
     if (!selectedTest || !selectedSubject || !selectedSection) {
       alert("Please make sure all fields are filled.");
       return;
     }
-
-    // Proceed with the form submission logic
     console.log("Form Submitted with Data: ", {
       test: selectedTest,
       subject: selectedSubject,
@@ -178,7 +181,6 @@ const DocumentUpload = () => {
   };
 
   const handleFileClick = (e) => {
-    // Run validation before allowing file selection
     if (!selectedTest || !selectedSubject) {
       e.preventDefault(); // Prevent file selection popup
       alert("Please select a Test and Subject before uploading a file.");
@@ -226,7 +228,7 @@ const DocumentUpload = () => {
   const handleSaveDocument = async (e) => {
     e.preventDefault();
 
-    setLoading(true); // Start loading
+    setLoading(true); 
 
     try {
       const formData = new FormData();
@@ -257,7 +259,16 @@ const DocumentUpload = () => {
       setLoading(false); // Stop loading
     }
   };
+  const filteredDocuments = documentList.filter(documentList => {
+    return Object.values(documentList).some(value => 
+      value != null && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentDocuments = filteredDocuments.slice(indexOfFirstItem, indexOfLastItem);
 
+ 
   return (
     <div className={styles.InstructionContainer}>
       <div className={styles.pageHeading}>DOCUMENT UPLOAD</div>
@@ -272,7 +283,18 @@ const DocumentUpload = () => {
           </button>
         </div>
       )}
-
+<div className={styles.searchBarContainer}>
+                   <FaSearch className={styles.searchIcon} />
+                    <input 
+                      type="text" 
+                      placeholder="Search courses..." 
+                      className={styles.searchInput}
+                      value={searchTerm}
+                      onChange={handleSearchChange} 
+                    />
+               
+            
+                  </div>
       {showForm && (
         <form className={styles.formContainer} onSubmit={handleSubmit}>
           {/* Header row with Close Button */}
@@ -353,6 +375,7 @@ const DocumentUpload = () => {
                 required
               />
             </div>
+             
           </div>
 
           {file && isDocumentVisible && (
@@ -375,7 +398,7 @@ const DocumentUpload = () => {
       <div style={{ padding: "3%" }}>
         <DynamicTable
           columns={columns}
-          data={documentList}
+          data={currentDocuments}
           selectedRows={selectedRows}
           onSelectRow={handleSelectRow}
           onSelectAll={handleSelectAll}
@@ -385,6 +408,17 @@ const DocumentUpload = () => {
           type="document"
         />
       </div>
+      <div className={styles.pagination}>
+  {Array.from({ length: Math.ceil(filteredDocuments.length / itemsPerPage) }, (_, i) => (
+    <button
+      key={i + 1}
+      onClick={() => setCurrentPage(i + 1)}
+      className={currentPage === i + 1 ? styles.pageButtonActive : styles.pageButton}
+    >
+      {i + 1}
+    </button>
+  ))}
+</div>
 
       
     </div>
