@@ -625,44 +625,57 @@ router.delete("/delete/:courseId", async (req, res) => {
   }
 });
 
-router.get("/GetAllCourses", async (req, res) => {
+router.get("/GetAllCourses/:portalid", async (req, res) => {
+  const { portalid } = req.params; 
   const conn = await db.getConnection();
 
   try {
-    // Start a database transaction (if necessary, but can be skipped for a read-only query)
     await conn.beginTransaction();
-
-    // Query to get all courses with related subjects and test types
-    const query = `
-   SELECT 
-  c.course_creation_id,
-  c.course_name,
-  c.course_year,
-  c.exam_id,
-  c.course_start_date,
-  c.course_end_date,
-  c.cost,
-  c.discount,
-  c.total_price,
-  c.portal_id,
-  c.active_course,
-  c.card_image,
-  GROUP_CONCAT(DISTINCT s.subject_id) AS subject_ids, 
-  GROUP_CONCAT(DISTINCT c.exam_id) AS exam_ids,
-  GROUP_CONCAT(DISTINCT t.type_of_test_id) AS test_type_ids,
-  GROUP_CONCAT(DISTINCT tt.type_of_test_name) AS test_type_names
-FROM iit_db.iit_course_creation_table c
-LEFT JOIN iit_db.iit_course_subjects cs ON cs.course_creation_id = c.course_creation_id
-LEFT JOIN iit_db.iit_subjects s ON s.subject_id = cs.subject_id
-LEFT JOIN iit_db.iit_course_type_of_tests t ON t.course_creation_id = c.course_creation_id
-LEFT JOIN iit_db.iit_type_of_test tt ON tt.type_of_test_id = t.type_of_test_id
-GROUP BY c.course_creation_id;
-
-
+    let query = ` 
+    SELECT 
+      c.course_creation_id,
+      c.course_name,
+      c.course_year,
+      c.exam_id,  -- Direct selection since it's from the main table
+      c.course_start_date,
+      c.course_end_date,
+      c.cost,
+      c.discount,
+      c.total_price,
+      c.portal_id,
+      c.active_course,
+      c.card_image,
+      GROUP_CONCAT(DISTINCT s.subject_id) AS subject_ids, 
+      GROUP_CONCAT(DISTINCT c.exam_id) AS exam_ids
     `;
+    
+        // Add test and course types for portal_id 1 and 3 respectively
+        if (portalid === '1') {
+          query += `,
+            GROUP_CONCAT(DISTINCT t.type_of_test_id) AS test_type_ids,
+            GROUP_CONCAT(DISTINCT tt.type_of_test_name) AS test_type_names
+          `;
+        } else if (portalid === '3') {
+          query += `,
+            GROUP_CONCAT(DISTINCT ot.orvl_course_type_id) AS course_type_ids,
+            GROUP_CONCAT(DISTINCT otc.orvl_course_type_name) AS course_type_names
+          `;
+        }
+    
+        query += ` FROM iit_course_creation_table c
+        LEFT JOIN iit_course_subjects cs ON cs.course_creation_id = c.course_creation_id
+        LEFT JOIN iit_subjects s ON s.subject_id = cs.subject_id
+        LEFT JOIN iit_course_type_of_tests t ON t.course_creation_id = c.course_creation_id
+        LEFT JOIN iit_type_of_test tt ON tt.type_of_test_id = t.type_of_test_id
+        LEFT JOIN iit_orvl_course_type_for_course ot ON ot.course_creation_id = c.course_creation_id
+        LEFT JOIN iit_orvl_course_types otc ON otc.orvl_course_type_id = ot.orvl_course_type_id
+        WHERE c.portal_id = ?  -- This filter will ensure only matching portal_id courses are fetched
+        GROUP BY c.course_creation_id;`;
+
+    
 
     // Run the query
-    const [courses] = await conn.query(query);
+    const [courses] = await conn.query(query,[portalid]);
 
     // Commit transaction (not really necessary for a read-only query)
     await conn.commit();

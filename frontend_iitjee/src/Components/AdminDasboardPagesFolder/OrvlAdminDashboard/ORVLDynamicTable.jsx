@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../../../Styles/AdminDashboardCSS/AdminDashboard.module.css";
 
-const ORVLDynamicTable = ({ columns, data, onEdit, onDelete }) => {
+const ORVLDynamicTable = ({ columns, data, onEdit, onDelete,course }) => {
   return (
     <div className={styles.tableWrapper}>
       <table className={styles.table}>

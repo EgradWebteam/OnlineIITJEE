@@ -22,6 +22,7 @@ const DynamicTable = ({
   showEdit = true,
   showToggle = true,
   tableType, 
+  course
 }) => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [popupType, setPopupType] = useState(""); 
@@ -190,7 +191,7 @@ const DynamicTable = ({
                           : styles.deactivate
                       }`}
                       onClick={() => {
-                        console.log("Toggle clicked for row:", row);
+                        // console.log("Toggle clicked for row:", row);
                         onToggle(row);
                       }}
                       title={

@@ -10,21 +10,16 @@ import DocumentUpload from '../AdminDashboardFiles/DocumentUpload.jsx';
 import InstructionsTab from '../AdminDashboardFiles/InstructionsTab.jsx';
 
 export default function AdminDashboardHome() {
-  // State to track the selected component
   const [activeComponent, setActiveComponent] = useState('dashboard');
-
-  // Function to handle menu item click
   const handleMenuClick = (component) => {
     setActiveComponent(component);
   };
-
-  // Function to render the appropriate component based on activeComponent state
   const renderMainContent = () => {
     switch (activeComponent) {
       case 'dashboard':
         return <DashBoard />;
       case 'course-creation':
-        return <CourseCreationTab />;
+        return <CourseCreationTab  portalid={1}/>;
       case 'test-creation':
         return <TestCreationTab />;
       case 'document-upload':

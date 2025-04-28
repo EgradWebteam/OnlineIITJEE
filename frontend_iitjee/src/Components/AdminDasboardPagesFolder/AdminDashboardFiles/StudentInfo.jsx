@@ -21,7 +21,8 @@ const StudentInfo = () => {
   const [purchasedTimes, setPurchasedTimes] = useState([]);
   const [courses, setCourses] = useState([]); // State to store available courses
   const [selectedCourses, setSelectedCourses] = useState([]); // State for selected courses
-
+const [popupMessage, setPopupMessage] = useState(null);
+const [showPopup, setShowPopup] = useState(false);
   const [studentsList, setStudentsList] = useState(() => {
     const saved = localStorage.getItem("studentsList");
     return saved ? JSON.parse(saved) : [];
@@ -39,16 +40,16 @@ const StudentInfo = () => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/studentInfo/coursesName`);
-        console.log("Fetched courses:", response.data);
+        //console.log("Fetched courses:", response.data);
 
         if (Array.isArray(response.data)) {
           setCourses(response.data);
         } else {
-          console.warn("Courses API did not return an array:", response.data);
+          //console.warn("Courses API did not return an array:", response.data);
           setCourses([]); // fallback
         }
       } catch (error) {
-        console.error("Error fetching courses:", error);
+        //console.error("Error fetching courses:", error);
         setCourses([]); // fallback
       }
     };
@@ -60,17 +61,22 @@ const StudentInfo = () => {
     e.preventDefault();
     let validationErrors = {};
 
-    // Email validation regex
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!email || !emailRegex.test(email)) {
-      validationErrors.email = "Please enter a valid email address.";
+    if (!mobileNumber || mobileNumber.length < 10) {
+      validationErrors.mobileNumber = "Mobile number must be exactly 10 digits.";
     }
+    const result = await checkEmailValidity(email);
 
+    if (!result.valid) {
+      setPopupMessage(
+        <div className={styles.popupMessageemailpopup}>
+          <span>{result.message}</span>
+        </div>
+      );
+      setShowPopup(true);
+      setEmail("")
+    }
     if (Object.keys(validationErrors).length > 0) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-      }));
-      alert("Enter valid email");
+      setErrors(validationErrors);
       return;
     }
 
@@ -134,12 +140,11 @@ const StudentInfo = () => {
   };
 
   const handleMobileChange = (e) => {
-    const value = e.target.value;
-    if (/^\d{0,10}$/.test(value)) {
-      // Allow only numbers and up to 10 digits
-      setMobileNumber(value);
-    }
+    let value = e.target.value.replace(/\D/g, ''); // Remove non-numeric characters
+    value = value.slice(0, 10); // Limit to first 10 digits
+    setMobileNumber(value);
   };
+  
 
   // Handle course selection/unselection
   const handleCourseChange = (courseId) => {
@@ -153,11 +158,10 @@ const StudentInfo = () => {
   };
   const handleNameChange = (e) => {
     const value = e.target.value;
-    // Ensure name length is within 40 characters
-    if (/^[A-Za-z\s]*$/.test(value) && value.length <= 40) {
-      setName(value);
-    }
+    const onlyLettersAndSpaces = value.replace(/[^A-Za-z\s]/g, '').slice(0, 40);
+    setName(onlyLettersAndSpaces);
   };
+  
   const handleDownloadImage = () => {
     const popupContent = document.getElementById("studentDetailsPopup"); // Get the popup element
 
@@ -180,7 +184,51 @@ const StudentInfo = () => {
     setStudentDetails(null);
     setShowStudentsButton(true);
   };
-
+  const checkEmailValidity = async (emailToCheck) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+    if (!emailRegex.test(emailToCheck)) {
+      return { valid: false, message: `Email "${emailToCheck}" has an invalid format.` };
+    }
+  
+    try {
+      const response = await fetch(`${BASE_URL}/student/checkEmailExists`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ emailId: emailToCheck }),
+      });
+  
+      const result = await response.json();
+  
+      if (result.message === "Your email already exists. Please use a different email.") {
+        return { valid: false, message: result.message };
+      }
+  
+      return { valid: true };
+    } catch (error) {
+      console.error("Email check failed:", error);
+      return { valid: false, message: "Error checking email." };
+    }
+  };
+  
+  const handleEmailBlur = async (event) => {
+    const emailId = event.target.value;
+  
+    if (!emailId) return;
+  
+    const result = await checkEmailValidity(emailId);
+  
+    if (!result.valid) {
+      setPopupMessage(
+        <div className={styles.popupMessageemailpopup}>
+          <span>{result.message}</span>
+        </div>
+      );
+      setShowPopup(true);
+    }
+  };
+  
+  
   // ✅ PLACE IT HERE
   const handleEditStudent = async (student) => {
     try {
@@ -219,7 +267,7 @@ const StudentInfo = () => {
 
         alert(
           `Student ${
-            currentStatus === 1 ? "activated" : "deactivated"
+            currentStatus === 1 ? "deactivated" : "activated"
           } successfully.`
         );
       }
@@ -276,7 +324,7 @@ const StudentInfo = () => {
             }}
           >
             <option value="all">Show All Students</option>
-            <option value="active">Dectivated Students</option>
+            <option value="active">Deactivated Students</option>
             <option value="inactive">Activated Students</option>
           </select>
         </div>
@@ -303,6 +351,7 @@ const StudentInfo = () => {
                     placeholder="Enter your Name"
                     className={styles.PopUPInput}
                     value={name}
+                    required
                   />
                 </div>
                 <div className={styles.InboxesForForm}>
@@ -310,8 +359,10 @@ const StudentInfo = () => {
                   <input
                     type="text"
                     placeholder="Enter your Mail"
+                    onBlur={handleEmailBlur}
                     onChange={(e) => setEmail(e.target.value)}
                     className={styles.PopUPInput}
+                    required
                   />
                 </div>
                 {errors.email && (
@@ -325,6 +376,7 @@ const StudentInfo = () => {
                     onChange={handleMobileChange}
                     value={mobileNumber}
                     className={styles.PopUPInput}
+                    required
                   />
                 </div>
                 {errors.mobileNumber && (
@@ -496,6 +548,7 @@ const StudentInfo = () => {
                   <input
                     type="email"
                     value={editingStudent.email}
+                    
                     onChange={(e) =>
                       setEditingStudent({
                         ...editingStudent,
@@ -564,6 +617,22 @@ const StudentInfo = () => {
           </div>
         )}
       </div>
+   
+        {showPopup && popupMessage}
+        {showPopup && (
+             <div className={styles.PopUPContainer}>
+        <div className={styles.PopUP}>
+          {popupMessage}
+          <button
+            className={styles.closePopupBtn}
+            onClick={() => setShowPopup(false)}
+          >
+            Close
+          </button>
+          </div>
+      </div>
+        )}
+      
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import styles from "../../../Styles/AdminDashboardCSS/CourseForm.module.css";
 
-const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,onCourseCreated, courseData }) => {
+const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCourseData, onCourseCreated, courseData }) => {
   const IITCourseCardImages = [
     "iit_jee1.png",
     "iit_jee2.png",
@@ -11,12 +11,9 @@ const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,on
   ];
 
   const isEditMode = !!courseData;
-  const ImagePath = "OtsCourseCardImages";
-
   const [exams, setExams] = useState([]);
   const [types, setTypes] = useState([]);
   const [subjects, setSubjects] = useState([]);
-
   const [courseName, setCourseName] = useState("");
   const [courseStartDate, setCourseStartDate] = useState("");
   const [courseEndDate, setCourseEndDate] = useState("");
@@ -30,27 +27,41 @@ const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,on
   const [discountAmount, setDiscountAmount] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [selectedTestTypes, setSelectedTestTypes] = useState([]);
-
+  const [selectedType, setSelectedType] = useState([]);
   useEffect(() => {
     if (courseData && courseData.test_type_ids) {
-   
+
       const ids = courseData.test_type_ids.split(',').map(id => id.trim());
       setSelectedTestTypes(ids);
     }
   }, [courseData]);
-  
-  // Fetch dropdown data on mount
   useEffect(() => {
-    fetch(`${BASE_URL}/CourseCreation/CourseCreationFormData`)
-      .then((response) => response.json())
-      .then((data) => {
-        setExams(data.exams || []);
-        setTypes(data.types || []);
-      })
-      .catch((error) => console.error("Error fetching exams/types:", error));
-  }, []);
-
-  // Fetch subjects when exam changes
+    if (portalid === 3) {
+      // Fetch only when portalid is 3
+      //console.log("Fetching data for portalid 3...");
+      fetch(`${BASE_URL}/CourseCreation/OrvlExamsTypesofCourses`)
+        .then((response) => response.json())
+        .then((data) => {
+          setExams(data.exams || []);
+          setTypes(data.coursetypes || []);
+          
+        })
+        .catch((error) => console.error("Error fetching exams/types:", error));
+    }
+  }, [portalid]); 
+  
+  useEffect(() => {
+    if (portalid === 1) {
+      fetch(`${BASE_URL}/CourseCreation/CourseCreationFormData`)
+        .then((response) => response.json())
+        .then((data) => {
+          setExams(data.exams || []);
+          setTypes(data.types || []);
+        })
+        .catch((error) => console.error("Error fetching exams/types:", error));
+    }
+  }, [portalid]); 
+  
   useEffect(() => {
     if (selectedExamId) {
       fetch(`${BASE_URL}/CourseCreation/ExamSubjects/${selectedExamId}`)
@@ -62,7 +73,7 @@ const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,on
     }
   }, [selectedExamId]);
 
-  // Prefill form if editing
+
   useEffect(() => {
     if (isEditMode && courseData) {
       setCourseName(courseData.course_name || "");
@@ -76,11 +87,9 @@ const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,on
         courseData.subject_ids?.split(",").map((id) => parseInt(id)) || []
       );
       setSelectedImage(courseData.card_image?.split("-")[1] || "");
-      setSelectedTypes([]); // Update this if you store type IDs as well
+      setSelectedTypes([]);
     }
   }, [isEditMode, courseData]);
-
-  // Auto calculate discount and total
   useEffect(() => {
     const parsedCost = parseFloat(cost) || 0;
     const parsedDiscount = parseFloat(discount) || 0;
@@ -117,12 +126,15 @@ const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,on
     }
     return years;
   };
-  const getImageFile = (imageName) => {
+  const getImageFile = async (imageName) => {
     const imgPath = `/OtsCourseCardImages/${imageName}`;
-    // Return a dummy file object (not the actual file, but for simulation)
     return fetch(imgPath)
       .then((response) => response.blob())
       .then((blob) => new File([blob], imageName, { type: blob.type }));
+  };
+  const handleTypeSelectChange = (e) => {
+    const selectedValue = e.target.value;
+    setSelectedType(selectedValue);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -139,9 +151,7 @@ const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,on
     formData.append("selectedExamId", selectedExamId);
     formData.append("selectedSubjects", JSON.stringify(selectedSubjects));
     formData.append("selectedTypes", JSON.stringify(selectedTypes));
-    // if (selectedImage) {
-    //   formData.append("courseImageFile", `${ImagePath}/${selectedImage}`);
-    // }
+
     if (selectedImage) {
       const imageFile = await getImageFile(selectedImage);
       formData.append("courseImageFile", imageFile);
@@ -153,10 +163,9 @@ const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,on
 
     try {
       const response = await fetch(
-        `${BASE_URL}/CourseCreation/${
-          isEditMode
-            ? `UpdateCourse/${courseData.course_creation_id}`
-            : "CreateCourse"
+        `${BASE_URL}/CourseCreation/${isEditMode
+          ? `UpdateCourse/${courseData.course_creation_id}`
+          : "CreateCourse"
         }`,
         {
           method: isEditMode ? "PUT" : "POST",
@@ -183,22 +192,22 @@ const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,on
 
   return (
     <div className={styles.CourseCreationFormPage}>
- 
-      <button className={styles.closeBtn}
-            
-              onClick={() => {
-                setShowForm(false);
-                setEditCourseData(null);              
-              }}
-            >
-            ❌
 
-            </button>
-          
+      <button className={styles.closeBtn}
+
+        onClick={() => {
+          setShowForm(false);
+          setEditCourseData(null);
+        }}
+      >
+        ❌
+
+      </button>
+
       <h2 className={styles.HeadingForEditMode}>
         {isEditMode ? "✏️ Edit Course" : "📝 Create Course"}
       </h2>
-       
+
       <form
         className={styles.CourseFormContainer}
         style={{ backgroundColor: "white" }}
@@ -206,13 +215,12 @@ const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,on
       >
         <div className={styles.CourseFormSubPagesContainer}>
           <div className={styles.CourseFormSubPage}>
-            {/* Course Details */}
             <h5 className={styles.SmallHeadingForCourse}>Course Details:</h5>
             <div className={styles.CourseForInputSubContainer}>
               <div className={styles.InputBoxForCourses1}>
                 <label>
                   Course Name:<span className={styles.MandatoryForCourses}>*</span>
-                 
+
                 </label>
                 <input
                   type="text"
@@ -253,7 +261,7 @@ const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,on
               <div className={styles.InputBoxForCourses2}>
                 <label>
                   End Date:<span className={styles.MandatoryForCourses}>*</span>
-              
+
                 </label>
                 <input
                   type="date"
@@ -263,8 +271,6 @@ const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,on
                 />
               </div>
             </div>
-
-            {/* Cost Details */}
             <h5 className={styles.SmallHeadingForCourse}>Cost Details:</h5>
             <div className={styles.CourseForInputSubContainer}>
               <div className={styles.InputBoxForCourses1}>
@@ -282,7 +288,7 @@ const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,on
               <div className={styles.InputBoxForCourses2}>
                 <label>
                   Discount (%):<span className={styles.MandatoryForCourses}>*</span>
-                 
+
                 </label>
                 <input
                   type="number"
@@ -303,76 +309,119 @@ const CourseForm = ({ showForm, setShowForm,editCourseData, setEditCourseData,on
                 <input type="number" value={totalPrice} readOnly />
               </div>
             </div>
-            {/* Exam Details */}
             <h5 className={styles.SmallHeadingForCourse}>Exam Details:</h5>
             <div className={styles.CourseForInputSubContainer}>
               <div className={styles.InputBoxForCourses2}>
                 <label>
                   Select Exam:
                   <span className={styles.MandatoryForCourses}>*</span>
-                  </label>
-                  <select
-                    value={selectedExamId}
-                    onChange={(e) => setSelectedExamId(e.target.value)}
-                    required
-                  >
-                    <option value="">Select Exam</option>
-                    {exams.map((exam) => (
-                      <option key={exam.exam_id} value={exam.exam_id}>
-                        {exam.exam_name}
-                      </option>
-                    ))}
-                  </select>
-                
+                </label>
+                <select
+                  value={selectedExamId}
+                  onChange={(e) => setSelectedExamId(e.target.value)}
+                  required
+                >
+                  <option value="">Select Exam</option>
+                  {exams.map((exam) => (
+                    <option key={exam.exam_id} value={exam.exam_id}>
+                      {exam.exam_name}
+                    </option>
+                  ))}
+                </select>
+
               </div>
 
-              <div className={styles.SelectBoxForCourses}>
-               <div className={styles.HeadingForSubjectsSelectCourse}> 
-                <label>Subjects:</label>
-                </div>
-                {subjects.map((subject) => (
-                  <div key={subject.subject_id} className={styles.SelectSubjectOptionsForCourses} >
-                    <label>{subject.subject_name} 
-                    </label>
-                      <input
-                        type="checkbox"
-                        value={subject.subject_id}
-                        checked={selectedSubjects.includes(subject.subject_id)}
-                        onChange={handleSubjectCheckboxChange}
-                      />
-                     
+              {portalid == 1 &&
+                <div className={styles.InputBoxForCourses2}>
+                  <div className={styles.SelectBoxForCourses}>
+                    <div className={styles.HeadingForSubjectsSelectCourse}>
+                      <label>Subjects:</label>
+                    </div>
+                    {subjects.map((subject) => (
+                      <div key={subject.subject_id} className={styles.SelectSubjectOptionsForCourses} >
+                        <label>{subject.subject_name}
+                        </label>
+                        <input
+                          type="checkbox"
+                          value={subject.subject_id}
+                          checked={selectedSubjects.includes(subject.subject_id)}
+                          onChange={handleSubjectCheckboxChange}
+                        />
+
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              }
+
+              {portalid == 3 && (
+                <div className={styles.InputBoxForCourses2}>
+                  <div className={styles.SelectBoxForCourses}>
+                    <div className={styles.HeadingForSubjectsSelectCourse}>
+                      <label>Subjects:</label>
+                    </div>
+                    <select
+                      value={selectedSubjects[0] || ""}
+                      onChange={(e) => setSelectedSubjects([e.target.value])}
+                    >
+                      <option value="">Select a subject</option>
+                      {subjects.map((subject) => (
+                        <option key={subject.subject_id} value={subject.subject_id}>
+                          {subject.subject_name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              )}
+
             </div>
           </div>
 
           <div className={styles.CourseFormSubPage}>
-            <div className={styles.SelectBoxForCourses}>
-            <div className={styles.HeadingForSubjectsSelectCourse}> 
-            <label>Type of Test:</label></div>
-            {types.map((testType) => (
-  <label key={testType.type_of_test_id}>
-    <input
-      type="checkbox"
-      value={testType.type_of_test_id}
-      checked={selectedTestTypes.includes(testType.type_of_test_id.toString())}
-      onChange={(e) => {
-        const value = e.target.value;
-        if (e.target.checked) {
-          setSelectedTestTypes([...selectedTestTypes, value]);
-        } else {
-          setSelectedTestTypes(selectedTestTypes.filter((id) => id !== value));
-        }
-      }}
-    />
-    {testType.type_of_test_name}
-  </label>
-))}
+            {portalid == 1 && (
+              <div className={styles.SelectBoxForCourses}>
+                <div className={styles.HeadingForSubjectsSelectCourse}>
+                  <label>Type of Test:</label>
+                </div>
+                {types.map((testType) => (
+                  <label key={testType.type_of_test_id}>
+                    <input
+                      type="checkbox"
+                      value={testType.type_of_test_id}
+                      checked={selectedTestTypes.includes(testType.type_of_test_id?.toString())}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (e.target.checked) {
+                          setSelectedTestTypes([...selectedTestTypes, value]);
+                        } else {
+                          setSelectedTestTypes(selectedTestTypes.filter((id) => id !== value));
+                        }
+                      }}
+                    />
+                    {testType.type_of_test_name}
+                  </label>
+                ))}
+              </div>
+            )}
+            {portalid == 3 && (
+              <div className={styles.SelectBoxForCourses}>
+                <div className={styles.InputBoxForCourses2}>
+                  <div className={styles.HeadingForSubjectsSelectCourse}>
+                    <label>Type of Course:</label>
+                  </div>
+                  <select value={selectedType || ""} onChange={handleTypeSelectChange}>
+                    <option value="">Select a course type</option>
+                    {types.map((type) => (
+                      <option key={type.orvl_course_type_id} value={type.orvl_course_type_id}>
+                        {type.orvl_course_type_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
 
-            </div>
-
-            {/* Image */}
             <div className={styles.InputSelectBoxForCourses}>
               <label>Select Course Image:</label>
               <select

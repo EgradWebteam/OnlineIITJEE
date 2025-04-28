@@ -62,7 +62,7 @@ const itemsPerPage = 5;
   };
 
   const handleDownload = (row) => {
-    console.log("Download Paper", row);
+    //console.log("Download Paper", row);
   };
   const handleAddTestClick = () => {
     setSelectedTestData(null);
@@ -70,7 +70,7 @@ const itemsPerPage = 5;
     setShowAddTestForm(true);
   };
   const handleEdit = (testData) => {
-    console.log("Selected Test Data for Edit:", testData);
+    //console.log("Selected Test Data for Edit:", testData);
     setSelectedTestData(testData);
     fetchFormData();
     setShowAddTestForm(true);

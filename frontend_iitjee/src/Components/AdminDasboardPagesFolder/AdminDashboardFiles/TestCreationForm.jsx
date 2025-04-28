@@ -36,7 +36,7 @@ const TestCreationForm = ({
   useEffect(() => {
     const loadEditData = async () => {
       if (isEditMode && editData) {
-        console.log("💡 Edit Mode - Received Edit Data:", editData);
+        //console.log("💡 Edit Mode - Received Edit Data:", editData);
   
         // Pre-fill main test form fields
         setFormFields({
@@ -70,7 +70,7 @@ const TestCreationForm = ({
   
   
         if (Array.isArray(editData.sections) && editData.sections.length > 0) {
-          console.log("🧩 Prefilling sections:", editData.sections);
+          //console.log("🧩 Prefilling sections:", editData.sections);
   
 
           setIncludeSection(true);
