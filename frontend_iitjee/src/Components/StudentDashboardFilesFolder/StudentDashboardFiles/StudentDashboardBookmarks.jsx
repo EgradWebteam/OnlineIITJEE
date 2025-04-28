@@ -4,22 +4,26 @@ import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL";
 import axios from "axios";
 import { MdOutlineDeleteForever } from "react-icons/md";
+import LoadingSpinner from "../../../ContextFolder/LoadingSpinner";
 
 const StudentDashboardBookmarks = ({ studentId }) => {
   const [testPaperData, setTestPaperData] = useState([]);
-
+   const [loading, setLoading] = useState(true);
   const [visibleSolutions, setVisibleSolutions] = useState({});
   const [visibleVideoSolutions, setVisibleVideoSolutions] = useState({});
 
   useEffect(() => {
     const fetchTestPaper = async () => {
       try {
+        setLoading(true); 
         const response = await axios.get(
           `${BASE_URL}/studentBookMarks/BookMarkQuestionOptions/${studentId}`
         );
         setTestPaperData(response.data);
       } catch (err) {
         console.error("Error fetching test paper:", err);
+      }finally {
+        setLoading(false);
       }
     };
 
@@ -153,7 +157,12 @@ const StudentDashboardBookmarks = ({ studentId }) => {
       </div>
   
       <div className={styles.BookMarksSubDivForScroll}>
-      {isEmpty ? (
+      {loading ? ( // <-- Loading spinner block
+          <div className={globalCSS.loadingContainer}>
+            <p className={globalCSS.loadingText}><LoadingSpinner/></p>
+          </div>
+        ) :
+      isEmpty ? (
           <div className={globalCSS.noCoursesContainer}>
             <p className={globalCSS.noCoursesMsg}>You have not yet bookmarked anything.</p>
           </div>

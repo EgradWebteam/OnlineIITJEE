@@ -15,7 +15,7 @@ const fetch = (...args) =>
 
 // ENV VARIABLES
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
-const sasToken = process.env.AZURE_SAS_TOKEN;
+const sasToken = process.env.AZURE_SAS_TOKEN_UPLOADS;
 const containerName = process.env.AZURE_CONTAINER_NAME;
 const testDocumentFolderName = process.env.AZURE_DOCUMENT_FOLDER;
 const BackendBASE_URL = process.env.BASE_URL;
