@@ -45,9 +45,9 @@ router.get("/CourseImage/:fileName", async (req, res) => {
 // Endpoint to get purchased courses
 router.get("/Purchasedcourses/:studentregisterationid", async (req, res) => {
   const { studentregisterationid } = req.params;
-  console.log("Received request for purchased courses:", {
-    studentregisterationid,
-  });
+  // console.log("Received request for purchased courses:", {
+  //   studentregisterationid,
+  // });
 
   let connection;
 
@@ -82,10 +82,10 @@ router.get("/Purchasedcourses/:studentregisterationid", async (req, res) => {
 
     // ✅ Return 200 OK with empty array if no courses found
     if (rows.length === 0) {
-      console.log("No purchased courses found for this student.");
+      // console.log("No purchased courses found for this student.");
       return res.status(200).json([]);
     }
-    console.log("Purchased courses found:", rows);
+    // console.log("Purchased courses found:", rows);
 
     // Structure courses by portal and exam
     const coursesByPortalAndExam = {};
@@ -133,9 +133,9 @@ router.get(
   "/coursetestdetails/:course_creation_id/:student_registration_id",
   async (req, res) => {
     const { course_creation_id, student_registration_id } = req.params;
-    console.log("Received request for course test details:", {
-      course_creation_id,
-    });
+    // console.log("Received request for course test details:", {
+    //   course_creation_id,
+    // });
     if (!course_creation_id) {
       return res
         .status(400)
@@ -178,14 +178,14 @@ router.get(
       );
 
       if (rows.length === 0) {
-        console.log("No test details found for this course.");
+        // console.log("No test details found for this course.");
         return res.status(404).json({ message: "No test details found" });
       }
 
-      console.log("Test details found:", rows);
+      // console.log("Test details found:", rows);
       // res.status(200).json(rows);
       if (rows.length === 0) {
-        console.log("No test details found for this course.");
+        // console.log("No test details found for this course.");
         return res.status(404).json({ message: "No test details found" });
       }
 
@@ -206,7 +206,7 @@ router.get(
         },
       };
 
-      console.log("Test details grouped:", courseDetails);
+      // console.log("Test details grouped:", courseDetails);
       res.status(200).json(courseDetails);
     } catch (error) {
       console.error("Error fetching test details:", error);
@@ -231,7 +231,7 @@ router.post("/InsertOrUpdateTestAttemptStatus", async (req, res) => {
 
   try {
     connection = await db.getConnection();
-    console.log("Student start test data", req.body);
+    // console.log("Student start test data", req.body);
 
     // Check if record already exists
     const [existing] = await connection.query(
@@ -294,7 +294,7 @@ router.post("/InsertOrUpdateTestAttemptStatus", async (req, res) => {
 
 router.get("/instructions/:test_creation_table_id", async (req, res) => {
   const { test_creation_table_id } = req.params;
-  console.log("Received request for instructions:", { test_creation_table_id });
+  // console.log("Received request for instructions:", { test_creation_table_id });
   if (!test_creation_table_id) {
     return res.status(400).json({ message: "Test creation ID is required" });
   }
@@ -317,7 +317,7 @@ ip.instruction_point
     );
 
     if (rows.length === 0) {
-      console.log("No instructions found for this test.");
+      // console.log("No instructions found for this test.");
       return res.status(404).json({ message: "No instructions found" });
     }
 

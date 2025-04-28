@@ -76,8 +76,6 @@ const studentProfile = userData?.uploaded_photo;
   }}
 />
 
-
-
           </div>
 
           {showProfileMenu && (

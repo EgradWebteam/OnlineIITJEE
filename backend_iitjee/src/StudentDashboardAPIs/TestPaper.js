@@ -373,84 +373,156 @@ router.post("/QusetionsSorting", async (req, res) => {
   }
 });
 
-// CHECK FUNCTION
-async function checkIfResponseExists(connection, identifiers) {
-  const checkQuery = `
-    SELECT student_registration_id, test_creation_table_id, subject_id, section_id, question_id, question_type_id
-    FROM iit_user_responses
-    WHERE student_registration_id = ? AND test_creation_table_id = ? AND subject_id = ? AND section_id = ?
-      AND question_id = ? AND question_type_id = ?
-  `;
+// // CHECK FUNCTION
+// async function checkIfResponseExists(connection, identifiers) {
+//   const checkQuery = `
+//     SELECT student_registration_id, test_creation_table_id, subject_id, section_id, question_id, question_type_id
+//     FROM iit_user_responses
+//     WHERE student_registration_id = ? AND test_creation_table_id = ? AND subject_id = ? AND section_id = ?
+//       AND question_id = ? AND question_type_id = ?
+//   `;
 
-  const checkValues = [
-    parseInt(identifiers.realStudentId, 10),
-    parseInt(identifiers.realTestId, 10),
-    identifiers.subject_id ? parseInt(identifiers.subject_id, 10) : null,
-    identifiers.section_id ? parseInt(identifiers.section_id, 10) : 0,
-    parseInt(identifiers.question_id, 10),
-    parseInt(identifiers.question_type_id, 10),
-  ];
+//   const checkValues = [
+//     parseInt(identifiers.realStudentId, 10),
+//     parseInt(identifiers.realTestId, 10),
+//     identifiers.subject_id ? parseInt(identifiers.subject_id, 10) : null,
+//     identifiers.section_id ? parseInt(identifiers.section_id, 10) : 0,
+//     parseInt(identifiers.question_id, 10),
+//     parseInt(identifiers.question_type_id, 10),
+//   ];
 
-  const [result] = await connection.query(checkQuery, checkValues);
-  return result.length > 0;
-}
+//   const [result] = await connection.query(checkQuery, checkValues);
+//   return result.length > 0;
+// }
 
-// INSERT FUNCTION
-async function insertResponse(connection, data) {
-  const insertQuery = `
-    INSERT INTO iit_user_responses (
-      student_registration_id,
-      test_creation_table_id,
-      subject_id,
-      section_id,
-      question_id,
-      question_type_id,
-      user_answer,
-      option_id,
-      question_status
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
+// // INSERT FUNCTION
+// async function insertResponse(connection, data) {
+//   const insertQuery = `
+//     INSERT INTO iit_user_responses (
+//       student_registration_id,
+//       test_creation_table_id,
+//       subject_id,
+//       section_id,
+//       question_id,
+//       question_type_id,
+//       user_answer,
+//       option_id,
+//       question_status
+//     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+//   `;
 
-  const insertValues = [
-    parseInt(data.realStudentId, 10),
-    parseInt(data.realTestId, 10),
-    data.subject_id ? parseInt(data.subject_id, 10) : null,
-    data.section_id ? parseInt(data.section_id, 10) : 0,
-    parseInt(data.question_id, 10),
-    parseInt(data.question_type_id, 10),
-    data.userAnswer,
-    data.optionIds,
-    data.answered,
-  ];
+//   const insertValues = [
+//     parseInt(data.realStudentId, 10),
+//     parseInt(data.realTestId, 10),
+//     data.subject_id ? parseInt(data.subject_id, 10) : null,
+//     data.section_id ? parseInt(data.section_id, 10) : 0,
+//     parseInt(data.question_id, 10),
+//     parseInt(data.question_type_id, 10),
+//     data.userAnswer,
+//     data.optionIds,
+//     data.answered,
+//   ];
 
-  return await connection.query(insertQuery, insertValues);
-}
+//   return await connection.query(insertQuery, insertValues);
+// }
 
-// UPDATE FUNCTION
-async function updateResponse(connection, data) {
-  const updateQuery = `
-    UPDATE iit_user_responses
-    SET user_answer = ?, option_id = ?, question_status = ?
-    WHERE student_registration_id = ? AND test_creation_table_id = ? AND subject_id = ? AND section_id = ?
-      AND question_id = ? AND question_type_id = ?
-  `;
+// // UPDATE FUNCTION
+// async function updateResponse(connection, data) {
+//   const updateQuery = `
+//     UPDATE iit_user_responses
+//     SET user_answer = ?, option_id = ?, question_status = ?
+//     WHERE student_registration_id = ? AND test_creation_table_id = ? AND subject_id = ? AND section_id = ?
+//       AND question_id = ? AND question_type_id = ?
+//   `;
 
-  const updateValues = [
-    data.userAnswer,
-    data.optionIds,
-    data.answered,
-    parseInt(data.realStudentId, 10),
-    parseInt(data.realTestId, 10),
-    data.subject_id ? parseInt(data.subject_id, 10) : null,
-    data.section_id ? parseInt(data.section_id, 10) : 0,
-    parseInt(data.question_id, 10),
-    parseInt(data.question_type_id, 10),
-  ];
+//   const updateValues = [
+//     data.userAnswer,
+//     data.optionIds,
+//     data.answered,
+//     parseInt(data.realStudentId, 10),
+//     parseInt(data.realTestId, 10),
+//     data.subject_id ? parseInt(data.subject_id, 10) : null,
+//     data.section_id ? parseInt(data.section_id, 10) : 0,
+//     parseInt(data.question_id, 10),
+//     parseInt(data.question_type_id, 10),
+//   ];
 
-  return await connection.query(updateQuery, updateValues);
-}
+//   return await connection.query(updateQuery, updateValues);
+// }
 
-// MASTER ROUTE
+// // MASTER ROUTE
+// router.post("/SaveResponse", async (req, res) => {
+//   let connection;
+//   try {
+//     const {
+//       realStudentId,
+//       questionId,
+//       questionTypeId,
+//       realTestId,
+//       subject_id,
+//       section_id,
+//       optionIndexes1 = "",
+//       optionIndexes2 = "",
+//       optionIndexes1CharCodes = [],
+//       optionIndexes2CharCodes = [],
+//       calculatorInputValue = "",
+//       answered = "",
+//     } = req.body;
+
+//     // console.log("SaveResponse request received:", req.body);
+
+//     connection = await db.getConnection();
+
+//     const commonAnswer =
+//       optionIndexes1CharCodes.join(",") + optionIndexes2CharCodes.join(",");
+//     const commonOptions =
+//       optionIndexes1 + optionIndexes2 + calculatorInputValue;
+
+//     const identifiers = {
+//       realStudentId,
+//       question_id: questionId,
+//       question_type_id: questionTypeId,
+//       realTestId,
+//       subject_id,
+//       section_id,
+//     };
+
+//     const data = {
+//       ...identifiers,
+//       userAnswer: commonOptions,
+//       optionIds: commonAnswer,
+//       answered,
+//     };
+
+//     const exists = await checkIfResponseExists(connection, identifiers);
+
+//     if (exists) {
+//       await updateResponse(connection, data);
+//       // console.log("Data to be inserted/updated:", data);
+//       // console.log("Response updated");
+//       return res
+//         .status(200)
+//         .json({ success: true, message: "Response updated successfully" });
+//     } else {
+//       await insertResponse(connection, data);
+//       // console.log("Data to be inserted/updated:", data);
+//       // console.log("Response inserted");
+//       return res
+//         .status(200)
+//         .json({ success: true, message: "Response inserted successfully" });
+//     }
+//   } catch (error) {
+//     console.error("SaveResponse Error:", error);
+//     return res
+//       .status(500)
+//       .json({ success: false, message: "Internal server error" });
+//   } finally {
+//     if (connection) connection.release();
+//   }
+// });
+
+
+// OPTIMIZED MASTER ROUTE
 router.post("/SaveResponse", async (req, res) => {
   let connection;
   try {
@@ -469,53 +541,56 @@ router.post("/SaveResponse", async (req, res) => {
       answered = "",
     } = req.body;
 
-    console.log("SaveResponse request received:", req.body);
-
     connection = await db.getConnection();
 
-    const commonAnswer =
-      optionIndexes1CharCodes.join(",") + optionIndexes2CharCodes.join(",");
-    const commonOptions =
-      optionIndexes1 + optionIndexes2 + calculatorInputValue;
+    const commonAnswer = optionIndexes1CharCodes.join(",") + optionIndexes2CharCodes.join(",");
+    const commonOptions = optionIndexes1 + optionIndexes2 + calculatorInputValue;
 
-    const identifiers = {
-      realStudentId,
-      question_id: questionId,
-      question_type_id: questionTypeId,
-      realTestId,
-      subject_id,
-      section_id,
-    };
+    const studentId = parseInt(realStudentId, 10);
+    const testId = parseInt(realTestId, 10);
+    const subjectId = subject_id ? parseInt(subject_id, 10) : null;
+    const sectionId = section_id ? parseInt(section_id, 10) : 0;
+    const quesId = parseInt(questionId, 10);
+    const quesTypeId = parseInt(questionTypeId, 10);
 
-    const data = {
-      ...identifiers,
-      userAnswer: commonOptions,
-      optionIds: commonAnswer,
-      answered,
-    };
+    const upsertQuery = `
+      INSERT INTO iit_user_responses (
+        student_registration_id,
+        test_creation_table_id,
+        subject_id,
+        section_id,
+        question_id,
+        question_type_id,
+        user_answer,
+        option_id,
+        question_status
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON DUPLICATE KEY UPDATE
+        user_answer = VALUES(user_answer),
+        option_id = VALUES(option_id),
+        question_status = VALUES(question_status)
+    `;
 
-    const exists = await checkIfResponseExists(connection, identifiers);
+    const values = [
+      studentId,
+      testId,
+      subjectId,
+      sectionId,
+      quesId,
+      quesTypeId,
+      commonOptions,
+      commonAnswer,
+      answered
+    ];
 
-    if (exists) {
-      await updateResponse(connection, data);
-      console.log("Data to be inserted/updated:", data);
-      console.log("Response updated");
-      return res
-        .status(200)
-        .json({ success: true, message: "Response updated successfully" });
-    } else {
-      await insertResponse(connection, data);
-      console.log("Data to be inserted/updated:", data);
-      console.log("Response inserted");
-      return res
-        .status(200)
-        .json({ success: true, message: "Response inserted successfully" });
-    }
+    await connection.query(upsertQuery, values);
+
+    return res.status(200).json({ success: true, message: "Response saved successfully" });
+
   } catch (error) {
     console.error("SaveResponse Error:", error);
-    return res
-      .status(500)
-      .json({ success: false, message: "Internal server error" });
+    return res.status(500).json({ success: false, message: "Internal server error" });
   } finally {
     if (connection) connection.release();
   }
@@ -552,7 +627,7 @@ router.delete(
           });
       }
 
-      console.log("Response cleared successfully");
+      // console.log("Response cleared successfully");
       res
         .status(200)
         .json({ success: true, message: "Response cleared successfully" });

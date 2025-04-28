@@ -19,7 +19,7 @@ router.post("/SaveExamSummary", async (req, res) => {
       totalNotAttemptedQuestions,
       TimeSpent,
     } = req.body;
-    console.log("Received exam summary data from frontend:", req.body);
+    // console.log("Received exam summary data from frontend:", req.body);
     const studentIdNumber = parseInt(studentId, 10);
     const test_creation_table_idNumber = parseInt(test_creation_table_id, 10);
 
@@ -63,7 +63,7 @@ router.post("/SaveExamSummary", async (req, res) => {
         studentIdNumber,
         test_creation_table_idNumber,
       ]);
-      console.log("Exam summary updated successfully");
+      // console.log("Exam summary updated successfully");
       res
         .status(200)
         .json({ success: true, message: "Exam summary updated successfully" });
@@ -102,7 +102,7 @@ router.post("/SaveExamSummary", async (req, res) => {
         totalNotAttemptedQuestions,
         TimeSpent,
       ]);
-      console.log("Exam summary saved successfully");
+      // console.log("Exam summary saved successfully");
       res
         .status(201)
         .json({ success: true, message: "Exam summary saved successfully" });
@@ -259,7 +259,7 @@ router.get(
   async (req, res) => {
     let connection;
     const { testCreationTableId, user_Id } = req.params;
-    console.log("examSummary req.params", req.params);
+    // console.log("examSummary req.params", req.params);
 
     if (!testCreationTableId || !user_Id) {
       return res.status(400).json({ message: "Missing required parameters" });
@@ -317,7 +317,7 @@ router.get(
         totalAttempted,
       };
 
-      console.log("examSummary response", responseObj);
+      // console.log("examSummary response", responseObj);
       res.status(200).json(responseObj);
     } catch (error) {
       console.error("Error fetching exam summary:", error);
@@ -465,10 +465,10 @@ router.get(
       connection = await db.getConnection();
 
       const { testCreationTableId, studentregistrationId } = req.params;
-      console.log("⏳ Request Params:", {
-        testCreationTableId,
-        studentregistrationId,
-      });
+      // console.log("⏳ Request Params:", {
+      //   testCreationTableId,
+      //   studentregistrationId,
+      // });
 
       // Step 1: Fetch exam_id using testCreationTableId
       const [testInfoRows] = await connection.query(
@@ -481,7 +481,7 @@ router.get(
       WHERE t.test_creation_table_id = ?`,
         [testCreationTableId] // ✅ Removed trailing comma
       );
-      console.log("📄 testInfoRows:", testInfoRows);
+      // console.log("📄 testInfoRows:", testInfoRows);
 
       if (!testInfoRows || testInfoRows.length === 0) {
         console.warn("⚠️ Test not found for ID:", testCreationTableId);
@@ -491,7 +491,7 @@ router.get(
       }
 
       const examId = testInfoRows[0].exam_id;
-      console.log("🎯 examId:", examId);
+      // console.log("🎯 examId:", examId);
 
       // Step 2: Fetch user responses
       const [userResponseRows] = await connection.query(
@@ -513,7 +513,7 @@ router.get(
         AND ur.question_status IN (1, 2)`, // ✅ Removed trailing comma
         [testCreationTableId, studentregistrationId]
       );
-      console.log("📦 userResponseRows:", userResponseRows);
+      // console.log("📦 userResponseRows:", userResponseRows);
 
       const marks = userResponseRows.map((row) => {
         const userAnswer = (row.user_answer || "").trim().toLowerCase();
@@ -639,7 +639,7 @@ router.get(
       });
 
       await Promise.all(insertQueries);
-      console.log("✅ All marks inserted successfully");
+      // console.log("✅ All marks inserted successfully");
 
       res.json(marks);
     } catch (error) {
@@ -664,10 +664,10 @@ router.delete("/DeleteStudentDataWindowClose/:studentId/:testCreationTableId", a
       [studentId, testCreationTableId]
     );
 
-    console.log("Test Status:", testStatus);
+    // console.log("Test Status:", testStatus);
 
     if (!testStatus || testStatus.length === 0) {
-      console.log("No test record found, skipping deletion.");
+      // console.log("No test record found, skipping deletion.");
       return res.status(404).json({ message: "No test record found." });
     }
 
@@ -675,7 +675,7 @@ router.delete("/DeleteStudentDataWindowClose/:studentId/:testCreationTableId", a
     const isCompleted = testStatus.flat().some(status => status.testAttemptStatus && status.testAttemptStatus.toLowerCase() === "completed");
 
     if (isCompleted) {
-      console.log("Test was completed. Data not deleted.");
+      // console.log("Test was completed. Data not deleted.");
       return res.status(200).json({ message: "Test completed, data not deleted." });
     }
 
@@ -691,7 +691,7 @@ router.delete("/DeleteStudentDataWindowClose/:studentId/:testCreationTableId", a
       await db.query(query, values);
     }
 
-    console.log(`Test data deleted for student ${studentId} (Test ID: ${testCreationTableId})`);
+    // console.log(`Test data deleted for student ${studentId} (Test ID: ${testCreationTableId})`);
     return res.status(200).json({ message: "Test data deleted successfully." });
 
   } catch (error) {

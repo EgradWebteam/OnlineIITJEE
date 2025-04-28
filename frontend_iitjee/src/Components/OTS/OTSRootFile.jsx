@@ -60,6 +60,7 @@ export default function OTSRootFile() {
 
   const testName = testPaperData.TestName;
 
+  //WINDOW CLOSE DATA DELETE CODE START
   useEffect(() => {
     const handleUnload = () => {
       if (realTestId && realStudentId) {
@@ -91,7 +92,10 @@ export default function OTSRootFile() {
       window.removeEventListener("unload", handleUnload);
     };
   }, [realTestId, realStudentId]);
+  //WINDOW CLOSE DATA DELETE CODE START
 
+
+  //KEYBOARD KEYS DISABLE ALERT CODE START
   useEffect(() => {
     const handleKeyDown = (event) => {
       // Add pressed key to the set
@@ -130,6 +134,101 @@ export default function OTSRootFile() {
       document.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
+  //KEYBOARD KEYS DISABLE ALERT CODE END
+  
+
+  //TERMINATION PAGE CODE START
+  const [isShiftPressed, setIsShiftPressed] = useState(false);
+  const [isMetaPressed, setIsMetaPressed] = useState(false);
+  const [warningMessage,setWarningMessage] = useState(false);
+  const [violationCount, setViolationCount] = useState(0);
+  const handleKeyDown = (event) => {
+    if (event.key === "Shift") {
+      event.preventDefault();
+      setIsShiftPressed(true);
+    }
+    if (event.key === "Meta" || event.key === "Win") {
+      event.preventDefault();
+      setIsMetaPressed(true);
+    }
+    if (event.key === "s" && isShiftPressed && isMetaPressed) {
+      event.preventDefault();
+      window.history.back();
+      window.close();
+    }
+
+    if (isShiftPressed && isMetaPressed) {
+      event.preventDefault();
+    }
+  };
+
+  const handleKeyUp = (event) => {
+    if (event.key === "Shift") {
+      event.preventDefault();
+      setIsShiftPressed(false);
+    }
+    if (event.key === "Meta" || event.key === "Win") {
+      event.preventDefault();
+      setIsMetaPressed(false);
+    }
+  };
+
+
+  const handleVisibilityChange = () => {
+    if (document.hidden) {
+      // setWarningMessage(true)
+    } else {
+      setWarningMessage(true)
+      // Set a timeout to hide the warning message after 1 minute
+    setTimeout(() => {
+      setWarningMessage(false);
+    }, 10000); // 60,000 milliseconds = 1 minute
+    }
+  };
+  const handleBlur = () => {
+    console.log("Window is not focused");
+    setViolationCount((prevCount) => {
+      const newCount = prevCount + 1;
+
+      if (newCount < 4) {
+ 
+      } else {
+        navigate("/OTSTerminationPage");
+        localStorage.removeItem("popupWindowURL1");
+        localStorage.removeItem("popupWindowURL2");
+        localStorage.removeItem("popupWindowURL3");
+      }
+
+      return newCount;
+    });
+
+  };
+
+  useEffect(() => {
+    if ("hidden" in document) {
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+
+
+      window.addEventListener("blur", handleBlur);
+
+      document.addEventListener("keydown", handleKeyDown);
+      document.addEventListener("keyup", handleKeyUp);
+    } else {
+      console.log("Page Visibility API is not supported");
+    }
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+
+
+      window.removeEventListener("blur", handleBlur);
+
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [isShiftPressed, isMetaPressed]);
+  //TERMINATION PAGE  CODE END
+
 
   return (
     <div className={styles.OTSRootMainContainer}>
@@ -144,6 +243,7 @@ export default function OTSRootFile() {
         testData={testPaperData}
         realStudentId={realStudentId}
         realTestId={realTestId}
+        warningMessage={warningMessage}
       />
       {showCustomPopup && (
         <>

@@ -28,24 +28,14 @@ const ExamSummaryComponent = ({
 
   const [courseCreationId, setCourseCreationId] = useState([]);
 
-  // useEffect(() => {
-  //   // Check if the exam summary flag is set in localStorage
-  //   const enteredSummary = localStorage.getItem("examSummaryEntered") === "true";
-  //   if (enteredSummary) {
-  //     setShowExamSummary(true); // Show exam summary if flag is set
-  //   } else {
-  //     // Logic to handle case when the user directly accesses this page
-  //     // If they haven't already entered the exam summary, ensure the interface is correct
-  //     setShowExamSummary(false);
-  //   }
-  // }, []);
-
+  
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       const enteredSummary = localStorage.getItem("examSummaryEntered") === "true";
       if (enteredSummary) {
-        e.preventDefault();
-        e.returnValue = ""; // This line triggers the popup
+        setShowExamSummary(true);
+        // e.preventDefault();
+        // e.returnValue = ""; // This line triggers the popup
       }
     };
   
@@ -100,7 +90,7 @@ const ExamSummaryComponent = ({
         connection_status: "disconnected",
       };
 
-      console.log("Post data for updating status:", postData);
+      // console.log("Post data for updating status:", postData);
 
       const updateResponse = await fetch(
         `${BASE_URL}/OTSExamSummary/UpdateTestAttemptStatus`,
@@ -118,7 +108,7 @@ const ExamSummaryComponent = ({
       }
 
       const updateResult = await updateResponse.json();
-      console.log("Update result:", updateResult);
+      // console.log("Update result:", updateResult);
 
       if (updateResult.message?.includes("No matching")) {
         alert(
@@ -127,7 +117,7 @@ const ExamSummaryComponent = ({
         return;
       }
 
-      console.log("Test status updated successfully");
+      // console.log("Test status updated successfully");
 
       const [summaryRes, marksRes] = await Promise.allSettled([
         fetch(
@@ -155,8 +145,8 @@ const ExamSummaryComponent = ({
         return;
       }
 
-      console.log("Exam Summary:", examSummary);
-      console.log("Student Marks:", studentMarks);
+      // console.log("Exam Summary:", examSummary);
+      // console.log("Student Marks:", studentMarks);
     } catch (error) {
       console.error("Unexpected error during submission process:", error);
       alert("An unexpected error occurred. Please try again.");

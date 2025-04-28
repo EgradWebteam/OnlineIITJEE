@@ -35,7 +35,7 @@ router.get("/TestCreationFormData", async (req, res) => {
 
 router.get("/CourseSubjects/:course_creation_id", async (req, res) => {
   const { course_creation_id } = req.params;
-  console.log("Course Creation ID:", course_creation_id); // Log course_creation_id
+  // console.log("Course Creation ID:", course_creation_id); // Log course_creation_id
 
   try {
     const [subjects] = await db.query(
@@ -49,7 +49,7 @@ router.get("/CourseSubjects/:course_creation_id", async (req, res) => {
       [course_creation_id]
     );
 
-    console.log("Subjects:", subjects); // Log the result
+    // console.log("Subjects:", subjects); // Log the result
 
     if (subjects.length === 0) {
       return res
@@ -114,7 +114,7 @@ router.post("/CreateTest", async (req, res) => {
     ]);
 
     const testCreationTableId = testResult.insertId;
-    console.log("sections", sections);
+    // console.log("sections", sections);
     // Insert each section with the retrieved test ID
     for (const section of sections) {
       const { sectionName, numOfQuestions, subjectId } = section;
@@ -526,7 +526,7 @@ ORDER BY s.subject_id, sec.section_id, q.question_id, o.option_index;
 });
 router.get("/getNotAssignedCourses/:testCreationTableId", async (req, res) => {
   const { testCreationTableId } = req.params;
-  console.log("For the test creation table ID", testCreationTableId);
+  // console.log("For the test creation table ID", testCreationTableId);
 
   try {
     // Query for courses not assigned to the test creation table
@@ -568,8 +568,8 @@ router.post("/assignToTest/:testCreationTableId", async (req, res) => {
   const { coursesToBeAssigned } = req.body;
   const { testCreationTableId } = req.params;
 
-  console.log(testCreationTableId, "testCreationTableId");
-  console.log(coursesToBeAssigned);
+  // console.log(testCreationTableId, "testCreationTableId");
+  // console.log(coursesToBeAssigned);
 
   try {
     const sql = `
@@ -587,7 +587,7 @@ router.post("/assignToTest/:testCreationTableId", async (req, res) => {
         course_name, // assuming testName is same as course name for now
       ]);
 
-      console.log(rows, "Inserted Row");
+      // console.log(rows, "Inserted Row");
     }
 
     res.status(200).json({ message: "Courses assigned successfully" });
@@ -601,12 +601,12 @@ router.delete(
   async (req, res) => {
     const { courseCreationId, testCreationTableId } = req.params;
 
-    console.log(
-      "Unassigning course:",
-      courseCreationId,
-      "from test creation table ID:",
-      testCreationTableId
-    );
+    // console.log(
+    //   "Unassigning course:",
+    //   courseCreationId,
+    //   "from test creation table ID:",
+    //   testCreationTableId
+    // );
 
     try {
       // SQL query to delete the association between the course and the test creation table

@@ -3,13 +3,14 @@ import CourseForm from "./ORVLCourseForm.jsx"; // updated component name
 import DynamicTable from "./ORVLDynamicTable.jsx";
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import Styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css";
+import ORVLCourseForm from "./ORVLCourseForm.jsx";
 
 
 const CourseCreationTab = () => {
   const [courses, setCourses] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); 
-  const [itemsPerPage, setItemsPerPage] = useState(6); 
+  const [itemsPerPage, setItemsPerPage] = useState(5); 
   const [editCourseData, setEditCourseData] = useState(null); 
   // Fetch courses data from the new API
   const fetchCourses = () => {
@@ -120,7 +121,9 @@ const CourseCreationTab = () => {
 
   return (
     <div>
-      <h2>Course Management</h2>
+      <div className={Styles.pageHeading}>
+        COURSE CREATION
+      </div>
 
       {/* Button to add a new course */}
       {!showForm && (
@@ -134,7 +137,7 @@ const CourseCreationTab = () => {
       {showForm && (
   <div className={Styles.modal}>
     <div className={Styles.modalContent}>
-      <CourseForm
+      < ORVLCourseForm
         onCourseCreated={handleCourseCreated}
         courseData={editCourseData}             
       />

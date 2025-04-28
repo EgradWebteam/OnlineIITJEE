@@ -37,11 +37,18 @@ nav ul li .active {
 
 .mainContent {
   flex-grow: 1;
-  background: #f0f7ff;
+  background:#f9fafc;;
   display: flex;
   flex-direction: column;
 }
-
+.pageHeading{
+  font-size: 28px;
+font-weight: 600;
+text-align: center;
+background-color: #1f1f22ed;
+color: white;
+margin: 1rem;
+}
 .logo {
   font-size: 1.3rem;
   font-weight: bold;
@@ -52,7 +59,6 @@ nav ul li .active {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
   background: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-bottom: 2px solid #837777;
@@ -98,15 +104,15 @@ nav ul li .active {
 }
 
 .dashboardTitle {
-  /* font-size: 1.5rem;
-  text-align: center;
-  margin-bottom: 2rem;
-  font-weight: bold;
-  border-bottom: 41px solid #1f1f22ed;
-  padding-bottom: -0.5rem;
-  width: 100%;
-  line-height: 181%;
-  color: white; */
+  background-color: #1f1f22ed;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 7%;
+    padding: 9px;
+    font-weight: 600;
+    font-size: larger;
 }
 
 .statGrid {
@@ -139,7 +145,33 @@ nav ul li .active {
   background-color: #f1f1f1;
   color: #007bff;
 }
+.searchBarContainer {
+  display: flex
+;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 25px;
+    padding: 6px 12px;
+    box-shadow: 0 0 8px rgba(0, 120, 255, 0.2);
+    width: 97%;
+    margin-left: 2%;
+    max-width: 100%;
+  
+}
 
+.searchBarContainer input {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.searchIcon {
+  color: #999;
+  margin-right: 6px;
+}
 .sidebarMenu li {
   display: flex;
   align-items: center;
@@ -171,7 +203,7 @@ nav ul li .active {
 .tableWrapper {
   width: 100%;
   overflow-x: auto;
-  margin-top: 1rem;
+  margin-top: 3rem;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -193,7 +225,7 @@ nav ul li .active {
 
 .table th,
 .table td {
-  padding: 12px 16px;
+  padding: 4px 5px;
   text-align: center;
   border-bottom: 1px solid #e0e0e0;
   font-size: 14px;
@@ -249,14 +281,11 @@ nav ul li .active {
 }
 .DocumentUploadForm {
   display: flex;
-  /* flex-direction: column; */
   gap: 1.5rem;
   padding: 2rem;
   background-color: #fdfdfd;
   border: 1px solid #e0e0e0;
   border-radius: 12px;
-  /* max-width: 600px; */
-  /* margin: 0 auto; */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 .uploadButton{
@@ -266,9 +295,8 @@ nav ul li .active {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    margin: 1%;
 }
-
-
 .DocumentContentDiv {
   padding: 2rem;
   margin: 2rem auto;
@@ -279,13 +307,6 @@ nav ul li .active {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* .DocumentContentDiv h2 {
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-  color: #333;
-  text-align: center;
-  font-weight: 600;
-} */
 
 .TestPaperContent {
   background-color: #fff;
@@ -333,18 +354,17 @@ nav ul li .active {
   align-items: center;
 }
 .headerImg {
-  height: 70px; /* or whatever fits your layout */
+  height: 70px;
   display: flex;
   align-items: center;
   padding: 0 20px;
 }
 
 .headerImg img {
-  height: 100%; /* Make image fill the container */
+  height: 100%; 
   object-fit: contain;
 }
-/* Modal styles */
-/* Styles for the modal backdrop */
+
 .modalBackdrop {
   position: fixed;
   top: 0;
@@ -358,29 +378,29 @@ nav ul li .active {
   z-index: 1000;
 }
 
-/* Styles for the modal content */
+
 .modalContent {
   background-color: white;
   padding: 20px;
   max-width: 600px;
-  max-height: 80vh; /* Ensure the modal doesn't grow too large */
-  overflow-y: auto; /* Enables scrolling when content overflows */
+  max-height: 80vh; 
+  overflow-y: auto; 
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Style for the instruction image */
+
 .instructionImage img {
   max-width: 100%;
   height: auto;
 }
 
-/* Style for the instruction points list */
+
 .instructionPoints {
   margin-top: 10px;
 }
 
-/* Style for the close button */
+
 .closeModalBtn {
   background-color: #007bff;
   color: white;
@@ -389,6 +409,39 @@ nav ul li .active {
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.pageButton {
+  padding: 8px 12px;
+  margin: 0 4px;
+  background-color: #f4f4f4;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pageButton:hover {
+  background-color: #e0e0e0;
+}
+.addbutton{
+  background-color: #00b94a;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    margin: 2%;
+}
+.pageButtonActive {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
 }
 
 .closeModalBtn:hover {

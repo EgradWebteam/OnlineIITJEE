@@ -9,7 +9,6 @@ font-weight: 600;
 text-align: center;
 background-color: #1f1f22ed;
 color: white;
-padding: 5px;
 margin: 1rem;
 }
 
@@ -38,15 +37,17 @@ margin: 1rem;
 }
 
 .searchBarContainer {
-  display: flex;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 25px;
-  padding: 6px 12px;
-  box-shadow: 0 0 8px rgba(0, 120, 255, 0.2);
-  width: 100%;
-  margin: 1rem 0;
-  max-width: 100%;
+  display: flex
+  ;
+      align-items: center;
+      background-color: #fff;
+      border-radius: 25px;
+      padding: 6px 12px;
+      box-shadow: 0 0 8px rgba(0, 120, 255, 0.2);
+      width: 97%;
+      max-width: 100%;
+      margin-left: 2%;
+  
 }
 
 .searchBarContainer input {
@@ -84,7 +85,7 @@ margin: 1rem;
   display: inline-block;
 }
 .dashboardContent {
-  padding: 2rem;
+
   background-color: #f9fafc;
 }
 
@@ -102,12 +103,13 @@ margin: 1rem;
   padding: 10px 15px;
   border: none;
   border-radius: 5px;
-  margin: 0 16px;
+  margin: 2%;
 
 }
 
 .addCourseBtn:hover {
   background-color: #00a23f;
+ 
 }
 
 /* Modal/Popup Form Container */

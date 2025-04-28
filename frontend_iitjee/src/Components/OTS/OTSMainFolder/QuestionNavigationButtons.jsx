@@ -115,7 +115,7 @@ export default function QuestionNavigationButtons({
           setActiveSection(nextSubject.sections?.[0]?.SectionName || null);
           setActiveQuestionIndex(0);
         } else {
-          console.log("All subjects and sections completed!");
+          // console.log("All subjects and sections completed!");
           setActiveSubject(testData.subjects[0]?.SubjectName);
           setActiveSection(
             testData.subjects[0]?.sections?.[0]?.SectionName || null
@@ -165,7 +165,7 @@ export default function QuestionNavigationButtons({
       });
  
       const data = await res.json();
-      console.log("SaveResponse API result:", data);
+      // console.log("SaveResponse API result:", data);
  
       return data;
     } catch (error) {
@@ -175,447 +175,300 @@ export default function QuestionNavigationButtons({
   };
  
  //optimised code
-  const handleSaveAndNext = useCallback(
-    debounce(async () => {
-      const subject = testData?.subjects?.find((sub) => sub.SubjectName === activeSubject);
-      const section = subject?.sections?.find((sec) => sec.SectionName === activeSection);
-      const question = section?.questions?.[activeQuestionIndex];
+  // const handleSaveAndNext = useCallback(
+  //   debounce(async () => {
+  //     const subject = testData?.subjects?.find((sub) => sub.SubjectName === activeSubject);
+  //     const section = subject?.sections?.find((sec) => sec.SectionName === activeSection);
+  //     const question = section?.questions?.[activeQuestionIndex];
   
-      if (!question) return;
+  //     if (!question) return;
   
-      const qid = question.question_id;
-      const subjectId = subject.subjectId;
-      const sectionId = section.sectionId;
-      const qTypeId = question?.questionType?.quesionTypeId;
+  //     const qid = question.question_id;
+  //     const subjectId = subject.subjectId;
+  //     const sectionId = section.sectionId;
+  //     const qTypeId = question?.questionType?.quesionTypeId;
   
-      let savedData = { subjectId, sectionId, questionId: qid, type: "" };
+  //     let savedData = { subjectId, sectionId, questionId: qid, type: "" };
   
-      // Prepare the answer data (based on question type)
-      let optionIndexesStr = "";
-      let optionCharCodes = [];
-      let calcVal = "";
+  //     // Prepare the answer data (based on question type)
+  //     let optionIndexesStr = "";
+  //     let optionCharCodes = [];
+  //     let calcVal = "";
   
-      if ([1, 2].includes(qTypeId) && selectedOption?.option_index) {
-        optionIndexesStr = selectedOption.option_index;
+  //     if ([1, 2].includes(qTypeId) && selectedOption?.option_index) {
+  //       optionIndexesStr = selectedOption.option_index;
   
-        const matchedOption = question.options.find(
-          (opt) => opt.option_index === selectedOption.option_index
-        );
-        optionCharCodes = matchedOption ? [matchedOption.option_id] : [];
+  //       const matchedOption = question.options.find(
+  //         (opt) => opt.option_index === selectedOption.option_index
+  //       );
+  //       optionCharCodes = matchedOption ? [matchedOption.option_id] : [];
   
-        savedData = {
-          ...savedData,
-          optionId: matchedOption?.option_id,
-          optionIndex: selectedOption.option_index,
-          buttonClass: styles.AnswerdBtnCls,
-          type: "MCQ",
-        };
-      } else if ([3, 4].includes(qTypeId) && Array.isArray(selectedOptionsArray) && selectedOptionsArray.length > 0) {
-        optionIndexesStr = selectedOptionsArray.join(",");
-        optionCharCodes = selectedOptionsArray.map((optIndex) => {
-          const match = question.options.find((qOpt) => qOpt.option_index === optIndex);
-          return match?.option_id;
-        }).filter(Boolean);
+  //       savedData = {
+  //         ...savedData,
+  //         optionId: matchedOption?.option_id,
+  //         optionIndex: selectedOption.option_index,
+  //         buttonClass: styles.AnswerdBtnCls,
+  //         type: "MCQ",
+  //       };
+  //     } else if ([3, 4].includes(qTypeId) && Array.isArray(selectedOptionsArray) && selectedOptionsArray.length > 0) {
+  //       optionIndexesStr = selectedOptionsArray.join(",");
+  //       optionCharCodes = selectedOptionsArray.map((optIndex) => {
+  //         const match = question.options.find((qOpt) => qOpt.option_index === optIndex);
+  //         return match?.option_id;
+  //       }).filter(Boolean);
   
-        savedData = {
-          ...savedData,
-          selectedOptions: selectedOptionsArray, // or rename to selectedOptionIndexes for clarity
-          buttonClass: styles.AnswerdBtnCls,
-          type: "MSQ",
-        };
-      } else if ([5, 6].includes(qTypeId) && natValue?.trim() !== "") {
-        calcVal = natValue;
-        optionIndexesStr = "";
-        optionCharCodes = [];
-        savedData = {
-          ...savedData,
-          natAnswer: natValue,
-          buttonClass: styles.AnswerdBtnCls,
-          type: "NAT",
-        };
-      }
+  //       savedData = {
+  //         ...savedData,
+  //         selectedOptions: selectedOptionsArray, // or rename to selectedOptionIndexes for clarity
+  //         buttonClass: styles.AnswerdBtnCls,
+  //         type: "MSQ",
+  //       };
+  //     } else if ([5, 6].includes(qTypeId) && natValue?.trim() !== "") {
+  //       calcVal = natValue;
+  //       optionIndexesStr = "";
+  //       optionCharCodes = [];
+  //       savedData = {
+  //         ...savedData,
+  //         natAnswer: natValue,
+  //         buttonClass: styles.AnswerdBtnCls,
+  //         type: "NAT",
+  //       };
+  //     }
   
-      // Explicit fallback to NotAnswered if nothing valid is selected
-      if (
-        !([1, 2].includes(qTypeId) && selectedOption?.option_index) &&
-        !([3, 4].includes(qTypeId) && Array.isArray(selectedOptionsArray) && selectedOptionsArray.length > 0) &&
-        !([5, 6].includes(qTypeId) && natValue?.trim() !== "")
-      ) {
-        savedData = {
-          ...savedData,
-          buttonClass: styles.NotAnsweredBtnCls,
-          type: "",
-        };
-      }
+  //     // Explicit fallback to NotAnswered if nothing valid is selected
+  //     if (
+  //       !([1, 2].includes(qTypeId) && selectedOption?.option_index) &&
+  //       !([3, 4].includes(qTypeId) && Array.isArray(selectedOptionsArray) && selectedOptionsArray.length > 0) &&
+  //       !([5, 6].includes(qTypeId) && natValue?.trim() !== "")
+  //     ) {
+  //       savedData = {
+  //         ...savedData,
+  //         buttonClass: styles.NotAnsweredBtnCls,
+  //         type: "",
+  //       };
+  //     }
   
-      // Save to local state (only update when needed)
-      setUserAnswers((prev) => {
-        const updated = { ...prev, [qid]: savedData };
+  //     // Save to local state (only update when needed)
+  //     setUserAnswers((prev) => {
+  //       const updated = { ...prev, [qid]: savedData };
   
-        const totalQuestions = section?.questions?.length || 0;
-        if (activeQuestionIndex < totalQuestions - 1) {
-          const nextQuestion = section?.questions?.[activeQuestionIndex + 1];
-          if (nextQuestion && !updated[nextQuestion.question_id]) {
-            updated[nextQuestion.question_id] = {
-              subjectId,
-              sectionId,
-              questionId: nextQuestion.question_id,
-              buttonClass: styles.NotAnsweredBtnCls,
-              type: "",
-            };
-          }
-        }
+  //       const totalQuestions = section?.questions?.length || 0;
+  //       if (activeQuestionIndex < totalQuestions - 1) {
+  //         const nextQuestion = section?.questions?.[activeQuestionIndex + 1];
+  //         if (nextQuestion && !updated[nextQuestion.question_id]) {
+  //           updated[nextQuestion.question_id] = {
+  //             subjectId,
+  //             sectionId,
+  //             questionId: nextQuestion.question_id,
+  //             buttonClass: styles.NotAnsweredBtnCls,
+  //             type: "",
+  //           };
+  //         }
+  //       }
   
-        return updated;
-      });
+  //       return updated;
+  //     });
   
-      // Send to backend
-      await saveUserResponse({
-        realStudentId,
-        realTestId,
-        subject_id: subjectId,
-        section_id: sectionId,
-        question_id: qid,
-        question_type_id: qTypeId,
-        optionIndexes1: optionIndexesStr,
-        optionIndexes1CharCodes: optionCharCodes,
-        calculatorInputValue: calcVal,
-        answered: "1", // answered
-      });
+  //     // Send to backend
+  //     await saveUserResponse({
+  //       realStudentId,
+  //       realTestId,
+  //       subject_id: subjectId,
+  //       section_id: sectionId,
+  //       question_id: qid,
+  //       question_type_id: qTypeId,
+  //       optionIndexes1: optionIndexesStr,
+  //       optionIndexes1CharCodes: optionCharCodes,
+  //       calculatorInputValue: calcVal,
+  //       answered: "1", // answered
+  //     });
   
-      // Move to next question
-      navigateToNext(subject, section, activeQuestionIndex);
-    }, 300), // Debounced with a delay of 300ms
+  //     // Move to next question
+  //     navigateToNext(subject, section, activeQuestionIndex);
+  //   }, 300), // Debounced with a delay of 300ms
   
-    [testData, activeSubject, activeSection, activeQuestionIndex, selectedOption, selectedOptionsArray, natValue, saveUserResponse, navigateToNext] // Dependencies array
-  );
+  //   [testData, activeSubject, activeSection, activeQuestionIndex, selectedOption, selectedOptionsArray, natValue, saveUserResponse, navigateToNext] // Dependencies array
+  // );
  
    //without optimised code 
-  // const handleSaveAndNext = async () => {
-  //   const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
-  //   const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
-  //   const question = section?.questions?.[activeQuestionIndex];
-  //   if (!question) return;
+  const handleSaveAndNext = async () => {
+    const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
+    const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
+    const question = section?.questions?.[activeQuestionIndex];
+    if (!question) return;
  
-  //   const qid = question.question_id;
-  //   const subjectId = subject.subjectId;
-  //   const sectionId = section.sectionId;
-  //   const qTypeId = question?.questionType?.quesionTypeId;
+    const qid = question.question_id;
+    const subjectId = subject.subjectId;
+    const sectionId = section.sectionId;
+    const qTypeId = question?.questionType?.quesionTypeId;
  
-  //   const existingAnswer = userAnswers?.[qid];
-  //   let buttonClass = existingAnswer?.buttonClass || styles.NotAnsweredBtnCls;
+    const existingAnswer = userAnswers?.[qid];
+    let buttonClass = existingAnswer?.buttonClass || styles.NotAnsweredBtnCls;
  
-  //   let savedData = { subjectId, sectionId, questionId: qid, type: "", buttonClass };
+    let savedData = { subjectId, sectionId, questionId: qid, type: "", buttonClass };
  
-  //   let optionIndexesStr = "";
-  //   let optionCharCodes = [];
-  //   let calcVal = "";
+    let optionIndexesStr = "";
+    let optionCharCodes = [];
+    let calcVal = "";
  
-  //   if ([1, 2].includes(qTypeId) && selectedOption?.option_index) {
-  //     optionIndexesStr = selectedOption.option_index;
+    if ([1, 2].includes(qTypeId) && selectedOption?.option_index) {
+      optionIndexesStr = selectedOption.option_index;
  
-  //     const matchedOption = question.options.find(
-  //       opt => opt.option_index === selectedOption.option_index
-  //     );
-  //     optionCharCodes = matchedOption ? [matchedOption.option_id] : [];
+      const matchedOption = question.options.find(
+        opt => opt.option_index === selectedOption.option_index
+      );
+      optionCharCodes = matchedOption ? [matchedOption.option_id] : [];
  
-  //     savedData = {
-  //       ...savedData,
-  //       optionId: matchedOption?.option_id,
-  //       optionIndex: selectedOption.option_index,
-  //       buttonClass: styles.AnswerdBtnCls,
-  //       type: "MCQ"
-  //     };
-  //   } else if ([3, 4].includes(qTypeId) && Array.isArray(selectedOptionsArray) && selectedOptionsArray.length > 0) {
-  //     optionIndexesStr = selectedOptionsArray.join(",");
+      savedData = {
+        ...savedData,
+        optionId: matchedOption?.option_id,
+        optionIndex: selectedOption.option_index,
+        buttonClass: styles.AnswerdBtnCls,
+        type: "MCQ"
+      };
+    } else if ([3, 4].includes(qTypeId) && Array.isArray(selectedOptionsArray) && selectedOptionsArray.length > 0) {
+      optionIndexesStr = selectedOptionsArray.join(",");
    
-  //     optionCharCodes = selectedOptionsArray.map(optIndex => {
-  //       const match = question.options.find(qOpt => qOpt.option_index === optIndex);
-  //       return match?.option_id;
-  //     }).filter(Boolean);
+      optionCharCodes = selectedOptionsArray.map(optIndex => {
+        const match = question.options.find(qOpt => qOpt.option_index === optIndex);
+        return match?.option_id;
+      }).filter(Boolean);
    
-  //     savedData = {
-  //       ...savedData,
-  //       selectedOptions: selectedOptionsArray, // or rename to selectedOptionIndexes for clarity
-  //       buttonClass: styles.AnswerdBtnCls,
-  //       type: "MSQ"
-  //     };
-  //   } else if ([5, 6].includes(qTypeId) && natValue?.trim() !== "") {
-  //     calcVal = natValue;
-  //     optionIndexesStr = ""
-  //     optionCharCodes = [];
-  //     savedData = {
-  //       ...savedData,
-  //       natAnswer: natValue,
-  //       buttonClass: styles.AnswerdBtnCls,
-  //       type: "NAT"
-  //     };
-  //   }
+      savedData = {
+        ...savedData,
+        selectedOptions: selectedOptionsArray, // or rename to selectedOptionIndexes for clarity
+        buttonClass: styles.AnswerdBtnCls,
+        type: "MSQ"
+      };
+    } else if ([5, 6].includes(qTypeId) && natValue?.trim() !== "") {
+      calcVal = natValue;
+      optionIndexesStr = ""
+      optionCharCodes = [];
+      savedData = {
+        ...savedData,
+        natAnswer: natValue,
+        buttonClass: styles.AnswerdBtnCls,
+        type: "NAT"
+      };
+    }
  
-  //   // Explicit fallback to NotAnswered if nothing valid is selected
-  //   if (
-  //     !([1, 2].includes(qTypeId) && selectedOption?.option_index) &&
-  //     !([3, 4].includes(qTypeId) && Array.isArray(selectedOptionsArray) && selectedOptionsArray.length > 0) &&
-  //     !([5, 6].includes(qTypeId) && natValue?.trim() !== "")
-  //   ) {
-  //     savedData = {
-  //       ...savedData,
-  //       buttonClass: styles.NotAnsweredBtnCls,
-  //       type: ""
-  //     };
-  //   }
+    // Explicit fallback to NotAnswered if nothing valid is selected
+    if (
+      !([1, 2].includes(qTypeId) && selectedOption?.option_index) &&
+      !([3, 4].includes(qTypeId) && Array.isArray(selectedOptionsArray) && selectedOptionsArray.length > 0) &&
+      !([5, 6].includes(qTypeId) && natValue?.trim() !== "")
+    ) {
+      savedData = {
+        ...savedData,
+        buttonClass: styles.NotAnsweredBtnCls,
+        type: ""
+      };
+    }
  
-  //   // Save to local state
-  //   setUserAnswers(prev => {
-  //     const updated = { ...prev, [qid]: savedData };
+    // Save to local state
+    setUserAnswers(prev => {
+      const updated = { ...prev, [qid]: savedData };
  
-  //     const totalQuestions = section?.questions?.length || 0;
-  //     if (activeQuestionIndex < totalQuestions - 1) {
-  //       const nextQuestion = section?.questions?.[activeQuestionIndex + 1];
-  //       if (nextQuestion && !updated[nextQuestion.question_id]) {
-  //         updated[nextQuestion.question_id] = {
-  //           subjectId,
-  //           sectionId,
-  //           questionId: nextQuestion.question_id,
-  //           buttonClass: styles.NotAnsweredBtnCls,
-  //           type: ""
-  //         };
-  //       }
-  //     }
-  //     return updated;
-  //   });
- 
-  //   // Send to backend
-  //   await saveUserResponse({
-  //     realStudentId,
-  //     realTestId,
-  //     subject_id: subjectId,
-  //     section_id: sectionId,
-  //     question_id: qid,
-  //     question_type_id: qTypeId,
-  //     optionIndexes1: optionIndexesStr,
-  //     optionIndexes1CharCodes: optionCharCodes,
-  //     calculatorInputValue: calcVal,
-  //     answered: "1" // answered
-  //   });
- 
-  //   // Move to next question
-  //   navigateToNext(subject, section, activeQuestionIndex);
-  // };
- 
-
-  const handleMarkedForReview = useCallback(
-    debounce(async () => {
-      const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
-      const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
-      const question = section?.questions?.[activeQuestionIndex];
-      if (!question) return;
-  
-      const qid = question.question_id;
-      const subjectId = subject.subjectId;
-      const sectionId = section.sectionId;
-      const qTypeId = question?.questionType?.quesionTypeId;
-  
-      let buttonClass = styles.MarkedForReview;
-      let savedData = { subjectId, sectionId, questionId: qid, type: "", buttonClass };
-  
-      let optionIndexesStr = "";
-      let optionCharCodes = [];
-      let calcVal = "";
-  
-      // MCQ, MSQ, or NAT handling
-      if ([1, 2].includes(qTypeId) && selectedOption?.option_index) {
-        optionIndexesStr = selectedOption.option_index;
-        const matchedOption = question.options.find(opt => opt.option_index === selectedOption.option_index);
-        optionCharCodes = matchedOption ? [matchedOption.option_id] : [];
-  
-        buttonClass = styles.AnsMarkedForReview;
-        savedData = {
-          ...savedData,
-          optionId: matchedOption?.option_id,
-          optionIndex: selectedOption.option_index,
-          buttonClass,
-          type: "MCQ",
-        };
-      } else if ([3, 4].includes(qTypeId) && Array.isArray(selectedOptionsArray) && selectedOptionsArray.length > 0) {
-        optionIndexesStr = selectedOptionsArray.join(",");
-        optionCharCodes = selectedOptionsArray.map(optIndex => {
-          const match = question.options.find(qOpt => qOpt.option_index === optIndex);
-          return match?.option_id;
-        }).filter(Boolean);
-  
-        savedData = {
-          ...savedData,
-          selectedOptions: selectedOptionsArray,
-          buttonClass: styles.AnsMarkedForReview,
-          type: "MSQ",
-        };
-      } else if ([5, 6].includes(qTypeId) && natValue?.trim() !== "") {
-        calcVal = natValue;
-        buttonClass = styles.AnsMarkedForReview;
-        savedData = {
-          ...savedData,
-          natAnswer: natValue,
-          buttonClass,
-          type: "NAT",
-        };
-      }
-  
-      // Check if there is anything to save
-      const shouldSave =
-        ([1, 2].includes(qTypeId) && optionIndexesStr) || // MCQ
-        ([3, 4].includes(qTypeId) && optionIndexesStr) || // MSQ
-        ([5, 6].includes(qTypeId) && calcVal?.trim() !== ""); // NAT
-  
-      if (shouldSave) {
-        // Save to backend
-        await saveUserResponse({
-          realStudentId,
-          realTestId,
-          subject_id: subjectId,
-          section_id: sectionId,
-          question_id: qid,
-          question_type_id: qTypeId,
-          optionIndexes1: optionIndexesStr,
-          optionIndexes1CharCodes: optionCharCodes,
-          calculatorInputValue: calcVal,
-          answered: "2", // marked for review
-        });
-      }
-  
-      // Save to local state
-      setUserAnswers(prev => {
-        const updated = { ...prev, [qid]: savedData };
-  
-        const totalQuestions = section?.questions?.length || 0;
-        if (activeQuestionIndex < totalQuestions - 1) {
-          const nextQuestion = section?.questions?.[activeQuestionIndex + 1];
-          if (nextQuestion && !updated[nextQuestion.question_id]) {
-            updated[nextQuestion.question_id] = {
-              subjectId,
-              sectionId,
-              questionId: nextQuestion.question_id,
-              buttonClass: styles.NotAnsweredBtnCls,
-              type: "",
-            };
-          }
+      const totalQuestions = section?.questions?.length || 0;
+      if (activeQuestionIndex < totalQuestions - 1) {
+        const nextQuestion = section?.questions?.[activeQuestionIndex + 1];
+        if (nextQuestion && !updated[nextQuestion.question_id]) {
+          updated[nextQuestion.question_id] = {
+            subjectId,
+            sectionId,
+            questionId: nextQuestion.question_id,
+            buttonClass: styles.NotAnsweredBtnCls,
+            type: ""
+          };
         }
+      }
+      return updated;
+    });
+ 
+    // Send to backend
+    await saveUserResponse({
+      realStudentId,
+      realTestId,
+      subject_id: subjectId,
+      section_id: sectionId,
+      question_id: qid,
+      question_type_id: qTypeId,
+      optionIndexes1: optionIndexesStr,
+      optionIndexes1CharCodes: optionCharCodes,
+      calculatorInputValue: calcVal,
+      answered: "1" // answered
+    });
+ 
+    // Move to next question
+    navigateToNext(subject, section, activeQuestionIndex);
+  };
+ 
+ //optimised code
+  // const handleMarkedForReview = useCallback(
+  //   debounce(async () => {
+  //     const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
+  //     const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
+  //     const question = section?.questions?.[activeQuestionIndex];
+  //     if (!question) return;
   
-        return updated;
-      });
+  //     const qid = question.question_id;
+  //     const subjectId = subject.subjectId;
+  //     const sectionId = section.sectionId;
+  //     const qTypeId = question?.questionType?.quesionTypeId;
   
-      // Move to next question
-      navigateToNext(subject, section, activeQuestionIndex);
-    }, 300), // Debounced with a delay of 300ms
+  //     let buttonClass = styles.MarkedForReview;
+  //     let savedData = { subjectId, sectionId, questionId: qid, type: "", buttonClass };
   
-    [testData, activeSubject, activeSection, activeQuestionIndex, selectedOption, selectedOptionsArray, natValue, saveUserResponse, navigateToNext] // Dependencies array
-  );
+  //     let optionIndexesStr = "";
+  //     let optionCharCodes = [];
+  //     let calcVal = "";
   
-//without optimised code 
-  // const handleMarkedForReview = async () => {
-  //   const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
-  //   const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
-  //   const question = section?.questions?.[activeQuestionIndex];
-  //   if (!question) return;
- 
-  //   const qid = question.question_id;
-  //   const subjectId = subject.subjectId;
-  //   const sectionId = section.sectionId;
-  //   const qTypeId = question?.questionType?.quesionTypeId;
- 
-  //   let buttonClass = styles.MarkedForReview;
-  //   let savedData = { subjectId, sectionId, questionId: qid, type: "", buttonClass };
- 
-  //   let optionIndexesStr = "";
-  //   let optionCharCodes = [];
-  //   let calcVal = "";
- 
-  //   if ([1, 2].includes(qTypeId) && selectedOption?.option_index) {
-  //     optionIndexesStr = selectedOption.option_index;
- 
-  //     const matchedOption = question.options.find(
-  //       opt => opt.option_index === selectedOption.option_index
-  //     );
-  //     optionCharCodes = matchedOption ? [matchedOption.option_id] : [];
- 
-  //     buttonClass = styles.AnsMarkedForReview;
-  //     savedData = {
-  //       ...savedData,
-  //       optionId: matchedOption?.option_id,
-  //       optionIndex: selectedOption.option_index,
-  //       buttonClass,
-  //       type: "MCQ"
-  //     };
-  //   } else if ([3, 4].includes(qTypeId) && Array.isArray(selectedOptionsArray) && selectedOptionsArray.length > 0) {
-  //     optionIndexesStr = selectedOptionsArray.join(",");
-   
-  //     optionCharCodes = selectedOptionsArray.map(optIndex => {
-  //       const match = question.options.find(qOpt => qOpt.option_index === optIndex);
-  //       return match?.option_id;
-  //     }).filter(Boolean);
-   
-  //     savedData = {
-  //       ...savedData,
-  //       selectedOptions: selectedOptionsArray, // or rename to selectedOptionIndexes for clarity
-  //       buttonClass: styles.AnsMarkedForReview,
-  //       type: "MSQ"
-  //     };
-  //   } else if ([5, 6].includes(qTypeId) && natValue?.trim() !== "") {
-  //     calcVal = natValue;
-  //     buttonClass = styles.AnsMarkedForReview;
-  //     savedData = {
-  //       ...savedData,
-  //       natAnswer: natValue,
-  //       buttonClass,
-  //       type: "NAT"
-  //     };
-  //   }
- 
-  //   // Save to local state
-  //   setUserAnswers(prev => {
-  //     const updated = { ...prev, [qid]: savedData };
- 
-  //     const totalQuestions = section?.questions?.length || 0;
-  //     if (activeQuestionIndex < totalQuestions - 1) {
-  //       const nextQuestion = section?.questions?.[activeQuestionIndex + 1];
-  //       if (nextQuestion && !updated[nextQuestion.question_id]) {
-  //         updated[nextQuestion.question_id] = {
-  //           subjectId,
-  //           sectionId,
-  //           questionId: nextQuestion.question_id,
-  //           buttonClass: styles.NotAnsweredBtnCls,
-  //           type: ""
-  //         };
-  //       }
+  //     // MCQ, MSQ, or NAT handling
+  //     if ([1, 2].includes(qTypeId) && selectedOption?.option_index) {
+  //       optionIndexesStr = selectedOption.option_index;
+  //       const matchedOption = question.options.find(opt => opt.option_index === selectedOption.option_index);
+  //       optionCharCodes = matchedOption ? [matchedOption.option_id] : [];
+  
+  //       buttonClass = styles.AnsMarkedForReview;
+  //       savedData = {
+  //         ...savedData,
+  //         optionId: matchedOption?.option_id,
+  //         optionIndex: selectedOption.option_index,
+  //         buttonClass,
+  //         type: "MCQ",
+  //       };
+  //     } else if ([3, 4].includes(qTypeId) && Array.isArray(selectedOptionsArray) && selectedOptionsArray.length > 0) {
+  //       optionIndexesStr = selectedOptionsArray.join(",");
+  //       optionCharCodes = selectedOptionsArray.map(optIndex => {
+  //         const match = question.options.find(qOpt => qOpt.option_index === optIndex);
+  //         return match?.option_id;
+  //       }).filter(Boolean);
+  
+  //       savedData = {
+  //         ...savedData,
+  //         selectedOptions: selectedOptionsArray,
+  //         buttonClass: styles.AnsMarkedForReview,
+  //         type: "MSQ",
+  //       };
+  //     } else if ([5, 6].includes(qTypeId) && natValue?.trim() !== "") {
+  //       calcVal = natValue;
+  //       buttonClass = styles.AnsMarkedForReview;
+  //       savedData = {
+  //         ...savedData,
+  //         natAnswer: natValue,
+  //         buttonClass,
+  //         type: "NAT",
+  //       };
   //     }
-  //     return updated;
-  //   });
- 
-  //   // // Save to backend
-  //   // await saveUserResponse({
-  //   //   realStudentId,
-  //   //   realTestId,
-  //   //   subject_id: subjectId,
-  //   //   section_id: sectionId,
-  //   //   question_id: qid,
-  //   //   question_type_id: qTypeId,
-  //   //   optionIndexes1: optionIndexesStr,
-  //   //   optionIndexes1CharCodes: optionCharCodes,
-  //   //   calculatorInputValue: calcVal,
-  //   //   answered: "2" // marked for review
-  //   // });
-  //       // Check if there's any answer to save
-
-  //       const shouldSave =
-  //       ([1, 2].includes(qTypeId) &&
-  //         optionIndexesStr &&
-  //         optionCharCodes.length > 0) || // MCQ
-  //       ([3, 4].includes(qTypeId) &&
-  //         optionIndexesStr &&
-  //         optionCharCodes.length > 0) || // MSQ
+  
+  //     // Check if there is anything to save
+  //     const shouldSave =
+  //       ([1, 2].includes(qTypeId) && optionIndexesStr) || // MCQ
+  //       ([3, 4].includes(qTypeId) && optionIndexesStr) || // MSQ
   //       ([5, 6].includes(qTypeId) && calcVal?.trim() !== ""); // NAT
-
+  
   //     if (shouldSave) {
+  //       // Save to backend
   //       await saveUserResponse({
   //         realStudentId,
   //         realTestId,
@@ -628,12 +481,149 @@ export default function QuestionNavigationButtons({
   //         calculatorInputValue: calcVal,
   //         answered: "2", // marked for review
   //       });
-  
   //     }
+  
+  //     // Save to local state
+  //     setUserAnswers(prev => {
+  //       const updated = { ...prev, [qid]: savedData };
+  
+  //       const totalQuestions = section?.questions?.length || 0;
+  //       if (activeQuestionIndex < totalQuestions - 1) {
+  //         const nextQuestion = section?.questions?.[activeQuestionIndex + 1];
+  //         if (nextQuestion && !updated[nextQuestion.question_id]) {
+  //           updated[nextQuestion.question_id] = {
+  //             subjectId,
+  //             sectionId,
+  //             questionId: nextQuestion.question_id,
+  //             buttonClass: styles.NotAnsweredBtnCls,
+  //             type: "",
+  //           };
+  //         }
+  //       }
+  
+  //       return updated;
+  //     });
+  
+  //     // Move to next question
+  //     navigateToNext(subject, section, activeQuestionIndex);
+  //   }, 300), // Debounced with a delay of 300ms
+  
+  //   [testData, activeSubject, activeSection, activeQuestionIndex, selectedOption, selectedOptionsArray, natValue, saveUserResponse, navigateToNext] // Dependencies array
+  // );
+  
+//without optimised code 
+  
+   //without optimised code 
+const handleMarkedForReview = async () => {
+    const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
+    const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
+    const question = section?.questions?.[activeQuestionIndex];
+    if (!question) return;
  
-  //   // Move to next question
-  //   navigateToNext(subject, section, activeQuestionIndex);
-  // };
+    const qid = question.question_id;
+    const subjectId = subject.subjectId;
+    const sectionId = section.sectionId;
+    const qTypeId = question?.questionType?.quesionTypeId;
+ 
+    let buttonClass = styles.MarkedForReview;
+    let savedData = { subjectId, sectionId, questionId: qid, type: "", buttonClass };
+ 
+    let optionIndexesStr = "";
+    let optionCharCodes = [];
+    let calcVal = "";
+ 
+    if ([1, 2].includes(qTypeId) && selectedOption?.option_index) {
+      optionIndexesStr = selectedOption.option_index;
+ 
+      const matchedOption = question.options.find(
+        opt => opt.option_index === selectedOption.option_index
+      );
+      optionCharCodes = matchedOption ? [matchedOption.option_id] : [];
+ 
+      buttonClass = styles.AnsMarkedForReview;
+      savedData = {
+        ...savedData,
+        optionId: matchedOption?.option_id,
+        optionIndex: selectedOption.option_index,
+        buttonClass,
+        type: "MCQ"
+      };
+    } else if ([3, 4].includes(qTypeId) && Array.isArray(selectedOptionsArray) && selectedOptionsArray.length > 0) {
+      optionIndexesStr = selectedOptionsArray.join(",");
+   
+      optionCharCodes = selectedOptionsArray.map(optIndex => {
+        const match = question.options.find(qOpt => qOpt.option_index === optIndex);
+        return match?.option_id;
+      }).filter(Boolean);
+   
+      savedData = {
+        ...savedData,
+        selectedOptions: selectedOptionsArray, // or rename to selectedOptionIndexes for clarity
+        buttonClass: styles.AnsMarkedForReview,
+        type: "MSQ"
+      };
+    } else if ([5, 6].includes(qTypeId) && natValue?.trim() !== "") {
+      calcVal = natValue;
+      buttonClass = styles.AnsMarkedForReview;
+      savedData = {
+        ...savedData,
+        natAnswer: natValue,
+        buttonClass,
+        type: "NAT"
+      };
+    }
+ 
+    // Save to local state
+    setUserAnswers(prev => {
+      const updated = { ...prev, [qid]: savedData };
+ 
+      const totalQuestions = section?.questions?.length || 0;
+      if (activeQuestionIndex < totalQuestions - 1) {
+        const nextQuestion = section?.questions?.[activeQuestionIndex + 1];
+        if (nextQuestion && !updated[nextQuestion.question_id]) {
+          updated[nextQuestion.question_id] = {
+            subjectId,
+            sectionId,
+            questionId: nextQuestion.question_id,
+            buttonClass: styles.NotAnsweredBtnCls,
+            type: ""
+          };
+        }
+      }
+      return updated;
+    });
+ 
+
+ 
+        // Check if there's any answer to save
+        const shouldSave =
+        ([1, 2].includes(qTypeId) &&
+          optionIndexesStr &&
+          optionCharCodes.length > 0) || // MCQ
+        ([3, 4].includes(qTypeId) &&
+          optionIndexesStr &&
+          optionCharCodes.length > 0) || // MSQ
+        ([5, 6].includes(qTypeId) && calcVal?.trim() !== ""); // NAT
+    // // Save to backend
+      if (shouldSave) {
+        await saveUserResponse({
+          realStudentId,
+          realTestId,
+          subject_id: subjectId,
+          section_id: sectionId,
+          question_id: qid,
+          question_type_id: qTypeId,
+          optionIndexes1: optionIndexesStr,
+          optionIndexes1CharCodes: optionCharCodes,
+          calculatorInputValue: calcVal,
+          answered: "2", // marked for review
+        });
+  
+      }
+ 
+    // Move to next question
+    navigateToNext(subject, section, activeQuestionIndex);
+  };
  
  
  
@@ -665,7 +655,7 @@ export default function QuestionNavigationButtons({
           buttonClass: styles.NotAnsweredBtnCls,
         },
       };
-      console.log("Cleared and updated Answer:", updated[qid]);
+      // console.log("Cleared and updated Answer:", updated[qid]);
       return updated;
     });
  
@@ -694,9 +684,6 @@ export default function QuestionNavigationButtons({
   const handlePrevious = () => {
     if (activeQuestionIndex > 0) {
       setActiveQuestionIndex(prev => prev - 1);
-    } else {
-      // Optionally handle the case when there's no previous question (e.g., disable the button or show a message).
-      console.log("This is the first question.");
     }
   };
  
@@ -717,12 +704,26 @@ useEffect(() => {
 }, [timeLeft, isAutoSubmitted, isSubmitClicked]);
  
  
+  // useEffect(() => {
+  //   if (timeLeft === 0) {
+  //     setIsAutoSubmitted(true);
+  //     localStorage.setItem("examSummaryEntered", "true"); //  LOCK as soon as time up
+      
+  //   }
+  // }, [timeLeft]);
+
   useEffect(() => {
     if (timeLeft === 0) {
-      setIsAutoSubmitted(true);
-      localStorage.setItem("examSummaryEntered", "true"); //  LOCK as soon as time up
+      const autoSubmit = async () => {
+        setIsAutoSubmitted(true);
+        localStorage.setItem("examSummaryEntered", "true"); // LOCK as soon as time up
+  
+        await handleSubmitClick(); // <<<<<<<<<<<<<<< Call handleSubmitClick here
+      };
+      autoSubmit();
     }
   }, [timeLeft]);
+  
  
   useEffect(() => {
     const enteredSummary = localStorage.getItem("examSummaryEntered") === "true";
@@ -826,8 +827,8 @@ useEffect(() => {
                   setShowExamSummary(false);      // Close summary
                   setIsSubmitClicked(false);      // Reset submit flag
                   setIsAutoSubmitted(false);      // Reset auto submit flag
-                  localStorage.removeItem("examSummaryEntered"); // ❌ unlock summary lock
-                  localStorage.removeItem("examSubmitted"); // ❌ ensure test not marked submitted
+                  localStorage.removeItem("examSummaryEntered"); //  unlock summary lock
+                  localStorage.removeItem("examSubmitted"); //  ensure test not marked submitted
                 }}
                 isSubmitClicked={isSubmitClicked}
                 isAutoSubmitted={isAutoSubmitted}

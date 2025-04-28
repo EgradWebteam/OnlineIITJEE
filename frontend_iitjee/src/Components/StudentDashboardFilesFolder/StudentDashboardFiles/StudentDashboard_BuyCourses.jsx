@@ -8,10 +8,6 @@ export default function StudentDashboard_BuyCourses({
   setActiveSection,
   studentId,
 }) {
-  // useEffect(() => {
-  //   console.log("buycourses");
-  // }, []);
-
   const [structuredCourses, setStructuredCourses] = useState([]);
   const [selectedExam, setSelectedExam] = useState("");
   const [selectedPortal, setSelectedPortal] = useState("Online Test Series");
@@ -105,7 +101,7 @@ export default function StudentDashboard_BuyCourses({
   }, [flatCourses, selectedExam, selectedPortal]);
 
   const studentpaymentcreation = async (courseId, studentId) => {
-    console.log("Payment creation started...");
+    // console.log("Payment creation started...");
 
     try {
       if (!courseId || !studentId)
@@ -166,7 +162,7 @@ export default function StudentDashboard_BuyCourses({
                 }),
               }
             );
-            console.log("Payment success response", paymentsuccess);
+            // console.log("Payment success response", paymentsuccess);
             setActiveSection("myCourses"); // Navigate to My Courses section
           } catch (error) {
             console.error("Error processing payment success:", error);
@@ -207,7 +203,7 @@ export default function StudentDashboard_BuyCourses({
             }
           );
           console.error("Payment failed");
-          console.log("Payment failure response", paymentfailure);
+          // console.log("Payment failure response", paymentfailure);
         } catch (error) {
           console.error("Error processing payment failure:", error);
         }
@@ -253,39 +249,6 @@ export default function StudentDashboard_BuyCourses({
           </button>
         ))}
       </div>
-
-      {/* Course Cards */}
-      {/* Course Cards or No Courses Message */}
-      {/* {filteredCourses.length > 0 ? (
-        <div className={globalCSS.cardHolderOTSORVLHome}>
-          {filteredCourses.map((course) => (
-            <CourseCard
-              key={`${course.portal_id}-${course.course_creation_id}`}
-              title={course.course_name}
-              cardImage={course.card_image}
-              price={course.total_price}
-              context="buyCourses"
-              onBuy={() => {
-                const courseId = course.course_creation_id;
-                if (!courseId) {
-                  console.error("Course ID is missing:", course);
-                  return;
-                }
-                studentpaymentcreation(courseId, studentId);
-              }}
-              onGoToTest={() =>
-                console.log("Go to Test:", course.course_creation_id)
-              }
-            />
-          ))}
-        </div>
-      ) : (
-        <div className={globalCSS.noCoursesContainer}>
-          <p className={globalCSS.noCoursesMsg}>
-            No courses available at the moment.
-          </p>
-        </div>
-      )} */}
       {loading ? (
   <div className={globalCSS.loadingContainer}>
     <p className={globalCSS.loadingText}>Loading courses...</p>

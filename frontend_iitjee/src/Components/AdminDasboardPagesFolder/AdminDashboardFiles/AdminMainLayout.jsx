@@ -4,7 +4,7 @@ import AdminDashboardHome from './AdminDashboardHome.jsx';
 
 export default function MainLayout() {
   return (
-    <div>
+    <div >
       <AdminDashboardHome />
     </div>
   );

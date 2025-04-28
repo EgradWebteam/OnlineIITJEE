@@ -8,7 +8,7 @@ const AdminDashboardHeader = () => {
   const navigate = useNavigate();
   const isActive = (path) => location.pathname === path;
   const handleLogout = async () => {
-       localStorage.removeItem('token');
+       localStorage.removeItem('adminInfo');
       navigate('/AdminLoginPage');
   }
   return (

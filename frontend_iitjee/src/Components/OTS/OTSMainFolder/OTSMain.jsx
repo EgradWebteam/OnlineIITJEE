@@ -9,7 +9,7 @@ import { TimerProvider } from "../../../ContextFolder/TimerContext.jsx";
 import OtsTimer from "./OTSTimer.jsx";
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 
-export default function OTSMain({ testData, realStudentId, realTestId }) {
+export default function OTSMain({ testData, realStudentId, realTestId,warningMessage }) {
   const [activeSubject, setActiveSubject] = useState(null);
   const [activeSection, setActiveSection] = useState(null);
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
@@ -199,13 +199,22 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
     
     
   return (
-    <div className={`${styles.OTSMainFileMainContainer}`}>
-      <div className={` 
-      ${styles.OTSWaterMark} ${styles.OTSTestForCalcHeight}`}>
+    <div>
+      <div className={`${styles.OTSMainFileMainContainer} ${styles.OTSWaterMark}`}>
         <div className={styles.OTSMainFileSubContainer}>
           <TimerProvider testData={testData}>
             <OtsTimer testData={testData}/>
           </TimerProvider>
+          {warningMessage && (
+        <div className={styles.warning_message}>
+          <p>
+            Warning: You are currently taking the test. Please do not switch to
+            another tab, course or test, refresh the page, or use any keyboard
+            actions that could interrupt the test. Also, avoid minimizing or
+            maximizing the screen.
+          </p>
+        </div>
+      )}
           <SubjectsAndSectionsConatiner
             testData={testData}
             activeSubject={activeSubject}
@@ -251,7 +260,7 @@ export default function OTSMain({ testData, realStudentId, realTestId }) {
        
         </div>
       </div>
-      <div className={styles.QuestionNavigationBTns1}>
+      <div className={styles.QuestionNavigationBTns}>
         <QuestionStatusProvider
           testData={testData}
           activeSubject={activeSubject}
