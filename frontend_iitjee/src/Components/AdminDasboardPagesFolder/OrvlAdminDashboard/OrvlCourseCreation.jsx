@@ -13,7 +13,7 @@ const CourseCreationTab = ({portalid}) => {
   const [editCourseData, setEditCourseData] = useState(null); 
  
   const fetchCourses = () => {
-
+    const portalid = 3;
     fetch(`${BASE_URL}/CourseCreation/GetAllCourses/${portalid}`)
       .then((res) => res.json())
       .then((data) => {
@@ -92,13 +92,14 @@ const CourseCreationTab = ({portalid}) => {
 
     ? Object.keys(courses[0])
 
-        .filter((key) => key !== "subject_ids" && key !== "exam_ids" && key !=="card_image" && key !=="course_type_ids") // Filter out 'subject_ids' and 'exam_ids'
+        .filter((key) => key !== "subject_ids" && key !== "exam_ids" && key !=="card_image") // Filter out 'subject_ids' and 'exam_ids'
         .map((key) => ({
           header: key.replace(/_/g, " ").toUpperCase(),
           accessor: key,
         }))
     : [];
-
+    console.log(columns)
+  // Get current courses for the current page
   const indexOfLastCourse = currentPage * itemsPerPage;
   const indexOfFirstCourse = indexOfLastCourse - itemsPerPage;
   const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
@@ -145,6 +146,7 @@ const CourseCreationTab = ({portalid}) => {
         onDelete={handleDelete}
         onToggle={handleToggle}
         type="course" 
+         course="ots"
       />
       </div>
       <div className={Styles.pagination}>

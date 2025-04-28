@@ -22,6 +22,7 @@ const DynamicTable = ({
   showEdit = true,
   showToggle = true,
   tableType, 
+  course
 }) => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [popupType, setPopupType] = useState(""); 
