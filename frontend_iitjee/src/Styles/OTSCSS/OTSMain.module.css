@@ -550,7 +550,7 @@ height: 100%;
   display: block;
 }
 .QuestionNavigationBTns{
-  border: 1px solid rgb(204, 204, 204);
+  /* border: 1px solid rgb(204, 204, 204); */
   /* display: flex;
   align-items: center;
   justify-content: space-between; */
@@ -1398,7 +1398,7 @@ display: none;
     /* height: 70vh; */
 }
 .QuestionNavigationBTns{
-  border: 1px solid rgb(204, 204, 204);
+  /* border: 1px solid rgb(204, 204, 204); */
   padding: 7px;
   width: 100%;
   margin-top: 30px;
@@ -1573,7 +1573,7 @@ display: none;
   /* height: 80vh; */
 }
 .QuestionNavigationBTns{
-  border: 1px solid rgb(204, 204, 204);
+  /* border: 1px solid rgb(204, 204, 204); */
   padding: 10px;
   width: 100%;
   margin-top: 30px;
@@ -1798,7 +1798,7 @@ padding: 3px;
   gap: 1.5rem;
 }
 ._QuestionNavigationBTns_8o7gq_863 {
-  border: 1px solid rgb(204, 204, 204);
+  /* border: 1px solid rgb(204, 204, 204); */
   padding: 10px;
   width: 100%;
   margin-top: 30px;
@@ -1807,7 +1807,7 @@ padding: 3px;
   gap: 0px;
 }
 .QuestionNavigationBTns{
-  border: 1px solid rgb(204, 204, 204);
+  /* border: 1px solid rgb(204, 204, 204); */
   padding: 10px;
   width: 100%;
   margin-top: 30px;

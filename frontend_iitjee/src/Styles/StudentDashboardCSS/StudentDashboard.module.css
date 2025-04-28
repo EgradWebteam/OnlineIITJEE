@@ -1062,6 +1062,11 @@ height: 100%;
         left: -1rem;
         z-index: 1100;
       }
+      .StudentDashboardRightSideContentHolder {
+        width: 100%;
+      margin: 1rem 1rem auto;
+      overflow-y: scroll;
+      }
     }
 
   
