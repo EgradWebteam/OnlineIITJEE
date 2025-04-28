@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from "react";
-import CourseForm from "./ORVLCourseForm.jsx"; // updated component name
 import DynamicTable from "./ORVLDynamicTable.jsx";
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import Styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css";
-import ORVLCourseForm from "./ORVLCourseForm.jsx";
+import CourseForm from "../AdminDashboardFiles/CourseForm.jsx";
 
 
-const CourseCreationTab = () => {
+const CourseCreationTab = ({portalid}) => {
   const [courses, setCourses] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); 
   const [itemsPerPage, setItemsPerPage] = useState(5); 
   const [editCourseData, setEditCourseData] = useState(null); 
-  // Fetch courses data from the new API
+ 
   const fetchCourses = () => {
 
-    fetch(`${BASE_URL}/CourseCreation/GetAllCourses`)
+    fetch(`${BASE_URL}/CourseCreation/GetAllCourses/${portalid}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -28,15 +27,14 @@ const CourseCreationTab = () => {
       .catch((err) => console.error("Error loading courses", err));
   };
 
-  // Fetch courses when the component mounts
   useEffect(() => {
     fetchCourses();
   }, []);
 
-  // Callback when a course is created
+
   const handleCourseCreated = () => {
     setShowForm(false);
-    fetchCourses(); // Refresh courses after a new course is added
+    fetchCourses(); 
   };
 
   const handleEdit = (course) => {
@@ -44,13 +42,10 @@ const CourseCreationTab = () => {
     setShowForm(true);         
   };
   
-
-  // Handle opening a course (e.g., view more details)
   const handleOpen = (course) => {
     alert(`Opening: ${course.course_name}`);
   };
 
-  // Handle deleting a course
   const handleDelete = (course) => {
     if (window.confirm(`Delete course "${course.course_name}"?`)) {
       fetch(`${BASE_URL}/CourseCreation/delete/${course.course_creation_id}`, {
@@ -60,7 +55,7 @@ const CourseCreationTab = () => {
         .then((result) => {
           if (result.success) {
             alert("Deleted.");
-            fetchCourses(); // Refresh courses after deletion
+            fetchCourses(); 
           } else {
             alert("Failed to delete.");
           }
@@ -104,15 +99,11 @@ const CourseCreationTab = () => {
         }))
     : [];
 
-  // Get current courses for the current page
   const indexOfLastCourse = currentPage * itemsPerPage;
   const indexOfFirstCourse = indexOfLastCourse - itemsPerPage;
   const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
-
-  // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Total pages
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(courses.length / itemsPerPage); i++) {
     pageNumbers.push(i);
@@ -124,42 +115,31 @@ const CourseCreationTab = () => {
       <div className={Styles.pageHeading}>
         COURSE CREATION
       </div>
-
-      {/* Button to add a new course */}
       {!showForm && (
         <div className={Styles.flex}>
           <button className={Styles.addCourseBtn} onClick={() => setShowForm(true)}> Add Course</button>
           </div>
         
       )}
-
-      {/* Show the course form if showForm is true */}
       {showForm && (
   <div className={Styles.modal}>
     <div className={Styles.modalContent}>
-      < ORVLCourseForm
+    <CourseForm
         onCourseCreated={handleCourseCreated}
-        courseData={editCourseData}             
+        courseData={editCourseData}    
+        setShowForm={setShowForm}  
+        setEditCourseData={setEditCourseData}  
+        portalid={portalid} 
       />
-      <button
-        className={Styles.closeBtn}
-        onClick={() => {
-          setShowForm(false);
-          setEditCourseData(null);              
-        }}
-      >
-        Close
-      </button>
+  
     </div>
   </div>
 )}
 
-
-      {/* Display courses in a dynamic table */}
       <div style={{padding:"2%"}}>
       <DynamicTable
         columns={columns}
-        data={currentCourses} // Show paginated courses
+        data={currentCourses}
         onEdit={handleEdit}
         onOpen={handleOpen}
         onDelete={handleDelete}
@@ -167,9 +147,6 @@ const CourseCreationTab = () => {
         type="course" 
       />
       </div>
-      
-
-      {/* Pagination controls */}
       <div className={Styles.pagination}>
         {pageNumbers.map((number) => (
           <button className={Styles.pageButton} key={number} onClick={() => paginate(number)}>

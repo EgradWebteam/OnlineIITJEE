@@ -4,7 +4,7 @@ import DynamicTable from "./DynamicTable.jsx";
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import Styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css";
 import { FaSearch } from 'react-icons/fa';
-const CourseCreationTab = () => {
+const CourseCreationTab = ({portalid}) => {
   const [courses, setCourses] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); 
@@ -13,7 +13,7 @@ const CourseCreationTab = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const fetchCourses = () => {
 
-    fetch(`${BASE_URL}/CourseCreation/GetAllCourses`)
+    fetch(`${BASE_URL}/CourseCreation/GetAllCourses/${portalid}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -149,13 +149,13 @@ const CourseCreationTab = () => {
         onCourseCreated={handleCourseCreated}
         courseData={editCourseData}    
         setShowForm={setShowForm}  
-        setEditCourseData={setEditCourseData}       
+        setEditCourseData={setEditCourseData}  
+        portalid={portalid} 
       />
       
     </div>
   </div>
 )}
-   {/* Display courses in a dynamic table */}
       <div style={{ padding: "2%", backgroundColor:" #f9fafc" }}>
   {courses.length === 0 ? (
     <div>No courses available. Please add some courses.</div>

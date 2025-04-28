@@ -24,7 +24,7 @@ export default function  OrvlDashboardHome() {
       case 'dashboard':
         return <OrvlDashborad/>
       case 'course-creation':
-        return <OrvlCourseCreation/>
+        return <OrvlCourseCreation portalid={3}/>
       case 'topic-creation':
         return <OrvlTopicCreation/>;
       default:

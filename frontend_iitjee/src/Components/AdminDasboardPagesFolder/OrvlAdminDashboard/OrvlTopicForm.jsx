@@ -52,8 +52,8 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
     formData.append("exam_id", selectedExamId);
     formData.append("subject_id", selectedSubjectId);
 
-    if (topicPdf) formData.append("topic_pdf", topicPdf); // ✅ binary
-    if (topicDoc) formData.append("topic_doc", topicDoc); // ✅ binary
+    if (topicPdf) formData.append("topic_pdf", topicPdf); 
+    if (topicDoc) formData.append("topic_doc", topicDoc); 
 
     try {
       const response = topic
@@ -133,13 +133,13 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
               onChange={(e) => setTopicPdf(e.target.files[0])}
               className={styles.inputFile}
             />
-            {topic?.orvl_topic_pdf && !topicPdf && (
+          
+          </div>
+          {topic?.orvl_topic_pdf && !topicPdf && (
               <div className={styles.fileInfo}>
-                <span>{topic.orvl_topic_pdf}</span>
+               <label>Previous Uploaded:</label> <span>{topic.orvl_topic_pdf}</span>
               </div>
             )}
-          </div>
-
           <div className={styles.flex}>
             <label>Upload Topic Documentation:</label>
             <input
