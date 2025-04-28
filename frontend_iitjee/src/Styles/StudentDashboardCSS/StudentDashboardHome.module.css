@@ -16,8 +16,8 @@
     flex-direction: column;
     gap: 1rem;
     padding: 20px;
-    justify-content: center;
-    align-items: center;
+    /* justify-content: center; */
+    /* align-items: center; */
 }
 .exploreCardsDiv{
     display: flex;

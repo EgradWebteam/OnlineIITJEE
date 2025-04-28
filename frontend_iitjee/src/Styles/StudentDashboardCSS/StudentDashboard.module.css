@@ -284,7 +284,7 @@ button.backslash {
 .MainDivStudentDasboard {
   background: white;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  /* height: 7vh; */
+  height: 7vh;
   padding: 5px;
 }
 .studentLogo {
@@ -375,7 +375,7 @@ color: black;
 .stuentDashboardMainContentContainer {
   display: flex;
   margin: 1px;
-  height: 100vh; 
+  /* height: 100vh;  */
   overflow: hidden;
 }
 .studentDashboardLeftsidebar {
@@ -432,8 +432,8 @@ color: black;
 }
 .StudentDashboardRightSideContentHolder {
   width: 80%;
-margin: 1rem  auto;
-overflow-y: auto;
+  margin: 1rem 1rem auto;
+  overflow-y: auto;
 }
 .LectureHeader {
   display: flex;
@@ -923,7 +923,7 @@ height: 100%;
     margin: 1rem;
   }
   .BookMarksSubDivForScroll{
-    height: 90vh;
+    /* height: 90vh; */
    
   }
   .QuestionImgContainer{
@@ -965,6 +965,25 @@ height: 100%;
 }
 .testContainerIcon{
   font-size: 2rem;
+}
+@media (max-width:1240px) {
+  .MainDivStudentDasboard{
+    background: white;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    height: 8vh;
+    padding: 5px;
+}
+.StudentDashboardContentHolder{
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 9vh);
+}
+.StudentDashboardRightSideContentHolder{
+  width: 80%;
+  margin: 1rem 1rem auto;
+  overflow-y: auto;
+  height: calc(100vh - 11vh);
+}
 }
   @media (max-width:1024px) {
     .testCard{
@@ -1041,10 +1060,11 @@ height: 100%;
         /* top: 80px;
         left: 33px; */
         width: 220px;
-        height: 100vh;
+        /* height: 100vh; */
         background-color: rgba(94, 93, 93,);
         z-index: 1000;
         /* transition: transform 0.3s ease-in-out; */
+        height: calc(100vh - 9vh);
       }
       .headingForLectures{
         font-size: 15px;
