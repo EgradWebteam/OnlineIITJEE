@@ -156,9 +156,9 @@ const ExamSummaryComponent = ({
   const handleViewReport = () => {
     localStorage.removeItem("examSummaryEntered");
     localStorage.removeItem("examSubmitted");
-
+    const localStorageUserId = localStorage.getItem('userId');
     // Pass 'results' section via URL param (for immediate effect)
-    const destinationURL = `/StudentDashboard/6?section=results`;
+    const destinationURL = `/StudentDashboard/${localStorageUserId}?section=results`;
 
     if (window.opener) {
       // Set location of opener (parent window)

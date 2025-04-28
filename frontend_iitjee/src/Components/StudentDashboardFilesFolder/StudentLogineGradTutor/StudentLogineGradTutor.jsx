@@ -173,6 +173,8 @@ const handleResetPassword = async (e) => {
             handleLogin={handleLogin}
             handleForgotPassword={handleForgotPassword}
             handleResetPassword={handleResetPassword}
+            setIsResetPassword={setIsResetPassword}
+            setIsForgotPassword={setIsForgotPassword}
           />
 
           {/* Forgot password and registration links */}
@@ -180,6 +182,7 @@ const handleResetPassword = async (e) => {
             <div className={styles.studentLoginLinks}>
               <p>New here? <Link to="/StudentRegistrationPage">Register</Link></p>
               <p><a href="#" onClick={() => setIsForgotPassword(true)}>Forgot Password?</a></p>
+           
             </div>
           )}
 
