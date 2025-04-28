@@ -4,7 +4,11 @@ import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.pn
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard_AccountSettings.module.css";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 
-const StudentDashboard_AccountSettings = ({ userData, setActiveSubSection, activeSubSection }) => {
+const StudentDashboard_AccountSettings = ({
+  userData,
+  setActiveSubSection,
+  activeSubSection,
+}) => {
   // const [activeSubSection, setActiveSubSection] = useState("profile");
 
   const [showPassword, setShowPassword] = useState({
@@ -15,18 +19,28 @@ const StudentDashboard_AccountSettings = ({ userData, setActiveSubSection, activ
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(""); // Error message state
   const [successMessage, setSuccessMessage] = useState(""); // Success message state
+  const [isNewPasswordFocused, setIsNewPasswordFocused] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+const [popupMessage, setPopupMessage] = useState("");
 
+
+
+  const [touched, setTouched] = useState({
+    newPassword: false,
+    confirmPassword: false,
+  });
+  
   const togglePasswordVisibility = (field) => {
     setShowPassword((prevState) => ({
       ...prevState,
       [field]: !prevState[field],
     }));
   };
- 
+
   const studentName = userData?.candidate_name;
   const studentEmail = userData?.email_id;
   const studentContact = userData?.mobile_no;
- const studentProfile= userData?.uploaded_photo || defaultImage;
+  const studentProfile = userData?.uploaded_photo || defaultImage;
 
   const handlePasswordChange = async (e) => {
     e.preventDefault();
@@ -61,13 +75,16 @@ const StudentDashboard_AccountSettings = ({ userData, setActiveSubSection, activ
       const data = await response.json();
 
       if (response.ok) {
-        setSuccessMessage("Password changed successfully.");
+        setPopupMessage("Password changed successfully!"); // ✅ Set popup message
+        setShowPopup(true); // ✅ Open popup
+      
+        setSuccessMessage("");
         setErrorMessage("");
-
-        // Clear input fields after successful password change
+      
         setNewPassword("");
         setConfirmPassword("");
-      } else {
+      }
+       else {
         setErrorMessage(
           data.message || "Failed to reset password. Please try again."
         );
@@ -97,10 +114,9 @@ const StudentDashboard_AccountSettings = ({ userData, setActiveSubSection, activ
       criteria.specialChar
     );
   };
-  
-
   const passwordCriteria = checkPasswordCriteria(newPassword);
 
+ 
   return (
     <div className={styles.studetnDashboard_SettingsHomePage}>
       <div className={styles.StdAccountPwdContainer}>
@@ -153,36 +169,83 @@ const StudentDashboard_AccountSettings = ({ userData, setActiveSubSection, activ
                 className={styles.passwordInput}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
+                onFocus={(e)=>{
+                  e.preventDefault()
+                  setIsNewPasswordFocused(true)}}
+  onBlur={() => setTouched((prev) => ({ ...prev, newPassword: true }))}
                 required
               />
+              {isNewPasswordFocused && (
               <span
-                onClick={() => togglePasswordVisibility("new")}
+                onClick={(e) => {
+                  e.preventDefault();
+                  togglePasswordVisibility("new")
+                }}
                 className={styles.eyeIcon}
               >
                 {showPassword.new ? <IoEyeOffOutline /> : <IoEyeOutline />}
               </span>
+)}
             </div>
-
-          
-
-            <ul className={styles.listofMandatory}>
-              <li className={passwordCriteria.length ? styles.valid : ""}>
-                At least 8 characters.
-              </li>
-              <li className={passwordCriteria.uppercase ? styles.valid : ""}>
-                At least one uppercase letter.
-              </li>
-              <li className={passwordCriteria.lowercase ? styles.valid : ""}>
-                At least one lowercase letter.
-              </li>
-              <li className={passwordCriteria.number ? styles.valid : ""}>
-                At least one number.
-              </li>
-              <li className={passwordCriteria.specialChar ? styles.valid : ""}>
-                At least one special character.
-              </li>
-            </ul>
-
+            {newPassword&&(
+              <ul className={styles.listofMandatory}>
+                <li
+                  className={
+                    passwordCriteria.length
+                      ? styles.valid
+                      : (touched.newPassword 
+                      ? styles.invalid
+                      : styles.hidden)
+                  }
+                >
+                  At least 8 characters.
+                </li>
+                <li
+                  className={
+                    passwordCriteria.uppercase
+                      ? styles.valid
+                      :(touched.newPassword 
+                      ? styles.invalid
+                      : styles.hidden)
+                  }
+                >
+                  At least one uppercase letter.
+                </li>
+                <li
+                  className={
+                    passwordCriteria.lowercase
+                      ? styles.valid
+                      :(touched.newPassword 
+                      ? styles.invalid
+                      : styles.hidden)
+                  }
+                >
+                  At least one lowercase letter.
+                </li>
+                <li
+                  className={
+                    passwordCriteria.number
+                      ? styles.valid
+                      : (touched.newPassword 
+                      ? styles.invalid
+                      : styles.hidden)
+                  }
+                >
+                  At least one number.
+                </li>
+                <li
+                  className={
+                    passwordCriteria.specialChar
+                      ? styles.valid
+                      : (touched.newPassword 
+                      ? styles.invalid
+                      : styles.hidden)
+                  }
+                >
+                  At least one special character.
+                </li>
+              </ul>
+            )}
             <label className={styles.PasswordCreation}>Confirm Password</label>
             <div className={styles.passwordInputContainer}>
             <input
@@ -190,31 +253,56 @@ const StudentDashboard_AccountSettings = ({ userData, setActiveSubSection, activ
   className={styles.passwordInput}
   value={confirmPassword}
   onChange={(e) => setConfirmPassword(e.target.value)}
-
+  onFocus={(e)=>{
+    e.preventDefault()
+    setIsNewPasswordFocused(true)}}
+  onBlur={() => setTouched((prev) => ({ ...prev, confirmPassword: true }))}
   required
 />
-
+{isNewPasswordFocused && (
               <span
-                onClick={() => togglePasswordVisibility("confirm")}
+                onClick={(e) => {
+                  e.preventDefault()
+                  togglePasswordVisibility("confirm")}}
                 className={styles.eyeIcon}
               >
                 {showPassword.confirm ? <IoEyeOffOutline /> : <IoEyeOutline />}
               </span>
+)}
             </div>
-{newPassword &&
-              confirmPassword &&
-              newPassword !== confirmPassword && (
-                <p className={styles.passwordError}>Passwords do not match</p>
-              )}
+            {touched.confirmPassword && newPassword && confirmPassword && newPassword !== confirmPassword && (
+  <p className={styles.passwordError}>Passwords do not match</p>
+)}
+
             {/* Display error or success message */}
             {errorMessage && (
               <div className={styles.errorMessage}>{errorMessage}</div>
             )}
-            {successMessage && (
-              <div className={styles.successMessage}>{successMessage}</div>
-            )}
+           
+           {showPopup && (
+            <div className={styles.popup_overlay}>
+              <div className={styles.popup_content}>
+  <div className={styles.popupMessage_container}>
+    <div className={styles.popupMessage}>
+    {popupMessage}
+    </div>
+    <div className={styles.CloseBtnForPopUp}>
+      <button onClick={()=> setShowPopup(false)}>Close</button>
+    </div>
+  </div>
+  </div>
+  </div>
+)}
 
-            <button type="submit" className={styles.ChangewPwdButton} disabled={!isPasswordValid(passwordCriteria) || newPassword !== confirmPassword}>
+            <button
+              type="submit"
+              className={styles.ChangewPwdButton}
+              disabled={
+                !isPasswordValid(passwordCriteria) ||
+                newPassword !== confirmPassword
+              }
+             
+            >
               Change Password
             </button>
           </form>
