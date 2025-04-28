@@ -12,7 +12,7 @@
 }
 .OTSMainHeader{
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    height: 6vh;
+ margin: 10px 0;
 }
 .OTSlogoHolder img{
  width: 100%;
@@ -20,6 +20,7 @@
 }
 .OTSlogoHolder{
     width: 250px;
+
 }
  .ListsContainerOfPiechart{
   display: flex;
@@ -399,6 +400,17 @@ height: 100%;
      width: 100%;
      height: 100%;
   }
+  .StdNameForProfile{
+    width: 35%;
+    display: flex;
+  }
+  .StdNameForProfile p{
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .OTSRightSideBarSubContainer{
     background-color: #e5f6fb;
    border: 2px solid;
@@ -749,8 +761,8 @@ height: 100%;
   flex-direction: column;
   height: auto;
   overflow: auto;
-  min-height: 60vh;
-  max-height: 80vh;
+  /* min-height: 60vh;
+  max-height: 80vh; */
   overflow-y: auto;
   padding: 1rem 1rem 1rem 3rem;
 }
@@ -786,7 +798,7 @@ height: 100%;
 .forTotalWidth{
   border: 1px solid black;
   padding: 10px;
-  width: 100%;
+  width: 90%;
 }
 .displayIcon{
   width: 7%;
@@ -827,8 +839,9 @@ height: 100%;
   padding: 0.7rem;
   word-wrap: break-word;
   border-left: 1px solid gray;
-  width: 190px;
+  width: 10%;
 }
+
 .userImageSubDiv img{
 width: 100%;
 height: 100%;
@@ -843,9 +856,17 @@ height: 100%;
   align-items: center;
   margin: 10px;
 }
-.userDetailsHolder p{
+
+.StdNameForData{
+  display: flex;
+  width: 35%;
+}
+.StdNameForData p{
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 700; 
+  white-space: nowrap; 
+  text-overflow: ellipsis; 
+  overflow: hidden;
 }
 .instructionList{
 padding: 1rem 3rem;
@@ -1380,7 +1401,7 @@ background-position: center center, /* Center image */ center 10%, center 30%,
   75% 90%, 100% 10%, 100% 30%, 100% 70%, 100% 90%, 0% center, 25% center;
 }
 .OTSQuestionOptionsContainerForScroll{
-  overflow-y: scroll;
+  overflow-y: auto;
   height: 60vh;
   padding: 1rem;
 }
@@ -1425,8 +1446,8 @@ display: none;
   flex-direction: column;
   height: auto;
   overflow: auto;
-  min-height: 60vh;
-  max-height: 75vh;
+  /* min-height: 60vh;
+  max-height: 75vh; */
   overflow-y: auto;
   padding: 1rem 1rem 1rem 3rem;
 }
@@ -1722,7 +1743,7 @@ display: none;
   overflow: auto;
   overflow-y: auto;
   width: 100%;
-  height: 40vh;
+  /* height: 40vh; */
 }
 .instrctionMianHeading{
   background-color: lightblue;
