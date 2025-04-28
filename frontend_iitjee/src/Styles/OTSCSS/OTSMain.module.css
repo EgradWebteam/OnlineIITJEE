@@ -12,7 +12,7 @@
 }
 .OTSMainHeader{
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
- margin: 10px 0;
+    height: 6vh;
 }
 .OTSlogoHolder img{
  width: 100%;
@@ -20,7 +20,6 @@
 }
 .OTSlogoHolder{
     width: 250px;
-
 }
  .ListsContainerOfPiechart{
   display: flex;
@@ -406,7 +405,6 @@ height: 100%;
   }
   .StdNameForProfile p{
     font-size: 15px;
-    font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -568,7 +566,7 @@ height: 100%;
   display: block;
 }
 .QuestionNavigationBTns{
-  /* border: 1px solid rgb(204, 204, 204); */
+  border: 1px solid rgb(204, 204, 204);
   /* display: flex;
   align-items: center;
   justify-content: space-between; */
@@ -753,6 +751,13 @@ height: 100%;
   text-decoration: underline;
   margin-bottom: 5px;
 }
+.examInstructionsContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+  overflow: hidden; /* Prevent body scroll */
+}
+
 .instrcutionstudentProfileDiv{
   display: flex;
 }
@@ -761,8 +766,6 @@ height: 100%;
   flex-direction: column;
   height: auto;
   overflow: auto;
-  /* min-height: 60vh;
-  max-height: 80vh; */
   overflow-y: auto;
   padding: 1rem 1rem 1rem 3rem;
 }
@@ -841,7 +844,6 @@ height: 100%;
   border-left: 1px solid gray;
   width: 10%;
 }
-
 .userImageSubDiv img{
 width: 100%;
 height: 100%;
@@ -1401,7 +1403,7 @@ background-position: center center, /* Center image */ center 10%, center 30%,
   75% 90%, 100% 10%, 100% 30%, 100% 70%, 100% 90%, 0% center, 25% center;
 }
 .OTSQuestionOptionsContainerForScroll{
-  overflow-y: auto;
+  overflow-y: scroll;
   height: 60vh;
   padding: 1rem;
 }
@@ -1435,7 +1437,7 @@ display: none;
     /* height: 70vh; */
 }
 .QuestionNavigationBTns{
-  /* border: 1px solid rgb(204, 204, 204); */
+  border: 1px solid rgb(204, 204, 204);
   padding: 7px;
   width: 100%;
   margin-top: 30px;
@@ -1446,8 +1448,6 @@ display: none;
   flex-direction: column;
   height: auto;
   overflow: auto;
-  /* min-height: 60vh;
-  max-height: 75vh; */
   overflow-y: auto;
   padding: 1rem 1rem 1rem 3rem;
 }
@@ -1619,7 +1619,7 @@ display: none;
   /* height: 80vh; */
 }
 .QuestionNavigationBTns{
-  /* border: 1px solid rgb(204, 204, 204); */
+  border: 1px solid rgb(204, 204, 204);
   padding: 10px;
   width: 100%;
   margin-top: 30px;
@@ -1650,7 +1650,14 @@ display: none;
   .ListsContainerOfPiechart{
     padding: 0px 20px;
     margin: 0 11px;
-    } 
+    }
+    .StudentProfileHolderOTS,
+.rightChevronBtn, 
+.OTSRightSideBarSubContainer,
+.SectionsAndSubjectDiv,
+.chooseQuestionInRightSideBar{
+  display: none;
+}
 }
   
 
@@ -1727,13 +1734,12 @@ display: none;
   width: 100%;
   height: 5rem;
 }
+
 .instructionSubdiv{
   display: flex;
   flex-direction: column;
   height: auto;
   overflow: auto;
-  min-height: 60vh;
-  max-height: 75vh;
   overflow-y: auto;
   padding: 1rem 1rem 1rem 1.5rem;
 }
@@ -1743,7 +1749,7 @@ display: none;
   overflow: auto;
   overflow-y: auto;
   width: 100%;
-  /* height: 40vh; */
+  height: 40vh;
 }
 .instrctionMianHeading{
   background-color: lightblue;
@@ -1767,13 +1773,6 @@ display: none;
 }
 .OTSRightSideBarMainContainer{
   /* display: none; */
-}
-.StudentProfileHolderOTS,
-.rightChevronBtn, 
-.OTSRightSideBarSubContainer,
-.SectionsAndSubjectDiv,
-.chooseQuestionInRightSideBar{
-  display: none;
 }
 .OTSMainFileSubContainer{
   display: flex;
@@ -1860,7 +1859,7 @@ padding: 3px;
   gap: 1.5rem;
 }
 ._QuestionNavigationBTns_8o7gq_863 {
-  /* border: 1px solid rgb(204, 204, 204); */
+  border: 1px solid rgb(204, 204, 204);
   padding: 10px;
   width: 100%;
   margin-top: 30px;
@@ -1869,7 +1868,7 @@ padding: 3px;
   gap: 0px;
 }
 .QuestionNavigationBTns{
-  /* border: 1px solid rgb(204, 204, 204); */
+  border: 1px solid rgb(204, 204, 204);
   padding: 10px;
   width: 100%;
   margin-top: 30px;
