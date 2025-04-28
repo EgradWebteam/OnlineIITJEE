@@ -45,16 +45,48 @@ export default function StudentDashboard() {
     
       setIsLoading(false);
     }, [location.state]);
+    // useEffect(() => {
+    //   const logoutTimer = setTimeout(() => {
+    //     console.log("🔒 Auto logout triggered after 4 hours");
+    //     handleLogout();
+    //   }, 4 * 60 * 60 * 1000); 
+    
+    //   return () => clearTimeout(logoutTimer); 
+    // }, []);
+ 
+    // Auto Logout When user is idle in the dashboard 30mins and also closes the tab
     useEffect(() => {
-      const logoutTimer = setTimeout(() => {
-        console.log("🔒 Auto logout triggered after 4 hours");
-        handleLogout();
-      }, 4 * 60 * 60 * 1000); 
+      let idleTimer;
     
-      return () => clearTimeout(logoutTimer); 
+      const resetIdleTimer = () => {
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => {
+          console.log("Auto logout triggered after 30 minutes of complete inactivity");
+          handleLogout();
+        }, 30 * 60 * 1000); // 30 minutes
+      };
+    
+      const events = ["mousemove", "keydown", "wheel", "scroll", "touchstart"];
+      events.forEach(event => window.addEventListener(event, resetIdleTimer));
+    
+      resetIdleTimer(); // Start idle timer initially
+    
+      // Handle tab close event
+      const handleBeforeUnload = (event) => {
+        handleLogout();  // Perform logout when tab is closed
+      };
+    
+      // Add the beforeunload event listener
+      window.addEventListener("beforeunload", handleBeforeUnload);
+    
+      // Cleanup function to remove event listeners
+      return () => {
+        events.forEach(event => window.removeEventListener(event, resetIdleTimer));
+        clearTimeout(idleTimer);
+        window.removeEventListener("beforeunload", handleBeforeUnload);  // Remove beforeunload listener
+      };
     }, []);
-    
-    
+      
     const handleLogout = async () => {
 
       const sessionId = localStorage.getItem("sessionId");
@@ -83,7 +115,7 @@ export default function StudentDashboard() {
         }
       } catch (error) {
         console.error("Logout error:", error);
-        alert("Something went wrong. Please try again.");
+        // alert("Something went wrong. Please try again.");
       }
     };
     
