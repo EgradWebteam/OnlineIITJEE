@@ -163,21 +163,54 @@ router.post("/reset-passwordadmin", async (req, res) => {
       }
 });
 router.get('/fetchTotalData', async (req, res) => {
-  const sql = `
+  const portalid = 1;
+  let sql = `
     SELECT
       (SELECT COUNT(*) FROM iit_db.iit_questions) AS total_questions,
-      (SELECT COUNT(*) FROM iit_db.iit_student_registration) AS total_users_registered, -- Correct table name here
+      (SELECT COUNT(*) FROM iit_db.iit_student_registration) AS total_users_registered,
       (SELECT COUNT(*) FROM iit_db.iit_questions WHERE question_id IS NOT NULL) AS total_questions_uploaded,
-      (SELECT COUNT(*) FROM iit_db.iit_course_creation_table) AS total_courses,
+      (SELECT COUNT(*) FROM iit_db.iit_course_creation_table WHERE portal_id = ?) AS total_courses,
       (SELECT COUNT(*) FROM iit_db.iit_test_creation_table) AS total_tests;
   `;
 
   try {
-    const [rows] = await db.query(sql); // db.query is assumed to be a Promise-based query method
-    res.json(rows[0]); // Respond with the aggregated data
+    const [rows] = await db.query(sql, [portalid]); 
+    res.json(rows[0]);
   } catch (err) {
     console.error('Error fetching totals:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+router.get('/fetchOrvlCounts', async (req, res) => {
+  const portalid = 3;  
+  const sql = `
+    SELECT 
+  -- Count of courses for portal_id 3
+  (SELECT COUNT(*) 
+   FROM iit_db.iit_course_creation_table 
+   WHERE portal_id = ?) AS total_courses,
+
+  -- Count of topics (no portal_id filter)
+  (SELECT COUNT(*) 
+   FROM iit_db.iit_orvl_topic_creation) AS total_topics,
+
+  -- Count of non-null lecture_video_link entries (from iit_orvl_lecture_names)
+  (SELECT COUNT(*) 
+   FROM iit_db.iit_orvl_lecture_names 
+   WHERE lecture_video_link IS NOT NULL) AS total_videos
+  `;
+
+  try {
+    const [rows] = await db.query(sql, [portalid, portalid]);
+    res.json({
+      total_courses: rows[0].total_courses,
+      total_topics: rows[0].total_topics,
+      total_videos: rows[0].total_videos
+    });
+  } catch (err) {
+    console.error('Error fetching counts:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 module.exports = router;

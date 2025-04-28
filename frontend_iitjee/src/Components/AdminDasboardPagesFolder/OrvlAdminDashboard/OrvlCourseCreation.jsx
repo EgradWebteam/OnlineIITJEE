@@ -3,9 +3,7 @@ import DynamicTable from "./ORVLDynamicTable.jsx";
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import Styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css";
 import CourseForm from "../AdminDashboardFiles/CourseForm.jsx";
-
-
-const CourseCreationTab = ({portalid}) => {
+const OrvlCourseCreationTab = ({portalid}) => {
   const [courses, setCourses] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); 
@@ -21,7 +19,7 @@ const CourseCreationTab = ({portalid}) => {
           setCourses(data.data || []);
 
         } else {
-          console.error("Error fetching courses:", data.message || "Unknown error");
+          //console.error("Error fetching courses:", data.message || "Unknown error");
         }
       })
       .catch((err) => console.error("Error loading courses", err));
@@ -79,27 +77,27 @@ const CourseCreationTab = ({portalid}) => {
   
       const result = await response.json();
       if (result.success) {
-        console.log(`Course status updated to ${newStatus}`);
+        //console.log(`Course status updated to ${newStatus}`);
         fetchCourses();
       } else {
-        console.error("Failed to update course status:", result.message);
+        //console.error("Failed to update course status:", result.message);
       }
     } catch (error) {
-      console.error("Error toggling course status:", error);
+      //console.error("Error toggling course status:", error);
     }
   };
   const columns = courses.length
 
     ? Object.keys(courses[0])
 
-        .filter((key) => key !== "subject_ids" && key !== "exam_ids" && key !=="card_image") // Filter out 'subject_ids' and 'exam_ids'
+        .filter((key) => key !== "subject_ids" && key !== "exam_ids" && key !=="card_image") 
         .map((key) => ({
           header: key.replace(/_/g, " ").toUpperCase(),
           accessor: key,
         }))
     : [];
-    console.log(columns)
-  // Get current courses for the current page
+    // console.log(columns)
+ 
   const indexOfLastCourse = currentPage * itemsPerPage;
   const indexOfFirstCourse = indexOfLastCourse - itemsPerPage;
   const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
@@ -160,4 +158,4 @@ const CourseCreationTab = ({portalid}) => {
   );
 };
 
-export default CourseCreationTab;
+export default OrvlCourseCreationTab;

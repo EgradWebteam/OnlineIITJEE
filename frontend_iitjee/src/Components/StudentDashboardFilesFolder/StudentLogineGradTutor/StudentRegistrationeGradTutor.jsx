@@ -688,7 +688,7 @@ if (message) {
   
     formDataToSend.append("termsAccepted", formData.termsAccepted.toString());
   
-    console.log("FormData Object:", Object.fromEntries(formDataToSend.entries()));
+    //console.log("FormData Object:", Object.fromEntries(formDataToSend.entries()));
   
     try {
       const response = await fetch(`${BASE_URL}/student/studentRegistration`, {
@@ -776,9 +776,9 @@ if (message) {
                       }),
                     }
                   );
-                  console.log("Payment success response", paymentsuccess);
+                  //console.log("Payment success response", paymentsuccess);
                 } catch (error) {
-                  console.error("Error processing payment success:", error);
+                  //console.error("Error processing payment success:", error);
                 }
               },
               prefill: {
@@ -811,16 +811,16 @@ if (message) {
                     }),
                   }
                 );
-                console.error("Payment failed");
-                console.log("Payment failure response", paymentfailure);
+                //console.error("Payment failed");
+                //console.log("Payment failure response", paymentfailure);
               } catch (error) {
-                console.error("Error processing payment failure:", error);
+                //console.error("Error processing payment failure:", error);
               }
             });
   
             paymentObject.open();
           } catch (error) {
-            console.error("Error creating payment session:", error);
+            //console.error("Error creating payment session:", error);
           }
         }
   
@@ -828,7 +828,7 @@ if (message) {
           throw new Error("Network response was not ok");
         }
   
-        console.log("Success:", result);
+        //console.log("Success:", result);
   
         alert(
           "Registration successful! Please check your email for further instructions."

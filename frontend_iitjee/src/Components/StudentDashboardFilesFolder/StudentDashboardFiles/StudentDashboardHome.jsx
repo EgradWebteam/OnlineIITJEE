@@ -7,7 +7,7 @@ export default function StudentDashboardHome({
   studentName,
 }) {
   return (
-    <div>
+    <div className={styles.DashboardHomePageContainer}>
       <div className={styles.gretingContainer}>
         <h3 className={styles.welcomeNoteStudentDashboard}>
           Welcome to eGRADTutor UG Online Courses.

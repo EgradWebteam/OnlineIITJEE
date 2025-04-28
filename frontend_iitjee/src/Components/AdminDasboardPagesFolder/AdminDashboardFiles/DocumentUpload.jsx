@@ -154,7 +154,7 @@ const DocumentUpload = () => {
     );
   };
   const handleOpen = (row) => {
-    console.log("Open clicked for:", row);
+    //console.log("Open clicked for:", row);
     
   };
 
@@ -173,11 +173,11 @@ const DocumentUpload = () => {
       alert("Please make sure all fields are filled.");
       return;
     }
-    console.log("Form Submitted with Data: ", {
-      test: selectedTest,
-      subject: selectedSubject,
-      section: selectedSubject,
-    });
+    // console.log("Form Submitted with Data: ", {
+    //   test: selectedTest,
+    //   subject: selectedSubject,
+    //   section: selectedSubject,
+    // });
   };
 
   const handleFileClick = (e) => {

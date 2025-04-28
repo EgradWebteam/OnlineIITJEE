@@ -39,7 +39,7 @@ const OrvlTopicCreation = () => {
   }, []);
 
   const handleEdit = (row) => {
-    console.log("✏️ Edit clicked for:", row);
+    //console.log("✏️ Edit clicked for:", row);
     setSelectedTopic(row);  
     setShowForm(true); 
   };

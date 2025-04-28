@@ -166,7 +166,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    padding: 3.5rem 0;
+    padding: 2.5rem 0;
   }
   .popup_content{
     position: relative;
@@ -177,7 +177,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   }
   .popupMessage{
     text-align: center;
-    font-size: 25px;
+    font-size: 20px;
     padding: 1.5rem ;
     color: green;
   }
@@ -193,7 +193,7 @@ color: white;
       align-items: center;
       flex-wrap: wrap;
       gap: 1rem;
-      margin:  1rem;
+      margin:  50px -10px;
   }
   }
   

@@ -75,7 +75,7 @@ export default function OTSRootFile() {
           method: "DELETE",
         })
           .then((res) => {
-            console.log("Deletion request sent on window close", res.status);
+            //console.log("Deletion request sent on window close", res.status);
           })
           .catch((err) => {
             console.error(
@@ -186,7 +186,7 @@ export default function OTSRootFile() {
     }
   };
   const handleBlur = () => {
-    console.log("Window is not focused");
+    //("Window is not focused");
     setViolationCount((prevCount) => {
       const newCount = prevCount + 1;
 
@@ -214,15 +214,12 @@ export default function OTSRootFile() {
       document.addEventListener("keydown", handleKeyDown);
       document.addEventListener("keyup", handleKeyUp);
     } else {
-      console.log("Page Visibility API is not supported");
+      //console.log("Page Visibility API is not supported");
     }
 
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-
-
-      window.removeEventListener("blur", handleBlur);
-
+   window.removeEventListener("blur", handleBlur);
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
     };
