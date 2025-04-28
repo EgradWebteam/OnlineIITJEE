@@ -626,14 +626,11 @@ router.delete("/delete/:courseId", async (req, res) => {
 });
 
 router.get("/GetAllCourses/:portalid", async (req, res) => {
-  const { portalid } = req.params; // Get the portal ID from request parameters
+  const { portalid } = req.params; 
   const conn = await db.getConnection();
 
   try {
-    // Start a database transaction (if necessary, but can be skipped for a read-only query)
     await conn.beginTransaction();
-
-    // Query to get all courses with related subjects and test types
     let query = ` 
     SELECT 
       c.course_creation_id,

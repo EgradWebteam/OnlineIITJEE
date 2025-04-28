@@ -5,23 +5,16 @@ import { FaBook, FaFileAlt, FaUserGraduate, FaQuestionCircle } from 'react-icons
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 
 const DashBoard = () => {
-   
-
-    // State variables to store the values from the API
     const [totalCourses, setTotalCourses] = useState(0);
     const [totalTests, setTotalTests] = useState(0);
     const [totalUsersRegistered, setTotalUsersRegistered] = useState(0);
     const [totalQuestions, setTotalQuestions] = useState(0);
     const [totalQuestionsUploaded, setTotalQuestionsUploaded] = useState(0);
-
-    // State for animating the numbers
     const [animatedCourses, setAnimatedCourses] = useState(0);
     const [animatedTests, setAnimatedTests] = useState(0);
     const [animatedUsers, setAnimatedUsers] = useState(0);
     const [animatedQuestions, setAnimatedQuestions] = useState(0);
     const [animatedQuestionsUploaded, setAnimatedQuestionsUploaded] = useState(0);
-
-    // Fetch data from the API using fetch() method
     useEffect(() => {
         const fetchData = async () => {
             try {

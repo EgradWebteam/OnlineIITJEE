@@ -12,7 +12,6 @@ const CourseCreationTab = ({portalid}) => {
   const [editCourseData, setEditCourseData] = useState(null); 
   const [searchTerm, setSearchTerm] = useState("");
   const fetchCourses = () => {
-const portalid = 1;
     fetch(`${BASE_URL}/CourseCreation/GetAllCourses/${portalid}`)
       .then((res) => res.json())
       .then((data) => {

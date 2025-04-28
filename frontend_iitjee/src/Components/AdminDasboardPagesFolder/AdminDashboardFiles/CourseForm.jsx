@@ -36,23 +36,32 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
     }
   }, [courseData]);
   useEffect(() => {
-    fetch(`${BASE_URL}/CourseCreation/OrvlExamsTypesofCourses`)
-      .then((response) => response.json())
-      .then((data) => {
-        setExams(data.exams || []);
-        setTypes(data.coursetypes || []);
-      })
-      .catch((error) => console.error("Error fetching exams/types:", error));
-  }, []);
+    if (portalid === 3) {
+      // Fetch only when portalid is 3
+      //console.log("Fetching data for portalid 3...");
+      fetch(`${BASE_URL}/CourseCreation/OrvlExamsTypesofCourses`)
+        .then((response) => response.json())
+        .then((data) => {
+          setExams(data.exams || []);
+          setTypes(data.coursetypes || []);
+          
+        })
+        .catch((error) => console.error("Error fetching exams/types:", error));
+    }
+  }, [portalid]); 
+  
   useEffect(() => {
-    fetch(`${BASE_URL}/CourseCreation/CourseCreationFormData`)
-      .then((response) => response.json())
-      .then((data) => {
-        setExams(data.exams || []);
-        setTypes(data.types || []);
-      })
-      .catch((error) => console.error("Error fetching exams/types:", error));
-  }, []);
+    if (portalid === 1) {
+      fetch(`${BASE_URL}/CourseCreation/CourseCreationFormData`)
+        .then((response) => response.json())
+        .then((data) => {
+          setExams(data.exams || []);
+          setTypes(data.types || []);
+        })
+        .catch((error) => console.error("Error fetching exams/types:", error));
+    }
+  }, [portalid]); 
+  
   useEffect(() => {
     if (selectedExamId) {
       fetch(`${BASE_URL}/CourseCreation/ExamSubjects/${selectedExamId}`)
@@ -370,46 +379,49 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
           </div>
 
           <div className={styles.CourseFormSubPage}>
-          {portalid == 1 && (
-  <div className={styles.SelectBoxForCourses}>
-    <div className={styles.HeadingForSubjectsSelectCourse}>
-      <label>Type of Test:</label>
-    </div>
-    {types.map((testType) => (
-      <label key={testType.type_of_test_id}>
-        <input
-          type="checkbox"
-          value={testType.type_of_test_id}
-          checked={selectedTestTypes.includes(testType.type_of_test_id?.toString())}
-          onChange={(e) => {
-            const value = e.target.value;
-            if (e.target.checked) {
-              setSelectedTestTypes([...selectedTestTypes, value]);
-            } else {
-              setSelectedTestTypes(selectedTestTypes.filter((id) => id !== value));
-            }
-          }}
-        />
-        {testType.type_of_test_name}
-      </label>
-    ))}
-  </div>
-)}
-
-            {portalid == 3 && <div className={styles.SelectBoxForCourses}>
-              <div className={styles.InputBoxForCourses2}>
+            {portalid == 1 && (
+              <div className={styles.SelectBoxForCourses}>
                 <div className={styles.HeadingForSubjectsSelectCourse}>
-                  <label>Type of Course:</label></div>
-                <select value={selectedType || ""} onChange={handleTypeSelectChange}>
-                  <option value="">Select a course type</option>
-                  {types.map((type) => (
-                    <option key={type.orvl_course_type_id} value={type.orvl_course_type_id}>
-                      {type.orvl_course_type_name}
-                    </option>
-                  ))}
-                </select>
+                  <label>Type of Test:</label>
+                </div>
+                {types.map((testType) => (
+                  <label key={testType.type_of_test_id}>
+                    <input
+                      type="checkbox"
+                      value={testType.type_of_test_id}
+                      checked={selectedTestTypes.includes(testType.type_of_test_id?.toString())}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (e.target.checked) {
+                          setSelectedTestTypes([...selectedTestTypes, value]);
+                        } else {
+                          setSelectedTestTypes(selectedTestTypes.filter((id) => id !== value));
+                        }
+                      }}
+                    />
+                    {testType.type_of_test_name}
+                  </label>
+                ))}
               </div>
-            </div>}
+            )}
+            {portalid == 3 && (
+              <div className={styles.SelectBoxForCourses}>
+                <div className={styles.InputBoxForCourses2}>
+                  <div className={styles.HeadingForSubjectsSelectCourse}>
+                    <label>Type of Course:</label>
+                  </div>
+                  <select value={selectedType || ""} onChange={handleTypeSelectChange}>
+                    <option value="">Select a course type</option>
+                    {types.map((type) => (
+                      <option key={type.orvl_course_type_id} value={type.orvl_course_type_id}>
+                        {type.orvl_course_type_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
+
             <div className={styles.InputSelectBoxForCourses}>
               <label>Select Course Image:</label>
               <select

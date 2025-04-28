@@ -68,13 +68,13 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
             },
           });
 
-      console.log("Topic submitted successfully:", response.data);
+      //console.log("Topic submitted successfully:", response.data);
       setLoading(false);
       alert(topic ? "Topic updated successfully!" : "Topic created successfully!"); // Alert on success
       onSuccess();
       onClose();
     } catch (error) {
-      console.error("Error submitting topic:", error.response?.data || error.message);
+      //console.error("Error submitting topic:", error.response?.data || error.message);
       setLoading(false);
       alert("Error submitting the topic. Please try again."); // Alert on error
     }

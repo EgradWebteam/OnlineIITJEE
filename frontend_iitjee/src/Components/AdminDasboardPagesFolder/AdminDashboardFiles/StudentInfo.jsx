@@ -40,16 +40,16 @@ const [showPopup, setShowPopup] = useState(false);
     const fetchCourses = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/studentInfo/coursesName`);
-        console.log("Fetched courses:", response.data);
+        //console.log("Fetched courses:", response.data);
 
         if (Array.isArray(response.data)) {
           setCourses(response.data);
         } else {
-          console.warn("Courses API did not return an array:", response.data);
+          //console.warn("Courses API did not return an array:", response.data);
           setCourses([]); // fallback
         }
       } catch (error) {
-        console.error("Error fetching courses:", error);
+        //console.error("Error fetching courses:", error);
         setCourses([]); // fallback
       }
     };

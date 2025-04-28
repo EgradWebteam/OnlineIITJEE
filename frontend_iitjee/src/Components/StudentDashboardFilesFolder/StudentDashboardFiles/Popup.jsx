@@ -58,7 +58,7 @@ const Popup = ({
   // Track video progress
   const handleProgress = (state) => {
     playedTimeRef.current = state.playedSeconds;
-    console.log("Current Played Time: ", state.playedSeconds);
+    //console.log("Current Played Time: ", state.playedSeconds);
 
     localStorage.setItem(
       `${lecture.orvl_lecture_name_id}:playedTime`,
@@ -178,17 +178,16 @@ const Popup = ({
   // };
   const handlePause = () => {
     const currentTime = playerRef.current?.getCurrentTime(); // Safe access with optional chaining
-    console.log(
-      `Saving time ${currentTime} for video ${lecture.orvl_lecture_name_id}`
-    );
+    // console.log(
+    //   `Saving time ${currentTime} for video ${lecture.orvl_lecture_name_id}`
+    // );
 
     // Only store duration if it's valid
     if (videoDuration && videoDuration !== 0) {
-      console.log(
-        `Lecture ID: ${lecture.orvl_lecture_name_id}, Current Time: ${currentTime}`
-      );
-      // localStorage.setItem(`${lecture.orvl_lecture_name_id}`, currentTime);
-      // localStorage.setItem(`${lecture.orvl_lecture_name_id}:totalTime`, videoDuration);  // Save the total video duration when paused
+      // console.log(
+      //   `Lecture ID: ${lecture.orvl_lecture_name_id}, Current Time: ${currentTime}`
+      // );
+    
     } else {
       console.error("Video duration is not valid");
     }
@@ -207,25 +206,21 @@ const Popup = ({
     if (duration && duration > 0) {
       setVideoDuration(duration);
       setIsPlayerReady(true);
-      console.log("Video Duration: ", duration);
+      //console.log("Video Duration: ", duration);
     } else {
-      console.log("Duration is not available immediately, polling...");
+      //console.log("Duration is not available immediately, polling...");
       const durationInterval = setInterval(() => {
         const polledDuration = playerRef.current?.getDuration();
         if (polledDuration && polledDuration > 0) {
           clearInterval(durationInterval);
           setVideoDuration(polledDuration);
           setIsPlayerReady(true);
-          console.log("Video Duration (After Polling): ", polledDuration);
+          //console.log("Video Duration (After Polling): ", polledDuration);
         }
       }, 1000);
     }
   };
 
-  // const savedTime = localStorage.getItem(`${lecture.orvl_lecture_name_id}:playedTime`);
-  // if (savedTime) {
-  //   playerRef.current.seekTo(parseFloat(savedTime));  // Seek to saved time if available
-  // }
 
   const handlePlay = () => {
     if (isVideoPaused) {
@@ -234,16 +229,12 @@ const Popup = ({
   };
 
   useEffect(() => {
-    // This will ensure that the player is ready before performing operations
+
     if (playerRef.current && playerRef.current.getDuration() > 0) {
       setIsPlayerReady(true);
     }
   }, [playerRef]);
-
-
-  // stores question ID of currently viewed solution
-  const [solutionTypes, setSolutionTypes] = useState({}); // { [questionId]: 'video' | 'image' }
-  // 'video' or 'image'
+  const [solutionTypes, setSolutionTypes] = useState({}); 
   const [solutionVisibility, setSolutionVisibility] = useState(null);
 
   const currentQuestion = exercise?.questions?.[currentQuestionIndex];
@@ -265,12 +256,12 @@ const Popup = ({
     if (currentQuestion.exercise_question_type === 'NATD' || currentQuestion.exercise_question_type === 'MCQ') {
       if (userAnswer.trim() === '') {
         alert('Please submit an answer before proceeding.');
-        return; // Prevent submission if the answer is empty
+        return; 
       }
     } else if (currentQuestion.exercise_question_type === 'MSQ') {
       if (selectedOptions.length === 0) {
         alert('Please submit an answer before proceeding.');
-        return; // Prevent submission if no options are selected
+        return; 
       }
     }
     if (currentQuestion.exercise_question_type === "NATD") {
@@ -304,17 +295,17 @@ const Popup = ({
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`); // Will skip everything below if failed
+        throw new Error(`HTTP error! Status: ${response.status}`); 
       }
 
       const data = await response.json();
-      console.log("Answer submitted successfully:", data);
+      //console.log("Answer submitted successfully:", data);
 
       await fetchExerciseStatus();
-      // await useranswervalue();
+     
     } catch (error) {
-      console.error("Error submitting answer:", error);
-      setFeedback("Failed to submit answer. Please try again."); // Optional feedback for user
+      //console.error("Error submitting answer:", error);
+      setFeedback("Failed to submit answer. Please try again."); 
     }
   };
 
@@ -338,8 +329,8 @@ const Popup = ({
   const getStatus = (questionId) => {
     if (exerciseStatus && typeof exerciseStatus === "object") {
       const status = exerciseStatus[questionId];
-      console.log(status);
-      return status; // No default here
+      //console.log(status);
+      return status; 
     }
     return undefined;
   };

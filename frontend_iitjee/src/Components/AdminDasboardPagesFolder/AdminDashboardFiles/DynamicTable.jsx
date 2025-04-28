@@ -191,7 +191,7 @@ const DynamicTable = ({
                           : styles.deactivate
                       }`}
                       onClick={() => {
-                        console.log("Toggle clicked for row:", row);
+                        // console.log("Toggle clicked for row:", row);
                         onToggle(row);
                       }}
                       title={
