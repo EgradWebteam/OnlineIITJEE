@@ -1,8 +1,8 @@
-import React, { lazy, useEffect, useState,Suspense, useCallback } from 'react'
+import React, { lazy, useEffect, useState,Suspense, useCallback  } from 'react'
 import StudentDashboardHeader from './StudentDashboardHeader.jsx';
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import StudentDashboardLeftSideBar from './StudentDashboardLeftSidebar.jsx';
-import { useLocation,useNavigate  } from 'react-router-dom';
+import { useLocation,useNavigate, useParams  } from 'react-router-dom';
 import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx'
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js'; 
 const StudentDashboardBookmarks = lazy(() => import('./StudentDashboardBookmarks.jsx'));
@@ -13,6 +13,7 @@ const StudentDashboard_MyResults = lazy(() => import("./StudentDashboard_MyResul
 const StudentDashboard_AccountSettings = lazy(() => import("./StudentDashboard_AccountSettings.jsx"));
 
 export default function StudentDashboard() {
+  const { userId: urlUserId } = useParams();  
   const [activeSection, setActiveSection] = useState("dashboard");
    const [activeSubSection, setActiveSubSection] = useState("profile");
   const [isLoading, setIsLoading] = useState(true);
@@ -32,6 +33,23 @@ export default function StudentDashboard() {
       localStorage.setItem("activeSection", section);
     }, []);
     const location = useLocation();
+    useEffect(() => {
+      const localStorageUserId = localStorage.getItem('userId');
+      console.log('URL User ID:', urlUserId); 
+      console.log('LocalStorage User ID:', localStorageUserId); 
+    
+      if (urlUserId !== localStorageUserId) {
+        console.log('User IDs do not match, redirecting to Error page.');
+        navigate('/LoginPage');
+        return;
+      }
+    
+      console.log('User IDs match, proceeding with loading dashboard.');
+      setIsLoading(false);
+    
+    }, [urlUserId, navigate]);
+    
+  
     useEffect(() => {
       const sectionFromRoute = location.state?.activeSection;
       if (sectionFromRoute && !sessionStorage.getItem("sectionFromRouteUsed")) {

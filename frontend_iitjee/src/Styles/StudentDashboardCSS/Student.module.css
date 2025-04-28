@@ -216,9 +216,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   .studentLoginLinks a:hover {
     text-decoration: underline;
   }
-  .backToLoginLink{
-    margin-top: 10%;
-  }
+
   .passwordInputWrapper {
     position: relative;
     display: flex;
@@ -242,6 +240,21 @@ input[type="password"]::-webkit-textfield-decoration-container {
     color: red;
     font-size: 0.9rem;
   }
+  .backToLogin {
+    margin-top: 10px;
+    text-align: center;
+  }
+ .backToLoginButton{
+  border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.25s;
+    background-color: white;
+    color: blue;
+ }
   
   @media(max-width:1150px){
     .studentLoginHomePage{
