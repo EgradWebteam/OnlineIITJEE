@@ -284,7 +284,7 @@ button.backslash {
 .MainDivStudentDasboard {
   background: white;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  height: 7vh;
+  /* height: 7vh; */
   padding: 5px;
 }
 .studentLogo {
@@ -305,7 +305,7 @@ button.backslash {
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  margin: 1rem 2rem;
+  margin: 1rem ;
   
 }
 .toggleTypeButtons button {
@@ -374,7 +374,9 @@ color: black;
 }
 .stuentDashboardMainContentContainer {
   display: flex;
-  /* height: 100vh; */
+  margin: 3px;
+   height: 100vh; 
+   overflow: hidden;
 }
 .studentDashboardLeftsidebar {
   width: 280px;
@@ -430,8 +432,8 @@ color: black;
 }
 .StudentDashboardRightSideContentHolder {
   width: 80%;
-margin: 1rem 1rem auto;
-overflow-y: scroll;
+margin: 1rem  auto;
+overflow-y: auto;
 }
 .LectureHeader {
   display: flex;
@@ -766,12 +768,10 @@ height: 100%;
 }
 
 
-/* Sidebar Responsive Behavior */
-
 /* student dashboard test  container css */
-.testDetailsConatinerMainDiv {
+ .testDetailsConatinerMainDiv {
   padding: 2rem;
-}
+} 
 
 .goBackInTestContainerDiv {
   text-align: right;
@@ -934,7 +934,7 @@ width: 100%;
 height: 100%;
   }
   .questionImageDivBookMarks{
-    width: 300px;
+    width: 100%;
     height: auto;
   }
   .bookDeleteConatainer{
@@ -1058,10 +1058,13 @@ height: 100%;
       .studentDashboardHamburgerMenu {
         display: block;
         position: absolute;
-        top: 55px;
-        left: -1rem;
+        top: 77px;
+        left: -1.5rem;
         z-index: 1100;
       }
+      .testDetailsConatinerMainDiv {
+        padding: 10px;
+      } 
     }
 
   
@@ -1107,6 +1110,14 @@ height: 100%;
       font-size: 10px;
       padding: 5px;
     }
+    .solutionBtnInBookMarks{
+      font-size: 13px;
+      padding: 7px ;
+    }
+.CourseNameForTest{
+  font-size: 15px;
+}
+
   }
   @media (max-width:425px) {
     .testContainerSub{
@@ -1161,7 +1172,7 @@ height: 100%;
   background-color: white;
   border-radius: 1rem 1rem 0px 0px;
   border: none;
-  padding: 0.5rem;
+  padding: 6px;
   font-size: 13px;
   cursor: pointer;
 }

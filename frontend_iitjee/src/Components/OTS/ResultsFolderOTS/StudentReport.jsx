@@ -341,36 +341,30 @@ const StudentReport = ({ testId, studentId }) => {
                 verticalAlign="bottom"
                 height={36}
                 content={() => (
-                  <ul
+                  <div >
+                  <ul className={styles.ListsContainerOfPiechart}
                     style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      listStyle: "none",
-                      padding: 0,
+                     
                     }}
                   >
                     {pieChartData1.map((entry, index) => (
-                      <li
+                      <li className={styles.listsofPiechart}
                         key={`item-${index}`}
                         style={{
-                          margin: "0 1rem",
+                          // margin: "0 1rem",
                           color: pieChart1COLORS[index],
                         }}
                       >
-                        <span
+                        <span className={styles.SubListsofPiechart}
                           style={{
-                            display: "inline-block",
-                            width: 10,
-                            height: 10,
                             backgroundColor: pieChart1COLORS[index],
-                            marginRight: 6,
-                            borderRadius: "50%",
                           }}
                         />
                         {entry.name}: {entry.value}
                       </li>
                     ))}
                   </ul>
+                  </div>
                 )}
               />
             </PieChart>
