@@ -194,7 +194,7 @@ router.post(
 
 // ENV VARIABLES (can also use dotenv)
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
-const sasToken = process.env.AZURE_SAS_TOKEN;
+const sasToken = process.env.AZURE_SAS_TOKEN_UPLOADS;
 const containerName = process.env.AZURE_CONTAINER_NAME;
 const STUDENT_PHOTO_FOLDER = "cards";
 
