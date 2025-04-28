@@ -148,7 +148,7 @@ const itemsPerPage = 5;
           <FaSearch className={styles.searchIcon} />
            <input 
              type="text" 
-             placeholder="Search courses..." 
+             placeholder="Search tests..." 
              className={styles.searchInput}
              value={searchTerm}
              onChange={handleSearchChange} 

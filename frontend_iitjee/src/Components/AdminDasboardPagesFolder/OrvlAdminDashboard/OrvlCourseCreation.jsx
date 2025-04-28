@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
-import DynamicTable from "./ORVLDynamicTable.jsx";
+import DynamicTable from "../../../Components/AdminDasboardPagesFolder/AdminDashboardFiles/DynamicTable.jsx";
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import Styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css";
 import CourseForm from "../AdminDashboardFiles/CourseForm.jsx";
+import { FaSearch } from 'react-icons/fa';
 const OrvlCourseCreationTab = ({portalid}) => {
   const [courses, setCourses] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1); 
   const [itemsPerPage, setItemsPerPage] = useState(5); 
   const [editCourseData, setEditCourseData] = useState(null); 
- 
+   const [searchTerm, setSearchTerm] = useState("");
   const fetchCourses = () => {
     const portalid = 3;
     fetch(`${BASE_URL}/CourseCreation/GetAllCourses/${portalid}`)
@@ -43,7 +44,14 @@ const OrvlCourseCreationTab = ({portalid}) => {
   const handleOpen = (course) => {
     alert(`Opening: ${course.course_name}`);
   };
-
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  const filteredCourses = courses.filter((course) => {
+    return Object.values(course).some((value) =>
+      value != null && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
   const handleDelete = (course) => {
     if (window.confirm(`Delete course "${course.course_name}"?`)) {
       fetch(`${BASE_URL}/CourseCreation/delete/${course.course_creation_id}`, {
@@ -100,7 +108,7 @@ const OrvlCourseCreationTab = ({portalid}) => {
  
   const indexOfLastCourse = currentPage * itemsPerPage;
   const indexOfFirstCourse = indexOfLastCourse - itemsPerPage;
-  const currentCourses = courses.slice(indexOfFirstCourse, indexOfLastCourse);
+  const currentCourses = filteredCourses.slice(indexOfFirstCourse, indexOfLastCourse);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const pageNumbers = [];
@@ -120,6 +128,18 @@ const OrvlCourseCreationTab = ({portalid}) => {
           </div>
         
       )}
+         <div className={Styles.searchBarContainer}>
+             <FaSearch className={Styles.searchIcon} />
+              <input 
+                type="text" 
+                placeholder="Search courses..." 
+                className={Styles.searchInput}
+                value={searchTerm}
+                onChange={handleSearchChange} 
+              />
+         
+      
+            </div>
       {showForm && (
   <div className={Styles.modal}>
     <div className={Styles.modalContent}>
@@ -143,7 +163,7 @@ const OrvlCourseCreationTab = ({portalid}) => {
         onOpen={handleOpen}
         onDelete={handleDelete}
         onToggle={handleToggle}
-        type="course" 
+      type="course"
          course="ots"
       />
       </div>

@@ -226,18 +226,7 @@ const itemsPerPage = 5;
           {showForm && !isReadOnly ? "Close Form" : "Add Instruction"}
         </button>
       </div>
- <div className={styles.searchBarContainer}>
-       <FaSearch className={styles.searchIcon} />
-        <input 
-          type="text" 
-          placeholder="Search courses..." 
-          className={styles.searchInput}
-          value={searchTerm}
-          onChange={handleSearchChange} 
-        />
-   
-
-      </div>
+ 
       {showForm && (
         <div className={styles.uploadForm}>
           <label>
@@ -291,7 +280,18 @@ const itemsPerPage = 5;
           </div>
         </div>
       )}
+<div className={styles.searchBarContainer}>
+       <FaSearch className={styles.searchIcon} />
+        <input 
+          type="text" 
+          placeholder="Search instructions..." 
+          className={styles.searchInput}
+          value={searchTerm}
+          onChange={handleSearchChange} 
+        />
+   
 
+      </div>
       <div style={{ marginTop: "20px" }}>
         <DynamicTable
         isOpen={isOpen}

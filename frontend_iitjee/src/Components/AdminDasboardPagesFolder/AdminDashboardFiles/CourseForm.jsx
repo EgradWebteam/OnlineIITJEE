@@ -37,8 +37,7 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
   }, [courseData]);
   useEffect(() => {
     if (portalid === 3) {
-      // Fetch only when portalid is 3
-      //console.log("Fetching data for portalid 3...");
+
       fetch(`${BASE_URL}/CourseCreation/OrvlExamsTypesofCourses`)
         .then((response) => response.json())
         .then((data) => {
@@ -72,8 +71,6 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
         .catch((error) => console.error("Error fetching subjects:", error));
     }
   }, [selectedExamId]);
-
-
   useEffect(() => {
     if (isEditMode && courseData) {
       setCourseName(courseData.course_name || "");
@@ -87,9 +84,18 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
         courseData.subject_ids?.split(",").map((id) => parseInt(id)) || []
       );
       setSelectedImage(courseData.card_image?.split("-")[1] || "");
-      setSelectedTypes([]);
+      setSelectedTypes([]); 
+      if (courseData.test_type_ids) {
+        const ids = courseData.test_type_ids.split(',').map(id => id.trim());
+        setSelectedTestTypes(ids);
+      }
+      if (courseData.course_type_ids) {
+    
+        setSelectedType(courseData.course_type_ids);
+      }
     }
   }, [isEditMode, courseData]);
+  
   useEffect(() => {
     const parsedCost = parseFloat(cost) || 0;
     const parsedDiscount = parseFloat(discount) || 0;
@@ -138,7 +144,7 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const formData = new FormData();
     formData.append("courseName", courseName);
     formData.append("selectedYear", selectedYear);
@@ -149,18 +155,23 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
     formData.append("discountAmount", discountAmount);
     formData.append("totalPrice", totalPrice);
     formData.append("selectedExamId", selectedExamId);
+    formData.append("portal_id", portalid);
     formData.append("selectedSubjects", JSON.stringify(selectedSubjects));
-    formData.append("selectedTypes", JSON.stringify(selectedTypes));
+    if (portalid === 1) {
+      formData.append("selectedTestTypes", JSON.stringify(selectedTestTypes)); 
+    } else if (portalid === 3) {
+      formData.append("selectedTestTypes", selectedType); 
+    }
 
     if (selectedImage) {
       const imageFile = await getImageFile(selectedImage);
       formData.append("courseImageFile", imageFile);
     }
-
+  
     if (isEditMode && courseData.course_creation_id) {
       formData.append("course_creation_id", courseData.course_creation_id);
     }
-
+  
     try {
       const response = await fetch(
         `${BASE_URL}/CourseCreation/${isEditMode
@@ -172,9 +183,9 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
           body: formData,
         }
       );
-
+  
       const result = await response.json();
-
+  
       if (result.success) {
         alert(
           isEditMode
@@ -189,7 +200,7 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
       console.error("Submission Error:", error);
     }
   };
-
+  
   return (
     <div className={styles.CourseCreationFormPage}>
 

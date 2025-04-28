@@ -78,7 +78,7 @@ router.get("/ExamSubjects/:examId", async (req, res) => {
   }
 });
 router.post(
-  "/CreateOrvlCourse",
+  "/CreateCourse",
   upload.single("courseImageFile"),
   async (req, res) => {
     const conn = await db.getConnection();
@@ -95,6 +95,7 @@ router.post(
         totalPrice,
         selectedExamId,
         courseImageFile,
+        portal_id, // Extract portal_id from request body
       } = req.body;
 
       const parseInputArray = (input) => {
@@ -109,46 +110,25 @@ router.post(
       };
 
       const selectedSubjects = parseInputArray(req.body.selectedSubjects);
-      const selectedTypes = parseInputArray(req.body.selectedTypes);
-
-      // console.log("📥 Received Form Data:", {
-      //   courseName,
-      //   selectedYear,
-      //   courseStartDate,
-      //   courseEndDate,
-      //   cost,
-      //   discount,
-      //   totalPrice,
-      //   selectedExamId,
-      //   selectedSubjects,
-      //   selectedTypes,
-      //   courseImageFile,
-      // });
+      const selectedTypes = parseInputArray(req.body.selectedTestTypes);
 
       const OriginalFileName = req.file.originalname;
-      // Ensure that we have a valid file uploaded before proceeding
       let imageUrl = "";
       if (req.file) {
-        // Construct image URL after upload, using the Azure file URL
-        const frontendBaseURL = "http://localhost:5173"; // or your actual domain
-        imageUrl = `${frontendBaseURL}/OtsCourseCardImages/${req.file.originalname}`; // Assuming the file is saved with filename
-        // console.log("imageUrl", imageUrl); // Log the constructed URL
+        const frontendBaseURL = "http://localhost:5173"; 
+        imageUrl = `${frontendBaseURL}/OtsCourseCardImages/${req.file.originalname}`;
       }
 
-      // Azure upload logic (ensure that file is correctly uploaded)
       let azureUrl = "";
       let azureFileName = "";
       if (req.file) {
-        azureUrl = await uploadToAzureWithSAS(req.file, OriginalFileName); // Function for uploading to Azure
-        azureFileName = azureUrl.split("/").pop().split("?")[0]; // Extract file name from Azure URL
-        // console.log("File name for Azure URL:", azureFileName); // Log file name for Azure
+        azureUrl = await uploadToAzureWithSAS(req.file, OriginalFileName); 
+        azureFileName = azureUrl.split("/").pop().split("?")[0]; 
       }
 
-      // console.log("azureFileName", azureFileName);
+      const activeCourseStatus = "inactive"; // Set the initial course status to inactive
 
-      const portal_id = 3;
-      const activeCourseStatus = "inactive";
-
+      // Insert course data into iit_course_creation_table
       const insertCourseQuery = `
         INSERT INTO iit_course_creation_table 
         (course_name, course_year, exam_id, course_start_date, course_end_date, cost, discount, total_price, portal_id, active_course, card_image) 
@@ -164,39 +144,44 @@ router.post(
         cost,
         discount,
         totalPrice,
-        portal_id,
+        portal_id, // Use the portal_id from request body
         activeCourseStatus,
-        azureFileName, // Save the Azure URL in the database
+        azureFileName,
       ];
 
       const [courseResult] = await conn.query(insertCourseQuery, courseValues);
       const courseCreationId = courseResult.insertId;
 
-      // console.log("✅ Course inserted with ID:", courseCreationId);
-
-      // Insert into iit_course_subjects
+      // Insert into iit_course_subjects table
       for (const subjectId of selectedSubjects) {
         await conn.query(
           `INSERT INTO iit_course_subjects (course_creation_id, subject_id) VALUES (?, ?)`,
           [courseCreationId, subjectId]
         );
-        // console.log(`📘 Added subject ${subjectId}`);
       }
 
-      // Insert into iit_course_type_of_tests
-
-      await conn.query(
-        `INSERT INTO iit_orvl_course_type_for_course (course_creation_id, orvl_course_type_id) VALUES (?, ?)`,
-        [courseCreationId, selectedTypes]
-      );
-      // console.log(`🧪 Added test type ${selectedTypes}`);
+      // Conditional insertion based on portal_id
+      if (portal_id ==1) {
+        // Insert into iit_course_type_of_tests table if portal_id is 1
+        for (const typeId of selectedTypes) {
+          await conn.query(
+            `INSERT INTO iit_course_type_of_tests (course_creation_id, type_of_test_id) VALUES (?, ?)`,
+            [courseCreationId, typeId]
+          );
+        }
+      } else if (portal_id ==3) {
+        // Insert into iit_orvl_course_type_for_course table if portal_id is 3
+        for (const typeId of selectedTypes) {
+          await conn.query(
+            `INSERT INTO iit_orvl_course_type_for_course (course_creation_id, orvl_course_type_id) VALUES (?, ?)`,
+            [courseCreationId, typeId]
+          );
+        }
+      }
 
       await conn.commit();
 
-      // console.log("🎉 Course created successfully with all related data!");
-      res
-        .status(200)
-        .json({ success: true, message: "Course Created Successfully" });
+      res.status(200).json({ success: true, message: "Course Created Successfully" });
     } catch (err) {
       await conn.rollback();
       console.error("❌ Error in submitForm:", err);
@@ -206,6 +191,7 @@ router.post(
     }
   }
 );
+
 // ENV VARIABLES (can also use dotenv)
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const sasToken = process.env.AZURE_SAS_TOKEN;
@@ -276,9 +262,12 @@ router.post(
         discount,
         totalPrice,
         selectedExamId,
-        courseImageFile,
+        portal_id,  // Getting portal_id from the frontend
+        selectedSubjects,
+        selectedTestTypes,
       } = req.body;
 
+      // Function to parse input arrays from the frontend
       const parseInputArray = (input) => {
         if (!input) return [];
         if (Array.isArray(input)) return input.map(Number);
@@ -290,47 +279,26 @@ router.post(
         }
       };
 
-      const selectedSubjects = parseInputArray(req.body.selectedSubjects);
-      const selectedTypes = parseInputArray(req.body.selectedTypes);
-
-      // console.log("📥 Received Form Data:", {
-      //   courseName,
-      //   selectedYear,
-      //   courseStartDate,
-      //   courseEndDate,
-      //   cost,
-      //   discount,
-      //   totalPrice,
-      //   selectedExamId,
-      //   selectedSubjects,
-      //   selectedTypes,
-      //   courseImageFile,
-      // });
+      const parsedSubjects = parseInputArray(selectedSubjects);
+      const parsedTestTypes = parseInputArray(selectedTestTypes);
 
       const OriginalFileName = req.file.originalname;
-      // Ensure that we have a valid file uploaded before proceeding
       let imageUrl = "";
       if (req.file) {
-        // Construct image URL after upload, using the Azure file URL
-        const frontendBaseURL = "http://localhost:5173"; // or your actual domain
-        imageUrl = `${frontendBaseURL}/OtsCourseCardImages/${req.file.originalname}`; // Assuming the file is saved with filename
-        // console.log("imageUrl", imageUrl); // Log the constructed URL
+        const frontendBaseURL = "http://localhost:5173"; // Set your frontend URL
+        imageUrl = `${frontendBaseURL}/OtsCourseCardImages/${req.file.originalname}`;
       }
 
-      // Azure upload logic (ensure that file is correctly uploaded)
       let azureUrl = "";
       let azureFileName = "";
       if (req.file) {
-        azureUrl = await uploadToAzureWithSAS(req.file, OriginalFileName); // Function for uploading to Azure
-        azureFileName = azureUrl.split("/").pop().split("?")[0]; // Extract file name from Azure URL
-        // console.log("File name for Azure URL:", azureFileName); // Log file name for Azure
+        azureUrl = await uploadToAzureWithSAS(req.file, OriginalFileName); 
+        azureFileName = azureUrl.split("/").pop().split("?")[0]; 
       }
 
-      // console.log("azureFileName", azureFileName);
+      const activeCourseStatus = "inactive"; // Default course status
 
-      const portal_id = 1;
-      const activeCourseStatus = "inactive";
-
+      // Insert course details into iit_course_creation_table
       const insertCourseQuery = `
         INSERT INTO iit_course_creation_table 
         (course_name, course_year, exam_id, course_start_date, course_end_date, cost, discount, total_price, portal_id, active_course, card_image) 
@@ -348,47 +316,53 @@ router.post(
         totalPrice,
         portal_id,
         activeCourseStatus,
-        azureFileName, // Save the Azure URL in the database
+        azureFileName, // Store the Azure image filename
       ];
 
       const [courseResult] = await conn.query(insertCourseQuery, courseValues);
       const courseCreationId = courseResult.insertId;
 
-      // console.log("✅ Course inserted with ID:", courseCreationId);
-
-      // Insert into iit_course_subjects
-      for (const subjectId of selectedSubjects) {
+      // Insert selected subjects into iit_course_subjects table
+      for (const subjectId of parsedSubjects) {
         await conn.query(
           `INSERT INTO iit_course_subjects (course_creation_id, subject_id) VALUES (?, ?)`,
           [courseCreationId, subjectId]
         );
-        // console.log(`📘 Added subject ${subjectId}`);
       }
 
-      // Insert into iit_course_type_of_tests
-      for (const typeId of selectedTypes) {
-        await conn.query(
-          `INSERT INTO iit_course_type_of_tests (course_creation_id, type_of_test_id) VALUES (?, ?)`,
-          [courseCreationId, typeId]
-        );
-        // console.log(`🧪 Added test type ${typeId}`);
+      // Conditional logic based on portal_id value
+      if (portal_id === 1) {
+        // Insert test types into iit_course_type_of_tests for portal_id = 1
+        for (const typeId of parsedTestTypes) {
+          await conn.query(
+            `INSERT INTO iit_course_type_of_tests (course_creation_id, type_of_test_id) VALUES (?, ?)`,
+            [courseCreationId, typeId]
+          );
+        }
+      } else if (portal_id === 3) {
+        // Insert into iit_orvl_course_type_for_course for portal_id = 3
+        for (const typeId of parsedTestTypes) {
+          await conn.query(
+            `INSERT INTO iit_orvl_course_type_for_course (course_creation_id, orvl_course_type_id) VALUES (?, ?)`,
+            [courseCreationId, typeId]
+          );
+        }
       }
 
       await conn.commit();
 
-      // console.log("🎉 Course created successfully with all related data!");
-      res
-        .status(200)
-        .json({ success: true, message: "Course Created Successfully" });
+      // Send success response
+      res.status(200).json({ success: true, message: "Course Created Successfully" });
     } catch (err) {
       await conn.rollback();
-      console.error("❌ Error in submitForm:", err);
+      console.error("❌ Error in CreateCourse:", err);
       res.status(500).json({ success: false, error: err.message });
     } finally {
       conn.release();
     }
   }
 );
+
 router.put(
   "/UpdateCourse/:courseId",
   upload.single("courseImageFile"),
@@ -422,7 +396,7 @@ router.put(
       };
 
       const selectedSubjects = parseInputArray(req.body.selectedSubjects);
-      const selectedTypes = parseInputArray(req.body.selectedTypes);
+      const selectedTypes = parseInputArray(req.body.selectedTestTypes);
 
       // console.log("📥 Incoming Update Data:", {
       //   courseId,
