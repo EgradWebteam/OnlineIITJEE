@@ -283,10 +283,11 @@ margin: 1rem;
   display: flex;
   gap: 1.5rem;
   padding: 2rem;
-  background-color: #fdfdfd;
+  background-color: #dfd6d6;
   border: 1px solid #e0e0e0;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  margin-bottom: 3px;
 }
 .uploadButton{
   background-color: #28a745;

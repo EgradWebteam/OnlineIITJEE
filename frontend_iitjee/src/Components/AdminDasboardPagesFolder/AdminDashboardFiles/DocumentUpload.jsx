@@ -283,18 +283,7 @@ const DocumentUpload = () => {
           </button>
         </div>
       )}
-<div className={styles.searchBarContainer}>
-                   <FaSearch className={styles.searchIcon} />
-                    <input 
-                      type="text" 
-                      placeholder="Search courses..." 
-                      className={styles.searchInput}
-                      value={searchTerm}
-                      onChange={handleSearchChange} 
-                    />
-               
-            
-                  </div>
+
       {showForm && (
         <form className={styles.formContainer} onSubmit={handleSubmit}>
           {/* Header row with Close Button */}
@@ -393,7 +382,18 @@ const DocumentUpload = () => {
           )}
         </form>
       )}
-
+<div className={styles.searchBarContainer}>
+                   <FaSearch className={styles.searchIcon} />
+                    <input 
+                      type="text" 
+                      placeholder="Search Documents..." 
+                      className={styles.searchInput}
+                      value={searchTerm}
+                      onChange={handleSearchChange} 
+                    />
+               
+            
+                  </div>
       {/* Render the table with the fetched documents */}
       <div style={{ padding: "3%" }}>
         <DynamicTable

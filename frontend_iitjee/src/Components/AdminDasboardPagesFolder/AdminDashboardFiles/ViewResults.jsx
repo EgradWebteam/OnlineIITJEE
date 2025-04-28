@@ -49,11 +49,13 @@ const ViewResults = ({ onClose, testCreationTableId }) => {
           setTopperData(topper);
         }
         if (data.length > 0) {
-          const { test_name, total_marks, course_name } = data[0];
+          const { test_name, total_marks, course_name,testtotalmarks
+          } = data[0];
           setTestInfo({
             test_name,
             total_marks,
             course_name,
+            testtotalmarks
           });
         }
       } else if (viewType === 'questionwise') {
@@ -81,7 +83,6 @@ const ViewResults = ({ onClose, testCreationTableId }) => {
     setViewType(view);
   };
 
-  // Pagination logic for displaying records
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentQuestionwiseData = questionwiseData.slice(indexOfFirstItem, indexOfLastItem);
@@ -93,8 +94,6 @@ const ViewResults = ({ onClose, testCreationTableId }) => {
   };
 
   const totalPages = Math.ceil(questionwiseData.length / itemsPerPage);
-
-  // Calculate the range of page numbers to display
   const pageNumbers = [];
   let startPage = Math.max(1, currentPage - 2);
   let endPage = Math.min(totalPages, currentPage + 2);
@@ -142,7 +141,7 @@ const ViewResults = ({ onClose, testCreationTableId }) => {
                 <div className={styles.card}>
                   <h3>Test Details</h3>
                   <p><strong>Test Name:</strong> {testInfo.test_name}</p>
-                  <p><strong>Total Marks:</strong> {testInfo.total_marks}</p>
+                  <p><strong>Total Marks:</strong> {testInfo.testtotalmarks}</p>
                   <p><strong>Course Name:</strong> {testInfo.course_name}</p>
                 </div>
                 {topperData.student_registration_id && (
