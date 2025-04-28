@@ -3,7 +3,7 @@ import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.
 import globalCSS from "../../../Styles/Global.module.css";
 import CourseCard from "../../LandingPagesFolder/CourseCards.jsx";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
-
+import LoadingSpinner from "../../../ContextFolder/LoadingSpinner.jsx";
 export default function StudentDashboard_BuyCourses({
   setActiveSection,
   studentId,
@@ -251,7 +251,7 @@ export default function StudentDashboard_BuyCourses({
       </div>
       {loading ? (
   <div className={globalCSS.loadingContainer}>
-    <p className={globalCSS.loadingText}>Loading courses...</p>
+    <p className={globalCSS.loadingText}><LoadingSpinner/></p>
   </div>
 ) : filteredCourses.length > 0 ? (
   <div className={styles.StduentDashboardRightSideBarForBggg}>

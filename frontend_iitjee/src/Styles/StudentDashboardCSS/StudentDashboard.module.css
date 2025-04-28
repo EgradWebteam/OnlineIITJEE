@@ -374,9 +374,9 @@ color: black;
 }
 .stuentDashboardMainContentContainer {
   display: flex;
-  margin: 3px;
-   height: 100vh; 
-   overflow: hidden;
+  margin: 1px;
+  height: 100vh; 
+  overflow: hidden;
 }
 .studentDashboardLeftsidebar {
   width: 280px;

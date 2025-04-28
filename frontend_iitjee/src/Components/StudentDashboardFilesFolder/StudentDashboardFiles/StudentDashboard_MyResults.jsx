@@ -5,10 +5,12 @@ import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
+import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx';
 
 export default function StudentDashboard_MyResults({ studentId,userData }) {
   const [testData, setTestData] = useState([]);
   const [selectedExam, setSelectedExam] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   const handleViewReportClick = (testId,test) => {
@@ -29,6 +31,7 @@ export default function StudentDashboard_MyResults({ studentId,userData }) {
 
     const fetchResultTestData = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(`${BASE_URL}/MyResults/FetchResultTestdata/${studentId}`);
         if (response.data.success) {
           setTestData(response.data.data);
@@ -37,6 +40,8 @@ export default function StudentDashboard_MyResults({ studentId,userData }) {
         }
       } catch (error) {
         console.error('Error fetching test result data:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -71,7 +76,11 @@ export default function StudentDashboard_MyResults({ studentId,userData }) {
         <h3>My Results</h3>
       </div>
 
-      {testData.length === 0 ? (
+      {loading ? (
+  <div >
+    <p ><LoadingSpinner/></p>
+  </div>
+) : testData.length === 0 ? (
         <div className={globalCSS.noCoursesContainer}>
           <p className={globalCSS.noCoursesMsg}>You have not attempted any test yet.</p>
         </div>
