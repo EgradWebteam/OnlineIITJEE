@@ -96,7 +96,7 @@ router.post("/checkEmailExists", async (req, res) => {
   try {
     const sql = `SELECT * FROM iit_student_registration WHERE email_id = ?`;
     const [result] = await db.query(sql, [emailId]);
-
+console.log( "result",result)
     if (result.length > 0) {
       return res.json({ message: "Your email already exists. Please use a different email." });
     } else {
