@@ -14,8 +14,8 @@ const CourseCreationTab = () => {
   const [editCourseData, setEditCourseData] = useState(null); 
   // Fetch courses data from the new API
   const fetchCourses = () => {
-
-    fetch(`${BASE_URL}/CourseCreation/GetAllCourses`)
+    const portalid = 3;
+    fetch(`${BASE_URL}/CourseCreation/GetAllCourses/${portalid}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -97,13 +97,13 @@ const CourseCreationTab = () => {
 
     ? Object.keys(courses[0])
 
-        .filter((key) => key !== "subject_ids" && key !== "exam_ids" && key !=="card_image" && key !=="course_type_ids") // Filter out 'subject_ids' and 'exam_ids'
+        .filter((key) => key !== "subject_ids" && key !== "exam_ids" && key !=="card_image") // Filter out 'subject_ids' and 'exam_ids'
         .map((key) => ({
           header: key.replace(/_/g, " ").toUpperCase(),
           accessor: key,
         }))
     : [];
-
+    console.log(columns)
   // Get current courses for the current page
   const indexOfLastCourse = currentPage * itemsPerPage;
   const indexOfFirstCourse = indexOfLastCourse - itemsPerPage;
@@ -165,6 +165,7 @@ const CourseCreationTab = () => {
         onDelete={handleDelete}
         onToggle={handleToggle}
         type="course" 
+         course="ots"
       />
       </div>
       

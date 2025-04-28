@@ -12,8 +12,8 @@ const CourseCreationTab = () => {
   const [editCourseData, setEditCourseData] = useState(null); 
   const [searchTerm, setSearchTerm] = useState("");
   const fetchCourses = () => {
-
-    fetch(`${BASE_URL}/CourseCreation/GetAllCourses`)
+const portalid = 1;
+    fetch(`${BASE_URL}/CourseCreation/GetAllCourses/${portalid}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -168,6 +168,7 @@ const CourseCreationTab = () => {
       onDelete={handleDelete}
       onToggle={handleToggle}
       type="course"
+      course="ots"
     />
   )}
 </div>
