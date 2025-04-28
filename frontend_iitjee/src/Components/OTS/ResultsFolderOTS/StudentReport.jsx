@@ -360,7 +360,7 @@ const StudentReport = ({ testId, studentId }) => {
                             backgroundColor: pieChart1COLORS[index],
                           }}
                         />
-                        {entry.name}: {entry.value}
+                        {entry.name}:{entry.value}
                       </li>
                     ))}
                   </ul>

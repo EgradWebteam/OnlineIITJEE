@@ -308,6 +308,7 @@ const [showPopup, setShowPopup] = useState(false);
   return (
     <div className={styles.AddedstudentsHomePage}>
       <AdminDashboardHeader />
+      <div className={styles.studentMainContentHomePage}>
       <div className={styles.StudentInfoHeader}>Student Information</div>
 
       <button className={styles.Addedstudent} onClick={() => setIsPopUp(true)}>
@@ -417,7 +418,7 @@ const [showPopup, setShowPopup] = useState(false);
                 </div>
                 <div>
                   <p className={styles.StudentInfoDetails}>
-                    <b>Name:</b> <span>{studentDetails.name}</span>
+                    <b>Name:</b> <span >{studentDetails.name}</span>
                   </p>
                   <p className={styles.StudentInfoDetails}>
                     <b>Email:</b>
@@ -476,7 +477,7 @@ const [showPopup, setShowPopup] = useState(false);
 
                     <div key={index} className={styles.StudentItem}>
                       <p className={styles.StudentInfoDetails}>
-                        <b>Name:</b> <span>{student.name}</span>
+                        <b>Name:</b> <span className={styles.StdNameInfo}>{student.name}</span>
                       </p>
                       <p className={styles.StudentInfoDetails}>
                         <b>Email:</b> <span>{student.email}</span>
@@ -532,9 +533,11 @@ const [showPopup, setShowPopup] = useState(false);
                 <h4 className={styles.SubHEadingForStd}>Student Information</h4>
                 <div className={styles.InboxesForForm}>
                   <label>Name:</label>
+                 
                   <input
                     type="text"
                     value={editingStudent.name}
+                    className={styles.EditStdNameInfo}
                     onChange={(e) =>
                       setEditingStudent({
                         ...editingStudent,
@@ -632,7 +635,7 @@ const [showPopup, setShowPopup] = useState(false);
           </div>
       </div>
         )}
-      
+      </div>
     </div>
   );
 };

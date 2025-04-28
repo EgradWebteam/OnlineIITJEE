@@ -1,3 +1,7 @@
+
+.StudentDashboardInterFace{
+  overflow: hidden;
+}
 /*student header css */
 .studentDashboardHeaderLogoDiv img {
   width: 100%;
@@ -632,7 +636,7 @@ height: 80%;
   gap: 2rem;
   margin: 1rem;
   border-top: 1px solid rgb(192, 191, 191);
-  padding: 1rem 0;
+  padding: 10px 0;
   align-items: center;
   justify-content: center;
 }
@@ -1047,7 +1051,7 @@ height: 100%;
         /* transition: transform 0.3s ease-in-out; */
       }
       .headingForLectures{
-        font-size: 15px;
+        font-size: 13px;
       }
       .sidebarHidden {
         transform: translateX(-133%);
@@ -1085,7 +1089,7 @@ height: 100%;
     }
    .popup_body {
       margin: 3.5rem auto;
-      height: 50vh;
+      height: 45vh;
     } 
     .side_nav_button {
       position: absolute;

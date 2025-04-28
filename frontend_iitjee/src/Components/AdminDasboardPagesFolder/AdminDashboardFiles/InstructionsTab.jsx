@@ -320,6 +320,7 @@ const itemsPerPage = 5;
       {showInstructionPoints && (
         <div className={styles.modalBackdrop} onClick={() => setShowInstructionPoints(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.InstructionTabHeadandbtn}>
             <h4>Instruction Points:</h4>
 
             {/* Close button to hide the section */}
@@ -327,9 +328,9 @@ const itemsPerPage = 5;
               className={styles.closeFormBtn}
               onClick={() => setShowInstructionPoints(false)} // Close the modal
             >
-              Close
+               ❌
             </button>
-
+            </div>
             {instructionImage && (
               <div className={styles.instructionImage}>
                 <img
@@ -346,14 +347,17 @@ const itemsPerPage = 5;
 
 <ol>
   {instructionPoints.map((point, index) => (
-    <li key={point.id}>
+    <li key={point.id} className={styles.listsInstructionpage}>
       {/* Show the point text if it's in read-only mode */}
       {isReadOnly ? (
         <>
+        <p>
           {point.point} 
+          </p>
           <button 
             onClick={() => setIsReadOnly(false)} 
-            style={{ marginLeft: '10px', cursor: 'pointer' }}
+            style={{  }}
+            className={styles.EditBtnForInstructions}
           >
             Edit
           </button>

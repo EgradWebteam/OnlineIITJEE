@@ -150,7 +150,7 @@ export default function StudentDashboard() {
   }
   
   return (
-    <div>
+    <div className={styles.StudentDashboardInterFace}>
       <StudentDashboardHeader  userData ={studentData?.userDetails} setActiveSection={setActiveSection} setActiveSubSection={setActiveSubSection}/>
       <div className={styles.StudentDashboardContentHolder}>
         <div className={styles.studentDashboardLeftNavHolder}>
