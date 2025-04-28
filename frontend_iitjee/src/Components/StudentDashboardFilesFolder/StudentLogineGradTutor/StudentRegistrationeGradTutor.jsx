@@ -1341,11 +1341,11 @@ if (message) {
               {showPopup && (
                 <div className={Styles.popupOverlay}>
                   <div className={Styles.popupContent}>
+                    
+                    <p>{popupMessage}</p>
                     <div className={Styles.popupHeaderclose}>
                   <button className={Styles.popupclosebtn} onClick={handleClosePopup}>Close</button>
                   </div>
-                    <p>{popupMessage}</p>
-                   
                   </div>
                 </div>
               )}

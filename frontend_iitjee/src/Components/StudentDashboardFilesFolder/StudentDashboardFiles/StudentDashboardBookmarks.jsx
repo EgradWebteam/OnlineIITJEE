@@ -183,7 +183,7 @@ const StudentDashboardBookmarks = ({ studentId }) => {
                             title="Delete Bookmark"
                           />
                         </div>
-
+                     <div className={styles.QuestionImgContainer}>
                         <div className={styles.questionImageDivBookMarks}>
                           <img
                             src={question.questionImgName}
@@ -217,7 +217,7 @@ const StudentDashboardBookmarks = ({ studentId }) => {
                               </div>
                             ))}
                         </div>
-
+</div>
                         {question.solution?.solutionImgName && (
                           <div className={styles.solutionButtonsWrapper}>
                             <button
