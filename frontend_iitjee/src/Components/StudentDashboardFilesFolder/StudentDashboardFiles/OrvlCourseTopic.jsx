@@ -231,13 +231,9 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
       const questionid =
         selectedExercise?.questions?.[currentQuestionIndex]
           ?.exercise_question_id;
-      if (!questionid) return; // If there's no questionid, exit early
-
-      // Check if exerciseStatus is an object and not null
+      if (!questionid) return; 
       if (exerciseStatus && typeof exerciseStatus === "object") {
-        const status = exerciseStatus[questionid]; // Get the status for the current question
-
-        // Only submit if the status is "NotVisited"
+        const status = exerciseStatus[questionid]; 
         if (status === "unvisited") {
           submitExerciseStatus(questionid);
           setAnswerDisabled(false);
@@ -299,8 +295,8 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
   };
   const handleLectureClick = (lecture) => {
     setSelectedLecture(lecture);
-    setSelectedExercise(null); // Don't auto-start exercise
-    setShowExercise(false); // Start with lecture only
+    setSelectedExercise(null); 
+    setShowExercise(false); 
     setShowPopup(true);
     setUserStatus(null);
   };

@@ -75,11 +75,12 @@ const OrvlTopicCreation = () => {
 
   return (
     <div>
-      <h2>Topics</h2>
-      <button onClick={handleAddTopicClick} className={styles.addBtn}>
+     <div className={styles.pageHeading}>TOPIC CREATION</div>
+     <div>
+     <button onClick={handleAddTopicClick} className={styles.addbutton}>
         {showForm ? "Close Form" : "Add Topic"}
       </button>
-
+     </div>
       {showForm && (
         <OrvlTopicForm
           topic={selectedTopic}  
