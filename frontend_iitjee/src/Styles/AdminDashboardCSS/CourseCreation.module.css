@@ -94,7 +94,10 @@ margin: 1rem;
   font-weight: bold;
   margin-bottom: 1rem;
 }
-
+.modalContent{
+  width: 75%;
+  margin: 1rem auto;
+}
 .addCourseBtn{
   background-color: #00b94a;
   color: white;
@@ -236,3 +239,15 @@ margin: 1rem;
 .pagination button:hover {
   background-color: #0056b3;
 }
+@media(max-width:1200px){
+  .modalContent{
+    width: 95%;
+    margin: 1rem auto;
+  }
+}
+ @media (max-width:768px) {
+  .modalContent{
+    width: 90%;
+    margin: 1rem auto;
+  }
+} 
