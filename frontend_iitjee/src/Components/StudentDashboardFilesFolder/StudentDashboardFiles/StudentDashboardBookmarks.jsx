@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import globalCSS from "../../../Styles/Global.module.css";
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
+import Styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL";
 import axios from "axios";
 import { MdOutlineDeleteForever } from "react-icons/md";
@@ -11,6 +12,7 @@ const StudentDashboardBookmarks = ({ studentId }) => {
    const [loading, setLoading] = useState(true);
   const [visibleSolutions, setVisibleSolutions] = useState({});
   const [visibleVideoSolutions, setVisibleVideoSolutions] = useState({});
+    const [videoPopup, setVideoPopup] = useState(null);
 
   useEffect(() => {
     const fetchTestPaper = async () => {
@@ -149,6 +151,14 @@ const StudentDashboardBookmarks = ({ studentId }) => {
   testPaperData.subjects.every((subject) =>
     subject.sections.every((section) => section.questions.length === 0)
   );
+  const openVideoPopup = (questionId) => {
+    setVideoPopup(questionId);
+    setVisibleSolutions(false);
+  };
+
+  const closeVideoPopup = () => {
+    setVideoPopup(null);
+  };
 
   return (
     <div className={styles.studentDashboardBookMarksMainDiv}>
@@ -240,17 +250,20 @@ const StudentDashboardBookmarks = ({ studentId }) => {
                                 : "View Solution"}
                             </button>
 
-                            {question.solution.video_solution_link && (
+                           {question.solution?.solutionImgName &&
+                                                     question.solution?.video_solution_link !== "" && (
+                                                       <div className={Styles.showSolutionButton}>
                               <button
                                 onClick={() =>
-                                  toggleVideoSolution(question.question_id)
+                                  openVideoPopup(question.question_id)
                                 }
                                 className={styles.solutionBtnInBookMarks}
                               >
-                                {visibleVideoSolutions[question.question_id]
+                                {videoPopup === question.question_id
                                   ? "Hide Video Solution"
                                   : "View Video Solution"}
                               </button>
+                              </div>
                             )}
                           </div>
                         )}
@@ -260,7 +273,7 @@ const StudentDashboardBookmarks = ({ studentId }) => {
                             <div
                               className={styles.solutionsMainDivInBookMarks}
                             >
-                              <p>
+                                 <p className={Styles.solutionTag}>
                                 <strong>Solution:</strong>
                               </p>
                               <div
@@ -268,18 +281,22 @@ const StudentDashboardBookmarks = ({ studentId }) => {
                               >
                                 <img
                                   src={question.solution.solutionImgName}
-                                  alt="Solution"
+                                  alt={`Solution for question ${question.question_id}`}
                                 />
                               </div>
                             </div>
                           )}
 
-                        {visibleVideoSolutions[question.question_id] &&
-                          question.solution?.video_solution_link && (
-                            <div style={{ marginTop: "1rem" }}>
-                              <p>
-                                <strong>Video Solution:</strong>
-                              </p>
+{videoPopup === question.question_id && (
+                           <div className={Styles.videoModalOverlay}>
+                                                   <div className={Styles.videoModalContent}>
+                                                     <p className={Styles.solutionTag}>Video Solution:</p>
+                             <button
+                                                         className={Styles.closeVideoModalBtn}
+                                                         onClick={closeVideoPopup}
+                                                       >
+                                                         ✖
+                                                       </button>
                               <iframe
                                 src={PlayVideoById(
                                   question.solution.video_solution_link
@@ -290,6 +307,7 @@ const StudentDashboardBookmarks = ({ studentId }) => {
                                 allowFullScreen
                                 style={{ width: "100%", height: "400px" }}
                               />
+                            </div>
                             </div>
                           )}
                       </div>

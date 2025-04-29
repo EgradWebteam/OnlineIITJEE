@@ -11,6 +11,9 @@
   flex-shrink: 0;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   border-right: 2px solid #837777;
+  display: block !important;
+  position: relative;
+  height: 100vh;
 }
 
 nav ul li .active {
@@ -23,8 +26,9 @@ nav ul li .active {
   padding: 0;
   margin: 0;
 }
-
 .sidebarMenu li {
+  display: flex;
+  align-items: center;
   padding: 15px 20px;
   cursor: pointer;
   font-weight: 500;
@@ -32,22 +36,28 @@ nav ul li .active {
 }
 
 .sidebarMenu li:hover {
-  background-color: #e0e0e0;
+  background-color: #f7f7f7;
 }
+.HamburgerHeader {
+  display: none;
+  cursor: pointer;
+  font-size: 25px;
 
+}
 .mainContent {
   flex-grow: 1;
-  background:#f9fafc;;
+  background: #f9fafc;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
-.pageHeading{
+.pageHeading {
   font-size: 28px;
-font-weight: 600;
-text-align: center;
-background-color: #1f1f22ed;
-color: white;
-margin: 1rem;
+  font-weight: 600;
+  text-align: center;
+  background-color: #1f1f22ed;
+  color: white;
+  margin: 1rem;
 }
 .logo {
   font-size: 1.3rem;
@@ -62,27 +72,8 @@ margin: 1rem;
   background: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-bottom: 2px solid #837777;
-  height: 9vh;
-}
-
-.headerButtons {
-  display: flex;
-  gap: 10px;
-}
-
-.headerButtons button {
-  position: relative;
-  padding: 10px 20px;
-  font-size: 1rem;
-  cursor: pointer;
-  border: none;
-  background-color: #dadfe7;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-}
-
-.headerButtons button:hover {
-  background-color: #e0e0e0;
+  height: 10vh;
+    margin: 10px 0;
 }
 
 .active {
@@ -106,14 +97,14 @@ margin: 1rem;
 
 .dashboardTitle {
   background-color: #1f1f22ed;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 7%;
-    padding: 9px;
-    font-weight: 600;
-    font-size: larger;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 7%;
+  padding: 9px;
+  font-weight: 600;
+  font-size: larger;
 }
 
 .statGrid {
@@ -147,17 +138,15 @@ margin: 1rem;
   color: #007bff;
 }
 .searchBarContainer {
-  display: flex
-;
-    align-items: center;
-    background-color: #fff;
-    border-radius: 25px;
-    padding: 6px 12px;
-    box-shadow: 0 0 8px rgba(0, 120, 255, 0.2);
-    width: 97%;
-    margin-left: 2%;
-    max-width: 100%;
-  
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 25px;
+  padding: 6px 12px;
+  box-shadow: 0 0 8px rgba(0, 120, 255, 0.2);
+  width: 97%;
+  margin-left: 2%;
+  max-width: 100%;
 }
 
 .searchBarContainer input {
@@ -172,17 +161,6 @@ margin: 1rem;
 .searchIcon {
   color: #999;
   margin-right: 6px;
-}
-.sidebarMenu li {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  cursor: pointer;
-  padding: 20px;
-}
-
-.sidebarMenu li:hover {
-  background-color: #f7f7f7;
 }
 
 .iconBox {
@@ -209,9 +187,9 @@ margin: 1rem;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
-.flex{
+.flex {
   display: flex;
-  justify-content:end
+  justify-content: end;
 }
 .table {
   width: 100%;
@@ -290,14 +268,14 @@ margin: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   margin-bottom: 3px;
 }
-.uploadButton{
+.uploadButton {
   background-color: #28a745;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 1%;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 1%;
 }
 .DocumentContentDiv {
   padding: 2rem;
@@ -309,7 +287,6 @@ margin: 1rem;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
-
 .TestPaperContent {
   background-color: #fff;
   padding: 1.5rem;
@@ -320,7 +297,7 @@ margin: 1rem;
   overflow-y: auto;
   white-space: pre-wrap;
   word-wrap: break-word;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   line-height: 1.5;
 }
 .formHeader {
@@ -363,7 +340,7 @@ margin: 1rem;
 }
 
 .headerImg img {
-  height: 100%; 
+  height: 100%;
   object-fit: contain;
 }
 
@@ -380,28 +357,24 @@ margin: 1rem;
   z-index: 1000;
 }
 
-
 .modalContent {
   background-color: white;
   padding: 20px;
   max-width: 600px;
-  max-height: 80vh; 
-  overflow-y: auto; 
+  max-height: 80vh;
+  overflow-y: auto;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
-
 
 .instructionImage img {
   max-width: 100%;
   height: auto;
 }
 
-
 .instructionPoints {
   margin-top: 10px;
 }
-
 
 .closeModalBtn {
   background-color: #007bff;
@@ -430,15 +403,15 @@ margin: 1rem;
 .pageButton:hover {
   background-color: #e0e0e0;
 }
-.addbutton{
+.addbutton {
   background-color: #00b94a;
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    margin: 2%;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  margin: 2%;
 }
 .pageButtonActive {
   background-color: #007bff;
@@ -449,18 +422,74 @@ margin: 1rem;
 .closeModalBtn:hover {
   background-color: #0056b3;
 }
+.headerButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 
+/* Button styling */
+.headerButtons button {
+  position: relative;
+  padding: 10px 20px;
+  margin: 0 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  background-color: #dadfe7;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
 
-@media screen and (max-width: 768px) {
-  .sidebar {
-    display: none;
-  }
+/* Hover effect */
+.headerButtons button:hover {
+  background-color: #e0e0e0;
+}
 
+/* Tablet scaling */
+@media (max-width: 1200px) {
   .headerButtons button {
     font-size: 0.8rem;
     padding: 6px 8px;
+    margin: 5px 10px;
+  }
+}
+
+/* Mobile layout */
+@media (max-width: 768px) {
+  .headerButtons {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    z-index: 1;
+    background-color: white;
+    right: 0;
+        top: 65px;
+        padding: 2px 25px;
   }
 
+  .headerButtons button {
+    width: 100%;
+    text-align: left;
+    font-size: 0.8rem;
+    padding: 10px 15px;
+    margin: 11px 0px;
+  }
+.sidebar{
+  position: fixed;
+  top: 137px;
+  left: 0;
+  z-index: 1;
+  transform: translateX(-100%);
+  border-right: none;
+  height: auto;
+}
+.sidebarOpen{
+  transform: translateX(0);
+}
+  .HamburgerHeader {
+    display: block;
+  }
   .stat-grid {
     flex-direction: column;
     align-items: center;
