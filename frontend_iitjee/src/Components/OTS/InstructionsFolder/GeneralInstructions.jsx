@@ -342,7 +342,7 @@ const GeneralInstructions = () => {
                             )}
                         </div>
                         <div className={styles.StdNameForData}>
-                        <p>{isAdmin ? "Admin" : studentName}</p></div>
+                        <p title={isAdmin ? "Admin" : studentName}>{isAdmin ? "Admin" : studentName}</p></div>
                     </div>
                 </div>
 
