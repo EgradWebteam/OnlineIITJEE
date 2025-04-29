@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
+import Styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import axios from "axios";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
@@ -172,10 +172,10 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
   };
 
   return (
-    <div className={styles.solutionContainerMain}>
-      <div className={styles.subjectDropDownContainer}>
+    <div className={Styles.solutionContainerMain}>
+      <div className={Styles.subjectDropDownContainer}>
         <select
-          className={styles.subjectWiseDropDown}
+          className={Styles.subjectWiseDropDown}
           onChange={handleDropdownChange}
           value={
             selectedSubjectSection
@@ -222,15 +222,15 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
               {selectedSubjectSection.questions.map((question) => (
                 <div
                   key={question.question_id}
-                  className={`${styles.questionSolutionsDiv} ${styles.watermarkForSolution}`}
+                  className={`${Styles.questionSolutionsDiv} ${Styles.watermarkForSolution}`}
                 >
-                  <div className={styles.QuestionNoAnsBookmarkHolder}>
+                  <div className={Styles.QuestionNoAnsBookmarkHolder}>
                     <p>Question No: {question.question_id}</p>
                     <button
                       onClick={() => toggleBookmark(question.question_id)}
-                      className={`${styles.bookmarkButton} ${
+                      className={`${Styles.bookmarkButton} ${
                         bookmarkedQuestions.includes(question.question_id)
-                          ? styles.bookmarked
+                          ? Styles.bookmarked
                           : ""
                       }`}
                     >
@@ -241,7 +241,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                       )}
                     </button>
                   </div>
-                  <div className={styles.questionImageInSolutionTab}>
+                  <div className={Styles.questionImageInSolutionTab}>
                     <img
                       src={question.questionImgName}
                       alt={`Question ${question.question_id}`}
@@ -304,11 +304,11 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                                 color,
                               }}
                             >
-                              <strong className={styles.correctWrongIcon}>
+                              <strong className={Styles.correctWrongIcon}>
                                 {icon}
                               </strong>
                               <strong>({option.option_index})</strong>
-                              <div className={styles.optionImageInSolutionTab}>
+                              <div className={Styles.optionImageInSolutionTab}>
                                 <img
                                   src={option.optionImgName}
                                   alt={`Option ${option.option_index}`}
@@ -348,11 +348,11 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                               color,
                             }}
                           >
-                            <strong className={styles.correctWrongIcon}>
+                            <strong className={Styles.correctWrongIcon}>
                               {icon}
                             </strong>
                             <strong>({option.option_index})</strong>
-                            <div className={styles.optionImageInSolutionTab}>
+                            <div className={Styles.optionImageInSolutionTab}>
                               <img
                                 src={option.optionImgName}
                                 alt={`Option ${option.option_index}`}
@@ -364,14 +364,14 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                     })()}
 
                     {question.solution?.solutionImgName && (
-                      <div className={styles.solutionButtonsContainer}>
-                        <div className={styles.showSolutionButton}>
+                      <div className={Styles.solutionButtonsContainer}>
+                        <div className={Styles.showSolutionButton}>
                           {/* View Solution Button */}
                           <button
                             onClick={() =>
                               toggleSolutionVisibility(question.question_id)
                             }
-                            className={styles.solutionBtnInBookMarks}
+                            className={Styles.solutionBtnInBookMarks}
                           >
                             {visibleSolutions[question.question_id]
                               ? "Hide Solution"
@@ -381,7 +381,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                         {/* View Video Solution Button */}
                         {question.solution?.solutionImgName &&
                           question.solution?.video_solution_link !== "" && (
-                            <div className={styles.showSolutionButton}>
+                            <div className={Styles.showSolutionButton}>
                               <button
                                 onClick={() =>
                                   openVideoPopup(question.question_id)
@@ -398,17 +398,17 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
 
                     {visibleSolutions[question.question_id] &&
                       question.solution?.solutionImgName && (
-                        <div className={styles.solutionImageInSolutionTab}>
-                          <p className={styles.solutionTag}>
+                        <div className={Styles.solutionImageInSolutionTab}>
+                          <p className={Styles.solutionTag}>
                             Answer: {question.answer}
                           </p>
                           {question.solution?.solutionImgName && (
                             <>
-                              <span className={styles.solutionTag}>
+                              <span className={Styles.solutionTag}>
                                 Solution:{" "}
                               </span>
                               <div
-                                className={styles.solutionImageDivInSolutionTab}
+                                className={Styles.solutionImageDivInSolutionTab}
                               >
                                 <img
                                   src={question.solution.solutionImgName}
@@ -423,11 +423,11 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                     {/* Check for video solution link and display button if available */}
 
                     {videoPopup === question.question_id && (
-                      <div className={styles.videoModalOverlay}>
-                        <div className={styles.videoModalContent}>
-                          <p className={styles.solutionTag}>Video Solution:</p>
+                      <div className={Styles.videoModalOverlay}>
+                        <div className={Styles.videoModalContent}>
+                          <p className={Styles.solutionTag}>Video Solution:</p>
                           <button
-                            className={styles.closeVideoModalBtn}
+                            className={Styles.closeVideoModalBtn}
                             onClick={closeVideoPopup}
                           >
                             ✖
@@ -453,16 +453,16 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
         </div>
 
         {/* Watermarks */}
-        {/* <span className={`${styles.waterMark} ${styles.topWaterMark}`}>
+        {/* <span className={`${Styles.waterMark} ${Styles.topWaterMark}`}>
           {studentContact}
         </span>
-        <span className={`${styles.waterMark} ${styles.bottomWaterMark}`}>
+        <span className={`${Styles.waterMark} ${Styles.bottomWaterMark}`}>
           {studentContact}
         </span>
-        <span className={`${styles.waterMark} ${styles.middleWaterMark}`}>
+        <span className={`${Styles.waterMark} ${Styles.middleWaterMark}`}>
           {studentContact}
         </span>
-        <span className={`${styles.waterMark} ${styles.rightWaterMark}`}>
+        <span className={`${Styles.waterMark} ${Styles.rightWaterMark}`}>
           {studentContact}
         </span> */}
       </div>

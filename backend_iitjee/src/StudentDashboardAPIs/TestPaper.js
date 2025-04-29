@@ -357,18 +357,19 @@ router.post("/QusetionsSorting", async (req, res) => {
   }
 
   try {
-    const queries = questions.map(({ question_id, sort_order }) =>
-      db.query(
+    const queries = questions.map(({ question_id, sort_order }) => {
+      // console.log(`Updating question_id: ${question_id} with sort_order: ${sort_order}`);
+      return db.query(
         "UPDATE iit_questions SET sort_id_text = ? WHERE question_id = ?",
         [sort_order.toString(), question_id]
-      )
-    );
+      );
+    });
 
     await Promise.all(queries);
 
     res.status(200).json({ message: "Sort order updated successfully" });
   } catch (error) {
-    console.error("Error updating sort order:", error);
+    // console.error("Error updating sort order:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });

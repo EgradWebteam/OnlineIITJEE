@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import styles from "../../../Styles/StudentDashboardCSS/Student.module.css";
 import { Link } from "react-router-dom";
+
 export default function StudentLoginFormeGradTutor({
   isForgotPassword,
   isResetPassword,
@@ -21,9 +22,13 @@ export default function StudentLoginFormeGradTutor({
   setIsForgotPassword,
   setIsResetPassword,
 }) {
-  const [showPassword, setShowPassword] = useState(false); 
-  const [showNewPassword, setShowNewPassword] = useState(false); 
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [touched, setTouched] = useState({
+    newPassword: false,
+    confirmPassword: false,
+  });
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -41,7 +46,9 @@ export default function StudentLoginFormeGradTutor({
 
   const isButtonDisabled = () => {
     if (isForgotPassword) {
-      return isResetPassword ? !isPasswordValid(passwordCriteria) || newPassword !== confirmPassword : false;
+      return isResetPassword
+        ? !isPasswordValid(passwordCriteria) || newPassword !== confirmPassword
+        : false;
     } else {
       return false;
     }
@@ -57,7 +64,6 @@ export default function StudentLoginFormeGradTutor({
     };
   };
 
-  
   const isPasswordValid = (criteria) => {
     return (
       criteria.length &&
@@ -67,7 +73,21 @@ export default function StudentLoginFormeGradTutor({
       criteria.specialChar
     );
   };
+
   const passwordCriteria = checkPasswordCriteria(newPassword);
+
+  // This function checks if we need to show the next validation message dynamically
+  const getValidationMessages = () => {
+    const messages = [];
+
+    if (!passwordCriteria.length) messages.push("At least 8 characters.");
+    if (!passwordCriteria.uppercase) messages.push("At least one uppercase letter.");
+    if (!passwordCriteria.lowercase) messages.push("At least one lowercase letter.");
+    if (!passwordCriteria.number) messages.push("At least one number.");
+    if (!passwordCriteria.specialChar) messages.push("At least one special character.");
+
+    return messages;
+  };
 
   return (
     <form
@@ -144,6 +164,7 @@ export default function StudentLoginFormeGradTutor({
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 ref={newPasswordRef} // Use ref here
+                onFocus={() => setTouched((prev) => ({ ...prev, newPassword: true }))}
                 required
               />
               <span
@@ -153,67 +174,59 @@ export default function StudentLoginFormeGradTutor({
                 {showNewPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
-                        <ul className={styles.listofMandatory}>
-                          <li className={passwordCriteria.length ? styles.valid : ""}>
-                            At least 8 characters.
-                          </li>
-                          <li className={passwordCriteria.uppercase ? styles.valid : ""}>
-                            At least one uppercase letter.
-                          </li>
-                          <li className={passwordCriteria.lowercase ? styles.valid : ""}>
-                            At least one lowercase letter.
-                          </li>
-                          <li className={passwordCriteria.number ? styles.valid : ""}>
-                            At least one number.
-                          </li>
-                          <li className={passwordCriteria.specialChar ? styles.valid : ""}>
-                            At least one special character.
-                          </li>
-                        </ul>
+            {/* Password criteria list */}
+            {touched.newPassword && (
+              <ul className={styles.listofMandatory}>
+                {getValidationMessages().map((message, index) => (
+                  <li key={index} className={styles.invalid}>
+                    {message}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           <div className={styles.studentLoginFormInput}>
             <label>Confirm Password:</label>
             <div className={styles.passwordInputWrapper}>
               <input
-                type={showConfirmPassword ? "text" : "password"} 
+                type={showConfirmPassword ? "text" : "password"}
                 placeholder="Confirm your new password"
                 name="confirmPassword"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 ref={confirmPasswordRef}
+                onFocus={() => setTouched((prev) => ({ ...prev, confirmPassword: true }))}
                 required
               />
               <span
                 className={styles.passwordToggle}
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)} 
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
             {/* Display error if new password and confirm password do not match */}
-            {newPassword &&
-              confirmPassword &&
-              newPassword !== confirmPassword && (
-                <p className={styles.passwordError}>Passwords do not match</p>
-              )}
+            {newPassword && confirmPassword && newPassword !== confirmPassword && (
+              <p className={styles.passwordError}>Passwords do not match</p>
+            )}
           </div>
         </>
       )}
 
       {/* Submit button */}
       <div className={styles.studentLoginFormSubmit}>
-        <button type="submit" disabled={isButtonDisabled(passwordCriteria)}>
+        <button type="submit" disabled={isButtonDisabled()}>
           {getButtonText()} {/* Dynamic button text */}
         </button>
       </div>
       {(isForgotPassword || isResetPassword) && (
         <div className={styles.backToLogin}>
-          <button 
-          className={styles.backToLoginButton}
-            type="button" 
+          <button
+            className={styles.backToLoginButton}
+            type="button"
             onClick={() => {
-              setIsForgotPassword(false); 
-              setIsResetPassword(false); 
+              setIsForgotPassword(false);
+              setIsResetPassword(false);
             }}
           >
             Back to Login

@@ -109,7 +109,7 @@ router.post("/CreateTest", async (req, res) => {
       duration,
       totalQuestions,
       totalMarks,
-      "active",
+      "inactive",
       selectedOptionPattern,
     ]);
 

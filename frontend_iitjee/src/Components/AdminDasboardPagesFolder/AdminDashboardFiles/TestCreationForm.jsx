@@ -36,12 +36,9 @@ const TestCreationForm = ({
   useEffect(() => {
     const loadEditData = async () => {
       if (isEditMode && editData) {
-        //console.log("💡 Edit Mode - Received Edit Data:", editData);
-  
-        // Pre-fill main test form fields
         setFormFields({
           testName: editData.test_name || "",
-          selectedTypeOfTest: editData.course_type_of_test_id || "",
+          selectedTypeOfTest: editData.type_of_test_id || "",
           selectedInstruction: editData.instruction_id || "",
           startDate: editData.test_start_date || "",
           endDate: editData.test_end_date || "",
@@ -52,11 +49,7 @@ const TestCreationForm = ({
           totalQuestions: editData.number_of_questions || "",
           totalMarks: editData.total_marks || "",
         });
-      
-        // Pre-select course
         setSelectedCourse(editData.course_creation_id || "");
-  
-        // Fetch & populate subjects for the selected course
         if (editData.course_creation_id) {
           try {
             const response = await axios.get(
@@ -67,28 +60,35 @@ const TestCreationForm = ({
             console.error("Error fetching subjects:", err);
           }
         }
-  
-  
         if (Array.isArray(editData.sections) && editData.sections.length > 0) {
-          //console.log("🧩 Prefilling sections:", editData.sections);
+
+          const filteredSections = editData.sections.filter(
+            (section) => section.test_creation_table_id === editData.test_creation_table_id
+          );
   
 
-          setIncludeSection(true);
+          if (filteredSections.length > 0) {
+            setIncludeSection(true);
   
-          const mappedSections = editData.sections.map((section) => ({
-            selectedSubject: section.subject_id || "",
-            sectionName: section.section_name || "",
-            numOfQuestions: section.no_of_questions || "", 
-          }));
-          setSubjectSections(mappedSections);
+            const mappedSections = filteredSections.map((section) => ({
+              selectedSubject: section.subject_id || "",
+              sectionName: section.section_name || "",
+              numOfQuestions: section.no_of_questions || "",
+            }));
+            setSubjectSections(mappedSections);
+          } else {
+      
+            setIncludeSection(false);
+            setSubjectSections([
+              { selectedSubject: "", sectionName: "", numOfQuestions: "" },
+            ]);
+          }
         } else {
-          setIncludeSection(false); 
-          setSubjectSections([
-            { selectedSubject: "", sectionName: "", numOfQuestions: "" },
-          ]);
+          setIncludeSection(false);
+          setSubjectSections([{ selectedSubject: "", sectionName: "", numOfQuestions: "" }]);
         }
       } else {
-
+   
         setFormFields({
           testName: "",
           selectedTypeOfTest: "",
@@ -103,16 +103,15 @@ const TestCreationForm = ({
           totalMarks: "",
         });
         setSelectedCourse("");
-        setIncludeSection(false); 
-        setSubjectSections([
-          { selectedSubject: "", sectionName: "", numOfQuestions: "" },
-        ]);
+        setIncludeSection(false);
+        setSubjectSections([{ selectedSubject: "", sectionName: "", numOfQuestions: "" }]);
         setSubjects([]);
       }
     };
   
     loadEditData();
-  }, [isEditMode, editData]);  
+  }, [isEditMode, editData]);
+   
   
   
 

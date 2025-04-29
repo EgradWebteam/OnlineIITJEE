@@ -4,6 +4,7 @@ import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import styles from "../../../Styles/AdminDashboardCSS/TestCreation.module.css";
 
 const ViewDocumentData = ({ data, onClose }) => {
+  console.log("ViewDocumentData data", data);
   if (!data) return null;
 
   const testId = data.test_creation_table_id;
@@ -28,61 +29,67 @@ const ViewDocumentData = ({ data, onClose }) => {
   return (
     <div className={styles.popup_viewquestion}>
       <div className={styles.popup_viewquestioncontent}>
-        <button onClick={onClose} className={styles.closebutton_viewquestion}>
-          ✖
-        </button>
+        <button onClick={onClose} className={styles.closebutton_viewquestion}>✖</button>
         <h2 className={styles.viewquestion_title}>{data.TestName}</h2>
 
         <div id="printable-content">
-          <div>
-            <h2>{viewTestPaperData.TestName}</h2>
-            {viewTestPaperData.subjects?.map((subject) => (
-              <div key={subject.subjectId}>
-                <h3>Subject: {subject.SubjectName}</h3>
-                {subject.sections.map((section) => (
-                  <div key={section.sectionId}>
-                    {/* <h4>Section: {section.SectionName}</h4> */}
-                    {section.SectionName && (
-                      <h4>Section: {section.SectionName}</h4>
-                    )}
-
-                    {section.questions.map((question) => (
-                      <div
-                        key={question.question_id}
-                        style={{ marginBottom: "2rem" }}
-                      >
-                        <p>Question No: {question.question_id}</p>
+          <h2>{viewTestPaperData?.TestName}</h2>
+          {viewTestPaperData?.subjects?.map((subject) => (
+            <div key={subject.subjectId}>
+              <h3>Subject: {subject.SubjectName}</h3>
+              {subject.sections.map((section) => (
+                <div key={section.sectionId}>
+                  <h4>Section: {section.SectionName}</h4>
+                  {section.questions.map((question, index) => (
+                    <div key={question.question_id} style={{ marginBottom: "2rem" }}>
+                      {/* Incremental Question Numbering */}
+                      <p>Question {index + 1}:</p> {/* Increment here */}
+                      {question.questionImgName && (
                         <img
                           src={question.questionImgName}
                           alt={`Question ${question.question_id}`}
-                          style={{ width: "300px", height: "auto" }}
+                          style={{
+                            maxWidth: "100%",
+                            height: "auto",
+                            maxHeight: "300px",
+                            display: "block",
+                            marginBottom: "1rem",
+                          }}
                         />
-                        <div style={{ marginTop: "1rem" }}>
-                          {question.options.map((option) => (
-                            <div
-                              key={option.option_id}
-                              style={{ display: "flex", alignItems: "center" }}
-                            >
-                              <strong>({option.option_index})</strong>
+                      )}
+                      <div style={{ marginTop: "1rem" }}>
+                        {question.options.map((option) => (
+                          <div
+                            key={option.option_id}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              marginBottom: "10px",
+                            }}
+                          >
+                            <strong>({option.option_index})</strong>
+                            {option.optionImgName && (
                               <img
                                 src={option.optionImgName}
                                 alt={`Option ${option.option_index}`}
                                 style={{
-                                  width: "150px",
+                                  maxWidth: "150px",
                                   height: "auto",
+                                  maxHeight: "150px",
                                   marginLeft: "10px",
+                                  display: "block",
                                 }}
                               />
-                            </div>
-                          ))}
-                        </div>
+                            )}
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
     </div>
