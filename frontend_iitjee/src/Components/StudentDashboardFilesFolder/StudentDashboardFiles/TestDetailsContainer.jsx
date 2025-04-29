@@ -9,6 +9,7 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
   const [groupedTests, setGroupedTests] = useState({});
   const [courseName, setCourseName] = useState('');
   const [selectedTestType, setSelectedTestType] = useState('Select Type Of Test');
+  const [showPopup, setShowPopup] = useState(false);
 
   const course_creation_id = course?.course_creation_id;
   const navigate = useNavigate();
@@ -51,58 +52,170 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
   }
 
   const formattedTime = getCurrentLocalMySQLTime();
+  // let newWinRef = null;
 
-  const handleStartTestClick = async (testCreationTableId) => {
-    try {
-        // calling test attemt status api
+  // const handleStartTestClick = async (testCreationTableId) => {
+  //   try {
+  //       // calling test attemt status api
+  //   const checkActiveTestResponse = await fetch(`${BASE_URL}/studentmycourses/CheckActiveTestOfStudent/${studentId}`);
+  //   const checkActiveTestData = await checkActiveTestResponse.json();
+
+  //   // If there's already an active test, block the user
+  //   if (checkActiveTestData.activeTestExists) {
+  //     alert("You already have an active test in progress. Please complete it before starting another one.");
+  //     return;
+  //   }
+  //     const [encryptedTestId, encryptedStudentId] = await encryptBatch([testCreationTableId, studentId]);
+
+  //     const testStatusData = {
+  //       studentregistrationId: studentId,
+  //       courseCreationId: course_creation_id,
+  //       testCreationTableId: testCreationTableId,
+  //       studentTestStartTime: formattedTime,
+  //       testAttemptStatus: 'started',
+  //       testConnectionStatus: 'active',
+  //       testConnectionTime: formattedTime
+  //     };
+
+  //     const response = await fetch(`${BASE_URL}/studentmycourses/InsertOrUpdateTestAttemptStatus`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(testStatusData),
+  //     });
+
+  //     const result = await response.json();
+
+  //     if (response.ok) {
+  //       // console.log(result.message);
+
+  //       sessionStorage.setItem('navigationToken', 'valid');
+
+  //       const screenWidth = window.screen.availWidth;
+  //       const screenHeight = window.screen.availHeight;
+  //       const url = `/GeneralInstructions/${encodeURIComponent(encryptedTestId)}/${encodeURIComponent(encryptedStudentId)}`;
+  //       const features = `width=${screenWidth},height=${screenHeight},top=0,left=0`;
+
+  //       window.open(url, '_blank', features);
+  //         // Now 'url' will be set based on the value of param4
+  //         newWinRef = window.open(
+  //           url,
+  //           "_blank",
+  //           `width=${screenWidth},height=${screenHeight},fullscreen=yes`
+  //       );
+
+  //       const monitorWindow = setInterval(() => {
+  //           if (newWinRef.closed) {
+  //               console.log("Quiz window closed");
+  //               clearInterval(monitorWindow);
+
+  //               if (!finalHeartbeatSent) {
+  //                   fetch(`${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${studentId}/${testCreationTableId}`, {
+  //                       method: "DELETE",
+  //                       headers: {
+  //                           "Content-Type": "application/json",
+  //                       },
+  //                       body: JSON.stringify({
+  //                         studentId: studentId,
+  //                           testCreationTableId: testCreationTableId,
+  //                       }),
+  //                   }).catch((error) => {
+  //                       console.error("Error deleting data on window close:", error);
+  //                   });
+                    
+              
+  //               }
+  //           }
+  //       }, 1000);
+  //     } else {
+  //       console.error('Failed to insert/update test status:', result.error);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error during test status insertion/update:', error);
+  //   }
+  // };
+
+  let newWinRef = null;
+
+const handleStartTestClick = async (testCreationTableId) => {
+  try {
+    // calling test attempt status API
     const checkActiveTestResponse = await fetch(`${BASE_URL}/studentmycourses/CheckActiveTestOfStudent/${studentId}`);
     const checkActiveTestData = await checkActiveTestResponse.json();
 
-    // If there's already an active test, block the user
     if (checkActiveTestData.activeTestExists) {
-      alert("You already have an active test in progress. Please complete it before starting another one.");
+      // alert("You already have an active test in progress. Please complete it before starting another one.");
+      setShowPopup(true);
       return;
     }
-      const [encryptedTestId, encryptedStudentId] = await encryptBatch([testCreationTableId, studentId]);
 
-      const testStatusData = {
-        studentregistrationId: studentId,
-        courseCreationId: course_creation_id,
-        testCreationTableId: testCreationTableId,
-        studentTestStartTime: formattedTime,
-        testAttemptStatus: 'started',
-        testConnectionStatus: 'active',
-        testConnectionTime: formattedTime
-      };
+    const [encryptedTestId, encryptedStudentId] = await encryptBatch([testCreationTableId, studentId]);
 
-      const response = await fetch(`${BASE_URL}/studentmycourses/InsertOrUpdateTestAttemptStatus`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(testStatusData),
-      });
+    const testStatusData = {
+      studentregistrationId: studentId,
+      courseCreationId: course_creation_id,
+      testCreationTableId: testCreationTableId,
+      studentTestStartTime: formattedTime,
+      testAttemptStatus: 'started',
+      testConnectionStatus: 'active',
+      testConnectionTime: formattedTime
+    };
 
-      const result = await response.json();
+    const response = await fetch(`${BASE_URL}/studentmycourses/InsertOrUpdateTestAttemptStatus`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(testStatusData),
+    });
 
-      if (response.ok) {
-        // console.log(result.message);
+    const result = await response.json();
 
-        sessionStorage.setItem('navigationToken', 'valid');
+    if (response.ok) {
+      sessionStorage.setItem('navigationToken', 'valid');
 
-        const screenWidth = window.screen.availWidth;
-        const screenHeight = window.screen.availHeight;
-        const url = `/GeneralInstructions/${encodeURIComponent(encryptedTestId)}/${encodeURIComponent(encryptedStudentId)}`;
-        const features = `width=${screenWidth},height=${screenHeight},top=0,left=0`;
+      const screenWidth = window.screen.availWidth;
+      const screenHeight = window.screen.availHeight;
+      const url = `/GeneralInstructions/${encodeURIComponent(encryptedTestId)}/${encodeURIComponent(encryptedStudentId)}`;
+      const features = `width=${screenWidth},height=${screenHeight},top=0,left=0`;
 
-        window.open(url, '_blank', features);
+      // Open the new window
+      newWinRef = window.open(url, "_blank", `width=${screenWidth},height=${screenHeight},fullscreen=yes`);
+
+      if (newWinRef) {
+        const monitorWindow = setInterval(() => {
+          if (newWinRef.closed) {
+            console.log("Quiz window closed");
+            clearInterval(monitorWindow);
+
+           
+              fetch(`${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${studentId}/${testCreationTableId}`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  studentId: studentId,
+                  testCreationTableId: testCreationTableId,
+                }),
+              }).catch((error) => {
+                console.error("Error deleting data on window close:", error);
+              });
+            
+          }
+        }, 1000);
       } else {
-        console.error('Failed to insert/update test status:', result.error);
+        console.error("Failed to open the quiz window.");
       }
-    } catch (error) {
-      console.error('Error during test status insertion/update:', error);
+    } else {
+      console.error('Failed to insert/update test status:', result.error);
     }
-  };
+  } catch (error) {
+    console.error('Error during test status insertion/update:', error);
+  }
+};
+
 
   const handleViewReportClickMycourses = (testId,test) => {
     // console.log("test",test)
@@ -212,6 +325,17 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
           </div>
         )}
       </div>
+
+      {showPopup && (
+        <div className={styles.modalOverlayTest}>
+          <div className={styles.modalContentTest}>
+            <h3>Active Test In Progress</h3>
+            <p>You already have an active test. Please complete it before starting a new one.</p>
+            <button onClick={() => setShowPopup(false)} className={styles.closeModalBtnTest}>Close</button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
