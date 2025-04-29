@@ -374,7 +374,7 @@ const itemsPerPage = 5;
             }}
             style={{ width: '100%', height: '10rem' }}
           />
-          <button 
+          <button  className={styles.SaveBtnForInstrctionpage}
             onClick={() => handleUpdate(point.id, point.point)}  
             style={{ marginTop: '10px', cursor: 'pointer' }}
           >
