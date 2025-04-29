@@ -66,7 +66,7 @@ setMenuOpen(prev => !prev)
  
         <Link to="/AdminProfiler" onClick={closeMenu}>
           <button className={isActive('/AdminProfiler') ? styles.active : ''}>
-            Profile
+             Admin Profile
             {isActive('/AdminProfiler') && <span className={styles.activeDot}></span>}
           </button>
         </Link>

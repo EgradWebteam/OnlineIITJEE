@@ -11,7 +11,7 @@ const MainPageCourseCards = memo(() => {
 
   const [showComingSoonPopup, setShowComingSoonPopup] = useState(false);
   // Extract the studentId from localStorage
-  const studentId = localStorage.getItem("decryptedId");
+  const studentId = localStorage.getItem("userId");
   const studentDashboardPath = `/StudentDashboard/${studentId}`;
 
   const isOnStudentDashboard = location.pathname.startsWith(`/StudentDashboard/`);

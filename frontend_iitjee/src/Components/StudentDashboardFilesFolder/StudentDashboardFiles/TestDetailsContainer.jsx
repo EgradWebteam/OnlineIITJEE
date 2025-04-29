@@ -54,6 +54,15 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
 
   const handleStartTestClick = async (testCreationTableId) => {
     try {
+        // calling test attemt status api
+    const checkActiveTestResponse = await fetch(`${BASE_URL}/studentmycourses/CheckActiveTestOfStudent/${studentId}`);
+    const checkActiveTestData = await checkActiveTestResponse.json();
+
+    // If there's already an active test, block the user
+    if (checkActiveTestData.activeTestExists) {
+      alert("You already have an active test in progress. Please complete it before starting another one.");
+      return;
+    }
       const [encryptedTestId, encryptedStudentId] = await encryptBatch([testCreationTableId, studentId]);
 
       const testStatusData = {

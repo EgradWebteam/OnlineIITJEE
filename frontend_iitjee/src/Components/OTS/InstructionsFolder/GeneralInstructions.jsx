@@ -6,7 +6,7 @@ import styles from "../../../Styles/OTSCSS/OTSMain.module.css"
 import OTSHeader from '../OTSHeaderFolder/OTSHeader.jsx';
 import {useStudent} from "../../../ContextFolder/StudentContext.jsx";
 import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx';
-
+import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 import adminCapImg from '../../../assets/logoCap.jpeg';
 const GeneralInstructions = () => {
@@ -26,6 +26,39 @@ const GeneralInstructions = () => {
     //  Read adminInfo from localStorage
   const adminInfo = JSON.parse(localStorage.getItem("adminInfo"));
   const isAdmin = adminInfo?.role === "admin";
+
+      //WINDOW CLOSE DATA DELETE CODE START
+      useEffect(() => {
+        const handleUnload = () => {
+          if (realTestId && realStudentId) {
+            const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`;
+    
+            // Use navigator.sendBeacon with POST to a wrapper endpoint, or use fetch (less reliable)
+            // We'll use fetch here as it's DELETE
+            navigator.sendBeacon = navigator.sendBeacon || function () {}; // fallback
+    
+            // Use fetch (best effort; may not always complete before unload)
+            fetch(url, {
+              method: "DELETE",
+            })
+              .then((res) => {
+                //console.log("Deletion request sent on window close", res.status);
+              })
+              .catch((err) => {
+                console.error(
+                  "Error sending deletion request on window close",
+                  err
+                );
+              });
+          }
+        };
+    
+        window.addEventListener("unload", handleUnload);
+    
+        return () => {
+          window.removeEventListener("unload", handleUnload);
+        };
+      }, [realTestId, realStudentId]);
 
     useEffect(() => {
         const token = sessionStorage.getItem("navigationToken");

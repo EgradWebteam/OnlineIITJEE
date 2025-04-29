@@ -357,7 +357,7 @@ const getImageUrl = (fileName) => {
       const [users] = await db.query(sql, [email]);
   
       if (users.length === 0) {
-        return res.status(400).json({ message: "Invalid email or password" });
+        return res.status(401).json({ message: "Invalid email or password" });
       }
   
       const user = users[0];
@@ -373,7 +373,7 @@ const getImageUrl = (fileName) => {
       const isMatch = await bcryptjs.compare(password, user.password);
   
       if (!isMatch) {
-        return res.status(400).json({ message: "Invalid email or password" });
+        return res.status(401).json({ message: "Invalid email or password" });
       }
   
       // 4. Generate new session and access token
@@ -422,7 +422,7 @@ router.post("/studentLogout", async (req, res) => {
   const { sessionId } = req.body; // Assume sessionId is passed in the request body
 
   if (!sessionId) {
-    return res.status(400).json({ message: "Session ID is required" });
+    return res.status(401).json({ message: "Session ID is required" });
   }
 
   try {
@@ -437,7 +437,7 @@ router.post("/studentLogout", async (req, res) => {
     // Check if any rows were affected
     if (result.affectedRows === 0) {
       return res
-        .status(400)
+        .status(401)
         .json({ message: "Invalid session ID or user already logged out" });
     }
 

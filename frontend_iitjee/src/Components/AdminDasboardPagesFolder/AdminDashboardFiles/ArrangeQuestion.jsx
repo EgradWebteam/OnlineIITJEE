@@ -10,6 +10,7 @@ const ArrangeQuestions = ({ data, onClose }) => {
 
   useEffect(() => {
     const fetchTestPaper = async () => {
+      debugger
       try {
         const response = await axios.get(`${BASE_URL}/TestCreation/ViewTestPaper/${testId}`);
         const paper = response.data;
@@ -84,11 +85,17 @@ const ArrangeQuestions = ({ data, onClose }) => {
                         <p>
                           <strong>Subject:</strong> {question.SubjectName} | <strong>Section:</strong> {question.SectionName}
                         </p>
-                        <p><strong>Question ID:</strong> {question.question_id}</p>
+                        <p><strong>Question {`${index + 1}`}</strong> </p>
                         <img
                           src={question.questionImgName}
                           alt="Question"
-                          style={{ width: "300px", height: "auto" }}
+                          style={{
+                            maxWidth: "100%",
+                            maxHeight: "300px",
+                            height: "auto",
+                            display: "block",
+                            marginTop: "10px"
+                          }}
                         />
                         <div style={{ marginTop: "1rem" }}>
                           {question.options?.map((option) => (
@@ -97,7 +104,13 @@ const ArrangeQuestions = ({ data, onClose }) => {
                               <img
                                 src={option.optionImgName}
                                 alt={`Option ${option.option_index}`}
-                                style={{ width: "150px", height: "auto", marginLeft: "10px" }}
+                                style={{
+                                  maxWidth: "150px",
+                                  maxHeight: "150px",
+                                  height: "auto",
+                                  marginLeft: "10px",
+                                  display: "block"
+                                }}
                               />
                             </div>
                           ))}

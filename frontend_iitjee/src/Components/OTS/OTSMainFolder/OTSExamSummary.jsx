@@ -22,10 +22,6 @@ const ExamSummaryComponent = ({
     visitedCount,
     totalQuestionsInTest,
   } = useQuestionStatus();
-
-
-  
-
   const [courseCreationId, setCourseCreationId] = useState([]);
 
   
@@ -119,6 +115,12 @@ const ExamSummaryComponent = ({
 
       // console.log("Test status updated successfully");
 
+        // Check for missing IDs (admin/test mode safeguard)
+    if (!realTestId || !realStudentId) {
+      console.warn("Missing test/student ID, skipping summary and marks fetch.");
+      return;
+    }
+
       const [summaryRes, marksRes] = await Promise.allSettled([
         fetch(
           `${BASE_URL}/OTSExamSummary/FetchExamSummaryCounts/${realTestId}/${realStudentId}`
@@ -153,30 +155,65 @@ const ExamSummaryComponent = ({
     }
   };
 
+  // const handleViewReport = () => {
+  //   localStorage.removeItem("examSummaryEntered");
+  //   localStorage.removeItem("examSubmitted");
+  //   const localStorageUserId = localStorage.getItem('userId');
+  //   // Pass 'results' section via URL param (for immediate effect)
+  //   const destinationURL = `/StudentDashboard/${localStorageUserId}?section=results`;
+
+  //   if (window.opener) {
+  //     // Set location of opener (parent window)
+  //     window.opener.location.href = destinationURL;
+
+  //     // Optional: Add safety net token too
+  //     window.opener.localStorage.setItem("activeSection", "results");
+
+  //     // Close current popup
+  //     setTimeout(() => {
+  //       window.open("", "_self").close();
+  //     }, 50);
+  //   } else {
+  //     // Fallback if not a popup
+  //     localStorage.setItem("activeSection", "results");
+  //     window.location.href = destinationURL;
+  //   }
+  // };
+
   const handleViewReport = () => {
     localStorage.removeItem("examSummaryEntered");
     localStorage.removeItem("examSubmitted");
+  
     const localStorageUserId = localStorage.getItem('userId');
-    // Pass 'results' section via URL param (for immediate effect)
-    const destinationURL = `/StudentDashboard/${localStorageUserId}?section=results`;
-
-    if (window.opener) {
-      // Set location of opener (parent window)
-      window.opener.location.href = destinationURL;
-
-      // Optional: Add safety net token too
-      window.opener.localStorage.setItem("activeSection", "results");
-
-      // Close current popup
-      setTimeout(() => {
-        window.open("", "_self").close();
-      }, 50);
+    const adminInfo = JSON.parse(localStorage.getItem("adminInfo"));
+    const isAdmin = adminInfo?.role === "admin";
+  
+    if (isAdmin) {
+      if (window.opener) {
+        window.opener.location.href = "/AdminDashboard";
+        setTimeout(() => {
+          window.open("", "_self").close();
+        }, 50);
+      } else {
+        window.location.href = "/AdminDashboard";
+      }
     } else {
-      // Fallback if not a popup
-      localStorage.setItem("activeSection", "results");
-      window.location.href = destinationURL;
+      const destinationURL = `/StudentDashboard/${localStorageUserId}?section=results`;
+  
+      if (window.opener) {
+        window.opener.location.href = destinationURL;
+        window.opener.localStorage.setItem("activeSection", "results");
+  
+        setTimeout(() => {
+          window.open("", "_self").close();
+        }, 50);
+      } else {
+        localStorage.setItem("activeSection", "results");
+        window.location.href = destinationURL;
+      }
     }
   };
+  
 
   return (
     <div className={styles.examSummaryContainer}>

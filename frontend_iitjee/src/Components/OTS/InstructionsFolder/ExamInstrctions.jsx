@@ -32,6 +32,39 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
   const adminInfo = JSON.parse(localStorage.getItem("adminInfo"));
   const isAdmin = adminInfo?.role === "admin";
 
+    //WINDOW CLOSE DATA DELETE CODE START
+    useEffect(() => {
+      const handleUnload = () => {
+        if (realTestId && realStudentId) {
+          const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`;
+  
+          // Use navigator.sendBeacon with POST to a wrapper endpoint, or use fetch (less reliable)
+          // We'll use fetch here as it's DELETE
+          navigator.sendBeacon = navigator.sendBeacon || function () {}; // fallback
+  
+          // Use fetch (best effort; may not always complete before unload)
+          fetch(url, {
+            method: "DELETE",
+          })
+            .then((res) => {
+              //console.log("Deletion request sent on window close", res.status);
+            })
+            .catch((err) => {
+              console.error(
+                "Error sending deletion request on window close",
+                err
+              );
+            });
+        }
+      };
+  
+      window.addEventListener("unload", handleUnload);
+  
+      return () => {
+        window.removeEventListener("unload", handleUnload);
+      };
+    }, [realTestId, realStudentId]);
+    
   useEffect(() => {
     const token = sessionStorage.getItem("navigationToken");
     if (!token) {
@@ -84,6 +117,7 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
       </div>
     );
   }
+
 
   const examName = instructionsData[0]?.exam_name || "Exam";
   const instructionPoints = instructionsData[0]?.instruction_points || [];

@@ -467,6 +467,7 @@ const [showPopup, setShowPopup] = useState(false);
                 })
                 .map((student, index) => (
                   <div className={styles.StudentInformationfromDB}>
+                    <div>
                     <div className={styles.ProfileForStdDetails}>
                       <FaUser />
                     </div>
@@ -512,6 +513,7 @@ const [showPopup, setShowPopup] = useState(false);
                           Edit
                         </button>
                       </div>
+                    </div>
                     </div>
                   </div>
                 ))}

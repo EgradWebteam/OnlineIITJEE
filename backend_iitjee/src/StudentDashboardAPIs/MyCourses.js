@@ -292,6 +292,41 @@ router.post("/InsertOrUpdateTestAttemptStatus", async (req, res) => {
   }
 });
 
+router.get('/CheckActiveTestOfStudent/:studentRegistrationId', async (req, res) => {
+ 
+  const { studentRegistrationId } = req.params; // Retrieve from req.params
+  console.log("studentRegistrationId", studentRegistrationId); // This should log the studentRegistrationId from the URL
+ 
+  if (!studentRegistrationId) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+ 
+  const testAttemptStatus = "started";
+  const testConnectionStatus = "active";
+ 
+  try {
+    // SQL query to check if there is an active test for the student
+    const query = `
+      SELECT COUNT(*) AS activeTestCount
+      FROM iit_db.iit_test_status_details
+      WHERE student_registration_id = ?
+        AND (test_attempt_status = ? AND test_connection_status = ?)
+    `;
+   
+    // Execute the query
+    const [rows] = await db.execute(query, [studentRegistrationId, testAttemptStatus, testConnectionStatus]);
+   
+    // If count > 0, there is an active test
+    const activeTestExists = rows[0].activeTestCount > 0;
+   
+    // Send response
+    return res.json({ activeTestExists });
+   
+  } catch (error) {
+    console.error('Error checking active test:', error);
+    return res.status(500).json({ error: 'Server error' });
+  }
+});
 router.get("/instructions/:test_creation_table_id", async (req, res) => {
   const { test_creation_table_id } = req.params;
   // console.log("Received request for instructions:", { test_creation_table_id });
