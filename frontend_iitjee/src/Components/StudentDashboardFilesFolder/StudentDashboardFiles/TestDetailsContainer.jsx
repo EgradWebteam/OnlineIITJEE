@@ -9,6 +9,7 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
   const [groupedTests, setGroupedTests] = useState({});
   const [courseName, setCourseName] = useState('');
   const [selectedTestType, setSelectedTestType] = useState('Select Type Of Test');
+  const [showPopup, setShowPopup] = useState(false);
 
   const course_creation_id = course?.course_creation_id;
   const navigate = useNavigate();
@@ -60,7 +61,8 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
 
     // If there's already an active test, block the user
     if (checkActiveTestData.activeTestExists) {
-      alert("You already have an active test in progress. Please complete it before starting another one.");
+      // alert("You already have an active test in progress. Please complete it before starting another one.");
+      setShowPopup(true);
       return;
     }
       const [encryptedTestId, encryptedStudentId] = await encryptBatch([testCreationTableId, studentId]);
@@ -212,6 +214,17 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
           </div>
         )}
       </div>
+
+      {showPopup && (
+        <div className={styles.modalOverlayTest}>
+          <div className={styles.modalContentTest}>
+            <h3>Active Test In Progress</h3>
+            <p>You already have an active test. Please complete it before starting a new one.</p>
+            <button onClick={() => setShowPopup(false)} className={styles.closeModalBtnTest}>Close</button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
