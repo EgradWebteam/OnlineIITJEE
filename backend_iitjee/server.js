@@ -10,7 +10,7 @@ const path = require("path");
 
 app.use(cors({
   origin: [
-    "https://icy-sand-03dfe2700.6.azurestaticapps.net",
+    "https://iitjee.egradtutor.in",
     "http://localhost:5173"
   ],
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
