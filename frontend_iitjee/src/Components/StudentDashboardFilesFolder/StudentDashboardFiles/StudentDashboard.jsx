@@ -33,21 +33,21 @@ export default function StudentDashboard() {
       localStorage.setItem("activeSection", section);
     }, []);
     const location = useLocation();
-    useEffect(() => {
-      const localStorageUserId = localStorage.getItem('userId');
-      console.log('URL User ID:', urlUserId); 
-      console.log('LocalStorage User ID:', localStorageUserId); 
+    // useEffect(() => {
+    //   const localStorageUserId = localStorage.getItem('userId');
+    //   console.log('URL User ID:', urlUserId); 
+    //   console.log('LocalStorage User ID:', localStorageUserId); 
     
-      if (urlUserId !== localStorageUserId) {
-        console.log('User IDs do not match, redirecting to Error page.');
-        navigate('/LoginPage');
-        return;
-      }
+    //   if (urlUserId !== localStorageUserId) {
+    //     console.log('User IDs do not match, redirecting to Error page.');
+    //     navigate('/LoginPage');
+    //     return;
+    //   }
     
-      console.log('User IDs match, proceeding with loading dashboard.');
-      setIsLoading(false);
+    //   console.log('User IDs match, proceeding with loading dashboard.');
+    //   setIsLoading(false);
     
-    }, [urlUserId, navigate]);
+    // }, [urlUserId]);
     
   
     useEffect(() => {
