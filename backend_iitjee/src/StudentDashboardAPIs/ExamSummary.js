@@ -651,58 +651,10 @@ router.get(
   }
 );
 
-// router.post("/DeleteStudentDataWindowClose/:studentId/:testCreationTableId", async (req, res) => {
-//   try {
-//     const { studentId, testCreationTableId } = req.params; // Correcting to extract parameters from req.params
-
-//     if (!studentId || !testCreationTableId) {
-//       return res.status(400).json({ message: "Missing parameters" });
-//     }
-
-//     const testStatus = await db.query(
-//       `SELECT test_attempt_status FROM iit_test_status_details WHERE student_registration_id = ? AND test_creation_table_id = ?`,
-//       [studentId, testCreationTableId]
-//     );
-
-//     // console.log("Test Status:", testStatus);
-
-//     if (!testStatus || testStatus.length === 0) {
-//       // console.log("No test record found, skipping deletion.");
-//       return res.status(404).json({ message: "No test record found." });
-//     }
-
-//     // Flatten the testStatus array and check if any status is 'completed'
-//     const isCompleted = testStatus.flat().some(status => status.testAttemptStatus && status.testAttemptStatus.toLowerCase() === "completed");
-
-//     if (isCompleted) {
-//       // console.log("Test was completed. Data not deleted.");
-//       return res.status(200).json({ message: "Test completed, data not deleted." });
-//     }
-
-//     // Proceed with deletion if testAttemptStatus is not "completed"
-//     const deleteQueries = [
-//       { query: `DELETE FROM iit_user_responses WHERE student_registration_id = ? AND test_creation_table_id = ?`, values: [studentId, testCreationTableId] },
-//       { query: `DELETE FROM iit_student_exam_summary WHERE student_registration_id = ? AND test_creation_table_id = ?`, values: [studentId, testCreationTableId] },
-//       { query: `DELETE FROM iit_test_status_details WHERE student_registration_id = ? AND test_creation_table_id = ?`, values: [studentId, testCreationTableId] },
-//       { query: `DELETE FROM iit_student_marks WHERE student_registration_id = ? AND test_creation_table_id = ?`, values: [studentId, testCreationTableId] },
-//     ];
-
-//     for (const { query, values } of deleteQueries) {
-//       await db.query(query, values);
-//     }
-
-//     // console.log(`Test data deleted for student ${studentId} (Test ID: ${testCreationTableId})`);
-//     return res.status(200).json({ message: "Test data deleted successfully." });
-
-//   } catch (error) {
-//     console.error("Error deleting user data:", error);
-//     return res.status(500).json({ message: "Internal server error", error: error.message });
-//   }
-// });
-router.post("/DeleteStudentDataWindowClose", async (req, res) => {
+router.post("/DeleteStudentDataWindowClose/:studentId/:testCreationTableId", async (req, res) => {
   try {
-    const { studentId, testCreationTableId } = req.body;
-
+    const { studentId, testCreationTableId } = req.params; // Correcting to extract parameters from req.params
+    console.log("Delete request received", req.params);
     if (!studentId || !testCreationTableId) {
       return res.status(400).json({ message: "Missing parameters" });
     }
@@ -712,43 +664,35 @@ router.post("/DeleteStudentDataWindowClose", async (req, res) => {
       [studentId, testCreationTableId]
     );
 
+    // console.log("Test Status:", testStatus);
+
     if (!testStatus || testStatus.length === 0) {
+      // console.log("No test record found, skipping deletion.");
       return res.status(404).json({ message: "No test record found." });
     }
 
-    const isCompleted = testStatus.flat().some(status =>
-      status.testAttemptStatus &&
-      status.testAttemptStatus.toLowerCase() === "completed"
-    );
+    // Flatten the testStatus array and check if any status is 'completed'
+    const isCompleted = testStatus.flat().some(status => status.testAttemptStatus && status.testAttemptStatus.toLowerCase() === "completed");
 
     if (isCompleted) {
+      // console.log("Test was completed. Data not deleted.");
       return res.status(200).json({ message: "Test completed, data not deleted." });
     }
 
+    // Proceed with deletion if testAttemptStatus is not "completed"
     const deleteQueries = [
-      {
-        query: `DELETE FROM iit_user_responses WHERE student_registration_id = ? AND test_creation_table_id = ?`,
-        values: [studentId, testCreationTableId]
-      },
-      {
-        query: `DELETE FROM iit_student_exam_summary WHERE student_registration_id = ? AND test_creation_table_id = ?`,
-        values: [studentId, testCreationTableId]
-      },
-      {
-        query: `DELETE FROM iit_test_status_details WHERE student_registration_id = ? AND test_creation_table_id = ?`,
-        values: [studentId, testCreationTableId]
-      },
-      {
-        query: `DELETE FROM iit_student_marks WHERE student_registration_id = ? AND test_creation_table_id = ?`,
-        values: [studentId, testCreationTableId]
-      }
+      { query: `DELETE FROM iit_user_responses WHERE student_registration_id = ? AND test_creation_table_id = ?`, values: [studentId, testCreationTableId] },
+      { query: `DELETE FROM iit_student_exam_summary WHERE student_registration_id = ? AND test_creation_table_id = ?`, values: [studentId, testCreationTableId] },
+      { query: `DELETE FROM iit_test_status_details WHERE student_registration_id = ? AND test_creation_table_id = ?`, values: [studentId, testCreationTableId] },
+      { query: `DELETE FROM iit_student_marks WHERE student_registration_id = ? AND test_creation_table_id = ?`, values: [studentId, testCreationTableId] },
     ];
 
     for (const { query, values } of deleteQueries) {
       await db.query(query, values);
     }
 
-    return res.status(204).end(); // No content, faster for sendBeacon
+    // console.log(`Test data deleted for student ${studentId} (Test ID: ${testCreationTableId})`);
+    return res.status(200).json({ message: "Test data deleted successfully." });
 
   } catch (error) {
     console.error("Error deleting user data:", error);

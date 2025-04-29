@@ -64,45 +64,65 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
     //     window.removeEventListener("unload", handleUnload);
     //   };
     // }, [realTestId, realStudentId]);
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+          if (realTestId && realStudentId) {
+            const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`;
+     
+            const data = JSON.stringify({
+              studentId: realStudentId,
+              testCreationTableId: realTestId,
+            });
+     
+            const blob = new Blob([data], { type: "application/json" });
+            navigator.sendBeacon(url, blob);
+          }
+        };
+     
+        window.addEventListener("beforeunload", handleBeforeUnload);
+     
+        return () => {
+          window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+      }, [realStudentId, realTestId]);
 
-
-    const handleBeforeUnload = useCallback(
-      async (event) => {
+    // const handleBeforeUnload = useCallback(
+    //   async (event) => {
   
   
-        try {
-          await fetch(`${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`, {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              studentId: realStudentId, // User ID
-              testCreationTableId: realTestId, // Test ID
-            }),
-          });
-          console.log(
-            "User data deleted successfully before closing the window."
-          );
-        } catch (error) {
-          console.error("Error deleting user data:", error);
-        }
+    //     try {
+    //       await fetch(`${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`, {
+    //         method: "DELETE",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify({
+    //           studentId: realStudentId, // User ID
+    //           testCreationTableId: realTestId, // Test ID
+    //         }),
+    //       });
+    //       console.log(
+    //         "User data deleted successfully before closing the window."
+    //       );
+    //     } catch (error) {
+    //       console.error("Error deleting user data:", error);
+    //     }
        
   
-        // Once deletion is successful, remove the 'beforeunload' listener
-        window.removeEventListener("beforeunload", preventUnload);
+    //     // Once deletion is successful, remove the 'beforeunload' listener
+    //     window.removeEventListener("beforeunload", preventUnload);
     
      
-      },
-      [realStudentId,realTestId]
-    );
+    //   },
+    //   [realStudentId,realTestId]
+    // );
 
-    useEffect(() => {
-      window.addEventListener("beforeunload", handleBeforeUnload);
-      return () => {
-        window.removeEventListener("beforeunload", handleBeforeUnload);
-      };
-    }, [handleBeforeUnload]);
+    // useEffect(() => {
+    //   window.addEventListener("beforeunload", handleBeforeUnload);
+    //   return () => {
+    //     window.removeEventListener("beforeunload", handleBeforeUnload);
+    //   };
+    // }, [handleBeforeUnload]);
     
   useEffect(() => {
     const token = sessionStorage.getItem("navigationToken");
