@@ -225,7 +225,7 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
         onSubmit={handleSubmit}
       >
         <div className={styles.CourseFormSubPagesContainer}>
-          <div className={styles.CourseFormSubPage}>
+          <div className={styles.CourseFormSubPage1}>
             <h5 className={styles.SmallHeadingForCourse}>Course Details:</h5>
             <div className={styles.CourseForInputSubContainer}>
               <div className={styles.InputBoxForCourses1}>
@@ -389,14 +389,17 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
             </div>
           </div>
 
-          <div className={styles.CourseFormSubPage}>
+          <div className={styles.CourseFormSubPage2}>
             {portalid == 1 && (
               <div className={styles.SelectBoxForCourses}>
                 <div className={styles.HeadingForSubjectsSelectCourse}>
                   <label>Type of Test:</label>
                 </div>
                 {types.map((testType) => (
+                  <div className={styles.SelectLableFlex}>
                   <label key={testType.type_of_test_id}>
+                  {testType.type_of_test_name}
+                  </label>
                     <input
                       type="checkbox"
                       value={testType.type_of_test_id}
@@ -410,8 +413,8 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
                         }
                       }}
                     />
-                    {testType.type_of_test_name}
-                  </label>
+                   
+                  </div>
                 ))}
               </div>
             )}

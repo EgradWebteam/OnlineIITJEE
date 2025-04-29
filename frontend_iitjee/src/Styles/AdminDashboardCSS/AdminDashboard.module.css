@@ -49,7 +49,8 @@ nav ul li .active {
   background: #f9fafc;
   display: flex;
   flex-direction: column;
-  position: relative;
+  width: 70%;
+  margin: 1rem auto;
 }
 .pageHeading {
   font-size: 28px;
@@ -451,12 +452,18 @@ nav ul li .active {
   .headerButtons button {
     font-size: 0.8rem;
     padding: 6px 8px;
-    margin: 5px 10px;
+    margin: 5px 0px;
   }
 }
 
 /* Mobile layout */
 @media (max-width: 768px) {
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+  }
   .headerButtons {
     display: flex;
     flex-direction: column;
@@ -477,7 +484,7 @@ nav ul li .active {
   }
 .sidebar{
   position: fixed;
-  top: 137px;
+  top: 143px;
   left: 0;
   z-index: 1;
   transform: translateX(-100%);
@@ -497,5 +504,19 @@ nav ul li .active {
 
   .dashboard-title {
     font-size: 1.2rem;
+  }
+  .headerImg {
+    height: 50px;
+  }
+  .headerImg img {
+    height: 100%;
+    object-fit: contain;
+  }
+  
+}
+@media(max-width:600px){
+  .sidebar{
+    top:120px;
+  left: 0;
   }
 }
