@@ -15,7 +15,7 @@ const fetch = (...args) =>
 
 // ENV VARIABLES
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
-const sasToken = process.env.AZURE_SAS_TOKEN;
+const sasToken = process.env.AZURE_SAS_TOKEN_UPLOADS;
 const containerName = process.env.AZURE_CONTAINER_NAME;
 const testDocumentFolderName = process.env.AZURE_DOCUMENT_FOLDER;
 const BackendBASE_URL = process.env.BASE_URL;
@@ -62,9 +62,7 @@ router.get(
   "/SectionNames/:test_creation_table_id/:subject_id",
   async (req, res) => {
     try {
-      const { test_creation_table_id, subject_id } = req.params; // Accessing the subject_id from the route parameter
-
-      // Query to fetch section names for a given subject
+      const { test_creation_table_id, subject_id } = req.params; 
       const [sectionName] = await db.query(
         `SELECT  
                 tc.test_creation_table_id,  
@@ -83,15 +81,11 @@ router.get(
               tc.test_creation_table_id = ? AND s.subject_id = ?`,
         [test_creation_table_id, subject_id]
       );
-
-      // Check if sections are found
       if (sectionName.length === 0) {
         return res
           .status(404)
           .json({ error: "No sections found for this subject" });
       }
-
-      // Return sections in a clean structure
       res.json({ sectionName });
     } catch (err) {
       console.error("Error fetching section details:", err);

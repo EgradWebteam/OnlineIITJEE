@@ -116,7 +116,7 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
       </div>
 
       <div className={styles.courseNameHolderDiv}>
-        <h2>{courseName}</h2>
+        <h2 className={styles.CourseNameForTest}>{courseName}</h2>
       </div>
 
       <div className={styles.typeOfTestsSelector}>

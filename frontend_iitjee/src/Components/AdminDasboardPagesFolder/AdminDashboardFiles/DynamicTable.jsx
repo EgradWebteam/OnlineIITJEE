@@ -21,14 +21,12 @@ const DynamicTable = ({
   setShowInstructionPoints,
   showEdit = true,
   showToggle = true,
-  tableType, 
+  course
 }) => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [popupType, setPopupType] = useState(""); 
   const [showModal, setShowModal] = useState(false);
-
-
-
+console.log(type,"type")
   const handleOptionSelect = (e, row) => {
     const selectedOption = e.target.value;
 
@@ -93,8 +91,15 @@ const DynamicTable = ({
   };
 
   const handleClosePopup = () => {
+    setPopupType("");  
+    setSelectedRow(null); 
+    setShowModal(false);  
+  };
+  
+  const handleCloseModal = () => {
+    setShowModal(false); 
     setPopupType("");
-    setSelectedRow(null);
+    setSelectedRow(null);  
   };
 
   const handleOpenModal = (row) => {
@@ -110,10 +115,7 @@ const DynamicTable = ({
     }
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false); 
-    setSelectedRow(null);
-  };
+
 
   return (
     <div className={styles.tableWrapper}>
@@ -190,7 +192,7 @@ const DynamicTable = ({
                           : styles.deactivate
                       }`}
                       onClick={() => {
-                        console.log("Toggle clicked for row:", row);
+                        // console.log("Toggle clicked for row:", row);
                         onToggle(row);
                       }}
                       title={

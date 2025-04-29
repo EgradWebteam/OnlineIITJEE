@@ -85,7 +85,7 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
       });
 
       setExerciseStatus(statuses);
-      console.log(statuses);
+      //console.log(statuses);
     } catch (err) {
       console.error("Error fetching exercise status:", err);
       setError(err);
@@ -222,22 +222,18 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
     console.log("gd");
 
     if (selectedExercise) {
-      console.log("gdgdgd");
-      console.log(selectedExercise);
-      console.log(
-        selectedExercise?.questions?.[currentQuestionIndex]
-          ?.exercise_question_id
-      );
+      // console.log("gdgdgd");
+      // console.log(selectedExercise);
+      // console.log(
+      //   selectedExercise?.questions?.[currentQuestionIndex]
+      //     ?.exercise_question_id
+      // );
       const questionid =
         selectedExercise?.questions?.[currentQuestionIndex]
           ?.exercise_question_id;
-      if (!questionid) return; // If there's no questionid, exit early
-
-      // Check if exerciseStatus is an object and not null
+      if (!questionid) return; 
       if (exerciseStatus && typeof exerciseStatus === "object") {
-        const status = exerciseStatus[questionid]; // Get the status for the current question
-
-        // Only submit if the status is "NotVisited"
+        const status = exerciseStatus[questionid]; 
         if (status === "unvisited") {
           submitExerciseStatus(questionid);
           setAnswerDisabled(false);
@@ -256,10 +252,10 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
           setSolutionVideo(null);
           setSolutionImage(null);
           setSelectedOptions([]);
-          console.log({ alldhf: "Question already visited or answered" });
+          //console.log({ alldhf: "Question already visited or answered" });
         }
       } else {
-        console.log("exerciseStatus or questionid is invalid.");
+        //console.log("exerciseStatus or questionid is invalid.");
       }
     }
   }, [selectedExercise, currentQuestionIndex, exerciseStatus]);
@@ -292,15 +288,15 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
 
       const data = await response.json();
       fetchExerciseStatus();
-      console.log("Response submitted:", data);
+      //console.log("Response submitted:", data);
     } catch (error) {
-      console.error("Error submitting exercise status:", error);
+      //console.error("Error submitting exercise status:", error);
     }
   };
   const handleLectureClick = (lecture) => {
     setSelectedLecture(lecture);
-    setSelectedExercise(null); // Don't auto-start exercise
-    setShowExercise(false); // Start with lecture only
+    setSelectedExercise(null); 
+    setShowExercise(false); 
     setShowPopup(true);
     setUserStatus(null);
   };
@@ -326,7 +322,7 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
 
   const handleClosePopup = async () => {
     if (selectedLecture) {
-      console.log("hi");
+      //console.log("hi");
       await trackVideoVisitpost(selectedLecture.orvl_lecture_name_id); // Ensure this finishes first
     }
 
@@ -451,7 +447,7 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
     try {
       const savedProgress = localStorage.getItem(`${videoId}:playedTime`);
       const savedTotalTime = localStorage.getItem(`${videoId}:totalTime`);
-      console.log(savedProgress, savedTotalTime);
+      //console.log(savedProgress, savedTotalTime);
 
       if (
         !studentId ||
@@ -462,9 +458,9 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
         !savedTotalTime ||
         savedTotalTime === null
       ) {
-        console.log(
-          "Missing required data: studentId, topicid, or videoId, savedProgress, savedTotalTime."
-        );
+        // console.log(
+        //   "Missing required data: studentId, topicid, or videoId, savedProgress, savedTotalTime."
+        // );
         return;
       }
 
@@ -488,7 +484,7 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
       }
 
       const data = await response.json();
-      console.log("Successfully tracked video visit:", data);
+      //console.log("Successfully tracked video visit:", data);
 
       localStorage.removeItem(`${videoId}:playedTime`);
       localStorage.removeItem(`${videoId}:totalTime`);
@@ -499,14 +495,14 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
 
   useEffect(() => {
     const handleBeforeUnload = () => {
-      console.log("fgjdf");
+      //console.log("fgjdf");
       if (selectedLecture && !showExercise) {
         trackVideoVisitpost(selectedLecture.orvl_lecture_name_id);
       }
     };
 
     const handleRouteChange = () => {
-      console.log("fgjdf");
+      //console.log("fgjdf");
       if (selectedLecture && !showExercise) {
         trackVideoVisitpost(selectedLecture.orvl_lecture_name_id);
       }
@@ -523,7 +519,7 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, selectedLecture, showExercise]);
   const orvlpdf = courseData?.orvl_topic_pdf;
-  console.log(orvlpdf);
+  //console.log(orvlpdf);
   if (loading)
     return (
       <div>

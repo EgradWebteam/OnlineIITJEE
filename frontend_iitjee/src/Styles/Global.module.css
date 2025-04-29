@@ -16,6 +16,7 @@
 .examButtonsDiv{
   margin: 1rem ;
   display: flex;
+
   gap: 10px;
 }
 .OrvlLectureCards{
@@ -126,6 +127,10 @@
 .OrvlCourseTopicHeader{
   font-size: 25px;
 }
+.examButtonsDiv{
+  align-items: center;
+  justify-content: center;
+}
 }
 
 @media (max-width:425px) {
@@ -146,6 +151,10 @@
 .examButtonsDiv{
   align-items: center;
   justify-content: center;
+
+}
+.examButtons{
+  padding: 10px;
 }
  .OrvlCourseTopicHeader{
   font-size: 25px;

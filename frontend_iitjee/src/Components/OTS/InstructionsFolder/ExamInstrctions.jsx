@@ -153,7 +153,9 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
                 />
               )}
             </div>
+            <div className={styles.StdNameForData}>
             <p>{isAdmin ? "Admin" : studentName}</p>
+            </div>
           </div>
         </div>
       </div>

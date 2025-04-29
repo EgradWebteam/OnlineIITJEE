@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import styles from "../../../Styles/StudentDashboardCSS/Student.module.css";
-
+import { Link } from "react-router-dom";
 export default function StudentLoginFormeGradTutor({
   isForgotPassword,
   isResetPassword,
@@ -17,11 +17,13 @@ export default function StudentLoginFormeGradTutor({
   setResetCode,
   handleLogin,
   handleForgotPassword,
-  handleResetPassword, // This is the function that handles the reset password API call
+  handleResetPassword,
+  setIsForgotPassword,
+  setIsResetPassword,
 }) {
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
-  const [showNewPassword, setShowNewPassword] = useState(false); // State to toggle new password visibility
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State to toggle confirm password visibility
+  const [showPassword, setShowPassword] = useState(false); 
+  const [showNewPassword, setShowNewPassword] = useState(false); 
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); 
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -29,11 +31,6 @@ export default function StudentLoginFormeGradTutor({
   const confirmPasswordRef = useRef(null);
   const resetCodeRef = useRef(null);
 
-
-
-  
-
-  // Function to handle button text change depending on mode
   const getButtonText = () => {
     if (isForgotPassword) {
       return isResetPassword ? "Save Password" : "Send Reset Code";
@@ -42,7 +39,6 @@ export default function StudentLoginFormeGradTutor({
     }
   };
 
-  // Determine if the button should be disabled
   const isButtonDisabled = () => {
     if (isForgotPassword) {
       return isResetPassword ? !isPasswordValid(passwordCriteria) || newPassword !== confirmPassword : false;
@@ -179,17 +175,17 @@ export default function StudentLoginFormeGradTutor({
             <label>Confirm Password:</label>
             <div className={styles.passwordInputWrapper}>
               <input
-                type={showConfirmPassword ? "text" : "password"} // Toggle password visibility
+                type={showConfirmPassword ? "text" : "password"} 
                 placeholder="Confirm your new password"
                 name="confirmPassword"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                ref={confirmPasswordRef} // Use ref here
+                ref={confirmPasswordRef}
                 required
               />
               <span
                 className={styles.passwordToggle}
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)} // Toggle confirm password visibility
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)} 
               >
                 {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
@@ -210,6 +206,20 @@ export default function StudentLoginFormeGradTutor({
           {getButtonText()} {/* Dynamic button text */}
         </button>
       </div>
+      {(isForgotPassword || isResetPassword) && (
+        <div className={styles.backToLogin}>
+          <button 
+          className={styles.backToLoginButton}
+            type="button" 
+            onClick={() => {
+              setIsForgotPassword(false); 
+              setIsResetPassword(false); 
+            }}
+          >
+            Back to Login
+          </button>
+        </div>
+      )}
     </form>
   );
 }

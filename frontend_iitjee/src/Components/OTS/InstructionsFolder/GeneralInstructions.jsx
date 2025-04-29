@@ -228,7 +228,8 @@ const GeneralInstructions = () => {
                                 />
                             )}
                         </div>
-                        <p>{isAdmin ? "Admin" : studentName}</p>
+                        <div className={styles.StdNameForData}>
+                        <p>{isAdmin ? "Admin" : studentName}</p></div>
                     </div>
                 </div>
 

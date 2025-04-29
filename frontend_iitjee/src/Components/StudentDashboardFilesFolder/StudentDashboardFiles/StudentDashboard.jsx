@@ -1,8 +1,8 @@
-import React, { lazy, useEffect, useState,Suspense, useCallback } from 'react'
+import React, { lazy, useEffect, useState,Suspense, useCallback  } from 'react'
 import StudentDashboardHeader from './StudentDashboardHeader.jsx';
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import StudentDashboardLeftSideBar from './StudentDashboardLeftSidebar.jsx';
-import { useLocation,useNavigate  } from 'react-router-dom';
+import { useLocation,useNavigate, useParams  } from 'react-router-dom';
 import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx'
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js'; 
 const StudentDashboardBookmarks = lazy(() => import('./StudentDashboardBookmarks.jsx'));
@@ -13,6 +13,7 @@ const StudentDashboard_MyResults = lazy(() => import("./StudentDashboard_MyResul
 const StudentDashboard_AccountSettings = lazy(() => import("./StudentDashboard_AccountSettings.jsx"));
 
 export default function StudentDashboard() {
+  const { userId: urlUserId } = useParams();  
   const [activeSection, setActiveSection] = useState("dashboard");
    const [activeSubSection, setActiveSubSection] = useState("profile");
   const [isLoading, setIsLoading] = useState(true);
@@ -33,6 +34,23 @@ export default function StudentDashboard() {
     }, []);
     const location = useLocation();
     useEffect(() => {
+      const localStorageUserId = localStorage.getItem('userId');
+      console.log('URL User ID:', urlUserId); 
+      console.log('LocalStorage User ID:', localStorageUserId); 
+    
+      if (urlUserId !== localStorageUserId) {
+        console.log('User IDs do not match, redirecting to Error page.');
+        navigate('/LoginPage');
+        return;
+      }
+    
+      console.log('User IDs match, proceeding with loading dashboard.');
+      setIsLoading(false);
+    
+    }, [urlUserId, navigate]);
+    
+  
+    useEffect(() => {
       const sectionFromRoute = location.state?.activeSection;
       if (sectionFromRoute && !sessionStorage.getItem("sectionFromRouteUsed")) {
         setActiveSection(sectionFromRoute);
@@ -45,16 +63,48 @@ export default function StudentDashboard() {
     
       setIsLoading(false);
     }, [location.state]);
+    // useEffect(() => {
+    //   const logoutTimer = setTimeout(() => {
+    //     console.log("🔒 Auto logout triggered after 4 hours");
+    //     handleLogout();
+    //   }, 4 * 60 * 60 * 1000); 
+    
+    //   return () => clearTimeout(logoutTimer); 
+    // }, []);
+ 
+    // Auto Logout When user is idle in the dashboard 30mins and also closes the tab
     useEffect(() => {
-      const logoutTimer = setTimeout(() => {
-        console.log("🔒 Auto logout triggered after 4 hours");
-        handleLogout();
-      }, 4 * 60 * 60 * 1000); 
+      let idleTimer;
     
-      return () => clearTimeout(logoutTimer); 
+      const resetIdleTimer = () => {
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => {
+          console.log("Auto logout triggered after 30 minutes of complete inactivity");
+          handleLogout();
+        }, 30 * 60 * 1000); // 30 minutes
+      };
+    
+      const events = ["mousemove", "keydown", "wheel", "scroll", "touchstart"];
+      events.forEach(event => window.addEventListener(event, resetIdleTimer));
+    
+      resetIdleTimer(); // Start idle timer initially
+    
+      // Handle tab close event
+      const handleBeforeUnload = (event) => {
+        handleLogout();  // Perform logout when tab is closed
+      };
+    
+      // Add the beforeunload event listener
+      window.addEventListener("beforeunload", handleBeforeUnload);
+    
+      // Cleanup function to remove event listeners
+      return () => {
+        events.forEach(event => window.removeEventListener(event, resetIdleTimer));
+        clearTimeout(idleTimer);
+        window.removeEventListener("beforeunload", handleBeforeUnload);  // Remove beforeunload listener
+      };
     }, []);
-    
-    
+      
     const handleLogout = async () => {
 
       const sessionId = localStorage.getItem("sessionId");
@@ -83,7 +133,7 @@ export default function StudentDashboard() {
         }
       } catch (error) {
         console.error("Logout error:", error);
-        alert("Something went wrong. Please try again.");
+        // alert("Something went wrong. Please try again.");
       }
     };
     
@@ -113,14 +163,12 @@ export default function StudentDashboard() {
           />;
       }
     };
-
-     // Until we know the correct section to show
   if (isLoading) {
     return <div><LoadingSpinner/></div>;
   }
   
   return (
-    <div>
+    <div className={styles.StudentDashboardInterFace}>
       <StudentDashboardHeader  userData ={studentData?.userDetails} setActiveSection={setActiveSection} setActiveSubSection={setActiveSubSection}/>
       <div className={styles.StudentDashboardContentHolder}>
         <div className={styles.studentDashboardLeftNavHolder}>

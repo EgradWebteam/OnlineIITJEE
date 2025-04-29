@@ -29,7 +29,7 @@ function encryptDataWithAN(data) {
 // Upload file to Azure using SAS token
 async function uploadToAzureWithSAS(file, options = {}) {
   const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
-  const sasToken = process.env.AZURE_SAS_TOKEN;
+  const sasToken = process.env.AZURE_SAS_TOKEN_UPLOADS;
   const containerName = process.env.AZURE_CONTAINER_NAME;
   const STUDENT_PHOTO_FOLDER = "student-data/";
 
@@ -96,7 +96,7 @@ router.post("/checkEmailExists", async (req, res) => {
   try {
     const sql = `SELECT * FROM iit_student_registration WHERE email_id = ?`;
     const [result] = await db.query(sql, [emailId]);
-
+console.log( "result",result)
     if (result.length > 0) {
       return res.json({ message: "Your email already exists. Please use a different email." });
     } else {
@@ -303,7 +303,7 @@ router.post("/reset-password", async (req, res) => {
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
-const sasToken = process.env.AZURE_SAS_TOKEN;
+const sasToken = process.env.AZURE_SAS_TOKEN_FOR_FETCHING;
 const containerName = process.env.AZURE_CONTAINER_NAME;
 const StudentImagesFolderName = process.env.AZURE_STUDENT_IMAGES_FOLDER;  
 const BASE_URL = process.env.BASE_URL;

@@ -10,7 +10,7 @@ const { v4: uuidv4 } = require("uuid");
 const db = require("../config/database.js"); // Adjust path if needed
 // Azure Storage Configuration: ensure your environment variables are set
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
-const sasToken = process.env.AZURE_SAS_TOKEN;
+const sasToken = process.env.AZURE_SAS_TOKEN_UPLOADS;
 const containerName = process.env.AZURE_CONTAINER_NAME;
 const blobServiceClient = new BlobServiceClient(
   `https://${accountName}.blob.core.windows.net?${sasToken}`

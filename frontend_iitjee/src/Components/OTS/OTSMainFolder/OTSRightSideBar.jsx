@@ -161,7 +161,8 @@ export default function OTSRightSideBar({
             />
           )}
         </div>
-        <p>{isAdmin ? "Admin" : studentName}</p>
+        <div className={styles.StdNameForProfile}>
+        <p>{isAdmin ? "Admin" : studentName}</p></div>
       </div>
 
       <div
