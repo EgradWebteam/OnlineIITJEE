@@ -381,7 +381,7 @@ height: 100%;
     right: 0;
     border: 1px solid gainsboro;
     background-color: white;
-    width: 285px;
+    width: 300px;
     top: 0;
     /* height: calc(100vh - 20vh); */
   }
@@ -518,7 +518,7 @@ height: 100%;
     align-items: start;
     justify-content: start;
     gap: 6px;
-    overflow-y: auto;
+    /* overflow-y: auto; */
     -webkit-overflow-scrolling: touch;
     padding-top: 10px;
     padding-left: 4px;
@@ -1419,7 +1419,7 @@ display: none;
   justify-content: space-between;
 }
 .widthForPiechart{
-  width: 53.125rem;
+  width: 30.125rem;
   margin: 0 auto;
 }
 .listsofPiechart{
@@ -1477,7 +1477,7 @@ display: none;
   -webkit-overflow-scrolling: touch;
   padding-top: 10px;
   padding-left: 4px;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
   /* height: 165px; */
 }
 .OTSQuestionOptionsContainerForScroll{
@@ -1561,6 +1561,13 @@ display: none;
         margin: 0 19px;
   } 
 }
+@media (max-width:1150px) {
+  .pieChartsMainDiv{
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+  }
+}
 @media (max-width:800px) {
   .QuestionsBtnsConatiner{
     margin-top: 5px;
@@ -1571,7 +1578,7 @@ display: none;
     align-items: start;
     justify-content: start;
     gap: 6px;
-    overflow-y: auto;
+    /* overflow-y: auto; */
     -webkit-overflow-scrolling: touch;
     padding-top: 10px;
     padding-left: 4px;
@@ -1890,7 +1897,7 @@ padding: 3px;
   padding-left: 0px;
   white-space: nowrap;
   border: none;
-  overflow-x: auto;
+  /* overflow-x: auto; */
   scroll-behavior: smooth;
   max-width: 100%;
   flex-wrap: nowrap;
