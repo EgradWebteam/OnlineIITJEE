@@ -47,7 +47,7 @@ export default function StudentDashboard() {
     //   console.log('User IDs match, proceeding with loading dashboard.');
     //   setIsLoading(false);
     
-    // }, [urlUserId]);
+    // }, [urlUserId]);               
     
   
     useEffect(() => {
@@ -63,47 +63,47 @@ export default function StudentDashboard() {
     
       setIsLoading(false);
     }, [location.state]);
-    // useEffect(() => {
-    //   const logoutTimer = setTimeout(() => {
-    //     console.log("🔒 Auto logout triggered after 4 hours");
-    //     handleLogout();
-    //   }, 4 * 60 * 60 * 1000); 
+    useEffect(() => {
+      const logoutTimer = setTimeout(() => {
+        console.log("🔒 Auto logout triggered after 4 hours");
+        handleLogout();
+      }, 4 * 60 * 60 * 1000); 
     
-    //   return () => clearTimeout(logoutTimer); 
-    // }, []);
+      return () => clearTimeout(logoutTimer); 
+    }, []);
  
     // Auto Logout When user is idle in the dashboard 30mins and also closes the tab
-    useEffect(() => {
-      let idleTimer;
+    // useEffect(() => {
+    //   let idleTimer;
     
-      const resetIdleTimer = () => {
-        clearTimeout(idleTimer);
-        idleTimer = setTimeout(() => {
-          console.log("Auto logout triggered after 30 minutes of complete inactivity");
-          handleLogout();
-        }, 30 * 60 * 1000); // 30 minutes
-      };
+    //   const resetIdleTimer = () => {
+    //     clearTimeout(idleTimer);
+    //     idleTimer = setTimeout(() => {
+    //       console.log("Auto logout triggered after 30 minutes of complete inactivity");
+    //       handleLogout();
+    //     }, 30 * 60 * 1000); // 30 minutes
+    //   };
     
-      const events = ["mousemove", "keydown", "wheel", "scroll", "touchstart"];
-      events.forEach(event => window.addEventListener(event, resetIdleTimer));
+    //   const events = ["mousemove", "keydown", "wheel", "scroll", "touchstart"];
+    //   events.forEach(event => window.addEventListener(event, resetIdleTimer));
     
-      resetIdleTimer(); // Start idle timer initially
+    //   resetIdleTimer(); // Start idle timer initially
     
-      // Handle tab close event
-      const handleBeforeUnload = (event) => {
-        handleLogout();  // Perform logout when tab is closed
-      };
+    //   // Handle tab close event
+    //   const handleBeforeUnload = (event) => {
+    //     handleLogout();  // Perform logout when tab is closed
+    //   };
     
-      // Add the beforeunload event listener
-      window.addEventListener("beforeunload", handleBeforeUnload);
+    //   // Add the beforeunload event listener
+    //   window.addEventListener("beforeunload", handleBeforeUnload);
     
-      // Cleanup function to remove event listeners
-      return () => {
-        events.forEach(event => window.removeEventListener(event, resetIdleTimer));
-        clearTimeout(idleTimer);
-        window.removeEventListener("beforeunload", handleBeforeUnload);  // Remove beforeunload listener
-      };
-    }, []);
+    //   // Cleanup function to remove event listeners
+    //   return () => {
+    //     events.forEach(event => window.removeEventListener(event, resetIdleTimer));
+    //     clearTimeout(idleTimer);
+    //     window.removeEventListener("beforeunload", handleBeforeUnload);  // Remove beforeunload listener
+    //   };
+    // }, []);
       
     const handleLogout = async () => {
 
