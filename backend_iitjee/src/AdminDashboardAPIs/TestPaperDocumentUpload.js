@@ -16,6 +16,7 @@ const fetch = (...args) =>
 // ENV VARIABLES
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const sasToken = process.env.AZURE_SAS_TOKEN_UPLOADS;
+const sasTokenForFetching = process.env.AZURE_SAS_TOKEN_FOR_FETCHING;
 const containerName = process.env.AZURE_CONTAINER_NAME;
 const testDocumentFolderName = process.env.AZURE_DOCUMENT_FOLDER;
 const BackendBASE_URL = process.env.BASE_URL;
@@ -424,7 +425,7 @@ router.get("/QOSImages/:documentName/:folder/:fileName", async (req, res) => {
 
   if (!fileName) return res.status(400).send("File name is required");
 
-  const imageUrl = `https://${accountName}.blob.core.windows.net/${containerName}/${testDocumentFolderName}/${documentName}/${folder}/${fileName}?${sasToken}`;
+  const imageUrl = `https://${accountName}.blob.core.windows.net/${containerName}/${testDocumentFolderName}/${documentName}/${folder}/${fileName}?${sasTokenForFetching}`;
 
   try {
     const response = await fetch(imageUrl);

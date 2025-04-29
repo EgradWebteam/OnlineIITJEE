@@ -406,6 +406,7 @@ const DocumentUpload = () => {
           onOpen={handleOpen}
           isOpen={true}
           type="document"
+       
         />
       </div>
       <div className={styles.pagination}>

@@ -3,7 +3,7 @@ import styles from "../../../Styles/AdminDashboardCSS/AdminDashboard.module.css"
 import ArrangeQuestions from "./ArrangeQuestion.jsx";
 import ViewQuestions from "./ViewQuestions.jsx";
 import ViewDocumentData from './ViewDocumentData.jsx'
-import ViewResults from "./ViewResults.jsx"; 
+import ViewResults from "./ViewResults.jsx";
 import { encryptBatch } from '../../../utils/cryptoUtils.jsx';
 import AssignToTest from "./AssignToTest.jsx";
 
@@ -11,29 +11,43 @@ const DynamicTable = ({
   columns,
   isOpen,
   data,
-  type, 
+  type,
   onEdit,
   onDelete,
   onToggle,
   onAssign,
   onDownload,
   onOpen,
+
   setShowInstructionPoints,
   showEdit = true,
   showToggle = true,
   course
 }) => {
-  const [selectedRow, setSelectedRow] = useState(null);
-  const [popupType, setPopupType] = useState(""); 
-  const [showModal, setShowModal] = useState(false);
-console.log(type,"type")
-  const handleOptionSelect = (e, row) => {
-    const selectedOption = e.target.value;
 
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [popupType, setPopupType] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [dropdownValues, setDropdownValues] = useState({});
+
+  const handleOptionSelect = (e, row, index) => {
+    const selectedOption = e.target.value;
+  
+    setDropdownValues((prev) => ({
+      ...prev,
+      [index]: selectedOption
+    }));
+  
     switch (selectedOption) {
       case "edit":
-        onEdit?.(row);
+        onEdit?.(row, index);  
+        setDropdownValues((prev) => ({
+          ...prev,
+          [index]: "Action", 
+        }));
+  
         break;
+      
       case "addDocx":
         alert("Add DOCX clicked");
         break;
@@ -51,6 +65,10 @@ console.log(type,"type")
         break;
       case "takeTest":
         handleTakeTest(row);
+        setDropdownValues((prev) => ({
+          ...prev,
+          [index]: "Action", 
+        }));
         break;
       case "assignTest":
         setSelectedRow(row);
@@ -58,59 +76,68 @@ console.log(type,"type")
         break;
       case "deleteTest":
         onDelete?.(row);
+        setDropdownValues((prev) => ({
+          ...prev,
+          [index]: "Action", 
+        }));
         break;
       default:
         break;
     }
   };
+  
 
   const handleTakeTest = async (row) => {
     try {
       const testId = row.test_creation_table_id;
-  
+
       // Encrypt only the testId
       const encryptedArray = await encryptBatch([testId]);
       const encryptedTestId = encodeURIComponent(encryptedArray[0]);
-  
+
       // Optional: Session token to protect route
       sessionStorage.setItem("navigationToken", "valid");
-  
+
       // Get full screen dimensions
       const screenWidth = window.screen.availWidth;
       const screenHeight = window.screen.availHeight;
-  
+
       // Build URL with only test ID
       const url = `/GeneralInstructions/${encryptedTestId}`;
       const features = `width=${screenWidth},height=${screenHeight},top=0,left=0`;
-  
+
       // Open in new tab
       window.open(url, "_blank", features);
     } catch (err) {
       console.error("Encryption failed:", err);
     }
   };
-
   const handleClosePopup = () => {
     setPopupType("");  
-    setSelectedRow(null); 
+    setSelectedRow(null);  
     setShowModal(false);  
+    if (selectedRow) {
+      const rowIndex = data.findIndex((row) => row === selectedRow);
+      setDropdownValues((prev) => ({ ...prev, [rowIndex]: "Action" }));
+    }
   };
   
+
   const handleCloseModal = () => {
-    setShowModal(false); 
+    setShowModal(false);
     setPopupType("");
-    setSelectedRow(null);  
+    setSelectedRow(null);
   };
 
   const handleOpenModal = (row) => {
-    onOpen?.(row);  
+    onOpen?.(row);
     setSelectedRow(row);
-    
+
     if (type === "document") {
-      setPopupType("viewDocument"); 
+      setPopupType("viewDocument");
       setShowInstructionPoints(false)
     } else {
-      setShowModal(false); 
+      setShowModal(false);
       setShowInstructionPoints(true);
     }
   };
@@ -149,17 +176,19 @@ console.log(type,"type")
                     <div className={styles.dropdownWrapper}>
                       <select
                         className={styles.dropdownMenu}
-                        onChange={(e) => handleOptionSelect(e, row)}
+                        value={dropdownValues[ri] || "Action"}
+                        onChange={(e) => handleOptionSelect(e, row, ri)}
                       >
                         <option value="Action">Actions ▼</option>
                         <option value="edit">Edit Test</option>
                         <option value="viewQuestions">View Questions</option>
                         <option value="arrangeQuestions">⇅ Arrange Questions</option>
-                        <option value="viewResults">View Results</option> 
-                        <option value="takeTest" onClick={handleTakeTest}>Take Test</option>
+                        <option value="viewResults">View Results</option>
+                        <option value="takeTest">Take Test</option>
                         <option value="assignTest">📌 Assign to Test</option>
                         <option value="deleteTest">🗑️ Delete Test</option>
                       </select>
+
                     </div>
                   ) : (
                     <>
@@ -182,15 +211,14 @@ console.log(type,"type")
                 {showToggle && type !== "document" && (
                   <td>
                     <button
-                      className={`${styles.toggleBtn} ${
-                        type === "test"
+                      className={`${styles.toggleBtn} ${type === "test"
                           ? row.test_activation === "active"
                             ? styles.activate
                             : styles.deactivate
                           : row.active_course === "active"
-                          ? styles.activate
-                          : styles.deactivate
-                      }`}
+                            ? styles.activate
+                            : styles.deactivate
+                        }`}
                       onClick={() => {
                         // console.log("Toggle clicked for row:", row);
                         onToggle(row);
@@ -201,8 +229,8 @@ console.log(type,"type")
                             ? "Deactivate the test"
                             : "Activate the test"
                           : row.active_course === "active"
-                          ? "Deactivate the course"
-                          : "Activate the course"
+                            ? "Deactivate the course"
+                            : "Activate the course"
                       }
                     >
                       {type === "test"
@@ -210,8 +238,8 @@ console.log(type,"type")
                           ? "Deactivate Test"
                           : "Activate Test"
                         : row.active_course === "active"
-                        ? "Deactivate Course"
-                        : "Activate Course"}
+                          ? "Deactivate Course"
+                          : "Activate Course"}
                     </button>
                   </td>
                 )}
@@ -221,17 +249,8 @@ console.log(type,"type")
         </tbody>
       </table>
 
-      {/* ✅ Modal handler */}
-      {showModal && selectedRow && (
-        <div className={styles.modalBackdrop} onClick={handleCloseModal}>
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <h3>Document for {selectedRow.name}</h3> {/* Example title */}
-            <p>{selectedRow.documentText || "This is the content of the document."}</p>
-          
-            <ViewDocumentData data={selectedRow} onClose={handleClosePopup} />
-          </div>
-        </div>
-      )}
+     
+     
 
       {/* ✅ Popup handler */}
       {popupType === "arrange" && selectedRow && (
@@ -260,16 +279,16 @@ console.log(type,"type")
           <AssignToTest data={selectedRow} onClose={handleClosePopup} />
         </div>
       )}
-       {popupType === "viewDocument" && selectedRow && (
-      <div className={styles.modalBackdrop} onClick={handleCloseModal}>
-        <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-          <h3>Document for {selectedRow.name}</h3>
-          <p>{selectedRow.documentText || "This is the content of the document."}</p>
-        
-          <ViewDocumentData data={selectedRow} onClose={handleClosePopup} />
+      {popupType === "viewDocument" && selectedRow && (
+        <div className={styles.modalBackdrop} onClick={handleCloseModal}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <h3>Document for {selectedRow.name}</h3>
+            <p>{selectedRow.documentText || "This is the content of the document."}</p>
+
+            <ViewDocumentData data={selectedRow} onClose={handleClosePopup} />
+          </div>
         </div>
-      </div>
-    )}
+      )}
     </div>
   )
 }

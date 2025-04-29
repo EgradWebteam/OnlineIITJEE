@@ -35,7 +35,7 @@ const AdminDashboardHeader = () => {
  
         <Link to="/AdminProfiler">
           <button className={isActive('/AdminProfiler') ? styles.active : ''}>
-            Profile
+             Admin Profile
             {isActive('/AdminProfiler') && <span className={styles.activeDot}></span>}
           </button>
         </Link>

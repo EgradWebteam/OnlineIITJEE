@@ -95,7 +95,8 @@ const CourseCreationTab = ({portalid}) => {
 
     ? Object.keys(courses[0])
 
-        .filter((key) => key !== "subject_ids" && key !== "exam_ids" && key !=="card_image" && key !=="course_type_ids" && key !=="test_type_ids") // Filter out 'subject_ids' and 'exam_ids'
+        .filter((key) => key !== "subject_ids" && key !== "exam_ids" && key !=="card_image" && key !=="course_type_ids" && key !=="test_type_ids" && key!=="test_type_names"
+) 
         .map((key) => ({
           header: key.replace(/_/g, " ").toUpperCase(),
           accessor: key,

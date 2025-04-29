@@ -78,7 +78,7 @@ export default function StudentDashboard_MyResults({ studentId,userData }) {
 
       {loading ? (
   <div >
-    <p ><LoadingSpinner/></p>
+    < ><LoadingSpinner/></>
   </div>
 ) : testData.length === 0 ? (
         <div className={globalCSS.noCoursesContainer}>
