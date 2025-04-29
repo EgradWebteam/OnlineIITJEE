@@ -120,15 +120,36 @@ const GeneralInstructions = () => {
     //     };
     //   }, [realStudentId, realTestId]);
 
-      useEffect(() => {
+    //   useEffect(() => {
+    //     const handleBeforeUnload = () => {
+    //       if (realTestId && realStudentId) {
+    //         const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`;
+    //         const data = new Blob(
+    //           [JSON.stringify({ studentId: realStudentId, testCreationTableId: realTestId })],
+    //           { type: "application/json" }
+    //         );
+    //         navigator.sendBeacon(url, data);
+    //       }
+    //     };
+      
+    //     window.addEventListener("beforeunload", handleBeforeUnload);
+      
+    //     return () => {
+    //       window.removeEventListener("beforeunload", handleBeforeUnload);
+    //     };
+    //   }, [realStudentId, realTestId]);
+    useEffect(() => {
         const handleBeforeUnload = () => {
           if (realTestId && realStudentId) {
-            const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`;
-            const data = new Blob(
-              [JSON.stringify({ studentId: realStudentId, testCreationTableId: realTestId })],
-              { type: "application/json" }
-            );
-            navigator.sendBeacon(url, data);
+            const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose`;
+      
+            const data = JSON.stringify({
+              studentId: realStudentId,
+              testCreationTableId: realTestId
+            });
+      
+            const blob = new Blob([data], { type: "application/json" });
+            navigator.sendBeacon(url, blob);
           }
         };
       
