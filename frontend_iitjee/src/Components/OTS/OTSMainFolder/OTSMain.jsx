@@ -120,6 +120,11 @@ export default function OTSMain({ testData, realStudentId, realTestId,warningMes
       const subjectId = subject.subjectId;
       const sectionId = section.sectionId;
     
+       // Early exit if any required ID is missing
+  if (!realStudentId || !realTestId) {
+    console.warn("Missing required IDs for autoSaveNATIfNeeded. Skipping.");
+    return;
+  }
       const prevAnswer = userAnswers?.[qid];
       const wasPreviouslyAnswered = prevAnswer?.type === "NAT" && prevAnswer?.natAnswer?.trim();
     

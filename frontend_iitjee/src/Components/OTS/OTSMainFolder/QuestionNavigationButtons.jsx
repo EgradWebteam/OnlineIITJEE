@@ -384,7 +384,17 @@ export default function QuestionNavigationButtons({
       }
       return updated;
     });
- 
+
+    // If any required params are missing, skip API but still navigate
+if (!realStudentId || !realTestId) {
+  console.warn("Missing required IDs, skipping saveUserResponse call.");
+
+  // Still move to next question
+  navigateToNext(subject, section, activeQuestionIndex);
+
+  // Return after navigation
+  return;
+}
     // Send to backend
     await saveUserResponse({
       realStudentId,
@@ -524,7 +534,7 @@ const handleMarkedForReview = async () => {
     const subjectId = subject.subjectId;
     const sectionId = section.sectionId;
     const qTypeId = question?.questionType?.quesionTypeId;
- 
+
     let buttonClass = styles.MarkedForReview;
     let savedData = { subjectId, sectionId, questionId: qid, type: "", buttonClass };
  
@@ -604,6 +614,17 @@ const handleMarkedForReview = async () => {
           optionIndexesStr &&
           optionCharCodes.length > 0) || // MSQ
         ([5, 6].includes(qTypeId) && calcVal?.trim() !== ""); // NAT
+
+   // If any required params are missing, skip API but still navigate
+if (!realStudentId || !realTestId) {
+  console.warn("Missing required IDs, skipping saveUserResponse call.");
+
+  // Still move to next question
+  navigateToNext(subject, section, activeQuestionIndex);
+
+  //Return after navigation
+  return;
+}
     // // Save to backend
       if (shouldSave) {
         await saveUserResponse({
@@ -658,6 +679,12 @@ const handleMarkedForReview = async () => {
       // console.log("Cleared and updated Answer:", updated[qid]);
       return updated;
     });
+
+    // Skip API if IDs are missing (admin case)
+  if (!realStudentId || !realTestId) {
+    console.warn("Missing required IDs, skipping ClearResponse API call.");
+    return;
+  }
  
     try {
       // Call DELETE API without a body
@@ -758,7 +785,11 @@ useEffect(() => {
  
     setShowExamSummary(true);
  
- 
+   //  Error handling: Skip API if IDs are missing (admin mode)
+   if (!realStudentId || !realTestId) {
+    console.warn("Missing IDs, skipping SaveExamSummary API call.");
+    return;
+  }
  
     try {
       const response = await fetch(`${BASE_URL}/OTSExamSummary/SaveExamSummary`, {
