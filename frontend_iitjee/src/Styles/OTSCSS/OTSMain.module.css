@@ -864,7 +864,7 @@ height: 100%;
 
 .StdNameForData{
   display: flex;
-  width: 35%;
+  width: 50%;
 }
 .StdNameForData p{
   font-size: 18px;
@@ -1445,6 +1445,7 @@ display: none;
   width: 100%;
   margin-top: 30px;
   height: 6vh;
+  border-top: none;
 }
 .instructionSubdiv{
   display: flex;
@@ -1628,6 +1629,7 @@ display: none;
   margin-top: 30px;
   height: 6vh;
   border-top:none ;
+  border-top: none;
 }
 .testDetailsContainerSub li {
   font-size: 12px;
