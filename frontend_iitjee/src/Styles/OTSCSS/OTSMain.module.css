@@ -864,7 +864,7 @@ height: 100%;
 
 .StdNameForData{
   display: flex;
-  width: 50%;
+  width: 40%;
 }
 .StdNameForData p{
   font-size: 18px;
@@ -872,6 +872,7 @@ height: 100%;
   white-space: nowrap; 
   text-overflow: ellipsis; 
   overflow: hidden;
+  cursor: pointer;
 }
 .instructionList{
 padding: 1rem 3rem;
