@@ -301,6 +301,7 @@ const handleStartTestClick = async (testCreationTableId) => {
                       return (
                         <button
                           className={styles.resumeTestBtn}
+                          onClick={() => handleStartTestClick(test.test_creation_table_id)}
                         >
                           Resume Test &gt;&gt;
                         </button>
@@ -365,6 +366,7 @@ const handleStartTestClick = async (testCreationTableId) => {
                     return (
                       <button
                         className={styles.resumeTestBtn}
+                        onClick={() => handleStartTestClick(test.test_creation_table_id)}
                       >
                         Resume Test &gt;&gt;
                       </button>

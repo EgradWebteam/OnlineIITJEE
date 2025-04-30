@@ -419,6 +419,19 @@ if (!realStudentId || !realTestId) {
         calculatorInputValue: calcVal,
         answered: "1" // answered
       });
+    }else{
+      await saveUserResponse({
+        realStudentId,
+        realTestId,
+        subject_id: subjectId,
+        section_id: sectionId,
+        question_id: qid,
+        question_type_id: qTypeId,
+        optionIndexes1: optionIndexesStr,
+        optionIndexes1CharCodes: optionCharCodes,
+        calculatorInputValue: calcVal,
+        answered: "3" // answered
+      });
     }
     // Move to next question
     navigateToNext(subject, section, activeQuestionIndex);
@@ -648,18 +661,27 @@ if (!realStudentId || !realTestId) {
           optionIndexes1: optionIndexesStr,
           optionIndexes1CharCodes: optionCharCodes,
           calculatorInputValue: calcVal,
-          answered: "2", // marked for review
+          answered: "2", //Ans and marked for review
         });
   
+      }else{
+        await saveUserResponse({
+          realStudentId,
+          realTestId,
+          subject_id: subjectId,
+          section_id: sectionId,
+          question_id: qid,
+          question_type_id: qTypeId,
+          optionIndexes1: optionIndexesStr,
+          optionIndexes1CharCodes: optionCharCodes,
+          calculatorInputValue: calcVal,
+          answered: "4", // marked for review
+        });
       }
  
     // Move to next question
     navigateToNext(subject, section, activeQuestionIndex);
   };
- 
- 
- 
- 
  
   const handleClearResponse = async () => {
     const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
