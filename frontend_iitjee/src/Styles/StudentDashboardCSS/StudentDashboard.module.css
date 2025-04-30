@@ -324,8 +324,9 @@ button.backslash {
 .MainDivStudentDasboard {
   background: white;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  height: 7vh;
-  padding: 5px;
+  height: 10vh;
+  padding: 5px 10px;
+
 }
 .studentLogo {
   width: 65px;
@@ -407,10 +408,11 @@ color: black;
 .StudentDashboardContentHolder {
   display: flex;
   flex-direction: row;
-  height: calc(100vh - 7vh);
+  height: calc(100vh - 10vh);
 }
 .studentDashboardLeftNavHolder {
   display: flex;
+  margin: 10px 0;
 }
 .stuentDashboardMainContentContainer {
   display: flex;
@@ -968,7 +970,7 @@ height: 100%;
     margin: 1rem;
   }
   .BookMarksSubDivForScroll{
-    /* height: 90vh; */
+    height: 75vh;
    
   }
   .QuestionImgContainer{
@@ -1021,7 +1023,7 @@ height: 100%;
 .StudentDashboardContentHolder{
   display: flex;
   flex-direction: row;
-  height: calc(100vh - 9vh);
+  height: calc(100vh - 10vh);
 }
 .StudentDashboardRightSideContentHolder{
   width: 80%;
@@ -1131,7 +1133,7 @@ height: 100%;
       .studentDashboardHamburgerMenu {
         display: block;
         position: absolute;
-        top: 48px;
+        top: 65px;
         left: -1.5rem;
         z-index: 1100;
       }
