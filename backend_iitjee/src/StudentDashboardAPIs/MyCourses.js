@@ -308,7 +308,7 @@ router.get('/CheckActiveTestOfStudent/:studentRegistrationId', async (req, res) 
     // SQL query to check if there is an active test for the student
     const query = `
       SELECT COUNT(*) AS activeTestCount
-      FROM iit_db.iit_test_status_details
+      FROM iit_test_status_details
       WHERE student_registration_id = ?
         AND (test_attempt_status = ? AND test_connection_status = ?)
     `;

@@ -271,7 +271,7 @@ router.get("/ActiveCourses/:coursecreationid", async (req, res) => {
                 course_end_date,
                 course_start_date AS course_duration
             FROM
-                iit_db.iit_course_creation_table
+                iit_course_creation_table
             WHERE
                 active_course = "active"
                 AND course_creation_id = ?`,
