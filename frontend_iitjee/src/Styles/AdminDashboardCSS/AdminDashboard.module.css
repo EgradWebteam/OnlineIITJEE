@@ -270,7 +270,7 @@ flex-direction: column;
   border: 1px solid #e0e0e0;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  margin-bottom: 3px;
+  margin:1rem;
 }
 .DocumetnUploadSelectInputs{
   width: 58%;
@@ -478,6 +478,9 @@ margin: 1rem ;
 
 /* Mobile layout */
 @media (max-width: 768px) {
+  .pageHeading{
+    font-size: 20px;
+  }
   .header {
     position: sticky;
     top: 0;

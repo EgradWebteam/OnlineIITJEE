@@ -402,7 +402,7 @@ const TestCreationForm = ({
               <div>
                 <label>
                   <input
-                    className={styles.testFeilds}
+                    className={styles.testFeildscheckbox}
                     type="checkbox"
                     checked={includeSection}
                     onChange={handleCheckboxChange}
