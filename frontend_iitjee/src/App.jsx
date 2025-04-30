@@ -14,6 +14,7 @@ const FooterTermsAndConditions = React.lazy(() => import('./Components/LandingPa
 const StudentLogineGradTutor = React.lazy(() => import('./Components/StudentDashboardFilesFolder/StudentLogineGradTutor/StudentLogineGradTutor.jsx'));
 const StudentDashboard = React.lazy(() => import('./Components/StudentDashboardFilesFolder/StudentDashboardFiles/StudentDashboard.jsx'));
 const OTSRootFile = React.lazy(() => import('./Components/OTS/OTSRootFile.jsx'));
+const OTSTerminationPage = React.lazy(() => import('./Components/OTS/OTSTerminationPage.jsx'));
 const MainLayout = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminDashboardFiles/AdminMainLayout.jsx'));
 const CourseCreationTab = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminDashboardFiles/CourseCreationTab.jsx'));
 const StudentInfo = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminDashboardFiles/StudentInfo.jsx'));
@@ -48,6 +49,7 @@ function App() {
           <Route path='/ContactUs' element={<ContactUs />} />
           <Route path='/AdminDashboard' element={<MainLayout />} />
           <Route path='/OTSRootFile/:testId/:studentId' element={<OTSRootFile />} />
+          <Route path='/OTSTerminationPage' element={<OTSTerminationPage />} />
           <Route path="/StudentInfo" element={<StudentInfo />} />
           <Route path="/CourseCreation" element={<CourseCreationTab />} />
           <Route path='/GeneralInstructions/:testId/:studentId' element={<GeneralInstructions />} />
