@@ -201,9 +201,9 @@ router.get("/GetInstructionPoints/:instruction_id", async (req, res) => {
           ip.instruction_point_id,
           i.instruction_img
         FROM 
-          iit_db.iit_instruction_points ip
+          iit_instruction_points ip
         JOIN 
-          iit_db.iit_instructions i 
+          iit_instructions i 
           ON i.instruction_id = ip.instruction_id
         WHERE 
           ip.instruction_id = ?`,

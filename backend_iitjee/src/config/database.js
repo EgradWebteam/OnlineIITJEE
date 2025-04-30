@@ -18,9 +18,11 @@ db.getConnection()
   .then(async connection => {
     // console.log("Connected to MySQL DB");
     await connection.query('SELECT 1');
+    console.log("Database conneted!");
     // console.log("Database is responsive");
     connection.release(); // ✅ Release the connection after test
   })
+
   .catch(err => {
     console.error("Error connecting to DB:", err);
   });
