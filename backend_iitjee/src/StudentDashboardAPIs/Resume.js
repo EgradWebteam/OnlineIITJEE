@@ -55,12 +55,7 @@ FROM
 WHERE 
     iur.student_registration_id = ?
     AND iur.test_creation_table_id = ?
-    AND EXISTS (
-        SELECT 1
-        FROM iit_test_status_details tsd
-        WHERE tsd.student_registration_id = iur.student_registration_id
-          AND tsd.test_creation_table_id = iur.test_creation_table_id
-          AND tsd.test_attempt_status = 'resumed');`,
+ `,
                 [studentId, testCreationTableId]
             );
     
