@@ -98,7 +98,7 @@ export default function OTSRootFile() {
       
       
             try {
-              await fetch(`${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`, {
+              await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`, {
                 method: "DELETE",
                 headers: {
                   "Content-Type": "application/json",

@@ -67,7 +67,7 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
     useEffect(() => {
         const handleBeforeUnload = () => {
           if (realTestId && realStudentId) {
-            const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`;
+            const url = `${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`;
      
             const data = JSON.stringify({
               studentId: realStudentId,

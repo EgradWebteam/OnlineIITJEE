@@ -190,8 +190,8 @@ const handleStartTestClick = async (testCreationTableId) => {
             clearInterval(monitorWindow);
 
            
-              fetch(`${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${studentId}/${testCreationTableId}`, {
-                method: "POST",
+              fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
+                method: "PUT",
                 headers: {
                   "Content-Type": "application/json",
                 },

@@ -101,7 +101,7 @@ const GeneralInstructions = () => {
     useEffect(() => {
         const handleBeforeUnload = () => {
           if (realTestId && realStudentId) {
-            const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`;
+            const url = `${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`;
      
             const data = JSON.stringify({
               studentId: realStudentId,
@@ -123,7 +123,7 @@ const GeneralInstructions = () => {
       useEffect(() => {
         const handleBeforeUnload = () => {
           if (realTestId && realStudentId) {
-            const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`;
+            const url = `${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`;
             const data = new Blob(
               [JSON.stringify({ studentId: realStudentId, testCreationTableId: realTestId })],
               { type: "application/json" }
