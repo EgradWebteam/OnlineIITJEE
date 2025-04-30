@@ -271,7 +271,7 @@ const StudentDashboardBookmarks = ({ studentId }) => {
                         {visibleSolutions[question.question_id] &&
                           question.solution?.solutionImgName && (
                             <div
-                              className={styles.solutionsMainDivInBookMarks}
+                              className={styles.solutionsMainDivInBookMarksContainer}
                             >
                                  <p className={Styles.solutionTag}>
                                 <strong>Solution:</strong>

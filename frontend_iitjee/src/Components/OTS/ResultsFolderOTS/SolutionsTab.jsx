@@ -241,13 +241,14 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                       )}
                     </button>
                   </div>
+                  <div className={Styles.QuestionImgContainer}>
                   <div className={Styles.questionImageInSolutionTab}>
                     <img
                       src={question.questionImgName}
                       alt={`Question ${question.question_id}`}
                     />
                   </div>
-                  <div style={{ marginTop: "1rem" }}>
+                  
                     {(() => {
                       const qTypeId = question.questionType?.quesionTypeId;
 
@@ -362,10 +363,10 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                         );
                       });
                     })()}
-
+   </div>
                     {question.solution?.solutionImgName && (
                       <div className={Styles.solutionButtonsContainer}>
-                        <div className={Styles.showSolutionButton}>
+                        
                           {/* View Solution Button */}
                           <button
                             onClick={() =>
@@ -377,11 +378,11 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                               ? "Hide Solution"
                               : "View Solution"}
                           </button>
-                        </div>
+                       
                         {/* View Video Solution Button */}
                         {question.solution?.solutionImgName &&
                           question.solution?.video_solution_link !== "" && (
-                            <div className={Styles.showSolutionButton}>
+                            
                               <button
                                 onClick={() =>
                                   openVideoPopup(question.question_id)
@@ -391,7 +392,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                                   ? "Hide Video Solution"
                                   : "View Video Solution"}
                               </button>
-                            </div>
+                           
                           )}
                       </div>
                     )}
@@ -445,8 +446,9 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                         </div>
                       </div>
                     )}
+               
                   </div>
-                </div>
+               
               ))}
             </div>
           )}

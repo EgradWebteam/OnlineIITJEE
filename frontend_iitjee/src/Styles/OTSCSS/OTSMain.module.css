@@ -748,7 +748,11 @@ height: 100%;
   padding-left: 3rem;
   margin: 1rem;
 }
-
+.QuestionImgContainer{
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
 .instructionHeading {
   text-decoration: underline;
   margin-bottom: 5px;
@@ -1285,9 +1289,11 @@ margin-left: 10px;
 
   gap: 1rem;
 }
-.showSolutionButton button{
+.solutionButtonsContainer button{
   background-color: rgb(7, 174, 240);
-  color: white;
+    color: white;
+    padding: 10px 5px;
+    font-size: 15px;
 }
 .solutionImageInSolutionTab{
   margin: 1rem;
@@ -1560,6 +1566,13 @@ display: none;
       
         margin: 0 19px;
   } 
+  .solutionImageInSolutionTab{
+    margin: 0.5rem;
+    padding: 0.5rem;
+    overflow: scroll;
+    gap: 7px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  }
 }
 @media (max-width:800px) {
   .QuestionsBtnsConatiner{
@@ -1576,6 +1589,13 @@ display: none;
     padding-top: 10px;
     padding-left: 4px;
     /* height: auto; */
+}
+.solutionImageInSolutionTab{
+  margin: 0.5rem;
+  padding: 0.5rem;
+  overflow: scroll;
+  gap: 7px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 .btnsSubContainer{
   display: flex;
@@ -1643,6 +1663,12 @@ display: none;
   width: 28rem;
   margin: 0 auto;
 }
+.questionImageInSolutionTab{
+  width: 400px;
+  height: auto;
+  
+}
+
 }
 @media(max-width:600px){
   .widthForPiechart{
@@ -1657,12 +1683,22 @@ display: none;
     padding: 0px 20px;
     margin: 0 11px;
     }
+    .solutionButtonsContainer button{
+      font-size: 12px;
+    }
     .StudentProfileHolderOTS,
 .rightChevronBtn, 
 .OTSRightSideBarSubContainer,
 .SectionsAndSubjectDiv,
 .chooseQuestionInRightSideBar{
   display: none;
+}
+.solutionImageInSolutionTab{
+  margin: 0.5rem;
+  padding: 0.5rem;
+  overflow: scroll;
+  gap: 7px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 }
   
@@ -2004,11 +2040,13 @@ padding: 3px;
 .solutionImageInSolutionTab{
   margin: 0.5rem;
   padding: 0.5rem;
+  overflow: scroll;
   gap: 7px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 .solutionImageDivInSolutionTab{
-  width:200px;
+  width:400px;
+  overflow: scroll;
 }
 .summaryTable{
   display: flex;

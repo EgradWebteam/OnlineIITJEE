@@ -485,8 +485,8 @@ const TestCreationForm = ({
                 )}
               </div>
             </div>
-            <div>
-              <button type="submit" className={styles.createButton}>
+            <div className={styles.createButton}>
+              <button type="submit" >
                 {isEditMode ? "Update Test" : "Create Test"}
               </button>
             </div>
