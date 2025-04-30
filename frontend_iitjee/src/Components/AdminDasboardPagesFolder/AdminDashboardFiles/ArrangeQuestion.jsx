@@ -10,7 +10,7 @@ const ArrangeQuestions = ({ data, onClose }) => {
 
   useEffect(() => {
     const fetchTestPaper = async () => {
-      debugger
+      
       try {
         const response = await axios.get(`${BASE_URL}/TestCreation/ViewTestPaper/${testId}`);
         const paper = response.data;
@@ -64,7 +64,9 @@ const ArrangeQuestions = ({ data, onClose }) => {
   return (
     <div className={styles.popup_viewquestion}>
       <div className={styles.popup_viewquestioncontent}>
-        <button onClick={onClose} className={styles.closebutton_viewquestion}>✖</button>
+        <div className={styles.closebutton_viewquestion}>
+        <button onClick={onClose} >✖</button>
+        </div>
         <h2 className={styles.viewquestion_title}>
           {questions.length > 0 ? questions[0].TestName : "Arrange Questions"}
         </h2>
@@ -86,6 +88,7 @@ const ArrangeQuestions = ({ data, onClose }) => {
                           <strong>Subject:</strong> {question.SubjectName} | <strong>Section:</strong> {question.SectionName}
                         </p>
                         <p><strong>Question {`${index + 1}`}</strong> </p>
+                        <div className={styles.ImagesInQuestions}>
                         <img
                           src={question.questionImgName}
                           alt="Question"
@@ -97,6 +100,7 @@ const ArrangeQuestions = ({ data, onClose }) => {
                             marginTop: "10px"
                           }}
                         />
+                        </div>
                         <div style={{ marginTop: "1rem" }}>
                           {question.options?.map((option) => (
                             <div key={option.option_id} style={{ display: "flex", alignItems: "center" }}>

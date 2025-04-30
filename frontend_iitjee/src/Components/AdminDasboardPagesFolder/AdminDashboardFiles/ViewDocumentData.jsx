@@ -29,7 +29,9 @@ const ViewDocumentData = ({ data, onClose }) => {
   return (
     <div className={styles.popup_viewquestion}>
       <div className={styles.popup_viewquestioncontent}>
-        <button onClick={onClose} className={styles.closebutton_viewquestion}>✖</button>
+        <div className={styles.closebutton_viewquestion}>
+        <button onClick={onClose} >✖</button>
+        </div>
         <h2 className={styles.viewquestion_title}>{data.TestName}</h2>
 
         <div id="printable-content">
@@ -45,6 +47,7 @@ const ViewDocumentData = ({ data, onClose }) => {
                       {/* Incremental Question Numbering */}
                       <p>Question {index + 1}:</p> {/* Increment here */}
                       {question.questionImgName && (
+                        <div className={styles.questionImage}>
                         <img
                           src={question.questionImgName}
                           alt={`Question ${question.question_id}`}
@@ -56,6 +59,7 @@ const ViewDocumentData = ({ data, onClose }) => {
                             marginBottom: "1rem",
                           }}
                         />
+                        </div>
                       )}
                       <div style={{ marginTop: "1rem" }}>
                         {question.options.map((option) => (

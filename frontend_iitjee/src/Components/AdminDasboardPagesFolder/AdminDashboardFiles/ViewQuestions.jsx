@@ -153,25 +153,30 @@ const ViewQuestions = ({ data, onClose }) => {
   return (
     <div className={styles.popup_viewquestion}>
       <div className={styles.popup_viewquestioncontent}>
-        <button onClick={onClose} className={styles.closebutton_viewquestion}>✖</button>
+      
+          <div className={styles.closebutton_viewquestion}>
+        <button onClick={onClose} >✖</button>
+        </div>
         <h2 className={styles.viewquestion_title}>{data.TestName}</h2>
         <button onClick={handleDownloadQuestionPaper} className={styles.printbutton_viewquestion}>
           {downloading ? "Downloading..." : "Download Question Paper"}
         </button>
-
+       
         <div id="printable-content">
-          <h2>{viewTestPaperData?.TestName}</h2>
+          <h2 className={styles.HeadingForViewTestData}>{viewTestPaperData?.TestName}</h2>
           {viewTestPaperData?.subjects?.map((subject) => (
-            <div key={subject.subjectId}>
-              <h3>Subject: {subject.SubjectName}</h3>
+            <div  key={subject.subjectId}>
+              <h3  className={styles.HeadingForViewTestData}>Subject: {subject.SubjectName}</h3>
               {subject.sections.map((section) => (
                 <div key={section.sectionId}>
-                  <h4>Section: {section.SectionName}</h4>
+                  <h4 className={styles.HeadingForViewTestData}>Section: {section.SectionName}</h4>
                   {section.questions.map((question,index) => (
                     <div key={question.question_id} style={{ marginBottom: "2rem" }}>
                         <p>Question {`${index + 1}`}</p>
                       {question.questionImgName && (
+                        <div className={styles.ImagesInQuestions}>
                         <img src={question.questionImgName} alt={`Question ${question.question_id}`} style={{ maxWidth: "100%", height: "auto", maxHeight: "300px", display: "block", marginBottom: "1rem" }} />
+                    </div>
                       )}
                       <div style={{ marginTop: "1rem" }}>
                         {question.options.map((option) => (
