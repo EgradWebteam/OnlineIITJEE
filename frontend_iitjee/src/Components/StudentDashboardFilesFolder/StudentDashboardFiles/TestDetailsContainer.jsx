@@ -271,7 +271,7 @@ const handleStartTestClick = async (testCreationTableId) => {
                     </div>
                   </div>
 
-                  {test.test_attempt_status?.toLowerCase().trim() === 'completed' ? (
+                  {/* {test.test_attempt_status?.toLowerCase().trim() === 'completed' ? (
                     <button
                       className={styles.viewReportBtn}
                       onClick={() => handleViewReportClickMycourses(test.test_creation_table_id,test)}
@@ -285,7 +285,37 @@ const handleStartTestClick = async (testCreationTableId) => {
                     >
                       Start Test &gt;&gt;
                     </button>
-                  )}
+                  )} */}
+                  {(() => {
+                    const status = test.test_attempt_status?.toLowerCase().trim();
+                    if (status === 'completed') {
+                      return (
+                        <button
+                          className={styles.viewReportBtn}
+                          onClick={() => handleViewReportClickMycourses(test.test_creation_table_id, test)}
+                        >
+                          View Report &gt;&gt;
+                        </button>
+                      );
+                    } else if (status === 'resumed') {
+                      return (
+                        <button
+                          className={styles.resumeTestBtn}
+                        >
+                          Resume Test &gt;&gt;
+                        </button>
+                      );
+                    } else {
+                      return (
+                        <button
+                          className={styles.startTestBtn}
+                          onClick={() => handleStartTestClick(test.test_creation_table_id)}
+                        >
+                          Start Test &gt;&gt;
+                        </button>
+                      );
+                    }
+                  })()}
                 </div>
               ))}
             </div>
@@ -305,7 +335,7 @@ const handleStartTestClick = async (testCreationTableId) => {
                     </div>
                   </div>
                 </div>
-                {test.test_attempt_status?.toLowerCase().trim() === 'completed' ? (
+                {/* {test.test_attempt_status?.toLowerCase().trim() === 'completed' ? (
                   <button
                     className={styles.viewReportBtn}
                     onClick={() => handleViewReportClickMycourses(test.test_creation_table_id,test)}
@@ -319,7 +349,37 @@ const handleStartTestClick = async (testCreationTableId) => {
                   >
                     Start Test &gt;&gt;
                   </button>
-                )}
+                )} */}
+                {(() => {
+                  const status = test.test_attempt_status?.toLowerCase().trim();
+                  if (status === 'completed') {
+                    return (
+                      <button
+                        className={styles.viewReportBtn}
+                        onClick={() => handleViewReportClickMycourses(test.test_creation_table_id, test)}
+                      >
+                        View Report &gt;&gt;
+                      </button>
+                    );
+                  } else if (status === 'resumed') {
+                    return (
+                      <button
+                        className={styles.resumeTestBtn}
+                      >
+                        Resume Test &gt;&gt;
+                      </button>
+                    );
+                  } else {
+                    return (
+                      <button
+                        className={styles.startTestBtn}
+                        onClick={() => handleStartTestClick(test.test_creation_table_id)}
+                      >
+                        Start Test &gt;&gt;
+                      </button>
+                    );
+                  }
+                })()}
               </div>
             ))}
           </div>
