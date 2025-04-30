@@ -8,6 +8,7 @@ import { QuestionStatusProvider } from "../../../ContextFolder/CountsContext.jsx
 import { TimerProvider } from "../../../ContextFolder/TimerContext.jsx";
 import OtsTimer from "./OTSTimer.jsx";
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
+import axios from "axios";
 
 export default function OTSMain({ testData, realStudentId, realTestId,warningMessage }) {
   const [activeSubject, setActiveSubject] = useState(null);
@@ -24,6 +25,21 @@ export default function OTSMain({ testData, realStudentId, realTestId,warningMes
   useEffect(() => {
     setActiveQuestionIndex(0); // This resets to 1st question when section changes
   }, [activeSection]);
+
+  console.log("studentid, testid:", realStudentId, realTestId);
+  useEffect(() => {
+    const fetchUserAnswersAfterResume = async () => {
+      try{
+        const response = await axios.get(
+            `${BASE_URL}/ResumeTest/getResumedUserresponses/${realStudentId}/${realTestId}`
+        );
+        setUserAnswers(response.data)
+      }catch(err){
+        console.error("Error fetching test paper:", err);
+      }
+    };
+    fetchUserAnswersAfterResume();
+  }, [realStudentId, realTestId]);
 
   // const autoSaveNATIfNeeded = () => {
   //   const subject = testData?.subjects?.find(
@@ -200,8 +216,6 @@ export default function OTSMain({ testData, realStudentId, realTestId,warningMes
         }
       }
     };
-    
-    
     
   return (
     <div>
