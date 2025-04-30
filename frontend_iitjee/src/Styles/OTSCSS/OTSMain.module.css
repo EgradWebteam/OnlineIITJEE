@@ -740,6 +740,9 @@ height: 100%;
   margin-top: 1rem;
   flex-direction: column;
 }
+.instructionSection{
+  margin: 1rem;
+}
 /*instrction page css */
 .instrctionMianHeading {
   background-color: lightblue;
@@ -843,13 +846,9 @@ height: 100%;
   font-size: 15px;
 }
 .userImageDivInst{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0.7rem;
-  word-wrap: break-word;
+ width: 10%;
   border-left: 1px solid gray;
-  width: 10%;
+  
 }
 .userImageSubDiv img{
 width: 100%;
@@ -868,9 +867,10 @@ height: 100%;
 
 .StdNameForData{
   display: flex;
-  width: 40%;
+  width: 100%;
 }
 .StdNameForData p{
+
   font-size: 18px;
   font-weight: 700; 
   white-space: nowrap; 
@@ -994,6 +994,7 @@ background-color: #04c7f8;
     max-width: 1200px;
     max-height: 90%;
     position: relative;
+ 
 }
 .OTSQuestionPaperSubDiv{
   overflow-y: auto;
@@ -1708,11 +1709,16 @@ display: none;
   gap: 7px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
+.OTSQuestionPaperQuestionImgDIv{
+  width: 300px;
+  height: auto;
+  overflow: auto;
+}
 }
   
 
 
-@media (max-width:430px) and (min-width: 320px) {
+@media (max-width:430px)  {
   .userImageDivInst{
     display: flex;
     flex-direction: column;

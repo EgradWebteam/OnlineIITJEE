@@ -76,19 +76,6 @@ export default function StudentLoginFormeGradTutor({
 
   const passwordCriteria = checkPasswordCriteria(newPassword);
 
-  // This function checks if we need to show the next validation message dynamically
-  const getValidationMessages = () => {
-    const messages = [];
-
-    if (!passwordCriteria.length) messages.push("At least 8 characters.");
-    if (!passwordCriteria.uppercase) messages.push("At least one uppercase letter.");
-    if (!passwordCriteria.lowercase) messages.push("At least one lowercase letter.");
-    if (!passwordCriteria.number) messages.push("At least one number.");
-    if (!passwordCriteria.specialChar) messages.push("At least one special character.");
-
-    return messages;
-  };
-
   return (
     <form
       onSubmit={
@@ -164,7 +151,8 @@ export default function StudentLoginFormeGradTutor({
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 ref={newPasswordRef} // Use ref here
-                onFocus={() => setTouched((prev) => ({ ...prev, newPassword: true }))}
+                onBlur={() => setTouched((prev) => ({ ...prev, newPassword: true }))}
+               
                 required
               />
               <span
@@ -175,15 +163,65 @@ export default function StudentLoginFormeGradTutor({
               </span>
             </div>
             {/* Password criteria list */}
-            {touched.newPassword && (
-              <ul className={styles.listofMandatory}>
-                {getValidationMessages().map((message, index) => (
-                  <li key={index} className={styles.invalid}>
-                    {message}
-                  </li>
-                ))}
-              </ul>
-            )}
+             {newPassword&&(
+                          <ul className={styles.listofMandatory}>
+                            <li
+                              className={
+                                passwordCriteria.length
+                                  ? styles.valid
+                                  : (touched.newPassword 
+                                  ? styles.invalid
+                                  : styles.hidden)
+                              }
+                            >
+                              At least 8 characters.
+                            </li>
+                            <li
+                              className={
+                                passwordCriteria.uppercase
+                                  ? styles.valid
+                                  :(touched.newPassword 
+                                  ? styles.invalid
+                                  : styles.hidden)
+                              }
+                            >
+                              At least one uppercase letter.
+                            </li>
+                            <li
+                              className={
+                                passwordCriteria.lowercase
+                                  ? styles.valid
+                                  :(touched.newPassword 
+                                  ? styles.invalid
+                                  : styles.hidden)
+                              }
+                            >
+                              At least one lowercase letter.
+                            </li>
+                            <li
+                              className={
+                                passwordCriteria.number
+                                  ? styles.valid
+                                  : (touched.newPassword 
+                                  ? styles.invalid
+                                  : styles.hidden)
+                              }
+                            >
+                              At least one number.
+                            </li>
+                            <li
+                              className={
+                                passwordCriteria.specialChar
+                                  ? styles.valid
+                                  : (touched.newPassword 
+                                  ? styles.invalid
+                                  : styles.hidden)
+                              }
+                            >
+                              At least one special character.
+                            </li>
+                          </ul>
+                        )}
           </div>
           <div className={styles.studentLoginFormInput}>
             <label>Confirm Password:</label>
