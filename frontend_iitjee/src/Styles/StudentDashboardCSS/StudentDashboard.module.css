@@ -765,7 +765,7 @@ justify-content: center;
 .solutionButtonsWrapper{
   display: flex;
   align-items: center;
-  gap: 1rem;
+  margin: 1rem 0;
 }
 .solutionsMainDivInBookMarksContainer{
   width: 100%;
@@ -1081,10 +1081,16 @@ height: 100%;
       right: 68px;
       top: 132px;
   }
+  .studentLogo {
+    width: 50px;
+    height: 50px
+  }
     .showPalette {
       display: block;
     }
-    
+    .studentDashboardHeaderLogoDiv {
+      width: 200px;
+    }
     .hamburgerIcon {
       display: block;
       text-align: right;
@@ -1125,7 +1131,7 @@ height: 100%;
       .studentDashboardHamburgerMenu {
         display: block;
         position: absolute;
-        top: 65px;
+        top: 48px;
         left: -1.5rem;
         z-index: 1100;
       }

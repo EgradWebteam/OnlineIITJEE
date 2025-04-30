@@ -385,10 +385,10 @@ const [showPopup, setShowPopup] = useState(false);
                   <p className={styles.errorText}>{errors.mobileNumber}</p>
                 )}
                 <h4 className={styles.SubHEadingForStd}>Selected Courses</h4>
-                <div className={styles.CoursesInputContainer}>
+              
                   {Array.isArray(courses) && courses.length > 0 ? (
                     courses.map((course) => (
-                      <div key={course.id}>
+                      <div key={course.id} className={styles.CoursesInputContainer}>
                         <input
                           type="checkbox"
                           checked={selectedCourses.includes(course.id)}
@@ -400,7 +400,7 @@ const [showPopup, setShowPopup] = useState(false);
                   ) : (
                     <p>No courses available</p>
                   )}
-                </div>
+            
                 <div className={styles.SubmitBtnsForPopUpfor}>
                   <button type="submit">Submit</button>
                 </div>

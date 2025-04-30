@@ -53,6 +53,7 @@ text-decoration: none;
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
 .PopUP {
   position: relative;
@@ -63,7 +64,8 @@ text-decoration: none;
   background-color: white;
   padding: 20px;
   border-radius: 5px;
-  width: 500px;
+  margin: 1rem;
+  
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 .HeadeandCloseBtn {
@@ -73,7 +75,7 @@ text-decoration: none;
 .PopUPForm {
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+  gap: 1rem;
 }
 .HedaingForAddStudents {
   text-align: center;
@@ -82,14 +84,13 @@ text-decoration: none;
   font-weight: 600;
 
 }
-.PopUPForm > div {
-  padding: 1rem;
-}
+
 .InboxesForForm {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 18px;
+  display: grid;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 18px;
+      grid-template-columns: 1fr 1fr;
 }
 .EditStdNameInfo{
   white-space: nowrap;
@@ -124,10 +125,11 @@ text-decoration: none;
   grid-template-columns: 1fr 1fr;
  gap: 10px;
  }
-.InboxesForForm > input {
+.InboxesForForm  input {
   padding: 0.5rem;
   border-radius: 5px;
   border: 1px solid rgb(209, 202, 202);
+  width: 100%;
 }
 .SubmitBtnsForPopUpfor button {
   background-color: rgb(10 77 117);
@@ -295,6 +297,7 @@ text-decoration: none;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  gap: 1rem;
 }
 .ButtonsForEdit button {
   color: white;
@@ -308,6 +311,9 @@ text-decoration: none;
 
 .CoursesInputContainer input {
   margin: 0 10px;
+}
+.CoursesInputContainer label{
+font-size: 10px;
 }
 .closeBtn {
   position: absolute;
@@ -323,6 +329,9 @@ text-decoration: none;
  @media(max-width:600px){
   .StudentInformationfromDB {
     width: 90%;
+  }
+  .HedaingForAddStudents {
+    font-size: 18px;
   }
  }
  
