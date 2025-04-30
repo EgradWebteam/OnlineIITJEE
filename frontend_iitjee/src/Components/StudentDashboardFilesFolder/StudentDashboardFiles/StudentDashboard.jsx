@@ -34,52 +34,52 @@ export default function StudentDashboard() {
       localStorage.setItem("activeSection", section);
     }, []);
     const location = useLocation();
-    useEffect(() => {
-      const handleBeforeUnload = () => {
-        handleLogout();
-      };
-      window.addEventListener('beforeunload', handleBeforeUnload);
-      return () => {
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-      };
-    }, []); 
-    useEffect(() => {
-      let timeoutId;
-      const resetInactivityTimer = () => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          handleLogout(); 
-        }, 30 * 60 * 1000); 
-      };
-      const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
+    // useEffect(() => {
+    //   const handleBeforeUnload = () => {
+    //     handleLogout();
+    //   };
+    //   window.addEventListener('beforeunload', handleBeforeUnload);
+    //   return () => {
+    //     window.removeEventListener('beforeunload', handleBeforeUnload);
+    //   };
+    // }, []); 
+    // useEffect(() => {
+    //   let timeoutId;
+    //   const resetInactivityTimer = () => {
+    //     clearTimeout(timeoutId);
+    //     timeoutId = setTimeout(() => {
+    //       handleLogout(); 
+    //     }, 30 * 60 * 1000); 
+    //   };
+    //   const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
     
-      events.forEach(event => {
-        window.addEventListener(event, resetInactivityTimer);
-      });
-      resetInactivityTimer();
+    //   events.forEach(event => {
+    //     window.addEventListener(event, resetInactivityTimer);
+    //   });
+    //   resetInactivityTimer();
     
-      return () => {
-        events.forEach(event => {
-          window.removeEventListener(event, resetInactivityTimer);
-        });
-        clearTimeout(timeoutId); 
-      };
-    }, []);
+    //   return () => {
+    //     events.forEach(event => {
+    //       window.removeEventListener(event, resetInactivityTimer);
+    //     });
+    //     clearTimeout(timeoutId); 
+    //   };
+    // }, []);
     
-    useEffect(() => {
-      const onBackButton = (event) => {
-        event.preventDefault();
-        setShowLogoutPopup(true);
-        window.history.pushState(null, "", window.location.pathname);
-      };
+    // useEffect(() => {
+    //   const onBackButton = (event) => {
+    //     event.preventDefault();
+    //     setShowLogoutPopup(true);
+    //     window.history.pushState(null, "", window.location.pathname);
+    //   };
   
-      window.history.pushState(null, "", window.location.pathname);
-      window.addEventListener("popstate", onBackButton);
+    //   window.history.pushState(null, "", window.location.pathname);
+    //   window.addEventListener("popstate", onBackButton);
     
-      return () => {
-        window.removeEventListener("popstate", onBackButton);
-      };
-    }, []);
+    //   return () => {
+    //     window.removeEventListener("popstate", onBackButton);
+    //   };
+    // }, []);
     
     
   
