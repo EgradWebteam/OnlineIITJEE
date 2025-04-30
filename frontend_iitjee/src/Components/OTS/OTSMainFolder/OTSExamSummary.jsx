@@ -184,7 +184,7 @@ const ExamSummaryComponent = ({
     localStorage.removeItem("examSummaryEntered");
     localStorage.removeItem("examSubmitted");
   
-    const localStorageUserId = localStorage.getItem('userId');
+
     const adminInfo = JSON.parse(localStorage.getItem("adminInfo"));
     const isAdmin = adminInfo?.role === "admin";
   
@@ -198,7 +198,7 @@ const ExamSummaryComponent = ({
         window.location.href = "/AdminDashboard";
       }
     } else {
-      const destinationURL = `/StudentDashboard/${localStorageUserId}?section=results`;
+      const destinationURL = `/StudentDashboard/?section=results`;
   
       if (window.opener) {
         window.opener.location.href = destinationURL;
