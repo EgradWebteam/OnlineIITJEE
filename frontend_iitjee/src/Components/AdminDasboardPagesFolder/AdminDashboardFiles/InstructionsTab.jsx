@@ -98,7 +98,7 @@ const itemsPerPage = 5;
   const [instructionImage, setInstructionImage] = useState(null);
 
   const handleOpen = async (row) => {
-    debugger
+ 
     try {
       const res = await fetch(
         `${BASE_URL}/Instructions/GetInstructionPoints/${row.instruction_id}`
@@ -229,8 +229,10 @@ const itemsPerPage = 5;
  
       {showForm && (
         <div className={styles.uploadForm}>
+          <div className={styles.UploadFormLabels}>
           <label>
             Select Exam:
+            </label>
             <select
               onChange={handleExamChange}
               value={selectedExam}
@@ -245,10 +247,10 @@ const itemsPerPage = 5;
                 </option>
               ))}
             </select>
-          </label>
-
+        </div>
+        <div className={styles.UploadFormLabels}>
           <label>
-            Instructions Heading:
+            Instructions Heading:</label>
             <input
               type="text"
               placeholder="Enter Heading"
@@ -256,16 +258,17 @@ const itemsPerPage = 5;
               onChange={handleHeadingChange}
               disabled={isReadOnly}
             />
-          </label>
+          </div>
 
           {!isReadOnly && (
+             <div className={styles.UploadFormLabels}>
             <label>
-              Instructions Document:
+              Instructions Document: </label>
               <input type="file" onChange={handleFileChange} />
-            </label>
+           </div>
           )}
 
-          <div>
+          <div  className={styles.UploadFormBtns}>
             <button
               className={styles.cancelBtn}
               onClick={() => setShowForm(false)}
@@ -345,7 +348,7 @@ const itemsPerPage = 5;
               </div>
             )}
 
-<ol>
+<ol className={styles.listsInstructionpageContainer}>
   {instructionPoints.map((point, index) => (
     <li key={point.id} className={styles.listsInstructionpage}>
       {/* Show the point text if it's in read-only mode */}

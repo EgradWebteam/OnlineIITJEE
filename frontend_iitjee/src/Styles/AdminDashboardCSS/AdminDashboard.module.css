@@ -261,13 +261,30 @@ nav ul li .active {
 }
 .DocumentUploadForm {
   display: flex;
+flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   gap: 1.5rem;
   padding: 2rem;
   background-color: #dfd6d6;
   border: 1px solid #e0e0e0;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  margin-bottom: 3px;
+  margin:1rem;
+}
+.DocumetnUploadSelectInputs{
+  width: 58%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.DocumetnUploadSelectInputs select{
+  border-radius: 10px;
+  padding: 10px;
+}
+.DocumetnUploadSelectInputs  input{
+  border-radius: 10px;
+  padding: 10px;
+  border: 1px solid whitesmoke;
 }
 .uploadButton {
   background-color: #28a745;
@@ -305,7 +322,10 @@ nav ul li .active {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+margin: 1rem ;
+}
+.formHeader h3{
+  text-align: center;
 }
 
 .closeButton {
@@ -458,6 +478,9 @@ nav ul li .active {
 
 /* Mobile layout */
 @media (max-width: 768px) {
+  .pageHeading{
+    font-size: 20px;
+  }
   .header {
     position: sticky;
     top: 0;
@@ -511,6 +534,17 @@ nav ul li .active {
   .headerImg img {
     height: 100%;
     object-fit: contain;
+  }
+  .DocumetnUploadSelectInputs{
+    display: flex;
+  flex-direction: column;
+ 
+  }
+  .formHeader h3{
+    font-size: 15px;
+  }
+  .closeButton{
+    padding: 5px;
   }
   
 }

@@ -402,7 +402,7 @@ const TestCreationForm = ({
               <div>
                 <label>
                   <input
-                    className={styles.testFeilds}
+                    className={styles.testFeildscheckbox}
                     type="checkbox"
                     checked={includeSection}
                     onChange={handleCheckboxChange}
@@ -485,8 +485,8 @@ const TestCreationForm = ({
                 )}
               </div>
             </div>
-            <div>
-              <button type="submit" className={styles.createButton}>
+            <div className={styles.createButton}>
+              <button type="submit" >
                 {isEditMode ? "Update Test" : "Create Test"}
               </button>
             </div>

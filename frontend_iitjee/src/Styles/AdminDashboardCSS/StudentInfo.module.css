@@ -5,13 +5,14 @@ margin: 0;
 padding: 0;
 text-decoration: none;
 }
-.Addedstudent {
+.Addedstudent{
+  text-align: right;
+  margin: 1rem ;
+}
+.Addedstudent button{
   color: white;
   background-color: #0d2a44;
-    position: relative;
-    left: 80%;
     padding: 10px;
-    margin: 1rem;
     font-size: 17px;
     border: none;
     border-radius: 7px;
@@ -37,7 +38,7 @@ text-decoration: none;
   margin: 0 auto;
   box-shadow: 0px 0px 3px 3px rgb(219, 219, 219);
   border-radius: 10px;
-  overflow: auto;
+  overflow: scroll;
 }
 .SubHEadingForStd{
   color: rgb(68, 112, 148);
@@ -319,5 +320,9 @@ text-decoration: none;
   cursor: pointer;
   z-index: 10;
 }
- 
+ @media(max-width:600px){
+  .StudentInformationfromDB {
+    width: 90%;
+  }
+ }
  
