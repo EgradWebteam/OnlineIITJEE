@@ -385,6 +385,16 @@ export default function QuestionNavigationButtons({
       return updated;
     });
 
+    // Check if there's any answer to save
+    const shouldSave =
+    ([1, 2].includes(qTypeId) &&
+      optionIndexesStr &&
+      optionCharCodes.length > 0) || // MCQ
+    ([3, 4].includes(qTypeId) &&
+      optionIndexesStr &&
+      optionCharCodes.length > 0) || // MSQ
+    ([5, 6].includes(qTypeId) && calcVal?.trim() !== ""); // NAT
+
     // If any required params are missing, skip API but still navigate
 if (!realStudentId || !realTestId) {
   console.warn("Missing required IDs, skipping saveUserResponse call.");
@@ -396,19 +406,20 @@ if (!realStudentId || !realTestId) {
   return;
 }
     // Send to backend
-    await saveUserResponse({
-      realStudentId,
-      realTestId,
-      subject_id: subjectId,
-      section_id: sectionId,
-      question_id: qid,
-      question_type_id: qTypeId,
-      optionIndexes1: optionIndexesStr,
-      optionIndexes1CharCodes: optionCharCodes,
-      calculatorInputValue: calcVal,
-      answered: "1" // answered
-    });
- 
+    if (shouldSave) {
+      await saveUserResponse({
+        realStudentId,
+        realTestId,
+        subject_id: subjectId,
+        section_id: sectionId,
+        question_id: qid,
+        question_type_id: qTypeId,
+        optionIndexes1: optionIndexesStr,
+        optionIndexes1CharCodes: optionCharCodes,
+        calculatorInputValue: calcVal,
+        answered: "1" // answered
+      });
+    }
     // Move to next question
     navigateToNext(subject, section, activeQuestionIndex);
   };

@@ -11,15 +11,16 @@ const StudentDashboard_MyCourses = lazy(() => import("./StudentDashboard_MyCours
 const StudentDashboard_BuyCourses = lazy(() => import("./StudentDashboard_BuyCourses.jsx"));
 const StudentDashboard_MyResults = lazy(() => import("./StudentDashboard_MyResults.jsx"));
 const StudentDashboard_AccountSettings = lazy(() => import("./StudentDashboard_AccountSettings.jsx"));
-
-export default function StudentDashboard() {
-  const { userId: urlUserId } = useParams();  
+const CustomLogoutPopup = lazy(() => import('./CustomLogoutPop.jsx'));
+export default function StudentDashboard() { 
   const [activeSection, setActiveSection] = useState("dashboard");
    const [activeSubSection, setActiveSubSection] = useState("profile");
   const [isLoading, setIsLoading] = useState(true);
   const studentData = JSON.parse(localStorage.getItem('studentData'));
   const studentName = studentData?.userDetails?.candidate_name;
   const studentId = sessionStorage.getItem('decryptedId');
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+
   const navigate = useNavigate();
     useEffect(() => {
       const savedSection = localStorage.getItem("activeSection");
@@ -33,21 +34,53 @@ export default function StudentDashboard() {
       localStorage.setItem("activeSection", section);
     }, []);
     const location = useLocation();
-    // useEffect(() => {
-    //   const localStorageUserId = localStorage.getItem('userId');
-    //   console.log('URL User ID:', urlUserId); 
-    //   console.log('LocalStorage User ID:', localStorageUserId); 
+    useEffect(() => {
+      const handleBeforeUnload = () => {
+        handleLogout();
+      };
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }, []); 
+    useEffect(() => {
+      let timeoutId;
+      const resetInactivityTimer = () => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          handleLogout(); 
+        }, 30 * 60 * 1000); 
+      };
+      const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
     
-    //   if (urlUserId !== localStorageUserId) {
-    //     console.log('User IDs do not match, redirecting to Error page.');
-    //     navigate('/LoginPage');
-    //     return;
-    //   }
+      events.forEach(event => {
+        window.addEventListener(event, resetInactivityTimer);
+      });
+      resetInactivityTimer();
     
-    //   console.log('User IDs match, proceeding with loading dashboard.');
-    //   setIsLoading(false);
+      return () => {
+        events.forEach(event => {
+          window.removeEventListener(event, resetInactivityTimer);
+        });
+        clearTimeout(timeoutId); 
+      };
+    }, []);
     
-    // }, [urlUserId]);               
+    useEffect(() => {
+      const onBackButton = (event) => {
+        event.preventDefault();
+        setShowLogoutPopup(true);
+        window.history.pushState(null, "", window.location.pathname);
+      };
+  
+      window.history.pushState(null, "", window.location.pathname);
+      window.addEventListener("popstate", onBackButton);
+    
+      return () => {
+        window.removeEventListener("popstate", onBackButton);
+      };
+    }, []);
+    
     
   
     useEffect(() => {
@@ -63,47 +96,7 @@ export default function StudentDashboard() {
     
       setIsLoading(false);
     }, [location.state]);
-    useEffect(() => {
-      const logoutTimer = setTimeout(() => {
-        console.log("🔒 Auto logout triggered after 4 hours");
-        handleLogout();
-      }, 4 * 60 * 60 * 1000); 
-    
-      return () => clearTimeout(logoutTimer); 
-    }, []);
- 
-    // Auto Logout When user is idle in the dashboard 30mins and also closes the tab
-    // useEffect(() => {
-    //   let idleTimer;
-    
-    //   const resetIdleTimer = () => {
-    //     clearTimeout(idleTimer);
-    //     idleTimer = setTimeout(() => {
-    //       console.log("Auto logout triggered after 30 minutes of complete inactivity");
-    //       handleLogout();
-    //     }, 30 * 60 * 1000); // 30 minutes
-    //   };
-    
-    //   const events = ["mousemove", "keydown", "wheel", "scroll", "touchstart"];
-    //   events.forEach(event => window.addEventListener(event, resetIdleTimer));
-    
-    //   resetIdleTimer(); // Start idle timer initially
-    
-    //   // Handle tab close event
-    //   const handleBeforeUnload = (event) => {
-    //     handleLogout();  // Perform logout when tab is closed
-    //   };
-    
-    //   // Add the beforeunload event listener
-    //   window.addEventListener("beforeunload", handleBeforeUnload);
-    
-    //   // Cleanup function to remove event listeners
-    //   return () => {
-    //     events.forEach(event => window.removeEventListener(event, resetIdleTimer));
-    //     clearTimeout(idleTimer);
-    //     window.removeEventListener("beforeunload", handleBeforeUnload);  // Remove beforeunload listener
-    //   };
-    // }, []);
+
       
     const handleLogout = async () => {
 
@@ -132,8 +125,8 @@ export default function StudentDashboard() {
           alert(data.message || "Logout failed. Please try again.");
         }
       } catch (error) {
-        console.error("Logout error:", error);
-        // alert("Something went wrong. Please try again.");
+        //console.error("Logout error:", error);
+       
       }
     };
     
@@ -185,6 +178,20 @@ export default function StudentDashboard() {
           </div>
         </div>
       </div>
+      {showLogoutPopup && (
+  <CustomLogoutPopup
+    onConfirm={() => {
+      //console.log("✅ User confirmed logout from popup");
+      setShowLogoutPopup(false);
+      handleLogout(); 
+    }}
+    onCancel={() => {
+      //console.log("❌ User canceled logout from popup");
+      setShowLogoutPopup(false);
+    }}
+  />
+)}
+
     </div>
   );
 }
