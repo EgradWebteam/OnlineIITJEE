@@ -151,7 +151,7 @@
 .printbutton_viewquestion {
   background-color: #4caf50;
   color: white;
-  padding: 0.625rem 1.25rem;
+  padding:5px 10px;
   margin-bottom: 1.25rem;
   cursor: pointer;
   border: none;
@@ -186,23 +186,18 @@
   height: 3rem;
   margin-left: 1rem;
 }
-
 .closebutton_viewquestion {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
+  text-align: right;
+}
+.closebutton_viewquestion button{
   background-color: #e74c3c;
   color: white;
   border: none;
-  padding: 0.625rem;
   border-radius: 50%;
   font-size: 1.25rem;
   cursor: pointer;
 }
 
-.closebutton_viewquestion:hover {
-  background-color: #c0392b;
-}
 @media(max-width:768px){
   .gridForm {
     grid-template-columns: 1fr;
@@ -214,4 +209,28 @@
   .testCreationFormContainer{
     width: 90%;
   }
+  .questionImage{
+    width: 500px;
+    height: auto;
+    overflow-x: scroll;
+  }
+  .HeadingForViewTestData{
+  font-size: 13px;
+  }
+.questionImage img{
+  width: 100%;
+  height: 100%;
+}
+.HeadForSubjectName{
+  font-size: 13px;
+}
+.ImagesInQuestions{
+  width: 400px;
+  height: auto;
+  overflow: auto;
+}
+.ImagesInQuestions img{
+  width: 100%;
+  height: 100%;
+}
 }

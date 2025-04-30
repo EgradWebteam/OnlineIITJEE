@@ -140,6 +140,7 @@ text-transform: uppercase;
     display: flex;
     align-items: center;
     justify-content: center;
+    height: inherit;
 }
 .OTSInstrctionsDivHolder button{
  color: white;
@@ -1086,7 +1087,7 @@ border-radius: 10px;
 .studentPerformanceReportMain, .solutionContainerMain{
   overflow-y: scroll;
   overflow-x: hidden;
-  height: 75vh;
+  height: 60vh;
 }
 .AIRholderDiv{
   display: flex;
