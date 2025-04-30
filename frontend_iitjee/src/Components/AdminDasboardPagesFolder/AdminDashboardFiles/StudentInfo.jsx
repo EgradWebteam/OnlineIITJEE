@@ -310,10 +310,11 @@ const [showPopup, setShowPopup] = useState(false);
       <AdminDashboardHeader />
       <div className={styles.studentMainContentHomePage}>
       <div className={styles.StudentInfoHeader}>Student Information</div>
-
-      <button className={styles.Addedstudent} onClick={() => setIsPopUp(true)}>
+     <div className={styles.Addedstudent}>
+      <button  onClick={() => setIsPopUp(true)}>
         Add students
       </button>
+      </div>
       <div className={styles.StundentInfoForContainer}>
         <div className={styles.FilterDropdown}>
           <select

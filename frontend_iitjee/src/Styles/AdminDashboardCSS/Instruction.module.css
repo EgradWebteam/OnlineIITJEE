@@ -11,11 +11,15 @@
     background: #dfd6d6;
     padding: 20px;
     border-radius: 8px;
-    margin-bottom: 20px;
-    display: flex;
+    display: grid;
     gap: 20px;
     align-items: center;
-    flex-wrap: wrap;
+    justify-content: center
+   
+  }
+  .UploadFormLabels{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
   .InstructionContainer {
     padding: 1.5rem;
@@ -34,12 +38,12 @@
     color: white;
     margin: 1rem;
   }
-  
-  .uploadForm label {
+  .UploadFormBtns{
     display: flex;
-    flex-direction: column;
-    font-weight: bold;
+    justify-content: center;
+    gap: 2rem;
   }
+  
   
 .searchBarContainer {
   display: flex;
@@ -234,10 +238,9 @@
   background-color: white;
   padding: 2rem;
   border-radius: 8px;
-  width: 80%;
+  width: 90%;
   max-width: 800px;
-  max-height: 90vh; /* Set a max height for the modal */
-  overflow-y: auto; /* Enable vertical scrolling */
+ 
   position: relative;
   z-index: 1001;
 }
@@ -246,10 +249,15 @@
   justify-content: space-between;
   align-items: center;
 }
+.listsInstructionpageContainer{
+  max-height: 80vh;
+  overflow-y: scroll; /* Enable vertical scrolling */
+}
 .listsInstructionpage{
   display: flex;
 justify-content: space-between;
   align-items: center;
+  
   margin: 1rem 0;
   gap: 1rem;
 }
@@ -293,4 +301,20 @@ justify-content: space-between;
   display: flex;
   align-items: center; 
   justify-content: space-between;
+}
+@media(max-width:768px){
+  .pageHeading{
+    font-size: 20px;
+  }
+}
+@media(max-width:600px){
+  .uploadForm label {
+    display: flex;
+  font-size: 10px;
+    font-weight: bold;
+  }
+  .UploadFormLabels{
+    display: grid;
+    grid-template-columns: 1fr;
+  }
 }

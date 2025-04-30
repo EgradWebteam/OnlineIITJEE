@@ -299,7 +299,7 @@ const DocumentUpload = () => {
           </div>
 
           <div className={styles.DocumentUploadForm}>
-            <div>
+            <div className={styles.DocumetnUploadSelectInputs}>
               <label>Select Test:</label>
               <select
                 name="test"
@@ -318,7 +318,7 @@ const DocumentUpload = () => {
               </select>
             </div>
 
-            <div>
+            <div className={styles.DocumetnUploadSelectInputs}>
               <label>Select Subject:</label>
               <select
                 name="subject"
@@ -336,7 +336,7 @@ const DocumentUpload = () => {
               </select>
             </div>
 
-            <div>
+            <div className={styles.DocumetnUploadSelectInputs}>
               <label>Select Section:</label>
               <select
                 name="section"
@@ -354,7 +354,7 @@ const DocumentUpload = () => {
               </select>
             </div>
 
-            <div>
+            <div className={styles.DocumetnUploadSelectInputs}>
               <label>Upload Document:</label>
               <input
                 type="file"

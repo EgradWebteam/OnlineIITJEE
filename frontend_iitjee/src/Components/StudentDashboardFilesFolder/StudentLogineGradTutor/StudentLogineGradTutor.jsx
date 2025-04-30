@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import styles from "../../../Styles/StudentDashboardCSS/Student.module.css"; 
 import stdLogo from '../../../assets/logoCap.jpeg';
 import MainHeader from '../../LandingPagesFolder/MainPageHeaderFooterFiles/MainHeader.jsx';
@@ -8,6 +8,7 @@ import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import StudentLoginFormeGradTutor from './StudentLoginFormeGradTutor.jsx';
 import { useStudent } from '../../../ContextFolder/StudentContext.jsx';
 import { v4 as uuidv4 } from 'uuid';
+
 export default function StudentLogineGradTutor() {
   const [username, setUsername] = useState(""); 
   const [password, setPassword] = useState("");  
@@ -16,24 +17,28 @@ export default function StudentLogineGradTutor() {
   const [resetCode, setResetCode] = useState(""); 
   const [isForgotPassword, setIsForgotPassword] = useState(false); 
   const [isResetPassword, setIsResetPassword] = useState(false);  
+  const [failedAttempts, setFailedAttempts] = useState(0); 
   const navigate = useNavigate();
   const { setStudentData } = useStudent();
-
   const handleLogin = async (e) => {
     const sessionId = uuidv4();
     e.preventDefault();
+  
     if (!username || !password) {
       alert("Please enter both username and password");
       return;
     }
- 
+  
+   
+  
     const loginData = {
-      email: username,  // Use 'email' field for student login
+      email: username,
       password: password,
       sessionId: sessionId
     };
- 
+  
     try {
+      // Make the API request
       const response = await fetch(`${BASE_URL}/student/studentLogin`, {
         method: "POST",
         headers: {
@@ -41,40 +46,62 @@ export default function StudentLogineGradTutor() {
         },
         body: JSON.stringify(loginData),
       });
+  
+      // Check if the response is OK (successful)
       const data = await response.json();
-// debugger
+  
       if (response.ok) {
-        if (response.ok) {
-          const decryptedId = data.decryptedId;
-          const accessToken = data.accessToken;
-          const sessionId = data.sessionId;
-          const userId = data.user_Id;
-          const studentInfo = data
-       
-          // Save basic stuff in localStorage
-          localStorage.setItem('decryptedId', decryptedId);
-          localStorage.setItem('accessToken', accessToken);
-          localStorage.setItem('sessionId', sessionId);
-          localStorage.setItem('userId', userId); 
-          sessionStorage.setItem('sessionId', sessionId);
-          sessionStorage.setItem('decryptedId', decryptedId);
-          sessionStorage.setItem('accessToken', accessToken);
-          sessionStorage.setItem('userId', userId);
-          setStudentData(studentInfo);
-          // console.log(studentInfo)
-          navigate(`/StudentDashboard/${userId}`);
-        }
-       
+        const decryptedId = data.decryptedId;
+        const accessToken = data.accessToken;
+        const sessionId = data.sessionId;
+        const userId = data.user_Id;
+        const studentInfo = data;
+  
+        // Store the session and student data
+        localStorage.setItem('decryptedId', decryptedId);
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('sessionId', sessionId);
+        localStorage.setItem('userId', userId);
+        sessionStorage.setItem('sessionId', sessionId);
+        sessionStorage.setItem('decryptedId', decryptedId);
+        sessionStorage.setItem('accessToken', accessToken);
+        sessionStorage.setItem('userId', userId);
+        setStudentData(studentInfo);
+  
+        // Reset failed attempts on successful login
+      
+        navigate(`/StudentDashboard/${userId}`);
       } else {
-        alert(data.message || "Login failed. Please try again.");
+        // Handle failed login attempts here (401 or other errors)
+        setFailedAttempts((prev) => prev + 1);
+        if (data.message === "You are already logged in. Please log out before logging in again.") {
+          alert(data.message);
+          return;
+        }
+        // Now we check for maximum attempts *after* the login failed
+        if (failedAttempts  >= 3) {
+          alert("You have exceeded the maximum number of login attempts. Please reset your password.");
+          setIsForgotPassword(true);
+          return;
+        }
+  
+        const remainingAttempts = 3 - (failedAttempts); 
+        if (remainingAttempts === 1) {
+          alert("You have 1 attempt left. Please try again.");
+        } else if (remainingAttempts === 2) {
+          alert("You have 2 attempts left. Please try again.");
+        } else {
+          alert("You have 3 attempts left. Please try again.");
+        }
       }
     } catch (error) {
       console.error("Error during login:", error);
       alert("Something went wrong. Please try again later.");
     }
-};
-
+  };
   
+  
+
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
@@ -93,8 +120,10 @@ export default function StudentLogineGradTutor() {
       });
       const data = await response.json();
       if (response.ok) {
-        setIsForgotPassword(true);  // Go back to login form after success
-        setIsResetPassword(true);  // Show reset password form with reset code
+        // Reset failed attempts after password reset request
+        setFailedAttempts(0);
+        setIsForgotPassword(true);  
+        setIsResetPassword(true);  
         alert("Password reset instructions have been sent to your email.");
       } else {
         alert(data.message || "Something went wrong. Please try again.");
@@ -104,47 +133,45 @@ export default function StudentLogineGradTutor() {
     }
   };
 
-  // Handle reset password form submission
-// Handle reset password form submission
-const handleResetPassword = async (e) => {
-  e.preventDefault();
+  const handleResetPassword = async (e) => {
+    
+    e.preventDefault();
   
-  if (!resetCode || !newPassword || !confirmPassword) {
-    alert("Please enter reset code, new password, and confirm password.");
-    return;
-  }
-
-  if (newPassword !== confirmPassword) {
-    alert("Passwords do not match.");
-    return;
-  }
-
-  const resetPasswordData = {
-    email: username,
-    resetCode: resetCode,
-    newPassword: newPassword,
-  };
-
-  try {
-    const response = await fetch(`${BASE_URL}/student/reset-password`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(resetPasswordData),
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      alert("Password has been reset successfully. You can now log in.");
-      
-      setIsForgotPassword(false);   
-      setIsResetPassword(false);    
-    } else {
-      alert(data.message || "Something went wrong. Please try again.");
+    if (!resetCode || !newPassword || !confirmPassword) {
+      alert("Please enter reset code, new password, and confirm password.");
+      return;
     }
-  } catch (error) {
-    alert("Something went wrong. Please try again later.");
-  }
-};
+
+    if (newPassword !== confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
+
+    const resetPasswordData = {
+      email: username,
+      resetCode: resetCode,
+      newPassword: newPassword,
+    };
+
+    try {
+      const response = await fetch(`${BASE_URL}/student/reset-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(resetPasswordData),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert("Password has been reset successfully. You can now log in.");
+        setIsForgotPassword(false);   
+        setIsResetPassword(false);    
+      } else {
+        alert(data.message || "Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      alert("Something went wrong. Please try again later.");
+    }
+  };
 
   return (
     <div className={styles.studentLoginHomePage}>
@@ -175,6 +202,8 @@ const handleResetPassword = async (e) => {
             handleResetPassword={handleResetPassword}
             setIsResetPassword={setIsResetPassword}
             setIsForgotPassword={setIsForgotPassword}
+            failedAttempts={failedAttempts}
+            setFailedAttempts={setFailedAttempts}
           />
 
           {/* Forgot password and registration links */}
@@ -182,11 +211,8 @@ const handleResetPassword = async (e) => {
             <div className={styles.studentLoginLinks}>
               <p>New here? <Link to="/StudentRegistrationPage">Register</Link></p>
               <p><a href="#" onClick={() => setIsForgotPassword(true)}>Forgot Password?</a></p>
-           
             </div>
           )}
-
-      
         </div>
       </div>
       <MainFooter />

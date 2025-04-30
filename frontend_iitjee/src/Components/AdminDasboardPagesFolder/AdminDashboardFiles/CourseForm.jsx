@@ -420,10 +420,11 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
             )}
             {portalid == 3 && (
               <div className={styles.SelectBoxForCourses}>
-                <div className={styles.InputBoxForCourses2}>
-                  <div className={styles.HeadingForSubjectsSelectCourse}>
+                <div className={styles.TypeofCourses}>
+                 <div>
                     <label>Type of Course:</label>
-                  </div>
+                 </div>
+                 <div>
                   <select value={selectedType || ""} onChange={handleTypeSelectChange}>
                     <option value="">Select a course type</option>
                     {types.map((type) => (
@@ -432,11 +433,12 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
                       </option>
                     ))}
                   </select>
+                  </div>
                 </div>
               </div>
             )}
 
-            <div className={styles.InputSelectBoxForCourses}>
+            <div className={styles.TypeofCourses}>
               <label>Select Course Image:</label>
               <select
                 value={selectedImage}
