@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   decryptBatch as decryptDataBatch,
@@ -33,37 +33,96 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
   const isAdmin = adminInfo?.role === "admin";
 
     //WINDOW CLOSE DATA DELETE CODE START
+    // useEffect(() => {
+    //   const handleUnload = () => {
+    //     if (realTestId && realStudentId) {
+    //       const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`;
+  
+    //       // Use navigator.sendBeacon with POST to a wrapper endpoint, or use fetch (less reliable)
+    //       // We'll use fetch here as it's DELETE
+    //       navigator.sendBeacon = navigator.sendBeacon || function () {}; // fallback
+  
+    //       // Use fetch (best effort; may not always complete before unload)
+    //       fetch(url, {
+    //         method: "DELETE",
+    //       })
+    //         .then((res) => {
+    //           //console.log("Deletion request sent on window close", res.status);
+    //         })
+    //         .catch((err) => {
+    //           console.error(
+    //             "Error sending deletion request on window close",
+    //             err
+    //           );
+    //         });
+    //     }
+    //   };
+  
+    //   window.addEventListener("unload", handleUnload);
+  
+    //   return () => {
+    //     window.removeEventListener("unload", handleUnload);
+    //   };
+    // }, [realTestId, realStudentId]);
     useEffect(() => {
-      const handleUnload = () => {
-        if (realTestId && realStudentId) {
-          const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`;
-  
-          // Use navigator.sendBeacon with POST to a wrapper endpoint, or use fetch (less reliable)
-          // We'll use fetch here as it's DELETE
-          navigator.sendBeacon = navigator.sendBeacon || function () {}; // fallback
-  
-          // Use fetch (best effort; may not always complete before unload)
-          fetch(url, {
-            method: "DELETE",
-          })
-            .then((res) => {
-              //console.log("Deletion request sent on window close", res.status);
-            })
-            .catch((err) => {
-              console.error(
-                "Error sending deletion request on window close",
-                err
-              );
+        const handleBeforeUnload = () => {
+          if (realTestId && realStudentId) {
+            const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`;
+     
+            const data = JSON.stringify({
+              studentId: realStudentId,
+              testCreationTableId: realTestId,
             });
-        }
-      };
+     
+            const blob = new Blob([data], { type: "application/json" });
+            navigator.sendBeacon(url, blob);
+          }
+        };
+     
+        window.addEventListener("beforeunload", handleBeforeUnload);
+     
+        return () => {
+          window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+      }, [realStudentId, realTestId]);
+
+    // const handleBeforeUnload = useCallback(
+    //   async (event) => {
   
-      window.addEventListener("unload", handleUnload);
   
-      return () => {
-        window.removeEventListener("unload", handleUnload);
-      };
-    }, [realTestId, realStudentId]);
+    //     try {
+    //       await fetch(`${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`, {
+    //         method: "DELETE",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify({
+    //           studentId: realStudentId, // User ID
+    //           testCreationTableId: realTestId, // Test ID
+    //         }),
+    //       });
+    //       console.log(
+    //         "User data deleted successfully before closing the window."
+    //       );
+    //     } catch (error) {
+    //       console.error("Error deleting user data:", error);
+    //     }
+       
+  
+    //     // Once deletion is successful, remove the 'beforeunload' listener
+    //     window.removeEventListener("beforeunload", preventUnload);
+    
+     
+    //   },
+    //   [realStudentId,realTestId]
+    // );
+
+    // useEffect(() => {
+    //   window.addEventListener("beforeunload", handleBeforeUnload);
+    //   return () => {
+    //     window.removeEventListener("beforeunload", handleBeforeUnload);
+    //   };
+    // }, [handleBeforeUnload]);
     
   useEffect(() => {
     const token = sessionStorage.getItem("navigationToken");
@@ -188,7 +247,7 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
               )}
             </div>
             <div className={styles.StdNameForData}>
-            <p>{isAdmin ? "Admin" : studentName}</p>
+            <p title={isAdmin ? "Admin" : studentName}>{isAdmin ? "Admin" : studentName}</p>
             </div>
           </div>
         </div>

@@ -651,10 +651,10 @@ router.get(
   }
 );
 
-router.delete("/DeleteStudentDataWindowClose/:studentId/:testCreationTableId", async (req, res) => {
+router.post("/DeleteStudentDataWindowClose/:studentId/:testCreationTableId", async (req, res) => {
   try {
     const { studentId, testCreationTableId } = req.params; // Correcting to extract parameters from req.params
-
+    console.log("Delete request received", req.params);
     if (!studentId || !testCreationTableId) {
       return res.status(400).json({ message: "Missing parameters" });
     }
