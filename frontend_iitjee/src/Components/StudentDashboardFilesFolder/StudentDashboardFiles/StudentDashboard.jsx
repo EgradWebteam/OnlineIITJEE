@@ -34,32 +34,32 @@ export default function StudentDashboard() {
       localStorage.setItem("activeSection", section);
     }, []);
     const location = useLocation();
-    useEffect(() => {
-      const handleBeforeUnload = (e) => {
-        // Check if it's a page reload
-        if (sessionStorage.getItem('isReloading') === 'true') {
-          // If it's a reload, we don't want to call the logout function
-          sessionStorage.removeItem('isReloading'); // Clean up the flag
-          return;
-        }
+    // useEffect(() => {
+    //   const handleBeforeUnload = (e) => {
+    //     // Check if it's a page reload
+    //     if (sessionStorage.getItem('isReloading') === 'true') {
+    //       // If it's a reload, we don't want to call the logout function
+    //       sessionStorage.removeItem('isReloading'); // Clean up the flag
+    //       return;
+    //     }
     
-        // Otherwise, handle tab close or back navigation
-        handleLogout();
-      };
+    //     // Otherwise, handle tab close or back navigation
+    //     handleLogout();
+    //   };
     
-      // Set a flag in sessionStorage when the page is about to reload
-      const handleBeforeReload = () => {
-        sessionStorage.setItem('isReloading', 'true');
-      };
+    //   // Set a flag in sessionStorage when the page is about to reload
+    //   const handleBeforeReload = () => {
+    //     sessionStorage.setItem('isReloading', 'true');
+    //   };
     
-      window.addEventListener('beforeunload', handleBeforeUnload);
-      window.addEventListener('beforeunload', handleBeforeReload);
+    //   window.addEventListener('beforeunload', handleBeforeUnload);
+    //   window.addEventListener('beforeunload', handleBeforeReload);
     
-      return () => {
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-        window.removeEventListener('beforeunload', handleBeforeReload);
-      };
-    }, []);
+    //   return () => {
+    //     window.removeEventListener('beforeunload', handleBeforeUnload);
+    //     window.removeEventListener('beforeunload', handleBeforeReload);
+    //   };
+    // }, []);
     
     
     useEffect(() => {
@@ -84,21 +84,47 @@ export default function StudentDashboard() {
         clearTimeout(timeoutId); 
       };
     }, []);
-    
     useEffect(() => {
-      const onBackButton = (event) => {
-        event.preventDefault();
-        setShowLogoutPopup(true);
-        window.history.pushState(null, "", window.location.pathname);
-      };
-  
-      window.history.pushState(null, "", window.location.pathname);
-      window.addEventListener("popstate", onBackButton);
+      // Push initial state to browser history
+      window.history.pushState({ page: "dashboard" }, "", window.location.href);
     
+      // Optional: Save to localStorage (in case you want to restore this later)
+      localStorage.setItem("pageState", JSON.stringify({ page: "dashboard" }));
+    
+      // Handle the back button press
+      const handlePopState = (event) => {
+        const state = event.state;
+        if (state?.page === "dashboard") {
+          setShowLogoutPopup(true); 
+          console.log("🔙 Back button detected - showing logout confirmation");
+    
+          // Re-push to history to prevent going further back without confirmation
+          window.history.pushState({ page: "dashboard" }, "", window.location.href);
+        }
+      };
+    
+      // Attach the event listener
+      window.addEventListener("popstate", handlePopState);
+    
+      // Cleanup on unmount
       return () => {
-        window.removeEventListener("popstate", onBackButton);
+        window.removeEventListener("popstate", handlePopState);
       };
     }, []);
+    // useEffect(() => {
+    //   const onBackButton = (event) => {
+    //     event.preventDefault();
+    //     setShowLogoutPopup(true);
+    //     window.history.pushState(null, "", window.location.pathname);
+    //   };
+  
+    //   window.history.pushState(null, "", window.location.pathname);
+    //   window.addEventListener("popstate", onBackButton);
+    
+    //   return () => {
+    //     window.removeEventListener("popstate", onBackButton);
+    //   };
+    // }, []);
     
     
   
@@ -118,7 +144,7 @@ export default function StudentDashboard() {
 
       
     const handleLogout = async () => {
-
+ debugger
       const sessionId = localStorage.getItem("sessionId");
     
       if (!sessionId) {
@@ -145,12 +171,15 @@ export default function StudentDashboard() {
         }
       } catch (error) {
         //console.error("Logout error:", error);
-       
       }
     };
-    
+    const handleConfirmForBrowserBackButton=()=>{
+       setShowLogoutPopup(false);
+      handleLogout(); 
+    }
     
     const renderStudentDashboardContent = () => {
+    
       switch (activeSection) {
         case "dashboard":
           return <StudentDashboardHome studentName ={studentName}
@@ -201,8 +230,7 @@ export default function StudentDashboard() {
   <CustomLogoutPopup
     onConfirm={() => {
       //console.log("✅ User confirmed logout from popup");
-      setShowLogoutPopup(false);
-      handleLogout(); 
+     handleConfirmForBrowserBackButton();
     }}
     onCancel={() => {
       //console.log("❌ User canceled logout from popup");
