@@ -130,10 +130,10 @@ router.get("/OTSTestData/:testCreationTableId", async (req, res) => {
       `SELECT 
           tct.test_name, 
           course.course_creation_id
-        FROM iit_db.iit_test_creation_table AS tct
-        JOIN iit_db.iit_course_creation_table AS course 
+        FROM iit_test_creation_table AS tct
+        JOIN iit_course_creation_table AS course 
           ON tct.course_creation_id = course.course_creation_id
-        JOIN iit_db.iit_exams AS exam 
+        JOIN iit_exams AS exam 
           ON course.exam_id = exam.exam_id
         WHERE tct.test_creation_table_id = ?`,
       [testCreationTableId]

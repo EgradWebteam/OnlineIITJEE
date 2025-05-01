@@ -198,11 +198,11 @@ const ExamSummaryComponent = ({
         window.location.href = "/AdminDashboard";
       }
     } else {
-      const destinationURL = `/StudentDashboard/${localStorageUserId}?section=results`;
+      const destinationURL = `/StudentDashboard/${localStorageUserId}`;
   
       if (window.opener) {
-        window.opener.location.href = destinationURL;
-        window.opener.localStorage.setItem("activeSection", "results");
+        window.opener.location.href = destinationURL
+        window.localStorage.setItem("activeSection", "results");
   
         setTimeout(() => {
           window.open("", "_self").close();

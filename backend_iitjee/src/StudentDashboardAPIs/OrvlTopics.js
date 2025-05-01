@@ -278,7 +278,7 @@ router.get('/GetExcerciseQuestionStatus/:orvl_topic_id/:exercise_name_id/:studen
 
     const [rows] = await connection.execute(
       `SELECT question_status, exercise_question_id
-       FROM iit_db.iit_orvl_exercise_userresponses
+       FROM iit_orvl_exercise_userresponses
        WHERE orvl_topic_id = ? AND exercise_name_id = ? AND student_registration_id = ? AND course_creation_id = ?`,
       [orvl_topic_id, exercise_name_id, student_registration_id, course_creation_id]
     );

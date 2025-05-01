@@ -142,15 +142,15 @@ router.get("/BookMarkQuestionOptions/:studentId", async (req, res) => {
         sol.solution_id,
         sol.solution_img_name,
         sol.video_solution_link
-FROM iit_db.iit_bookmark_questions bq
-INNER JOIN iit_db.iit_questions q ON q.question_id = bq.question_id
-INNER JOIN iit_db.iit_ots_document d ON q.document_Id = d.document_Id
- INNER JOIN iit_db.iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
-      INNER JOIN iit_db.iit_subjects s ON d.subject_id = s.subject_id
-      LEFT JOIN iit_db.iit_sections sec ON d.section_id = sec.section_id
-      LEFT JOIN iit_db.iit_options o ON q.question_id = o.question_id
-      LEFT JOIN iit_db.iit_question_type qts ON q.question_type_id = qts.question_type_id
-      LEFT JOIN iit_db.iit_solutions sol ON q.question_id = sol.question_id  
+FROM iit_bookmark_questions bq
+INNER JOIN iit_questions q ON q.question_id = bq.question_id
+INNER JOIN iit_ots_document d ON q.document_Id = d.document_Id
+ INNER JOIN iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
+      INNER JOIN iit_subjects s ON d.subject_id = s.subject_id
+      LEFT JOIN iit_sections sec ON d.section_id = sec.section_id
+      LEFT JOIN iit_options o ON q.question_id = o.question_id
+      LEFT JOIN iit_question_type qts ON q.question_type_id = qts.question_type_id
+      LEFT JOIN iit_solutions sol ON q.question_id = sol.question_id  
 WHERE bq.student_registration_id = ?
 
 
