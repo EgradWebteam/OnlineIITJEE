@@ -275,6 +275,8 @@ export default function OTSMain({ testData, realStudentId, realTestId,warningMes
               autoSaveNATIfNeeded={autoSaveNATIfNeeded}
               showSidebar={showSidebar}
               setShowSidebar={setShowSidebar}
+              realStudentId = {realStudentId}
+               realTestId={realTestId}
             />
        
         </div>

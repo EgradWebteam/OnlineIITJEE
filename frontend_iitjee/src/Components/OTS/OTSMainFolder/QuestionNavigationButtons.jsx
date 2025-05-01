@@ -291,6 +291,25 @@ export default function QuestionNavigationButtons({
   // );
  
    //without optimised code 
+   const isAnswerActuallyChanged = (prev = {}, current = {}) => {
+    if (prev.type !== current.type) return true;
+  
+    switch (current.type) {
+      case "MCQ":
+        console.log("prev.optionId",prev.optionId,"current.optionId",current.optionId)
+        return prev.optionId !== current.optionId;
+  
+      case "MSQ":
+        return JSON.stringify(prev.selectedOptions?.sort()) !== JSON.stringify(current.selectedOptions?.sort());
+  
+      case "NAT":
+        return prev.natAnswer?.trim() !== current.natAnswer?.trim();
+  
+      default:
+        return false;
+    }
+  };
+  
   const handleSaveAndNext = async () => {
     const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
     const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
@@ -301,7 +320,7 @@ export default function QuestionNavigationButtons({
     const subjectId = subject.subjectId;
     const sectionId = section.sectionId;
     const qTypeId = question?.questionType?.quesionTypeId;
- 
+
     const existingAnswer = userAnswers?.[qid];
     let buttonClass = existingAnswer?.buttonClass || styles.NotAnsweredBtnCls;
  
@@ -310,7 +329,7 @@ export default function QuestionNavigationButtons({
     let optionIndexesStr = "";
     let optionCharCodes = [];
     let calcVal = "";
- 
+
     if ([1, 2].includes(qTypeId) && selectedOption?.option_index) {
       optionIndexesStr = selectedOption.option_index;
  
@@ -405,8 +424,15 @@ if (!realStudentId || !realTestId) {
   // Return after navigation
   return;
 }
+
+const isAnswerChanged = isAnswerActuallyChanged(existingAnswer, savedData);
+console.log("Is answer changed:", isAnswerChanged);
+const isStatusChanged =
+existingAnswer?.buttonClass !== savedData.buttonClass ||
+existingAnswer?.type !== savedData.type;
+console.log(isStatusChanged )
     // Send to backend
-    if (shouldSave) {
+    if ((shouldSave && isAnswerChanged) || (!shouldSave && isStatusChanged)) {
       await saveUserResponse({
         realStudentId,
         realTestId,
@@ -417,20 +443,7 @@ if (!realStudentId || !realTestId) {
         optionIndexes1: optionIndexesStr,
         optionIndexes1CharCodes: optionCharCodes,
         calculatorInputValue: calcVal,
-        answered: "1" // answered
-      });
-    }else{
-      await saveUserResponse({
-        realStudentId,
-        realTestId,
-        subject_id: subjectId,
-        section_id: sectionId,
-        question_id: qid,
-        question_type_id: qTypeId,
-        optionIndexes1: optionIndexesStr,
-        optionIndexes1CharCodes: optionCharCodes,
-        calculatorInputValue: calcVal,
-        answered: "3" // answered
+        answered: shouldSave ? "1" : "3"
       });
     }
     // Move to next question
@@ -558,7 +571,7 @@ const handleMarkedForReview = async () => {
     const subjectId = subject.subjectId;
     const sectionId = section.sectionId;
     const qTypeId = question?.questionType?.quesionTypeId;
-
+    const existingAnswer = userAnswers?.[qid];
     let buttonClass = styles.MarkedForReview;
     let savedData = { subjectId, sectionId, questionId: qid, type: "", buttonClass };
  
@@ -649,8 +662,16 @@ if (!realStudentId || !realTestId) {
   //Return after navigation
   return;
 }
+const isAnswerChanged = isAnswerActuallyChanged(existingAnswer, savedData);
+console.log("Is answer changed:", isAnswerChanged);
+const isStatusChanged =
+existingAnswer?.buttonClass !== savedData.buttonClass ||
+existingAnswer?.type !== savedData.type;
+console.log(isStatusChanged )
+    // Send to backend
+    if ((shouldSave && isAnswerChanged) || (!shouldSave && isStatusChanged)) {
     // // Save to backend
-      if (shouldSave) {
+    
         await saveUserResponse({
           realStudentId,
           realTestId,
@@ -661,22 +682,10 @@ if (!realStudentId || !realTestId) {
           optionIndexes1: optionIndexesStr,
           optionIndexes1CharCodes: optionCharCodes,
           calculatorInputValue: calcVal,
-          answered: "2", //Ans and marked for review
+          answered:shouldSave? "2": "4", //Ans and marked for review
         });
   
-      }else{
-        await saveUserResponse({
-          realStudentId,
-          realTestId,
-          subject_id: subjectId,
-          section_id: sectionId,
-          question_id: qid,
-          question_type_id: qTypeId,
-          optionIndexes1: optionIndexesStr,
-          optionIndexes1CharCodes: optionCharCodes,
-          calculatorInputValue: calcVal,
-          answered: "4", // marked for review
-        });
+      
       }
  
     // Move to next question
