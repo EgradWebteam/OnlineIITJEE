@@ -35,15 +35,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION || 'ap-south-1' }}
 
-      - name: Change to backend_iit directory
-        working-directory: ./backend_iitjee
+      - name: Install dependencies
         run: |
+          cd backend_iitjee
           npm install
-          npm run build
 
       - name: Deploy to Elastic Beanstalk from backend_iit
-        working-directory: ./backend_iitjee
         run: |
+          cd backend_iitjee
           eb init your-eb-app-name --platform node.js --region ${{ secrets.AWS_REGION || 'us-east-1' }}
           eb use your-env-name
           eb deploy
