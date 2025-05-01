@@ -325,8 +325,7 @@ button.backslash {
   background: white;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   height: 10vh;
-  padding: 5px 10px;
-
+  padding: 5px;
 }
 .studentLogo {
   width: 65px;
@@ -412,7 +411,6 @@ color: black;
 }
 .studentDashboardLeftNavHolder {
   display: flex;
-  margin: 10px 0;
 }
 .stuentDashboardMainContentContainer {
   display: flex;
@@ -970,7 +968,7 @@ height: 100%;
     margin: 1rem;
   }
   .BookMarksSubDivForScroll{
-    height: 75vh;
+     height: 90vh; 
    
   }
   .QuestionImgContainer{

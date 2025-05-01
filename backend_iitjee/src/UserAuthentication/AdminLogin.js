@@ -94,7 +94,7 @@ router.post("/forgot-passwordadmin", async (req, res) => {
 
         // Generate a 6-character reset code (e.g., 'a1b2c3')
         const resetCode = generateResetCode();
-        // console.log("Generated reset code:", resetCode);
+         console.log("Generated reset code:", resetCode);
         const updateQuery =
         "UPDATE iit_admin_data SET reset_code = ? WHERE admin_email_id = ?";
       await connection.query(updateQuery, [resetCode, email]);
