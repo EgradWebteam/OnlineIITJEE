@@ -30,10 +30,10 @@ router.put("/updateResumeTest/:studentId/:testCreationTableId", async (req, res)
     }})  
     
     function formatUserResponses(rows) {
-        return rows.reduce((acc, { subject_id, section_id, question_id, user_answer, question_status }) => {
+        return rows.reduce((acc, { subject_id, section_id, question_id, user_answer, question_status,question_type_id }) => {
             acc[subject_id] = acc[subject_id] || { subject_id, sections: {} };
             acc[subject_id].sections[section_id] = acc[subject_id].sections[section_id] || { section_id, questions: [] };
-            acc[subject_id].sections[section_id].questions.push({ question_id, user_answer, question_status });
+            acc[subject_id].sections[section_id].questions.push({ question_id, user_answer, question_status,question_type_id });
             return acc;
         }, {});
     }
@@ -49,6 +49,8 @@ router.put("/updateResumeTest/:studentId/:testCreationTableId", async (req, res)
     iur.section_id,
     iur.question_id,
     iur.user_answer,
+    iur.question_type_id,
+
     iur.question_status 
 FROM 
     iit_user_responses iur
