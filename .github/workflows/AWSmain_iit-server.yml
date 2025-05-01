@@ -6,7 +6,7 @@ on:
       - AWSmain  # or your deployment branch
 
 jobs:
-  deploy:
+  deploy: 
     runs-on: ubuntu-latest
 
     steps:
