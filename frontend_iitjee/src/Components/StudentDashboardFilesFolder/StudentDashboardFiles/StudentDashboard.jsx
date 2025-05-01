@@ -34,52 +34,71 @@ export default function StudentDashboard() {
       localStorage.setItem("activeSection", section);
     }, []);
     const location = useLocation();
-    // useEffect(() => {
-    //   const handleBeforeUnload = () => {
-    //     handleLogout();
-    //   };
-    //   window.addEventListener('beforeunload', handleBeforeUnload);
-    //   return () => {
-    //     window.removeEventListener('beforeunload', handleBeforeUnload);
-    //   };
-    // }, []); 
-    // useEffect(() => {
-    //   let timeoutId;
-    //   const resetInactivityTimer = () => {
-    //     clearTimeout(timeoutId);
-    //     timeoutId = setTimeout(() => {
-    //       handleLogout(); 
-    //     }, 30 * 60 * 1000); 
-    //   };
-    //   const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
+    useEffect(() => {
+      const handleBeforeUnload = (e) => {
+        // Check if it's a page reload
+        if (sessionStorage.getItem('isReloading') === 'true') {
+          // If it's a reload, we don't want to call the logout function
+          sessionStorage.removeItem('isReloading'); // Clean up the flag
+          return;
+        }
     
-    //   events.forEach(event => {
-    //     window.addEventListener(event, resetInactivityTimer);
-    //   });
-    //   resetInactivityTimer();
+        // Otherwise, handle tab close or back navigation
+        handleLogout();
+      };
     
-    //   return () => {
-    //     events.forEach(event => {
-    //       window.removeEventListener(event, resetInactivityTimer);
-    //     });
-    //     clearTimeout(timeoutId); 
-    //   };
-    // }, []);
+      // Set a flag in sessionStorage when the page is about to reload
+      const handleBeforeReload = () => {
+        sessionStorage.setItem('isReloading', 'true');
+      };
     
-    // useEffect(() => {
-    //   const onBackButton = (event) => {
-    //     event.preventDefault();
-    //     setShowLogoutPopup(true);
-    //     window.history.pushState(null, "", window.location.pathname);
-    //   };
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      window.addEventListener('beforeunload', handleBeforeReload);
+    
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+        window.removeEventListener('beforeunload', handleBeforeReload);
+      };
+    }, []);
+    
+    
+    useEffect(() => {
+      let timeoutId;
+      const resetInactivityTimer = () => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          handleLogout(); 
+        }, 30 * 60 * 1000); 
+      };
+      const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
+    
+      events.forEach(event => {
+        window.addEventListener(event, resetInactivityTimer);
+      });
+      resetInactivityTimer();
+    
+      return () => {
+        events.forEach(event => {
+          window.removeEventListener(event, resetInactivityTimer);
+        });
+        clearTimeout(timeoutId); 
+      };
+    }, []);
+    
+    useEffect(() => {
+      const onBackButton = (event) => {
+        event.preventDefault();
+        setShowLogoutPopup(true);
+        window.history.pushState(null, "", window.location.pathname);
+      };
   
-    //   window.history.pushState(null, "", window.location.pathname);
-    //   window.addEventListener("popstate", onBackButton);
+      window.history.pushState(null, "", window.location.pathname);
+      window.addEventListener("popstate", onBackButton);
     
-    //   return () => {
-    //     window.removeEventListener("popstate", onBackButton);
-    //   };
-    // }, []);
+      return () => {
+        window.removeEventListener("popstate", onBackButton);
+      };
+    }, []);
     
     
   
