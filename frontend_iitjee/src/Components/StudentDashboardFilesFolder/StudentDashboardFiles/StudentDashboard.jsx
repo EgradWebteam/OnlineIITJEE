@@ -96,7 +96,7 @@ export default function StudentDashboard() {
         const state = event.state;
         if (state?.page === "dashboard") {
           setShowLogoutPopup(true); 
-          console.log("🔙 Back button detected - showing logout confirmation");
+          // console.log("🔙 Back button detected - showing logout confirmation");
     
           // Re-push to history to prevent going further back without confirmation
           window.history.pushState({ page: "dashboard" }, "", window.location.href);
@@ -144,7 +144,7 @@ export default function StudentDashboard() {
 
       
     const handleLogout = async () => {
- debugger
+
       const sessionId = localStorage.getItem("sessionId");
     
       if (!sessionId) {
