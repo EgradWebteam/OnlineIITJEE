@@ -4,16 +4,16 @@ const db = require("../config/database.js");
 
 router.put("/updateResumeTest/:studentId/:testCreationTableId", async (req, res) => {
     const { studentId, testCreationTableId } = req.params;
-  
+  const { timeleft } = req.body; // Extract timeleft from the request body
   
     let  connection;
     try {
         connection = await db.getConnection();
         const [result] = await connection.query(
         `UPDATE iit_test_status_details 
-             SET test_attempt_status = ?,test_connection_status=?, version =IFNULL(version, 0) + 1 
+             SET test_attempt_status = ?,test_connection_status=?, version =IFNULL(version, 0) + 1 ,time_left  = ?
              WHERE student_registration_id = ? AND test_creation_table_id = ?`,
-        ["resumed","disconnected", studentId, testCreationTableId]
+        ["resumed","disconnected",timeleft, studentId, testCreationTableId]
         );
     
         if (result.affectedRows === 0) {
