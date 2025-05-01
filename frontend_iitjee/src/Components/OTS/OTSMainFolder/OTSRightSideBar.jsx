@@ -214,7 +214,16 @@ export default function OTSRightSideBar({
         if (existing) return; // already answered, skip
     
         const qTypeId = question?.questionType?.quesionTypeId;
-
+        setUserAnswers((prev) => ({
+          ...prev,
+          [question.question_id]: {
+            subjectId: subject.subjectId,
+            sectionId: section.sectionId,
+            questionId: question.question_id,
+            buttonClass: styles.NotAnsweredBtnCls,
+            type: "", // no answer yet
+          },
+        }));
     console.log("qTypeId", qTypeId);
         await saveUserResponse({
           realStudentId,
