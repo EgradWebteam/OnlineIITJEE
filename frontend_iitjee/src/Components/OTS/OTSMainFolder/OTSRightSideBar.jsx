@@ -27,9 +27,18 @@ export default function OTSRightSideBar({
   );
 
   // Get active section from that subject
+  // const section = subject?.sections?.find(
+  //   (sec) => sec.SectionName === activeSection
+  // );
   const section = subject?.sections?.find(
-    (sec) => sec.SectionName === activeSection
+    (sec) =>
+      sec.SectionName === activeSection ||
+      sec.sectionName === activeSection ||
+      sec.sectionId === activeSection ||
+      sec.section_id === activeSection
   );
+  
+  
 
   const userData = studentData?.userDetails;
   const studentProfile = userData?.uploaded_photo;
@@ -339,7 +348,7 @@ export default function OTSRightSideBar({
             className={styles.QuestionsBtnsConatiner}
             ref={questionsContainerRef}
           >
-            {section?.questions?.map((q, index) => {
+            {/* {section?.questions?.map((q, index) => {
               const savedAnswer = userAnswers?.[q.question_id];
 
               // Check if this saved answer belongs to the current section
@@ -369,7 +378,33 @@ export default function OTSRightSideBar({
                   {index + 1}
                 </button>
               );
-            })}
+            })} */}
+{section?.questions?.map((q, index) => {
+  const savedAnswer = userAnswers?.[q.question_id];
+
+  // Normalize section IDs for comparison
+  const currentSectionId = Number(section?.sectionId ?? section?.section_id ?? 0);
+  const savedSectionId = Number(savedAnswer?.sectionId ?? 0);
+
+  const isFromCurrentSection = savedSectionId === currentSectionId;
+
+  const answerClass = isFromCurrentSection && savedAnswer?.buttonClass
+    ? savedAnswer.buttonClass
+    : styles.NotVisitedBehaviourBtns;
+
+  return (
+    <button
+      key={q.question_id}
+      className={`${styles.OTSQuestionBtn} ${
+        index === activeQuestionIndex ? styles.activeQuestionBtn : ""
+      } ${answerClass}`}
+      onClick={() => handleQuestionClick(index)}
+    >
+      {index + 1}
+    </button>
+  );
+})}
+
           </div>
         </div>
         {/* <div className={styles.chevRonrightForMobileRes} onClick={scrollRight}><FaChevronCircleRight/></div> */}

@@ -27,19 +27,212 @@ export default function OTSMain({ testData, realStudentId, realTestId,warningMes
   }, [activeSection]);
 
   console.log("studentid, testid:", realStudentId, realTestId);
-  useEffect(() => {
-    const fetchUserAnswersAfterResume = async () => {
-      try{
-        const response = await axios.get(
-            `${BASE_URL}/ResumeTest/getResumedUserresponses/${realStudentId}/${realTestId}`
-        );
-        setUserAnswers(response.data)
-      }catch(err){
-        console.error("Error fetching test paper:", err);
+
+  // useEffect(() => {
+  //   const fetchUserAnswersAfterResume = async () => {
+  //     if (!realStudentId || !realTestId) {
+  //       console.warn("Missing realStudentId or realTestId. Skipping fetch.");
+  //       return;
+  //     }
+  
+  //     try {
+  //       const response = await axios.get(
+  //         `${BASE_URL}/ResumeTest/getResumedUserresponses/${realStudentId}/${realTestId}`
+  //       );
+  
+  //       const data = response.data;
+  //       console.log("Fetched resume data:", data);
+  
+  //       const userAnswers = {};
+  //       let firstSubject = null;
+  //       let firstSection = null;
+  //       let firstQuestion = null;
+  
+  //       data.subjects?.forEach(subject => {
+  //         if (!firstSubject) firstSubject = subject.subject_id;
+  
+  //         subject.sections?.forEach(section => {
+  //           if (!firstSection) firstSection = section.section_id;
+  
+  //           section.questions?.forEach(question => {
+  //             const {
+  //               question_id,
+  //               user_answer,
+  //               question_status,
+  //               question_type_id
+  //             } = question;
+  
+  //             let buttonClass = styles.NotAnsweredBtnCls;
+  //             if (question_status === 1) buttonClass = styles.AnswerdBtnCls;
+  //             else if (question_status === 2) buttonClass = styles.AnsMarkedForReview;
+  //             else if (question_status === 3) buttonClass = styles.NotAnsweredBtnCls;
+  //             else if (question_status === 4) buttonClass = styles.MarkedForReview;
+  
+  //             const entry = {
+  //               questionId: question_id,
+  //               subjectId: subject.subject_id,
+  //               sectionId: section.section_id,
+  //               buttonClass,
+  //             };
+  
+  //             if (question_type_id === 1 || question_type_id === 2) {
+  //               entry.type = 'MCQ';
+  //               entry.optionIndex = user_answer || null;
+  //             } else if (question_type_id === 3 || question_type_id === 4) {
+  //               entry.type = 'MSQ';
+  //               entry.selectedOptions = user_answer
+  //                 ? user_answer.split(',').map(opt => opt.trim())
+  //                 : [];
+  //             } else if (question_type_id === 5 || question_type_id === 6) {
+  //               entry.type = 'NAT';
+  //               entry.natAnswer = user_answer || '';
+  //             }
+  
+  //             console.log(`Parsed entry for question ${question_id}:`, entry);
+  
+  //             userAnswers[question_id] = entry;
+  
+  //             if (!firstQuestion && user_answer) {
+  //               firstQuestion = { ...entry };
+  //             }
+  //           });
+  //         });
+  //       });
+  
+  //       console.log("Setting userAnswers:", userAnswers);
+  //       setUserAnswers(userAnswers);
+  
+  //       console.log("Setting activeSubject:", firstSubject);
+  //       setActiveSubject(firstSubject);
+  
+  //       console.log("Setting activeSection:", firstSection);
+  //       setActiveSection(firstSection);
+  
+  //       console.log("Setting activeQuestionIndex: 0");
+  //       setActiveQuestionIndex(0);
+  
+  //       if (firstQuestion) {
+  //         console.log("First answered question for UI input:", firstQuestion);
+  //         if (firstQuestion.type === 'MCQ') {
+  //           console.log("Prefilling selectedOption:", firstQuestion.optionIndex);
+  //           setSelectedOption(firstQuestion.optionIndex);
+  //         } else if (firstQuestion.type === 'MSQ') {
+  //           console.log("Prefilling selectedOptionsArray:", firstQuestion.selectedOptions);
+  //           setSelectedOptionsArray(firstQuestion.selectedOptions);
+  //         } else if (firstQuestion.type === 'NAT') {
+  //           console.log("Prefilling natValue:", firstQuestion.natAnswer);
+  //           setNatValue(firstQuestion.natAnswer);
+  //         }
+  //       } else {
+  //         console.log("No answered question found to prefill inputs.");
+  //       }
+  
+  //     } catch (err) {
+  //       console.error("Error fetching resumed answers:", err);
+  //     }
+  //   };
+  
+  //   fetchUserAnswersAfterResume();
+  // }, [realStudentId, realTestId]);
+  
+
+  // prefilling data when user resume the test..
+useEffect(() => {
+  const fetchUserAnswersAfterResume = async () => {
+    if (!realStudentId || !realTestId) {
+      console.warn("Missing realStudentId or realTestId. Skipping fetch.");
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/ResumeTest/getResumedUserresponses/${realStudentId}/${realTestId}`
+      );
+
+      const data = response.data;
+      console.log("Fetched resume data:", data);
+
+      const userAnswers = {};
+      let firstSubject = null;
+      let firstSection = null;
+      let firstQuestion = null;
+
+      data.subjects?.forEach(subject => {
+        if (firstSubject === null) firstSubject = subject.subject_id;
+
+        subject.sections?.forEach(section => {
+          const sectionId = section.section_id ?? 0;
+          if (firstSection === null) firstSection = sectionId;
+
+          section.questions?.forEach(question => {
+            const {
+              question_id,
+              user_answer,
+              question_status,
+              question_type_id
+            } = question;
+
+            let buttonClass = styles.NotAnsweredBtnCls;
+            if (question_status === 1) buttonClass = styles.AnswerdBtnCls;
+            else if (question_status === 2) buttonClass = styles.AnsMarkedForReview;
+            else if (question_status === 3) buttonClass = styles.NotAnsweredBtnCls;
+            else if (question_status === 4) buttonClass = styles.MarkedForReview;
+
+            const entry = {
+              questionId: question_id,
+              subjectId: subject.subject_id,
+              sectionId: sectionId,
+              buttonClass,
+            };
+
+            if (question_type_id === 1 || question_type_id === 2) {
+              entry.type = 'MCQ';
+              entry.optionIndex = user_answer || null;
+            } else if (question_type_id === 3 || question_type_id === 4) {
+              entry.type = 'MSQ';
+              entry.selectedOptions = user_answer
+                ? user_answer.split(',').map(opt => opt.trim())
+                : [];
+            } else if (question_type_id === 5 || question_type_id === 6) {
+              entry.type = 'NAT';
+              entry.natAnswer = user_answer || '';
+            }
+
+            console.log(`Parsed entry for question ${question_id}:`, entry);
+
+            userAnswers[question_id] = entry;
+
+            if (!firstQuestion && user_answer) {
+              firstQuestion = { ...entry };
+            }
+          });
+        });
+      });
+
+      setUserAnswers(userAnswers);
+      setActiveSubject(firstSubject);
+      setActiveSection(firstSection ?? 0); // ensures 0 is used when needed
+      setActiveQuestionIndex(0);
+
+      if (firstQuestion) {
+        if (firstQuestion.type === 'MCQ') {
+          setSelectedOption(firstQuestion.optionIndex);
+        } else if (firstQuestion.type === 'MSQ') {
+          setSelectedOptionsArray(firstQuestion.selectedOptions);
+        } else if (firstQuestion.type === 'NAT') {
+          setNatValue(firstQuestion.natAnswer);
+        }
       }
-    };
-    fetchUserAnswersAfterResume();
-  }, [realStudentId, realTestId]);
+
+    } catch (err) {
+      console.error("Error fetching resumed answers:", err);
+    }
+  };
+
+  fetchUserAnswersAfterResume();
+}, [realStudentId, realTestId]);
+
+  
 
   // const autoSaveNATIfNeeded = () => {
   //   const subject = testData?.subjects?.find(
