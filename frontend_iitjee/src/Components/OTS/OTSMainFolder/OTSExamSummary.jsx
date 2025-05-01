@@ -202,7 +202,7 @@ const ExamSummaryComponent = ({
   
       if (window.opener) {
         window.opener.location.href = destinationURL
-        window.opener.localStorage.setItem("activeSection", "results");
+        window.localStorage.setItem("activeSection", "results");
   
         setTimeout(() => {
           window.open("", "_self").close();
