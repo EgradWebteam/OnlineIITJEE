@@ -163,11 +163,13 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
       formData.append("selectedTestTypes", selectedType); 
     }
 
-    if (selectedImage) {
-      const imageFile = await getImageFile(selectedImage);
-      formData.append("courseImageFile", imageFile);
+    // if (selectedImage) {
+    //   const imageFile = await getImageFile(selectedImage);
+    //   formData.append("courseImageFile", imageFile);
+    // }
+    if (selectedImage && selectedImage.name) {
+      formData.append("courseImageFile", selectedImage.name);
     }
-  
     if (isEditMode && courseData.course_creation_id) {
       formData.append("course_creation_id", courseData.course_creation_id);
     }

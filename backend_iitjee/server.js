@@ -7,16 +7,16 @@ const app = express();
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const path = require("path");
-
 app.use(cors({
   origin: [
-    "https://iitjee.egradtutor.in",
+    "https://main.dtyztmuaj7r7o.amplifyapp.com",
     "http://localhost:5173"
   ],
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization", "popup-page-status"]
 }));
+
 
 
 app.use(bodyParser.json({ limit: "10mb" }));

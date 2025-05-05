@@ -1,22 +1,20 @@
 require('dotenv').config();
 const mysql = require('mysql2/promise');
-
 const db = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
+    host: "iit-db-instance.cn4s2qass7tx.ap-south-1.rds.amazonaws.com",
+    user: "admin",
+    password: "ServerDB114#",
+    database: "iitdatabase",
     waitForConnections: true,
     connectionLimit: 100,  
     queueLimit: 0,
-    ssl: {
-        rejectUnauthorized: true
-    },
+   
+    
 });
 
 db.getConnection()
   .then(async connection => {
-    // console.log("Connected to MySQL DB");
+    console.log("Connected to MySQL DB");
     await connection.query('SELECT 1');
     // console.log("Database is responsive");
     connection.release(); // ✅ Release the connection after test
