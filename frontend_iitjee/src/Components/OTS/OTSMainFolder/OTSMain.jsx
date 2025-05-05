@@ -9,7 +9,7 @@ import { TimerProvider } from "../../../ContextFolder/TimerContext.jsx";
 import OtsTimer from "./OTSTimer.jsx";
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import axios from "axios";
-import { useTimer } from "../../../ContextFolder/TimerContext.jsx";
+// import { useTimer } from "../../../ContextFolder/TimerContext.jsx";
 
 export default function OTSMain({ testData, realStudentId, realTestId,warningMessage }) {
   const [activeSubject, setActiveSubject] = useState(null);
@@ -23,7 +23,7 @@ export default function OTSMain({ testData, realStudentId, realTestId,warningMes
     const [showSidebar, setShowSidebar] = useState(true); 
   // let resumeTime = null;
   const [resumeTime, setResumeTime] = useState(null);
-  const { formattedTime } = useTimer();
+  // const { formattedTime } = useTimer();
   // Reset question index when section changes
   useEffect(() => {
     setActiveQuestionIndex(0); // This resets to 1st question when section changes
@@ -243,12 +243,12 @@ useEffect(() => {
 
 
 // storing time in localstorage to store
-    useEffect(() => {
-      if (formattedTime && realTestId && realStudentId) {
-        const key = `OTS_FormattedTime`;
-        localStorage.setItem(key, formattedTime);
-      }
-    }, [formattedTime, realTestId, realStudentId]);
+    // useEffect(() => {
+    //   if (formattedTime && realTestId && realStudentId) {
+    //     const key = `OTS_FormattedTime`;
+    //     localStorage.setItem(key, formattedTime);
+    //   }
+    // }, [formattedTime, realTestId, realStudentId]);
 
   // const autoSaveNATIfNeeded = () => {
   //   const subject = testData?.subjects?.find(
@@ -431,7 +431,8 @@ useEffect(() => {
       <div className={`${styles.OTSMainFileMainContainer} ${styles.OTSWaterMark}`}>
         <div className={styles.OTSMainFileSubContainer}>
           <TimerProvider testData={testData} resumeTime = {resumeTime}>
-            <OtsTimer testData={testData}/>
+            <OtsTimer testData={testData}  realStudentId = {realStudentId}
+               realTestId={realTestId}/>
           </TimerProvider>
           {warningMessage && (
         <div className={styles.warning_message}>
