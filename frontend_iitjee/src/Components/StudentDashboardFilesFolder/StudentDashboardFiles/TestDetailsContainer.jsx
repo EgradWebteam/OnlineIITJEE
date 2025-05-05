@@ -179,35 +179,39 @@ const handleStartTestClick = async (testCreationTableId) => {
       const screenHeight = window.screen.availHeight;
       const url = `/GeneralInstructions/${encodeURIComponent(encryptedTestId)}/${encodeURIComponent(encryptedStudentId)}`;
       const features = `width=${screenWidth},height=${screenHeight},top=0,left=0`;
+      window.open(url, '_blank', features);
 
+      //main code for delete student api
       // Open the new window
-      newWinRef = window.open(url, "_blank", `width=${screenWidth},height=${screenHeight},fullscreen=yes`);
+      // newWinRef = window.open(url, "_blank", `width=${screenWidth},height=${screenHeight},fullscreen=yes`);
 
-      if (newWinRef) {
-        const monitorWindow = setInterval(() => {
-          if (newWinRef.closed) {
-            console.log("Quiz window closed");
-            clearInterval(monitorWindow);
+      // if (newWinRef) {
+      //   const monitorWindow = setInterval(() => {
+      //     if (newWinRef.closed) {
+      //       console.log("Quiz window closed");
+      //       clearInterval(monitorWindow);
 
            
-              fetch(`${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${studentId}/${testCreationTableId}`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  studentId: studentId,
-                  testCreationTableId: testCreationTableId,
-                }),
-              }).catch((error) => {
-                console.error("Error deleting data on window close:", error);
-              });
+      //         fetch(`${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${studentId}/${testCreationTableId}`, {
+      //           method: "POST",
+      //           headers: {
+      //             "Content-Type": "application/json",
+      //           },
+      //           body: JSON.stringify({
+      //             studentId: studentId,
+      //             testCreationTableId: testCreationTableId,
+      //           }),
+      //         }).catch((error) => {
+      //           console.error("Error deleting data on window close:", error);
+      //         });
             
-          }
-        }, 1000);
-      } else {
-        console.error("Failed to open the quiz window.");
-      }
+      //     }
+      //   }, 1000);
+      // } else {
+      //   console.error("Failed to open the quiz window.");
+      // }
+
+
     } else {
       console.error('Failed to insert/update test status:', result.error);
     }

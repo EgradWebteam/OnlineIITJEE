@@ -93,43 +93,47 @@ export default function OTSRootFile() {
   //   };
   // }, [realTestId, realStudentId]);
 
-      const handleBeforeUnload = useCallback(
-          async (event) => {
+  //main code for delete student api
+      // const handleBeforeUnload = useCallback(
+      //     async (event) => {
       
       
-            try {
-              await fetch(`${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`, {
-                method: "DELETE",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  studentId: realStudentId, // User ID
-                  testCreationTableId: realTestId, // Test ID
-                }),
-              });
-              console.log(
-                "User data deleted successfully before closing the window."
-              );
-            } catch (error) {
-              console.error("Error deleting user data:", error);
-            }
+      //       try {
+      //         await fetch(`${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`, {
+      //           method: "DELETE",
+      //           headers: {
+      //             "Content-Type": "application/json",
+      //           },
+      //           body: JSON.stringify({
+      //             studentId: realStudentId, // User ID
+      //             testCreationTableId: realTestId, // Test ID
+      //           }),
+      //         });
+      //         console.log(
+      //           "User data deleted successfully before closing the window."
+      //         );
+      //       } catch (error) {
+      //         console.error("Error deleting user data:", error);
+      //       }
            
       
-            // Once deletion is successful, remove the 'beforeunload' listener
-            window.removeEventListener("beforeunload", preventUnload);
+      //       // Once deletion is successful, remove the 'beforeunload' listener
+      //       window.removeEventListener("beforeunload", preventUnload);
         
          
-          },
-          [realStudentId,realTestId]
-        );
+      //     },
+      //     [realStudentId,realTestId]
+      //   );
   
-        useEffect(() => {
-          window.addEventListener("beforeunload", handleBeforeUnload);
-          return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-          };
-        }, [handleBeforeUnload]);
+      //   useEffect(() => {
+      //     window.addEventListener("beforeunload", handleBeforeUnload);
+      //     return () => {
+      //       window.removeEventListener("beforeunload", handleBeforeUnload);
+      //     };
+      //   }, [handleBeforeUnload]);
+//main code for delte student api end
+
+
   //WINDOW CLOSE DATA DELETE CODE START
 
 
