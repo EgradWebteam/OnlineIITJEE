@@ -230,7 +230,10 @@ nav ul li .active {
   display: flex;
   font-size: 14px;
 }
-
+.tableWrapper select{
+  padding: 5px;
+    border-radius: 5px;
+}
 .editBtn {
   background-color: #00bcd4;
   color: white;
@@ -554,7 +557,13 @@ margin: 1rem ;
 }
 @media(max-width:600px){
   .sidebar{
-    top:134px;
+    top:120px;
+  left: 0;
+  }
+}
+@media(max-width:425px){
+  .sidebar{
+    top:110px;
   left: 0;
   }
 }

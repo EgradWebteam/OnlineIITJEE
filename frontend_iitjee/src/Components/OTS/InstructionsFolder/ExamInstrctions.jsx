@@ -64,27 +64,32 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
     //     window.removeEventListener("unload", handleUnload);
     //   };
     // }, [realTestId, realStudentId]);
-    useEffect(() => {
-        const handleBeforeUnload = () => {
-          if (realTestId && realStudentId) {
-            const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`;
+
+    
+    // main code for delete student api
+    // useEffect(() => {
+    //     const handleBeforeUnload = () => {
+    //       if (realTestId && realStudentId) {
+    //         const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`;
      
-            const data = JSON.stringify({
-              studentId: realStudentId,
-              testCreationTableId: realTestId,
-            });
+    //         const data = JSON.stringify({
+    //           studentId: realStudentId,
+    //           testCreationTableId: realTestId,
+    //         });
      
-            const blob = new Blob([data], { type: "application/json" });
-            navigator.sendBeacon(url, blob);
-          }
-        };
+    //         const blob = new Blob([data], { type: "application/json" });
+    //         navigator.sendBeacon(url, blob);
+    //       }
+    //     };
      
-        window.addEventListener("beforeunload", handleBeforeUnload);
+    //     window.addEventListener("beforeunload", handleBeforeUnload);
      
-        return () => {
-          window.removeEventListener("beforeunload", handleBeforeUnload);
-        };
-      }, [realStudentId, realTestId]);
+    //     return () => {
+    //       window.removeEventListener("beforeunload", handleBeforeUnload);
+    //     };
+    //   }, [realStudentId, realTestId]);
+      //main code for delete student api end
+
 
     // const handleBeforeUnload = useCallback(
     //   async (event) => {

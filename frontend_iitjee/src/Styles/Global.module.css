@@ -88,9 +88,10 @@
     font-weight: 600;
     margin: 10px;
   }
-
-
-
+  .OrvlCourseTopicHeaderContainer{
+    width: 80%;
+    margin: 0 auto;
+  }
   .OrvlCourseTopicHeader{
     display: flex;
     align-items: center;
@@ -106,12 +107,13 @@
   }
   .OrvlTopicName{
     text-align: center;
-    width: 90%;
+   
   }
   .OrvlCourseTopicContent{
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    background-color: white;
   }
 @media (max-width:768px) {
   .stuentDashboardGlobalHeading{
