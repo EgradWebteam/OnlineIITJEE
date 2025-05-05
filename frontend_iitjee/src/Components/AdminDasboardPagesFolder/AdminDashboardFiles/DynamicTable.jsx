@@ -276,7 +276,7 @@ const DynamicTable = ({
       )}
       {popupType === "assignTest" && selectedRow && (
         <div className={styles.popupWrapper}>
-          <AssignToTest data={selectedRow} onClose={handleClosePopup} />
+          <AssignToTest   testCreationTableId={selectedRow.test_creation_table_id} data={selectedRow} onClose={handleClosePopup} />
         </div>
       )}
       {popupType === "viewDocument" && selectedRow && (

@@ -257,20 +257,7 @@ export default function StudentLoginFormeGradTutor({
           {getButtonText()} {/* Dynamic button text */}
         </button>
       </div>
-      {(isForgotPassword || isResetPassword) && (
-        <div className={styles.backToLogin}>
-          <button
-            className={styles.backToLoginButton}
-            type="button"
-            onClick={() => {
-              setIsForgotPassword(false);
-              setIsResetPassword(false);
-            }}
-          >
-            Back to Login
-          </button>
-        </div>
-      )}
+ 
     </form>
   );
 }

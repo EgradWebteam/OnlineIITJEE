@@ -21,24 +21,52 @@ export default function StudentLogineGradTutor() {
   const navigate = useNavigate();
   const { setStudentData } = useStudent();
   const handleLogin = async (e) => {
-    const sessionId = uuidv4();
-    e.preventDefault();
+    e.preventDefault(); // Prevent form submission
   
+    // Generate a new session ID for login
+    const sessionId = uuidv4();
+    const storedSessionId = localStorage.getItem('sessionId'); // Check if session ID exists in localStorage
+  
+    // If sessionId exists in localStorage, log the user out before logging in
+    if (storedSessionId) {
+      try {
+        const response = await fetch(`${BASE_URL}/student/studentLogout`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ sessionId: storedSessionId }), // Send stored sessionId for logout
+        });
+  
+        const data = await response.json();
+  
+        if (response.ok) {
+          console.log("Logout successful:", data);
+          // Clear session data from localStorage and sessionStorage after logout
+          localStorage.removeItem("sessionId");
+          sessionStorage.removeItem("sessionId");
+        } else {
+          console.error("Logout failed:", data.message || "Unknown error");
+        }
+      } catch (error) {
+        console.error("Error during logout request:", error);
+      }
+    }
+  
+    // Proceed with login process
     if (!username || !password) {
       alert("Please enter both username and password");
       return;
     }
   
-   
-  
     const loginData = {
       email: username,
       password: password,
-      sessionId: sessionId
+      sessionId: sessionId,
     };
   
     try {
-      // Make the API request
+      // Make the login request
       const response = await fetch(`${BASE_URL}/student/studentLogin`, {
         method: "POST",
         headers: {
@@ -47,7 +75,6 @@ export default function StudentLogineGradTutor() {
         body: JSON.stringify(loginData),
       });
   
-      // Check if the response is OK (successful)
       const data = await response.json();
   
       if (response.ok) {
@@ -57,7 +84,7 @@ export default function StudentLogineGradTutor() {
         const userId = data.user_Id;
         const studentInfo = data;
   
-        // Store the session and student data
+        // Store the session and student data in localStorage and sessionStorage
         localStorage.setItem('decryptedId', decryptedId);
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('sessionId', sessionId);
@@ -66,39 +93,36 @@ export default function StudentLogineGradTutor() {
         sessionStorage.setItem('decryptedId', decryptedId);
         sessionStorage.setItem('accessToken', accessToken);
         sessionStorage.setItem('userId', userId);
-        setStudentData(studentInfo);
   
-        // Reset failed attempts on successful login
-      
+        setStudentData(studentInfo); // Set student info in the state
+  
+        // Navigate to the student's dashboard
         navigate(`/StudentDashboard/${userId}`);
       } else {
         // Handle failed login attempts here (401 or other errors)
         setFailedAttempts((prev) => prev + 1);
+  
         if (data.message === "You are already logged in. Please log out before logging in again.") {
           alert(data.message);
           return;
         }
-        // Now we check for maximum attempts *after* the login failed
-        if (failedAttempts  >= 3) {
+  
+        // Check for max login attempts
+        if (failedAttempts >= 3) {
           alert("You have exceeded the maximum number of login attempts. Please reset your password.");
           setIsForgotPassword(true);
           return;
         }
   
-        const remainingAttempts = 3 - (failedAttempts); 
-        if (remainingAttempts === 1) {
-          alert("You have 1 attempt left. Please try again.");
-        } else if (remainingAttempts === 2) {
-          alert("You have 2 attempts left. Please try again.");
-        } else {
-          alert("You have 3 attempts left. Please try again.");
-        }
+        const remainingAttempts = 3 - failedAttempts;
+        alert(`You have ${remainingAttempts} attempt${remainingAttempts > 1 ? "s" : ""} left. Please try again.`);
       }
     } catch (error) {
       console.error("Error during login:", error);
       alert("Something went wrong. Please try again later.");
     }
   };
+  
   
   
 
@@ -210,7 +234,15 @@ export default function StudentLogineGradTutor() {
           {!isForgotPassword && !isResetPassword && (
             <div className={styles.studentLoginLinks}>
               <p>New here? <Link to="/StudentRegistrationPage">Register</Link></p>
-              <p><a href="#" onClick={() => setIsForgotPassword(true)}>Forgot Password?</a></p>
+              <p>
+  <button 
+    type="button" 
+    onClick={() => setIsForgotPassword(true)}
+    className={styles.forgotPasswordButton} // Optionally, you can add a class for styling
+  >
+    Forgot Password?
+  </button>
+</p>
             </div>
           )}
         </div>

@@ -585,21 +585,21 @@ showPalette ? styles.showPaletteMobile : ""
                     <div className={styles.HeadingForLegend}>Legend</div>
 
                     <div className={styles.circleWrapper}>
-                      <div className={`${styles.circle} ${styles.unanswered}`}>
-                        {unansweredCount}
-                      </div>
-                      <span>Unanswered</span>
+                      <p className={`${styles.circle} ${styles.unanswered}`}>
+                        <span>{unansweredCount}</span>
+                      </p>
+                      <span className={styles.fntSize}>Not answered</span>
                     </div>
                     <div className={styles.circleWrapper}>
-                      <div className={`${styles.circle} ${styles.answered}`}>
-                        {answeredCount}
-                      </div>
+                      <p className={`${styles.circle} ${styles.answered}`}>
+                        <span>{answeredCount}</span>
+                      </p>
                       <span>Answered</span>
                     </div>
                     <div className={styles.circleWrapper}>
-                      <div className={`${styles.circle} ${styles.notVisited}`}>
-                        {notVisitedCount}
-                      </div>
+                      <p className={`${styles.circle} ${styles.unvisited}`}>
+                       <span>{notVisitedCount}</span> 
+                      </p>
                       <span>Not Visited</span>
                     </div>
                   </div>

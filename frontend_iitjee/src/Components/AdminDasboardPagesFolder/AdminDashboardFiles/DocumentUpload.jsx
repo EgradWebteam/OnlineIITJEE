@@ -186,7 +186,31 @@ const DocumentUpload = () => {
       alert("Please select a Test and Subject before uploading a file.");
     }
   };
-
+  const handleDeleteDocument = async (row) => {
+    const documentId = row.document_id; // ✅ Extract ID from the row
+  
+    const confirmDelete = window.confirm("Are you sure you want to delete this document and all its associated data?");
+    if (!confirmDelete) return;
+  
+    try {
+      const response = await fetch(`${BASE_URL}/DocumentUpload/DeleteTestPaperDocument/${documentId}`, {
+        method: "DELETE",
+      });
+  
+      if (response.ok) {
+        alert("Document and related data deleted successfully.");
+        setDocumentList(prev => prev.filter(doc => doc.document_id !== documentId));
+        setSelectedRows(prev => prev.filter(id => id !== documentId));
+      } else {
+        const data = await response.json();
+        alert(data.error || "Failed to delete the document.");
+      }
+    } catch (error) {
+      console.error("Error deleting document:", error);
+      alert("An unexpected error occurred while deleting the document.");
+    }
+  };
+  
   const handleDocumentUpload = (event) => {
     setFile(event.target.files[0]);
     const file = event.target.files[0];
@@ -403,6 +427,7 @@ const DocumentUpload = () => {
           onSelectRow={handleSelectRow}
           onSelectAll={handleSelectAll}
           onEdit={false}
+          onDelete={handleDeleteDocument}
           onOpen={handleOpen}
           isOpen={true}
           type="document"

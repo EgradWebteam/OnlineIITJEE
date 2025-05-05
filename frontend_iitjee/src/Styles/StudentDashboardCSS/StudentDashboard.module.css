@@ -471,9 +471,10 @@ color: black;
   cursor: pointer;
 }
 .StudentDashboardRightSideContentHolder {
-  width: 80%;
-  margin: 1rem 1rem auto;
+  width: 100%;
+  /* margin: 1rem 1rem auto; */
   overflow-y: auto;
+  background-color: #f5f3f3;
 }
 .LectureHeader {
   display: flex;
@@ -609,19 +610,16 @@ height: 80%;
   flex-wrap: wrap;
   height: fit-content;
   gap:10px;
-
+align-items: center;
 }
 /* .status_pallete::-webkit-scrollbar {
   display: none;
 } */
 .status_item {
-  border-radius: 50%;
- 
   width: 40px;
   height: 40px;
   text-align: center;
   padding: 5px;
-  background-color: rgb(221, 220, 220);
 }
 .slideshow {
   display: flex;
@@ -632,7 +630,7 @@ height: 80%;
   height: 100%;
 }
 .ExerciseQuestionContainers {
-  width: 90%; 
+  width: 70%; 
   padding: 20px;
   border-right: 1px solid #dbdada;
 }
@@ -706,35 +704,42 @@ height: 80%;
 .circleWrapper {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 5px 0;
-  width: 100%;
-
+  justify-content: start;
+  gap: 5px;
+  margin-bottom: 10px;
 }
 
 .circle {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-  padding: 7px;
+  display: flex;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+  align-items: center;
 }
 
 .unanswered{
-  background-color: rgb(253, 52, 52);
-  color: #fff;
+  background-image: url(../../assets//OTSTestInterfaceImages/NotAnswered.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: white;
+    line-height: 30px;
 }
 .answered{
-  background-color: rgb(57, 190, 57);
-  color: #fff;
+  background-image: url(../../assets//OTSTestInterfaceImages/Answered.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: white;
+    line-height: 30px;
 }
-
-.notVisited {
-  background-color: #e6e1e1; 
- 
+.unvisited {
+  background-image: url(../../assets//OTSTestInterfaceImages/Visited.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: black;
+    line-height: 30px;
+}
+.fntSize{
+  font-size: 15px;
 }
 .ContainerforLectures {
   width: 100%;
@@ -1024,10 +1029,17 @@ height: 100%;
   height: calc(100vh - 10vh);
 }
 .StudentDashboardRightSideContentHolder{
-  width: 80%;
-  margin: 1rem 1rem auto;
+  width: 100%;
+  /* margin: 1rem 1rem auto; */
   overflow-y: auto;
   height: calc(100vh - 11vh);
+}
+.img_container {
+  width: 400px;
+  overflow-x: auto;
+}
+.QuestionsAndImgScrollContainer{
+  overflow-x: auto;
 }
 }
   @media (max-width:1024px) {
@@ -1057,6 +1069,9 @@ height: 100%;
 .navigation_buttons button{
   font-size: 12px;
   padding: 5px;
+}
+.headingForLectures{
+  font-size: 13px;
 }
   }
   @media(max-width:768px){
@@ -1138,6 +1153,7 @@ height: 100%;
       .testDetailsConatinerMainDiv {
         padding: 10px;
       } 
+      
     }
 
   
@@ -1170,14 +1186,6 @@ height: 100%;
     .nextBtn {
       bottom: 0px;
       left: 215px;
-    }
-    .img_container {
-      width: 600px;
-      overflow-x: auto;
-    }
-   
-    .QuestionsAndImgScrollContainer{
-      overflow-x: auto;
     }
     .navigation_buttons button{
       font-size: 10px;

@@ -58,6 +58,40 @@ router.get("/subject/:test_creation_table_id", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch subject name" });
   }
 });
+router.delete("/DeleteTestPaperDocument/:documentId", async (req, res) => {
+  const { documentId } = req.params;
+  const connection = await db.getConnection();
+  await connection.beginTransaction();
+
+  try {
+    // Step 1: Get all related question IDs
+    const [questions] = await connection.query(
+      "SELECT question_id FROM iit_questions WHERE document_id = ?",
+      [documentId]
+    );
+    const questionIds = questions.map((q) => q.id);
+
+    if (questionIds.length > 0) {
+      // Step 2: Delete related options and solutions
+      await connection.query("DELETE FROM iit_options WHERE question_id IN (?)", [questionIds]);
+      await connection.query("DELETE FROM iit_solutions WHERE question_id IN (?)", [questionIds]);
+      await connection.query("DELETE FROM iit_questions WHERE document_id IN (?)", [questionIds]);
+    }
+
+    // Step 3: Delete the document itself
+    await connection.query("DELETE FROM iit_ots_document WHERE document_id = ?", [documentId]);
+
+    // Step 4: Commit transaction
+    await connection.commit();
+    res.status(200).json({ message: "Document and related data deleted successfully." });
+  } catch (err) {
+    await connection.rollback();
+    console.error("❌ Deletion error:", err);
+    res.status(500).json({ error: "Deletion failed." });
+  } finally {
+    connection.release();
+  }
+});
 
 router.get(
   "/SectionNames/:test_creation_table_id/:subject_id",
