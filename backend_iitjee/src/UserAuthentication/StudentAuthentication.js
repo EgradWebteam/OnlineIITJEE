@@ -30,7 +30,7 @@ function encryptDataWithAN(data) {
 async function uploadToAzureWithSAS(file, options = {}) {
   const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
   const sasToken = process.env.AZURE_SAS_TOKEN_UPLOADS;
-  const containerName = process.env.AZURE_CONTAINER_NAME;
+  const containerName = process.env.CONTAINER_NAME;
   const STUDENT_PHOTO_FOLDER = "student-data/";
 
   const sanitizedFilename = file.originalname.replace(/\s+/g, "_");
@@ -304,8 +304,8 @@ const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fet
 
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const sasToken = process.env.AZURE_SAS_TOKEN_FOR_FETCHING;
-const containerName = process.env.AZURE_CONTAINER_NAME;
-const StudentImagesFolderName = process.env.AZURE_STUDENT_IMAGES_FOLDER;  
+const containerName = process.env.CONTAINER_NAME;
+const StudentImagesFolderName = process.env.STUDENT_IMAGES_FOLDER;  
 const BASE_URL = process.env.BASE_URL;
 
 

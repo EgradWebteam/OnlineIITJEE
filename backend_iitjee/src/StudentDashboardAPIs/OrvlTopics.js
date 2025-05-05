@@ -3,9 +3,9 @@ const router = express.Router();
 const db = require("../config/database.js");
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const sasToken = process.env.AZURE_SAS_TOKEN_FOR_FETCHING;
-const containerName = process.env.AZURE_CONTAINER_NAME;
-const testDocumentFolderName = process.env.AZURE_DOCUMENT_FOLDER_ORVL;
-const PDFUrl = process.env.AZURE_DOCUMENT_FOLDER_PDF; // Folder name for PDFs
+const containerName = process.env.CONTAINER_NAME;
+const testDocumentFolderName = process.env.DOCUMENT_FOLDER_ORVL;
+const PDFUrl = process.env.DOCUMENT_FOLDER_PDF; // Folder name for PDFs
 
 // Helper to get image URL
 const getImageUrl = (documentName, folder, fileName) => {

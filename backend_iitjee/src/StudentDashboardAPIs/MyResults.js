@@ -41,8 +41,8 @@ router.get('/FetchResultTestdata/:studentId', async (req, res) => {
 
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const sasToken = process.env.AZURE_SAS_TOKEN_FOR_FETCHING;
-const containerName = process.env.AZURE_CONTAINER_NAME;
-const testDocumentFolderName = process.env.AZURE_DOCUMENT_FOLDER;  
+const containerName = process.env.CONTAINER_NAME;
+const testDocumentFolderName = process.env.DOCUMENT_FOLDER;  
 
 // Helper to get image URL
 const getImageUrl = (documentName, folder, fileName) => {

@@ -102,7 +102,7 @@ app.use("/EncryptDecrypt", EncryptDecrypt);
 /**EncrptDecryptAPIs */
 
 /**Payment API's */
-const razorpay = require("./src/PaymentGateway/Razorpay.js");
+const razorpay = require("./src/PaymentGateway/RazorPay.js");
 app.use("/razorpay", razorpay);
 /**Payment API's */
 
@@ -113,5 +113,5 @@ app.use("/CourseHomePage", CourseHomePage);
 
 
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

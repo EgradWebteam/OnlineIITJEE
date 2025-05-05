@@ -21,7 +21,7 @@ const generatePassword = (length = 12) => {
   async function uploadToAzureWithSAS(file) {
     const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
     const sasToken = process.env.AZURE_SAS_TOKEN_UPLOADS;
-    const containerName = process.env.AZURE_CONTAINER_NAME;
+    const containerName = process.env.CONTAINER_NAME;
     const STUDENT_PHOTO_FOLDER = "student-data/"; // ← folder path with trailing slash
   
     // 1. Clean original filename (optional)
@@ -62,8 +62,8 @@ const generatePassword = (length = 12) => {
   const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
   const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const sasToken = process.env.AZURE_SAS_TOKEN_FOR_FETCHING;
-const containerName = process.env.AZURE_CONTAINER_NAME;
-const CourseCardImagesFolderName = process.env.AZURE_COURSECARDS_FOLDER;  
+const containerName = process.env.CONTAINER_NAME;
+const CourseCardImagesFolderName = process.env.COURSECARDS_FOLDER;  
 const BackendBASE_URL = process.env.BASE_URL;
 
 
