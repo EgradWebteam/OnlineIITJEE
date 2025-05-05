@@ -7,7 +7,7 @@ import OTSNavbar from "./OTSHeaderFolder/OTSNavbar.jsx";
 import OTSMain from "./OTSMainFolder/OTSMain.jsx";
 import axios from "axios";
 import { BASE_URL } from "../../ConfigFile/ApiConfigURL.js";
-
+import { TimerProvider } from "../../ContextFolder/TimerContext.jsx";
 export default function OTSRootFile() {
   const { testId, studentId } = useParams();
   const navigate = useNavigate();
@@ -274,12 +274,14 @@ export default function OTSRootFile() {
         testName={testName}
         testData={testPaperData}
       />
+      <TimerProvider testData={testPaperData}>
       <OTSMain
         testData={testPaperData}
         realStudentId={realStudentId}
         realTestId={realTestId}
         warningMessage={warningMessage}
       />
+      </TimerProvider>
       {showCustomPopup && (
         <>
           <div className={styles.functionKeyActionAlertPopup}></div>
