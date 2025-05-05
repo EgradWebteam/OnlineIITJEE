@@ -51,19 +51,19 @@ router.put("/updateResumeTest/:studentId/:testCreationTableId", async (req, res)
     iur.user_answer,
     iur.option_id,
     iur.question_type_id,
-
+    tsd.time_left,
     iur.question_status 
 FROM 
     iit_user_responses iur
+LEFT JOIN 
+    iit_test_status_details tsd 
+    ON tsd.student_registration_id = iur.student_registration_id
+    AND tsd.test_creation_table_id = iur.test_creation_table_id
 WHERE 
     iur.student_registration_id = ?
     AND iur.test_creation_table_id = ?
-    AND EXISTS (
-        SELECT 1
-        FROM iit_test_status_details tsd
-        WHERE tsd.student_registration_id = iur.student_registration_id
-          AND tsd.test_creation_table_id = iur.test_creation_table_id
-          AND tsd.version > 0);
+    AND tsd.version > 0;
+
  `,
                 [studentId, testCreationTableId]
             );
@@ -73,7 +73,7 @@ WHERE
             }
     
             const subjects = formatUserResponses(rows);
-            res.status(200).json({ subjects: Object.values(subjects).map(subject => ({
+            res.status(200).json({time_left:rows[0].time_left, subjects: Object.values(subjects).map(subject => ({
                 subject_id: subject.subject_id,
                 sections: Object.values(subject.sections)
             })) });

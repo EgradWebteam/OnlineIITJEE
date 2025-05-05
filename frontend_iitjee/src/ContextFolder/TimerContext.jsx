@@ -3,16 +3,16 @@ import React, { createContext, useContext, useEffect, useState, useRef } from "r
 const TimerContext = createContext();
 export const useTimer = () => useContext(TimerContext);
 
-export const TimerProvider = ({ testData, children }) => {
+export const TimerProvider = ({ testData,resumeTime, children }) => {
   const [timeLeft, setTimeLeft] = useState(null); // null until testData is ready
   const intervalRef = useRef(null);
-
-  const totalDurationInSeconds = (testData?.TestDuration || 0) * 60;
+console.log(resumeTime)
+  const totalDurationInSeconds = resumeTime? resumeTime: (testData?.TestDuration || 0) * 60;
 
   useEffect(() => {
-    if (!testData || !testData.TestDuration) return;
+    if (!testData || !testData.TestDuration ) return;
 
-    setTimeLeft(totalDurationInSeconds);
+    setTimeLeft(  totalDurationInSeconds);
 
     intervalRef.current = setInterval(() => {
       setTimeLeft(prev => {
@@ -25,7 +25,7 @@ export const TimerProvider = ({ testData, children }) => {
     }, 1000);
 
     return () => clearInterval(intervalRef.current);
-  }, [testData]); // <-- Runs when testData is ready
+  }, [testData,resumeTime]); // <-- Runs when testData is ready
 
   const timeSpent = timeLeft !== null ? totalDurationInSeconds - timeLeft : 0;
 

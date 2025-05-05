@@ -21,6 +21,7 @@ export default function OTSMain({ testData, realStudentId, realTestId,warningMes
   const [selectedOptionsArray, setSelectedOptionsArray] = useState([]);
   const [natValue, setNatValue] = useState("");
     const [showSidebar, setShowSidebar] = useState(true); 
+    const [resumeTime,setResumeTime] = useState(null);
   const { formattedTime } = useTimer();
   // Reset question index when section changes
   useEffect(() => {
@@ -211,7 +212,8 @@ useEffect(() => {
           });
         });
       });
-
+setResumeTime(data.time_left);
+console.log("time left:",resumeTime,data.time_left)
       setUserAnswers(userAnswers);
       setActiveSubject(firstSubject);
       setActiveSection(firstSection ?? 0); // ensures 0 is used when needed
@@ -234,6 +236,7 @@ useEffect(() => {
 
   fetchUserAnswersAfterResume();
 }, [realStudentId, realTestId]);
+
 
 // storing time in localstorage to store
     useEffect(() => {
@@ -490,7 +493,7 @@ useEffect(() => {
           activeSection={activeSection}
           userAnswers={userAnswers}
         >
-          <TimerProvider testData={testData}>
+          <TimerProvider testData={testData} resumeTime = {resumeTime}>
           <QuestionNavigationButtons
             testData={testData}
             realStudentId={realStudentId}

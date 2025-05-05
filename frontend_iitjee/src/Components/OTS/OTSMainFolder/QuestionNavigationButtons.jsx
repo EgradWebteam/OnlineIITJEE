@@ -493,7 +493,7 @@ existingAnswer?.buttonClass !== savedData.buttonClass ||
 existingAnswer?.type !== savedData.type;
 console.log(isStatusChanged )
     // Send to backend
-    if ((shouldSave && isAnswerChanged) || (shouldSave && !existingAnswer)) {
+    if ((shouldSave && isAnswerChanged) || (!shouldSave && !existingAnswer) || isStatusChanged) {
       await saveUserResponse({
         realStudentId,
         realTestId,
@@ -801,7 +801,7 @@ existingAnswer?.buttonClass !== savedData.buttonClass ||
 existingAnswer?.type !== savedData.type;
 console.log(isStatusChanged )
     // Send to backend
-    if ((shouldSave && isAnswerChanged) || (shouldSave && !existingAnswer) ) {
+    if ((shouldSave && isAnswerChanged) || (!shouldSave && !existingAnswer)  || isStatusChanged ) {
     // // Save to backend
     
         await saveUserResponse({
