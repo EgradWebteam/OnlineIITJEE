@@ -43,6 +43,4 @@ jobs:
       - name: Deploy to Elastic Beanstalk from backend_iit
         run: |
           cd backend_iitjee
-          eb init Iit-server-aws --platform node.js --region ${{ secrets.AWS_REGION || 'ap-south-1' }}
-          eb use Iit-server-aws-env
           eb deploy
