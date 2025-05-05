@@ -4,64 +4,16 @@ import axios from "axios";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 
-const SolutionsTab = ({ testId, userData, studentId }) => {
-  const [testPaperData, setTestPaperData] = useState([]);
-  const [selectedSubjectSection, setSelectedSubjectSection] = useState(null);
+const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQuestions,setBookmarkedQuestions,selectedSubjectSection,setSelectedSubjectSection}) => {
+
+
   const studentContact = userData?.mobile_no;
   const [visibleSolutions, setVisibleSolutions] = useState({});
   const [videoVisible, setVideoVisible] = useState({});
   const [videoPopup, setVideoPopup] = useState(null); // null or question_id
-  const [bookmarkedQuestions, setBookmarkedQuestions] = useState([]);
 
-  useEffect(() => {
-    const fetchTestPaper = async () => {
-      try {
-        const response = await axios.get(
-          `${BASE_URL}/MyResults/StudentReportQuestionPaper/${testId}/${studentId}`
-        );
-        const data = response.data;
-        setTestPaperData(data);
 
-        // Automatically select first subject-section
-        if (data?.subjects?.length > 0) {
-          const firstSubject = data.subjects[0];
 
-          if (firstSubject.sections && firstSubject.sections.length > 0) {
-            const firstSection = firstSubject.sections[0];
-            setSelectedSubjectSection({
-              SubjectName: firstSubject.SubjectName,
-              SectionName: firstSection.SectionName,
-              questions: firstSection.questions || [],
-            });
-          } else {
-            // No sections present, just use subject
-            setSelectedSubjectSection({
-              SubjectName: firstSubject.SubjectName,
-              SectionName: null,
-              questions: firstSubject.sections?.[0]?.questions || [],
-            });
-          }
-        }
-
-        // Extract and store only the bookMark_Qid values in the array
-        const bookmarkedQuestions = data.subjects.flatMap((subject) =>
-          subject.sections.flatMap(
-            (section) =>
-              section.questions
-                .filter((question) => question.bookMark_Qid !== null) // Filter questions with non-null bookMark_Qid
-                .map((question) => question.bookMark_Qid) // Map to just the bookMark_Qid values
-          )
-        );
-
-        // Set the bookmarked question IDs in state
-        setBookmarkedQuestions(bookmarkedQuestions);
-      } catch (err) {
-        console.error("Error fetching test paper:", err);
-      }
-    };
-
-    fetchTestPaper();
-  }, [testId]);
 
   const handleDropdownChange = (e) => {
     const [subjectIdx, sectionIdx] = e.target.value.split("-");
