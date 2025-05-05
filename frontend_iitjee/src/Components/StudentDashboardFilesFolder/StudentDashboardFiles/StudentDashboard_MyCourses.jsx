@@ -136,8 +136,6 @@ export default function StudentDashboard_MyCourses({ studentId,userData }) {
     )}
   </div>
 )}
-
-
       {showQuizContainer && (
         <div className={styles.studentDashboardMyCoursesMainDiv}>
           <div className={globalCSS.stuentDashboardGlobalHeading}>
