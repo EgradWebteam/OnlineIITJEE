@@ -21,7 +21,7 @@ export default function OTSMain({ testData, realStudentId, realTestId,warningMes
   const [selectedOptionsArray, setSelectedOptionsArray] = useState([]);
   const [natValue, setNatValue] = useState("");
     const [showSidebar, setShowSidebar] = useState(true); 
-    const [resumeTime,setResumeTime] = useState(null);
+  let resumeTime = null;
   const { formattedTime } = useTimer();
   // Reset question index when section changes
   useEffect(() => {
@@ -212,7 +212,7 @@ useEffect(() => {
           });
         });
       });
-setResumeTime(data.time_left);
+      resumeTime =data.time_left ;
 console.log("time left:",resumeTime,data.time_left)
       setUserAnswers(userAnswers);
       setActiveSubject(firstSubject);

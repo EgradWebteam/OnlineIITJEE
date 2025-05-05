@@ -6,7 +6,7 @@ export const useTimer = () => useContext(TimerContext);
 export const TimerProvider = ({ testData,resumeTime, children }) => {
   const [timeLeft, setTimeLeft] = useState(null); // null until testData is ready
   const intervalRef = useRef(null);
-console.log(resumeTime)
+
   const totalDurationInSeconds = resumeTime? resumeTime: (testData?.TestDuration || 0) * 60;
 
   useEffect(() => {

@@ -461,6 +461,21 @@ setUserAnswers(prev => {
       buttonClass: styles.NotAnsweredBtnCls,
       type: ""
     };
+    if (realStudentId && realTestId) {
+      saveUserResponse({
+        realStudentId,
+        realTestId,
+        subject_id: subjectId,
+        section_id: sectionId,
+        question_id: nextQid,
+        question_type_id: nextQuestion?.questionType?.quesionTypeId || null,
+        optionIndexes1: "",
+        optionIndexes1CharCodes: [],
+        calculatorInputValue: "",
+        answered: "3" // Not Answered
+      });
+    }
+  
   }
 
   return updated;
@@ -493,7 +508,7 @@ existingAnswer?.buttonClass !== savedData.buttonClass ||
 existingAnswer?.type !== savedData.type;
 console.log(isStatusChanged )
     // Send to backend
-    if ((shouldSave && isAnswerChanged) || (!shouldSave && !existingAnswer) || isStatusChanged) {
+    if ((shouldSave && isAnswerChanged) || ((shouldSave ) && !isAnswerChanged) ) {
       await saveUserResponse({
         realStudentId,
         realTestId,
@@ -769,6 +784,20 @@ setUserAnswers(prev => {
       buttonClass: styles.NotAnsweredBtnCls,
       type: ""
     };
+    if (realStudentId && realTestId) {
+      saveUserResponse({
+        realStudentId,
+        realTestId,
+        subject_id: subjectId,
+        section_id: sectionId,
+        question_id: nextQid,
+        question_type_id: nextQuestion?.questionType?.quesionTypeId || null,
+        optionIndexes1: "",
+        optionIndexes1CharCodes: [],
+        calculatorInputValue: "",
+        answered: "3" // Not Answered
+      });
+    }
   }
 
   return updated;
