@@ -1,8 +1,22 @@
 branch-defaults:
   AWSmain:
     environment: Iit-server-aws-env
+  default:
+    environment: Iit-server-aws-env
+environment-defaults:
+  Iit-server-aws-env:
+    branch: null
+    repository: null
 global:
   application_name: Iit-server-aws
+  default_ec2_keyname: null
+  default_platform: Node.js 18
   default_region: ap-south-1
+  include_git_submodules: true
+  instance_profile: null
   platform: Node.js
+  platform_name: null
+  platform_version: null
+  profile: null
+  sc: null
   workspace_type: Application
