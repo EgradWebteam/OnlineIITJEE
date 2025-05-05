@@ -407,7 +407,7 @@ useEffect(() => {
           const response = await fetch(
             `${BASE_URL}/OTS/ClearResponse/${realStudentId}/${realTestId}/${qid}`,
             {
-              method: 'DELETE',
+              method: 'PUT',
               headers: {
                 'Content-Type': 'application/json',
               },

@@ -892,7 +892,7 @@ console.log(isStatusChanged )
     try {
       // Call DELETE API without a body
       const response = await fetch(`${BASE_URL}/OTS/ClearResponse/${realStudentId}/${realTestId}/${qid}`, {
-        method: 'DELETE',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -901,7 +901,7 @@ console.log(isStatusChanged )
       const data = await response.json();
  
       if (!data.success) {
-        console.warn('Delete API response:', data.message);
+        console.warn('Clear Response API response:', data.message);
       } else {
         console.log('Response deleted from DB');
       }
