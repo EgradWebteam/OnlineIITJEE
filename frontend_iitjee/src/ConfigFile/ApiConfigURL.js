@@ -5,5 +5,5 @@
 
 
 export const frontEndURL = `https://main.dtyztmuaj7r7o.amplifyapp.com`
-export const BASE_URL = `http://iit-server-aws-env.eba-bh38hbc5.ap-south-1.elasticbeanstalk.com/`
+export const BASE_URL = `https://iit-server-aws-env.eba-bh38hbc5.ap-south-1.elasticbeanstalk.com`
  
