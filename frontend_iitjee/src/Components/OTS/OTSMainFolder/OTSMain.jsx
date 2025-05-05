@@ -170,7 +170,8 @@ useEffect(() => {
               question_id,
               user_answer,
               question_status,
-              question_type_id
+              question_type_id,
+              option_id
             } = question;
 
             let buttonClass = styles.NotAnsweredBtnCls;
@@ -183,6 +184,7 @@ useEffect(() => {
               questionId: question_id,
               subjectId: subject.subject_id,
               sectionId: sectionId,
+              optionId:question.option_id,
               buttonClass,
             };
 
