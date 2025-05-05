@@ -21,7 +21,8 @@ export default function OTSMain({ testData, realStudentId, realTestId,warningMes
   const [selectedOptionsArray, setSelectedOptionsArray] = useState([]);
   const [natValue, setNatValue] = useState("");
     const [showSidebar, setShowSidebar] = useState(true); 
-  let resumeTime = null;
+  // let resumeTime = null;
+  const [resumeTime, setResumeTime] = useState(null);
   const { formattedTime } = useTimer();
   // Reset question index when section changes
   useEffect(() => {
@@ -213,8 +214,10 @@ useEffect(() => {
         });
       });
       const timevalue = data.time_left;
-      resumeTime = timevalue;
-console.log("time left:",resumeTime,data.time_left)
+      console.log("timevalue", timevalue)
+      // resumeTime = timevalue;
+      setResumeTime(timevalue);
+      console.log("time left:",resumeTime,data.time_left)
       setUserAnswers(userAnswers);
       setActiveSubject(firstSubject);
       setActiveSection(firstSection ?? 0); // ensures 0 is used when needed
@@ -428,7 +431,7 @@ console.log("time left:",resumeTime,data.time_left)
       <div className={`${styles.OTSMainFileMainContainer} ${styles.OTSWaterMark}`}>
         <div className={styles.OTSMainFileSubContainer}>
           <TimerProvider testData={testData} resumeTime = {resumeTime}>
-            <OtsTimer testData={testData} resumeTime = {resumeTime}/>
+            <OtsTimer testData={testData}/>
           </TimerProvider>
           {warningMessage && (
         <div className={styles.warning_message}>

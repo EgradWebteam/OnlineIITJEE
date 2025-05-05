@@ -3,19 +3,33 @@ import React, { createContext, useContext, useEffect, useState, useRef } from "r
 const TimerContext = createContext();
 export const useTimer = () => useContext(TimerContext);
 
-export const TimerProvider = ({ testData,resumeTime, children }) => {
-  const [timeLeft, setTimeLeft] = useState(null); // null until testData is ready
+export const TimerProvider = ({ testData, resumeTime, children }) => {
+  const [timeLeft, setTimeLeft] = useState(null);
   const intervalRef = useRef(null);
 
-  const totalDurationInSeconds = resumeTime ? resumeTime : (testData?.TestDuration || 0) * 60;
-console.log("time",resumeTime,totalDurationInSeconds )
-  useEffect(() => {
-    if (!testData || !testData.TestDuration ) return;
+  const parseTimeToSeconds = (time) => {
+    if (typeof time === "number") return time;
+    if (typeof time === "string") {
+      const [h, m, s] = time.split(":").map(Number);
+      return h * 3600 + m * 60 + s;
+    }
+    return 0;
+  };
 
-    setTimeLeft(  totalDurationInSeconds);
+  const totalDurationInSeconds = parseTimeToSeconds(
+    resumeTime ? resumeTime : (testData?.TestDuration || 0) * 60
+  );
+
+  console.log("time", resumeTime, totalDurationInSeconds);
+  console.log("TimerProvider resumeTime:", resumeTime);
+
+  useEffect(() => {
+    if (!testData || !testData.TestDuration) return;
+
+    setTimeLeft(totalDurationInSeconds);
 
     intervalRef.current = setInterval(() => {
-      setTimeLeft(prev => {
+      setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(intervalRef.current);
           return 0;
@@ -25,7 +39,7 @@ console.log("time",resumeTime,totalDurationInSeconds )
     }, 1000);
 
     return () => clearInterval(intervalRef.current);
-  }, [testData]); // <-- Runs when testData is ready
+  }, [testData]);
 
   const timeSpent = timeLeft !== null ? totalDurationInSeconds - timeLeft : 0;
 
@@ -42,7 +56,6 @@ console.log("time",resumeTime,totalDurationInSeconds )
         timeLeft,
         timeSpent,
         formattedTime: timeLeft !== null ? formatTime(timeLeft) : "Loading...",
-      
       }}
     >
       {children}
