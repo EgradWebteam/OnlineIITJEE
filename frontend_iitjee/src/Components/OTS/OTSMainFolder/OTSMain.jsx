@@ -158,7 +158,7 @@ useEffect(() => {
       let firstSubject = null;
       let firstSection = null;
       let firstQuestion = null;
-
+     
       data.subjects?.forEach(subject => {
         if (firstSubject === null) firstSubject = subject.subject_id;
 
@@ -212,7 +212,8 @@ useEffect(() => {
           });
         });
       });
-      resumeTime =data.time_left ;
+      const timevalue = data.time_left;
+      resumeTime = timevalue;
 console.log("time left:",resumeTime,data.time_left)
       setUserAnswers(userAnswers);
       setActiveSubject(firstSubject);
@@ -426,8 +427,8 @@ console.log("time left:",resumeTime,data.time_left)
     <div>
       <div className={`${styles.OTSMainFileMainContainer} ${styles.OTSWaterMark}`}>
         <div className={styles.OTSMainFileSubContainer}>
-          <TimerProvider testData={testData}>
-            <OtsTimer testData={testData}/>
+          <TimerProvider testData={testData} resumeTime = {resumeTime}>
+            <OtsTimer testData={testData} resumeTime = {resumeTime}/>
           </TimerProvider>
           {warningMessage && (
         <div className={styles.warning_message}>

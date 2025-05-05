@@ -7,8 +7,8 @@ export const TimerProvider = ({ testData,resumeTime, children }) => {
   const [timeLeft, setTimeLeft] = useState(null); // null until testData is ready
   const intervalRef = useRef(null);
 
-  const totalDurationInSeconds = resumeTime? resumeTime: (testData?.TestDuration || 0) * 60;
-
+  const totalDurationInSeconds = resumeTime ? resumeTime : (testData?.TestDuration || 0) * 60;
+console.log("time",resumeTime,totalDurationInSeconds )
   useEffect(() => {
     if (!testData || !testData.TestDuration ) return;
 
@@ -25,7 +25,7 @@ export const TimerProvider = ({ testData,resumeTime, children }) => {
     }, 1000);
 
     return () => clearInterval(intervalRef.current);
-  }, [testData,resumeTime]); // <-- Runs when testData is ready
+  }, [testData]); // <-- Runs when testData is ready
 
   const timeSpent = timeLeft !== null ? totalDurationInSeconds - timeLeft : 0;
 
