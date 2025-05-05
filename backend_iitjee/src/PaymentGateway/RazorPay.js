@@ -1,17 +1,18 @@
 // Razorpay.js
 
+
+require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const db = require("../config/database.js");
 const Razorpay = require("razorpay");
 const sendMail = require("../utils/email.js");
-require("dotenv").config();
+
 
 const razorpay = new Razorpay({
-  key_id: process.env.VITE_RAZORPAY_KEY_ID,
-  key_secret: process.env.VITE_RAZORPAY_KEY_SECRET,
+  key_id: "rzp_test_x3lel82AZIsRl6",
+  key_secret: "IAdwmjeqwMbXm9LEJD90JtAk",
 });
-
 
 router.post("/razorpay-create-order", async (req, res) => {
   const { amount, currency } = req.body;
