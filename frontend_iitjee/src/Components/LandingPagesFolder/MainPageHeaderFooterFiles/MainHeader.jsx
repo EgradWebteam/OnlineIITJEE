@@ -10,6 +10,10 @@ export default function
 
 
 MainHeader() {
+  const handleLoginClick = () => {
+    setIsForgotPassword(false); 
+    setIsResetPassword(false);  
+  };
   return (
     <div className={Styles.Header_MainPage}>
       <div className={Styles.Header_container}>
@@ -17,7 +21,7 @@ MainHeader() {
           <img src={logoImg} alt="logoImg" />
         </div>
         <div className={Styles.Header_logins_icons}>
-          <Link to="/LoginPage">
+          <Link to="/LoginPage" onClick={handleLoginClick}>
             <div className={Styles.Header_Login}>Login</div>
           </Link>
           <Link to="/">

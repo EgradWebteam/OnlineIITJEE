@@ -19,6 +19,7 @@ export default function StudentDashboard_MyCourses({ studentId,userData }) {
   const [topicId, setTopicId] = useState("");
   useEffect(() => {
     const fetchPurchasedCourses = async () => {
+  
       try {
         setLoading(true);
         const res = await fetch(
@@ -194,6 +195,7 @@ export default function StudentDashboard_MyCourses({ studentId,userData }) {
             <div className={styles.StduentDashboardRightSideBarForBggg}>
             <div className={globalCSS.cardHolderOTSORVLHome}>
               {filteredCourses.map((course) => (
+              
                 <CourseCard
                   key={course.course_creation_id}
                   title={course.course_name}
