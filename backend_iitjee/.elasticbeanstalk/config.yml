@@ -1,0 +1,8 @@
+branch-defaults:
+  AWSmain:
+    environment: Iit-server-aws-env
+global:
+  application_name: Iit-server-aws
+  default_region: ap-south-1
+  platform: Node.js
+  workspace_type: Application
