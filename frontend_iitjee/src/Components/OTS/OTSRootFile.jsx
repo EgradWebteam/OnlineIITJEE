@@ -99,7 +99,7 @@ export default function OTSRootFile() {
       
             try {
               await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`, {
-                method: "DELETE",
+                method: "PUT",
                 headers: {
                   "Content-Type": "application/json",
                 },
