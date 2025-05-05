@@ -236,7 +236,7 @@ useEffect(() => {
 // storing time in localstorage to store
     useEffect(() => {
       if (formattedTime && realTestId && realStudentId) {
-        const key = `OTS_FormattedTime_${realStudentId}_${realTestId}`;
+        const key = `OTS_FormattedTime`;
         localStorage.setItem(key, formattedTime);
       }
     }, [formattedTime, realTestId, realStudentId]);

@@ -189,6 +189,16 @@ const handleStartTestClick = async (testCreationTableId) => {
             console.log("Quiz window closed");
             clearInterval(monitorWindow);
 
+
+            const key = `OTS_FormattedTime`;
+            const timeLeft = localStorage.getItem(key);
+        
+            console.log("Sending timeLeft to API:", timeLeft);
+        
+            if (!timeLeft) {
+              console.warn("No timeLeft found in localStorage.");
+              return;
+            }
            
               fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
                 method: "PUT",
@@ -198,10 +208,13 @@ const handleStartTestClick = async (testCreationTableId) => {
                 body: JSON.stringify({
                   studentId: studentId,
                   testCreationTableId: testCreationTableId,
+                  timeleft: timeLeft
                 }),
               }).catch((error) => {
                 console.error("Error deleting data on window close:", error);
               });
+
+              localStorage.removeItem(`OTS_FormattedTime`)
             
           }
         }, 1000);
