@@ -8,15 +8,27 @@ import OTSMain from "./OTSMainFolder/OTSMain.jsx";
 import axios from "axios";
 import { BASE_URL } from "../../ConfigFile/ApiConfigURL.js";
 import { TimerProvider } from "../../ContextFolder/TimerContext.jsx";
+import { useTimer } from "../../ContextFolder/TimerContext.jsx";
+import { useQuestionStatus } from "../../ContextFolder/CountsContext.jsx";
 export default function OTSRootFile() {
   const { testId, studentId } = useParams();
   const navigate = useNavigate();
-
+  const { timeSpent } = useTimer();
   const [realTestId, setRealTestId] = useState("");
   const [realStudentId, setRealStudentId] = useState("");
   const [testPaperData, setTestPaperData] = useState([]);
   const [showCustomPopup, setShowCustomPopup] = useState(false);
   const pressedKeys = useRef(new Set());
+
+ const {
+    answeredCount,
+    answeredAndMarkedForReviewCount,
+    markedForReviewCount,
+    notAnsweredCount,
+    notVisitedCount,
+    visitedCount,
+    totalQuestionsInTest,
+  } = useQuestionStatus();
 
   useEffect(() => {
     const token = sessionStorage.getItem("navigationToken");
@@ -93,6 +105,65 @@ export default function OTSRootFile() {
   //   };
   // }, [realTestId, realStudentId]);
 
+  const formatTime = (seconds) => {
+    const h = String(Math.floor(seconds / 3600)).padStart(2, "0");
+    const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
+    const s = String(seconds % 60).padStart(2, "0");
+    return `${h}:${m}:${s}`;
+  };
+
+  // To submit the test on termination
+  const[courseCreationId, setCourseCreationId] = useState([]);
+
+ const callTerminationAPIs = async () => {
+  try {
+    const formattedTimeSpent = formatTime(timeSpent); // Format HH:MM:SS
+    const attemptedCount = answeredAndMarkedForReviewCount + answeredCount;
+    const notAttemptedCount = markedForReviewCount + notAnsweredCount;
+
+    const examSummaryData = {
+      studentId: realStudentId,
+      test_creation_table_id: realTestId,
+      totalQuestions: totalQuestionsInTest,
+      totalAnsweredQuestions: answeredCount,
+      totalAnsweredMarkForReviewQuestions: answeredAndMarkedForReviewCount,
+      totalMarkForReviewQuestions: markedForReviewCount,
+      totalNotAnsweredQuestions: notAnsweredCount,
+      totalVisitedQuestionQuestions: visitedCount,
+      totalNotVisitedQuestions: notVisitedCount,
+      totalAttemptedQuestions: attemptedCount,
+      totalNotAttemptedQuestions: notAttemptedCount,
+      TimeSpent: formattedTimeSpent,
+    };
+
+    // 1. Save Exam Summary (POST)
+    await axios.post(`${BASE_URL}/OTSExamSummary/SaveExamSummary`, examSummaryData);
+
+    // 2. Get OTSTestData (GET)
+    const otsTestDataResponse = await axios.get(` ${BASE_URL}/OTSExamSummary/OTSTestData/${realTestId}`);
+    const courseId = otsTestDataResponse?.data?.course_creation_id;
+    setCourseCreationId(courseId); // update state if needed elsewhere
+
+    // 3. Update Test Attempt Status (POST)
+    await axios.post(`${BASE_URL}/UpdateTestAttemptStatus`, {
+      studentId: realStudentId,
+      courseCreationId: courseCreationId,
+      test_creation_table_id: realTestId,
+      test_status: "completed",
+      connection_status: "disconnected",
+    });
+
+    // // 4. Fetch Exam Summary Counts (GET with correct path params)
+    // await fetch(`${BASE_URL}/OTSExamSummary/FetchExamSummaryCounts/${realTestId}/${realStudentId}`);
+
+    // // 5. Fetch Student Marks (GET with correct path params)
+    // await fetch(`${BASE_URL}/OTSExamSummary/FetchStudentMarks/${realTestId}/${realStudentId}`);
+
+    console.log("All termination APIs called successfully.");
+  } catch (error) {
+    console.error("Error calling termination APIs:", error);
+  }
+};
       const handleBeforeUnload = useCallback(
           async (event) => {
       
@@ -223,25 +294,47 @@ export default function OTSRootFile() {
     }, 10000); // 60,000 milliseconds = 1 minute
     }
   };
-  const handleBlur = () => {
-    //("Window is not focused");
-    setViolationCount((prevCount) => {
-      const newCount = prevCount + 1;
+  // const handleBlur = () => {
+  //   //("Window is not focused");
+  //   setViolationCount((prevCount) => {
+  //     const newCount = prevCount + 1;
 
-      if (newCount < 4) {
+  //     if (newCount < 4) {
  
-      } else {
-        navigate("/OTSTerminationPage");
+  //     } else {
+  //       navigate("/OTSTerminationPage");
+  //       localStorage.removeItem("popupWindowURL1");
+  //       localStorage.removeItem("popupWindowURL2");
+  //       localStorage.removeItem("popupWindowURL3");
+  //     }
+
+  //     return newCount;
+  //   });
+
+  // };
+
+  const handleBlur = async () => {
+    setViolationCount(async (prevCount) => {
+      const newCount = prevCount + 1;
+  
+      if (newCount >= 4) {
+        // Call termination APIs before navigation
+        await callTerminationAPIs();
+  
+        // Clear local storage
         localStorage.removeItem("popupWindowURL1");
         localStorage.removeItem("popupWindowURL2");
         localStorage.removeItem("popupWindowURL3");
+  
+        // Redirect to termination page
+        navigate("/OTSTerminationPage");
       }
-
+  
       return newCount;
     });
-
   };
-
+  
+  
   useEffect(() => {
     if ("hidden" in document) {
       document.addEventListener("visibilitychange", handleVisibilityChange);
