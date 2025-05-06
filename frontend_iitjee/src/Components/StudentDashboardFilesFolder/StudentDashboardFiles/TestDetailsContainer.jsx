@@ -213,10 +213,10 @@ const handleStartTestClick = async (testCreationTableId) => {
         
             console.log("Sending timeLeft to API:", timeLeft);
         
-            if (!timeLeft) {
-              console.warn("No timeLeft found in localStorage.");
-              return;
-            }
+            // if (!timeLeft) {
+            //   console.warn("No timeLeft found in localStorage.");
+            //   return;
+            // }
            
               fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
                 method: "PUT",
