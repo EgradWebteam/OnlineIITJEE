@@ -16,17 +16,14 @@ export const TimerProvider = ({ testData, resumeTime, children }) => {
     return 0;
   };
 
-  const totalDurationInSeconds = parseTimeToSeconds(
-    resumeTime ? resumeTime : (testData?.TestDuration || 0) * 60
-  );
-
-  console.log("time", resumeTime, totalDurationInSeconds);
-  console.log("TimerProvider resumeTime:", resumeTime);
-
+  const totalDurationInSeconds = parseTimeToSeconds( (testData?.TestDuration || 0) * 60);
+  const resumeTimeInSeconds = resumeTime;
+  const initialTimeLeft = parseTimeToSeconds(resumeTime ? resumeTimeInSeconds : totalDurationInSeconds  );;
+console.log(resumeTimeInSeconds, initialTimeLeft )
   useEffect(() => {
     if (!testData || !testData.TestDuration) return;
 
-    setTimeLeft(totalDurationInSeconds);
+    setTimeLeft(initialTimeLeft);
 
     intervalRef.current = setInterval(() => {
       setTimeLeft((prev) => {
@@ -39,7 +36,7 @@ export const TimerProvider = ({ testData, resumeTime, children }) => {
     }, 1000);
 
     return () => clearInterval(intervalRef.current);
-  }, [testData]);
+  }, [testData, resumeTime]);
 
   const timeSpent = timeLeft !== null ? totalDurationInSeconds - timeLeft : 0;
 
