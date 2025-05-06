@@ -19,7 +19,7 @@ export const TimerProvider = ({ testData, resumeTime, children }) => {
   const totalDurationInSeconds = parseTimeToSeconds( (testData?.TestDuration || 0) * 60);
   const resumeTimeInSeconds = resumeTime;
   const initialTimeLeft = parseTimeToSeconds(resumeTime ? resumeTimeInSeconds : totalDurationInSeconds  );;
-console.log(resumeTimeInSeconds, initialTimeLeft )
+// console.log(resumeTimeInSeconds, initialTimeLeft )
   useEffect(() => {
     if (!testData || !testData.TestDuration) return;
 

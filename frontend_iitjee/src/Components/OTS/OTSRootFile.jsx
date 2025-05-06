@@ -13,7 +13,7 @@ import { useQuestionStatus } from "../../ContextFolder/CountsContext.jsx";
 export default function OTSRootFile() {
   const { testId, studentId } = useParams();
   const navigate = useNavigate();
-  const { timeSpent } = useTimer();
+  // const { timeSpent } = useTimer();
   // const [realTestId, setRealTestId] = useState("");
   // const [realStudentId, setRealStudentId] = useState("");
   const realTestId = useRef('');
@@ -21,17 +21,11 @@ export default function OTSRootFile() {
   const [testPaperData, setTestPaperData] = useState([]);
   const [showCustomPopup, setShowCustomPopup] = useState(false);
   const pressedKeys = useRef(new Set());
+  const terminationCalledRef = useRef(false);
+  const summaryData = useRef({});
 
- const {
-    answeredCount,
-    answeredAndMarkedForReviewCount,
-    markedForReviewCount,
-    notAnsweredCount,
-    notVisitedCount,
-    visitedCount,
-    totalQuestionsInTest,
-  } = useQuestionStatus();
 
+console.log("summaryData",summaryData.current)
   useEffect(() => {
     const token = sessionStorage.getItem("navigationToken");
     if (!token) {
@@ -119,25 +113,46 @@ export default function OTSRootFile() {
 
  const callTerminationAPIs = async () => {
   try {
-    const formattedTimeSpent = formatTime(timeSpent); // Format HH:MM:SS
-    const attemptedCount = answeredAndMarkedForReviewCount + answeredCount;
-    const notAttemptedCount = markedForReviewCount + notAnsweredCount;
+    const {
+      answeredCount,
+      answeredAndMarkedForReviewCount,
+      markedForReviewCount,
+      notAnsweredCount,
+      notVisitedCount,
+      visitedCount,
+      totalQuestionsInTest,
+      timeSpent,
+    } = summaryData.current
+   
+    // ✅ Parse all values to numbers safely
+    const answered = parseInt(answeredCount) || 0;
+    const answeredAndMarked = parseInt(answeredAndMarkedForReviewCount) || 0;
+    const marked = parseInt(markedForReviewCount) || 0;
+    const notAnswered = parseInt(notAnsweredCount) || 0;
+    const notVisited = parseInt(notVisitedCount) || 0;
+    const visited = parseInt(visitedCount) || 0;
+    const totalQuestions = parseInt(totalQuestionsInTest) || 0;
+    const spentTime = parseInt(timeSpent) || 0;
+
+    const attemptedCount = answered + answeredAndMarked;
+    const notAttemptedCount = marked + notAnswered;
+
+    const formattedTimeSpent = formatTime(spentTime); // e.g. "00:14:20"
 
     const examSummaryData = {
       studentId: realStudentId.current,
       test_creation_table_id: realTestId.current,
-      totalQuestions: totalQuestionsInTest,
-      totalAnsweredQuestions: answeredCount,
-      totalAnsweredMarkForReviewQuestions: answeredAndMarkedForReviewCount,
-      totalMarkForReviewQuestions: markedForReviewCount,
-      totalNotAnsweredQuestions: notAnsweredCount,
-      totalVisitedQuestionQuestions: visitedCount,
-      totalNotVisitedQuestions: notVisitedCount,
+      totalQuestions: totalQuestions,
+      totalAnsweredQuestions: answered,
+      totalAnsweredMarkForReviewQuestions: answeredAndMarked,
+      totalMarkForReviewQuestions: marked,
+      totalNotAnsweredQuestions: notAnswered,
+      totalVisitedQuestionQuestions: visited,
+      totalNotVisitedQuestions: notVisited,
       totalAttemptedQuestions: attemptedCount,
       totalNotAttemptedQuestions: notAttemptedCount,
       TimeSpent: formattedTimeSpent,
     };
-
     // 1. Save Exam Summary (POST)
     await axios.post(`${BASE_URL}/OTSExamSummary/SaveExamSummary`, examSummaryData);
 
@@ -154,7 +169,31 @@ export default function OTSRootFile() {
       test_status: "completed",
       connection_status: "disconnected",
     });
+      const [summaryRes, marksRes] = await Promise.allSettled([
+        fetch(
+          `${BASE_URL}/OTSExamSummary/FetchExamSummaryCounts/${realTestId.current}/${realStudentId.current}`
+        ),
+        fetch(
+          `${BASE_URL}/OTSExamSummary/FetchStudentMarks/${realTestId.current}/${realStudentId.current}`
+        ),
+      ]);
 
+      const examSummary =
+        summaryRes.status === "fulfilled"
+          ? await summaryRes.value.json()
+          : null;
+      const studentMarks =
+        marksRes.status === "fulfilled" ? await marksRes.value.json() : null;
+
+      if (!examSummary) {
+        alert("Failed to fetch exam summary.");
+        return;
+      }
+
+      if (!studentMarks) {
+        alert("Failed to fetch student marks.");
+        return;
+      }
     // // 4. Fetch Exam Summary Counts (GET with correct path params)
     // await fetch(`${BASE_URL}/OTSExamSummary/FetchExamSummaryCounts/${realTestId}/${realStudentId}`);
 
@@ -319,6 +358,7 @@ export default function OTSRootFile() {
   
 
   const handleBlur = async () => {
+    console.log("Blur event triggered");
     setViolationCount((prevCount) => {
       const newCount = prevCount + 1;
       console.log("Blur event triggered. Violation count:", newCount);
@@ -334,6 +374,10 @@ export default function OTSRootFile() {
   };
   
   const handleTermination = async () => {
+
+    if (terminationCalledRef.current) return; // ✅ Avoid multiple calls
+
+  terminationCalledRef.current = true;
     await callTerminationAPIs();
   
     localStorage.removeItem("popupWindowURL1");
@@ -383,6 +427,10 @@ export default function OTSRootFile() {
         realStudentId={realStudentId.current}
         realTestId={realTestId.current}
         warningMessage={warningMessage}
+      
+       
+       summaryData={summaryData}
+
       />
       </TimerProvider>
       {showCustomPopup && (

@@ -4,30 +4,46 @@ const db = require("../config/database.js");
 
 router.put("/updateResumeTest/:studentId/:testCreationTableId", async (req, res) => {
     const { studentId, testCreationTableId } = req.params;
-  const { timeleft } = req.body; // Extract timeleft from the request body
+    const { timeleft } = req.body;
   
-    let  connection;
+    let connection;
     try {
-        connection = await db.getConnection();
-        const [result] = await connection.query(
-        `UPDATE iit_test_status_details 
-             SET test_attempt_status = ?,test_connection_status=?, version =IFNULL(version, 0) + 1 ,time_left  = ?
-             WHERE student_registration_id = ? AND test_creation_table_id = ?`,
-        ["resumed","disconnected",timeleft, studentId, testCreationTableId]
-        );
-    
-        if (result.affectedRows === 0) {
-        return res.status(404).json({ message: "No record found to update" });
-        }
-    
-        res.status(200).json({ message: "Resume test updated successfully" });
+      connection = await db.getConnection();
+  
+      // Build base query and params
+      let query = `
+        UPDATE iit_test_status_details 
+        SET test_attempt_status = ?, test_connection_status = ?, version = IFNULL(version, 0) + 1`;
+      const params = ["resumed", "disconnected"];
+  
+      // Conditionally add time_left if valid
+      if (timeleft !== null && timeleft !== undefined && timeleft !== "") {
+        query += `, time_left = ?`;
+        params.push(timeleft);
+      }
+  
+      // Add WHERE clause
+      query += `
+        WHERE student_registration_id = ? 
+          AND test_creation_table_id = ? 
+          AND test_attempt_status != 'completed'`;
+      params.push(studentId, testCreationTableId);
+  
+      const [result] = await connection.query(query, params);
+  
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: "No record found to update or test already completed" });
+      }
+  
+      res.status(200).json({ message: "Resume test updated successfully" });
     } catch (error) {
-        console.error("Error updating resume test:", error);
-        res.status(500).json({ message: "Internal server error" });
+      console.error("Error updating resume test:", error);
+      res.status(500).json({ message: "Internal server error" });
+    } finally {
+      if (connection) connection.release();
     }
-    finally {
-        if (connection) connection.release();
-    }})  
+  });
+  
     
     function formatUserResponses(rows) {
         return rows.reduce((acc, { subject_id, section_id, question_id, user_answer, question_status,question_type_id,option_id  }) => {

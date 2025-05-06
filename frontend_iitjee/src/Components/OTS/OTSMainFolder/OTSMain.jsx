@@ -9,9 +9,10 @@ import { TimerProvider } from "../../../ContextFolder/TimerContext.jsx";
 import OtsTimer from "./OTSTimer.jsx";
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import axios from "axios";
+import ExamSummaryCollector from "./ExamSummaryCollector.jsx";
 // import { useTimer } from "../../../ContextFolder/TimerContext.jsx";
 
-export default function OTSMain({ testData, realStudentId, realTestId,warningMessage }) {
+export default function OTSMain({ testData, realStudentId, realTestId,warningMessage, summaryData}) {
   const [activeSubject, setActiveSubject] = useState(null);
   const [activeSection, setActiveSection] = useState(null);
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
@@ -28,8 +29,8 @@ export default function OTSMain({ testData, realStudentId, realTestId,warningMes
   useEffect(() => {
     setActiveQuestionIndex(0); // This resets to 1st question when section changes
   }, [activeSection]);
-
-  console.log("studentid, testid:", realStudentId, realTestId);
+  console.log("summaryData",summaryData.current)
+  // console.log("studentid, testid:", realStudentId, realTestId);
 
   // useEffect(() => {
   //   const fetchUserAnswersAfterResume = async () => {
@@ -518,6 +519,13 @@ useEffect(() => {
             setNatValue={setNatValue}
             setSelectedOption={setSelectedOption}
           />
+             <ExamSummaryCollector
+          onDataReady={true}
+          realStudentId={realStudentId}
+          realTestId={realTestId}
+         
+          summaryData = {summaryData}
+        />
           </TimerProvider>
         </QuestionStatusProvider>
       </div>

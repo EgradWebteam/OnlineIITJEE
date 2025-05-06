@@ -155,7 +155,7 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
   //   }
   // };
 
-  let newWinRef = null;
+  // let newWinRef = null;
 
 const handleStartTestClick = async (testCreationTableId) => {
   try {
@@ -200,9 +200,40 @@ const handleStartTestClick = async (testCreationTableId) => {
       const features = `width=${screenWidth},height=${screenHeight},top=0,left=0`;
 
       // Open the new window
-      newWinRef = window.open(url, "_blank", `width=${screenWidth},height=${screenHeight},fullscreen=yes`);
+      const newWinRef = window.open(url, "_blank", `width=${screenWidth},height=${screenHeight},fullscreen=yes`);
 
       if (newWinRef) {
+        window.addEventListener('beforeunload', () => {
+          if (newWinRef && !newWinRef.closed) {
+            const key = `OTS_FormattedTime`;
+            const timeLeft = localStorage.getItem(key);
+        
+            console.log("Sending timeLeft to API:", timeLeft);
+        
+            // if (!timeLeft) {
+            //   console.warn("No timeLeft found in localStorage.");
+            //   return;
+            // }
+           
+              fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  studentId: studentId,
+                  testCreationTableId: testCreationTableId,
+                  timeleft: timeLeft
+                }),
+              }).catch((error) => {
+                console.error("Error deleting data on window close:", error);
+              });
+
+              localStorage.removeItem(`OTS_FormattedTime`)
+            
+            newWinRef.close();
+          }
+        });
         const monitorWindow = setInterval(() => {
           if (newWinRef.closed) {
             console.log("Quiz window closed");
