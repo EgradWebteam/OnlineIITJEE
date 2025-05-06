@@ -13,7 +13,25 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
 
   const course_creation_id = course?.course_creation_id;
   const navigate = useNavigate();
+  // const [timeSpent, setTimeSpent] = useState(null);
+  // const [timeLefSt, setTimeLeft] = useState(null);
+  // useEffect(() => {
+  //   const handleTimerUpdate = (event) => {
+  //     // Get data from the custom event
+  //     const { timeLeft, timeSpent } = event.detail;
+  //     console.log(timeLeft, timeSpent)
+  //     setTimeLeft(timeLeft);
+  //     setTimeSpent(timeSpent);
+  //   };
 
+  //   // Add event listener for 'timerUpdate' event
+  //   window.addEventListener("timerUpdate", handleTimerUpdate);
+
+  //   // Cleanup the event listener on unmount
+  //   return () => {
+  //     window.removeEventListener("timerUpdate", handleTimerUpdate);
+  //   };
+  // }, []);
   useEffect(() => {
     const fetchCourseTests = async () => {
       try {

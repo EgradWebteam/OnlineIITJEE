@@ -39,7 +39,17 @@ console.log(resumeTimeInSeconds, initialTimeLeft )
   }, [testData, resumeTime]);
 
   const timeSpent = timeLeft !== null ? totalDurationInSeconds - timeLeft : 0;
-
+  // useEffect(() => {
+  //   if (timeLeft !== null) {
+  //     const event = new CustomEvent("timerUpdate", {
+  //       detail: {
+  //         timeLeft: timeLeft,
+  //         timeSpent: totalDurationInSeconds - timeLeft,
+  //       },
+  //     });
+  //     window.dispatchEvent(event);
+  //   }
+  // }, [timeLeft]);
   const formatTime = (seconds) => {
     const h = String(Math.floor(seconds / 3600)).padStart(2, "0");
     const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
