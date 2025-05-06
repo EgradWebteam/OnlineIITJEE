@@ -350,8 +350,13 @@ const handleStartTestClick = async (testCreationTableId) => {
                     </button>
                   )} */}
                   {(() => {
-                    const status = test.test_attempt_status?.toLowerCase().trim();
-                    if (status === 'completed') {
+                     const status = test.status?.toLowerCase().trim();
+                     const attemptStatus = test.test_attempt_status?.toLowerCase().trim();
+                   
+                     if (status !== 'active') {
+                       return null; // No buttons if test is not active
+                     }
+                    if (attemptStatus === 'completed') {
                       return (
                         <button
                           className={styles.viewReportBtn}
@@ -360,7 +365,7 @@ const handleStartTestClick = async (testCreationTableId) => {
                           View Report &gt;&gt;
                         </button>
                       );
-                    } else if (status === 'resumed') {
+                    } else if (attemptStatus === 'resumed') {
                       return (
                         <button
                           className={styles.resumeTestBtn}
