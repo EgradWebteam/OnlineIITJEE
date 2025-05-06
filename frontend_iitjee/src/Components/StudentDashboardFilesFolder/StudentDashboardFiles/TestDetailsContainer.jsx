@@ -35,30 +35,31 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
   useEffect(() => {
     const fetchCourseTests = async () => {
       try {
-        const res = await fetch(`${BASE_URL}/studentmycourses/coursetestdetails/${course_creation_id}/${studentId}`);
+        const res = await fetch(
+          `${BASE_URL}/studentmycourses/coursetestdetails/${course_creation_id}/${studentId}`
+        );
         const data = await res.json();
-
-        const tests = data.test_details.tests;
-        const type = data.test_details.type_of_test_name;
-
+  
+        // Updated structure: data.test_details is an array
         const grouped = {};
-        tests.forEach(test => {
-          const testType = type;
-          if (!grouped[testType]) grouped[testType] = [];
-          grouped[testType].push(test);
+  
+        data.test_details.forEach(group => {
+          const testType = group.type_of_test_name;
+          grouped[testType] = group.tests;
         });
-
+  
         setGroupedTests(grouped);
         setCourseName(data.course_name);
       } catch (err) {
         console.error("Failed to fetch test details", err);
       }
     };
-
+  
     if (course_creation_id && studentId) {
       fetchCourseTests();
     }
   }, [course_creation_id, studentId]);
+  
 
   const allTestTypes = ['Select Type Of Test', ...Object.keys(groupedTests)];
 

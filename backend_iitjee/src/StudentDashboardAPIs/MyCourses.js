@@ -156,6 +156,7 @@ router.get(
                 tct.course_creation_id,
                 tsd.test_attempt_status,
                 cct.course_name,
+                 tct.status,
                 tot.type_of_test_name
             FROM iit_test_creation_table tct
             LEFT JOIN iit_course_creation_table cct ON tct.course_creation_id = cct.course_creation_id
@@ -190,21 +191,51 @@ router.get(
       }
 
       // Grouping the result into a course object with test details
-      const courseDetails = {
-        course_creation_id: rows[0].course_creation_id,
-        course_name: rows[0].course_name,
-        test_details: {
-          course_type_of_test_id: rows[0].course_type_of_test_id, // Assuming all tests have the same course_type_of_test_id
-          type_of_test_name: rows[0].type_of_test_name, // Assuming all tests have the same type_of_test_name
-          tests: rows.map((row) => ({
-            test_creation_table_id: row.test_creation_table_id,
-            test_attempt_status: row.test_attempt_status,
-            test_name: row.test_name,
-            total_marks: row.total_marks,
-            duration: row.duration,
-          })),
-        },
-      };
+      // const courseDetails = {
+      //   course_creation_id: rows[0].course_creation_id,
+      //   course_name: rows[0].course_name,
+      //   test_details: {
+      //     course_type_of_test_id: rows[0].course_type_of_test_id, // Assuming all tests have the same course_type_of_test_id
+      //     type_of_test_name: rows[0].type_of_test_name, // Assuming all tests have the same type_of_test_name
+      //     tests: rows.map((row) => ({
+      //       test_creation_table_id: row.test_creation_table_id,
+      //       test_attempt_status: row.test_attempt_status,
+      //       test_name: row.test_name,
+      //       total_marks: row.total_marks,
+      //       duration: row.duration,
+      //       status:row.status,
+      //     })),
+      //   },
+      // };
+// Group test details by course_type_of_test_id and type_of_test_name
+const groupedTests = {};
+
+rows.forEach((row) => {
+  const key = `${row.course_type_of_test_id}-${row.type_of_test_name}`;
+
+  if (!groupedTests[key]) {
+    groupedTests[key] = {
+      course_type_of_test_id: row.course_type_of_test_id,
+      type_of_test_name: row.type_of_test_name,
+      tests: [],
+    };
+  }
+
+  groupedTests[key].tests.push({
+    test_creation_table_id: row.test_creation_table_id,
+    test_attempt_status: row.test_attempt_status,
+    test_name: row.test_name,
+    total_marks: row.total_marks,
+    duration: row.duration,
+    status: row.status,
+  });
+});
+
+const courseDetails = {
+  course_creation_id: rows[0].course_creation_id,
+  course_name: rows[0].course_name,
+  test_details: Object.values(groupedTests), // Convert grouped tests to array
+};
 
       // console.log("Test details grouped:", courseDetails);
       res.status(200).json(courseDetails);
