@@ -194,7 +194,11 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
         } else if (isCorrect) {
           setFeedback("Correct Answer! ✅");
         } else {
-          setFeedback(`Incorrect Answer ❌,correct is ${correctAns} `);
+         
+          setFeedback(<div>
+            <div>Incorrect Answer ❌</div>
+            <div>correct Answer is {correctAns}</div>
+          </div>)
         }
         if (result) {
           setAnswerDisabled(true);

@@ -712,15 +712,12 @@ align-items: center;
   align-items: center;
   justify-content: start;
   gap: 5px;
-  margin-bottom: 10px;
 }
 
 .circle {
-  display: flex;
-  justify-content: center;
   height: 40px;
   width: 40px;
-  align-items: center;
+  text-align: center;
 }
 
 .unanswered{
@@ -1170,10 +1167,7 @@ height: 100%;
         margin-top: 3.5rem;
       }
     }
-
-  
   @media (max-width:600px) {
-    
     .status_pallete{
   min-height: 42%;
     }

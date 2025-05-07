@@ -115,6 +115,15 @@
     gap: 1rem;
     background-color: white;
   }
+  .noTopicsContainer{
+    background-color:#b1b1b1;
+    color: black;
+    font-size: 1.2rem;
+    margin: 1rem;
+    padding: 0.5rem;
+    font-weight: bold;
+
+  }
 @media (max-width:768px) {
   .stuentDashboardGlobalHeading{
     background-color: #444444;
@@ -145,6 +154,14 @@
 .noCoursesContainer{
   background-color: #09bffc;
   color: white;
+  font-size: 1rem;
+  margin: 1rem;
+  padding: 0.5rem;
+  font-weight: bold;
+}
+.noTopicsContainer{
+  background-color:#b1b1b1;
+    color: black;
   font-size: 1rem;
   margin: 1rem;
   padding: 0.5rem;
