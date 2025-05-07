@@ -30,7 +30,7 @@ export default function ExamSummaryCollector({ onDataReady, realStudentId, realT
       timeSpent,
     };
 
-    console.log("📊 summaryDataRef:", summaryData.current);
+    // console.log("📊 summaryDataRef:", summaryData.current);
 
     if (onDataReady) {
       summaryData = summaryData.current

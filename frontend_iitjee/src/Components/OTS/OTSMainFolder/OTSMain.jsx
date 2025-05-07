@@ -24,6 +24,8 @@ export default function OTSMain({ testData, realStudentId, realTestId,warningMes
     const [showSidebar, setShowSidebar] = useState(true); 
   // let resumeTime = null;
   const [resumeTime, setResumeTime] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); // loading flag
+
   // const { formattedTime } = useTimer();
   // Reset question index when section changes
   useEffect(() => {
@@ -233,15 +235,22 @@ useEffect(() => {
           setNatValue(firstQuestion.natAnswer);
         }
       }
-
+      console.log(activeSection,firstSection,userAnswers)
+      
+      setIsLoading(false);
     } catch (err) {
+      
+      setIsLoading(false);
       console.error("Error fetching resumed answers:", err);
     }
   };
 
   fetchUserAnswersAfterResume();
-}, [realStudentId, realTestId]);
+}, [realStudentId, realTestId,]);
 
+if (isLoading) {
+  return <div style={{ padding: '20px', textAlign: 'center' }}>Loading your test data...</div>;
+}
 
 // storing time in localstorage to store
     // useEffect(() => {
