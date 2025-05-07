@@ -5,6 +5,7 @@ import StudentDashboardLeftSideBar from './StudentDashboardLeftSidebar.jsx';
 import { useLocation,useNavigate, useParams  } from 'react-router-dom';
 import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx'
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js'; 
+
 import { useAlert } from "../StudentDashboardFiles/AlertContext";
 const StudentDashboardBookmarks = lazy(() => import('./StudentDashboardBookmarks.jsx'));
 const StudentDashboardHome = lazy(() => import("./StudentDashboardHome.jsx"));
@@ -13,6 +14,7 @@ const StudentDashboard_BuyCourses = lazy(() => import("./StudentDashboard_BuyCou
 const StudentDashboard_MyResults = lazy(() => import("./StudentDashboard_MyResults.jsx"));
 const StudentDashboard_AccountSettings = lazy(() => import("./StudentDashboard_AccountSettings.jsx"));
 const CustomLogoutPopup = lazy(() => import('./CustomLogoutPop.jsx'));
+
 export default function StudentDashboard() { 
   const [activeSection, setActiveSection] = useState("dashboard");
    const [activeSubSection, setActiveSubSection] = useState("profile");
@@ -180,7 +182,14 @@ export default function StudentDashboard() {
     }
     
     const renderStudentDashboardContent = () => {
-    
+      const localSessionId = localStorage.getItem('sessionId');
+  const sessionSessionId = sessionStorage.getItem('sessionId');
+
+  if (!localSessionId || !sessionSessionId || localSessionId !== sessionSessionId) {
+
+    navigate('/LoginPage');
+    return null;
+  }
       switch (activeSection) {
         case "dashboard":
           return <StudentDashboardHome studentName ={studentName}

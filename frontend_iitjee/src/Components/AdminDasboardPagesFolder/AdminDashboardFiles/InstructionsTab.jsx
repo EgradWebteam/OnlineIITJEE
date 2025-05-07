@@ -3,6 +3,7 @@ import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import styles from "../../../Styles/AdminDashboardCSS/Instruction.module.css";
 import DynamicTable from "../AdminDashboardFiles/DynamicTable.jsx";
 import { FaSearch } from 'react-icons/fa';
+
 const InstructionsTab = () => {
   const isOpen=true
   const [showForm, setShowForm] = useState(false);

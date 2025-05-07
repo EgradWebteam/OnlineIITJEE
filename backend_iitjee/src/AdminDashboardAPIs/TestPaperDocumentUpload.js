@@ -34,7 +34,7 @@ router.get("/TestNameFormData", async (req, res) => {
 
     res.json({ testDetails });
   } catch (err) {
-    console.error("Error fetching test details:", err);
+    // console.error("Error fetching test details:", err);
     res.status(500).json({ error: "Failed to fetch test details" });
   }
 });
@@ -54,7 +54,7 @@ router.get("/subject/:test_creation_table_id", async (req, res) => {
 
     res.json({ subjectName });
   } catch (err) {
-    console.error("Error fetching subjectName details:", err);
+    // console.error("Error fetching subjectName details:", err);
     res.status(500).json({ error: "Failed to fetch subject name" });
   }
 });
@@ -64,34 +64,64 @@ router.delete("/DeleteTestPaperDocument/:documentId", async (req, res) => {
   await connection.beginTransaction();
 
   try {
+    // console.log("📥 Received request to delete document:", documentId);
+
     // Step 1: Get all related question IDs
     const [questions] = await connection.query(
       "SELECT question_id FROM iit_questions WHERE document_id = ?",
       [documentId]
     );
-    const questionIds = questions.map((q) => q.id);
+
+    const questionIds = questions.map((q) => q.question_id);
+    // console.log("❓ Fetched Question IDs:", questionIds);
 
     if (questionIds.length > 0) {
-      // Step 2: Delete related options and solutions
-      await connection.query("DELETE FROM iit_options WHERE question_id IN (?)", [questionIds]);
-      await connection.query("DELETE FROM iit_solutions WHERE question_id IN (?)", [questionIds]);
-      await connection.query("DELETE FROM iit_questions WHERE document_id IN (?)", [questionIds]);
+      const placeholders = questionIds.map(() => '?').join(',');
+
+      // Step 2: Delete related options
+      const [optionsDeleteResult] = await connection.query(
+        `DELETE FROM iit_options WHERE question_id IN (${placeholders})`,
+        questionIds
+      );
+      // console.log(`🗑️ Deleted ${optionsDeleteResult.affectedRows} rows from iit_options`);
+
+      // Step 2: Delete related solutions
+      const [solutionsDeleteResult] = await connection.query(
+        `DELETE FROM iit_solutions WHERE question_id IN (${placeholders})`,
+        questionIds
+      );
+      // console.log(`🗑️ Deleted ${solutionsDeleteResult.affectedRows} rows from iit_solutions`);
+
+      // Step 2: Delete questions
+      const [questionsDeleteResult] = await connection.query(
+        `DELETE FROM iit_questions WHERE question_id IN (${placeholders})`,
+        questionIds
+      );
+      // console.log(`🗑️ Deleted ${questionsDeleteResult.affectedRows} rows from iit_questions`);
+    } else {
+      // console.log("⚠️ No related questions found for this document.");
     }
 
     // Step 3: Delete the document itself
-    await connection.query("DELETE FROM iit_ots_document WHERE document_id = ?", [documentId]);
+    const [documentDeleteResult] = await connection.query(
+      "DELETE FROM iit_ots_document WHERE document_id = ?",
+      [documentId]
+    );
+    // console.log(`📄 Deleted ${documentDeleteResult.affectedRows} row from iit_ots_document`);
 
     // Step 4: Commit transaction
     await connection.commit();
     res.status(200).json({ message: "Document and related data deleted successfully." });
   } catch (err) {
     await connection.rollback();
-    console.error("❌ Deletion error:", err);
+    // console.error("❌ Deletion error:", err);
     res.status(500).json({ error: "Deletion failed." });
   } finally {
     connection.release();
   }
 });
+
+
 
 router.get(
   "/SectionNames/:test_creation_table_id/:subject_id",
@@ -123,7 +153,7 @@ router.get(
       }
       res.json({ sectionName });
     } catch (err) {
-      console.error("Error fetching section details:", err);
+      // console.error("Error fetching section details:", err);
       res.status(500).json({ error: "Failed to fetch section details" });
     }
   }
@@ -141,7 +171,7 @@ async function uploadToAzure(fileBuffer, blobName) {
     // console.log(`✅ Uploaded ${blobName} successfully`);
     return path.basename(blobName);
   } catch (error) {
-    console.error("❌ Error uploading to Azure:", error);
+    // console.error("❌ Error uploading to Azure:", error);
     throw error;
   }
 }
@@ -170,8 +200,8 @@ const storeRecordsInBulk = async (connection, tableName, records) => {
         )
       : [];
   } catch (error) {
-    console.error(`❌ Error inserting into ${tableName}:`, error);
-    console.error(`SQL Query: ${query}`);
+    // console.error(`❌ Error inserting into ${tableName}:`, error);
+    // console.error(`SQL Query: ${query}`);
     throw error;
   }
 };
@@ -292,7 +322,7 @@ router.post(
           answerText = section.replace("[ans]", "").trim();
         }
         if (section.includes("[Marks]")) {
-          const match = section.match(/\[Marks\](\d+),(\d+)/);
+          const match = section.match(/\[Marks\]\s*(\d+)\s*,\s*(\d+)/);
           if (match) {
             Marks_text = parseInt(match[1]) || 1;
             nmarks_text = parseInt(match[2]) || 0;
@@ -472,7 +502,7 @@ router.get("/QOSImages/:documentName/:folder/:fileName", async (req, res) => {
     res.setHeader("Content-Type", response.headers.get("Content-Type"));
     response.body.pipe(res); // Stream the image directly
   } catch (error) {
-    console.error("Error fetching image from Azure Blob:", error);
+    // console.error("Error fetching image from Azure Blob:", error);
     res.status(500).send("Error fetching image");
   }
 });
@@ -633,7 +663,7 @@ ORDER BY s.subject_id, sec.section_id, q.question_id, o.option_index;
     const structured = transformTestData(rows);
     res.json(structured);
   } catch (error) {
-    console.error("Error fetching question paper:", error);
+    // console.error("Error fetching question paper:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });

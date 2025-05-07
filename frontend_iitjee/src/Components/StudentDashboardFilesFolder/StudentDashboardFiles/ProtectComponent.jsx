@@ -4,13 +4,9 @@ import { Navigate, useLocation } from 'react-router-dom';
 const ProtectedRoute = ({ children }) => {
   const location = useLocation();
  
+  const sessionId = localStorage.getItem('sessionId');
  
-  const isAuthenticated = () => {
-    const sessionId = sessionStorage.getItem('sessionId');
-    return !!sessionId;
-  };
- 
-  if (!isAuthenticated()) {
+  if (!sessionId) {
     return <Navigate to="/LoginPage" state={{ from: location }} replace />;
   }
  

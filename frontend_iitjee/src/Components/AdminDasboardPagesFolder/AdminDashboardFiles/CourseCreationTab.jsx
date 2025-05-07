@@ -4,6 +4,7 @@ import DynamicTable from "./DynamicTable.jsx";
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import Styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css";
 import { FaSearch } from 'react-icons/fa';
+
 const CourseCreationTab = ({portalid}) => {
   const [courses, setCourses] = useState([]);
   const [showForm, setShowForm] = useState(false);

@@ -54,6 +54,7 @@ const AssignToTest = ({ testCreationTableId, onClose }) => {
         alert("Courses assigned successfully!");
         setSelectedCourses([]); 
         fetchCourses();
+      
         onClose(); 
       } else {
         alert("Failed to assign courses.");
@@ -75,7 +76,8 @@ const AssignToTest = ({ testCreationTableId, onClose }) => {
 
       if (response.status === 200) {
         alert("Course unassigned successfully!");
-        fetchCourses(); // Refresh both lists
+        fetchCourses(); 
+       
       } else {
         alert("Failed to unassign course.");
       }

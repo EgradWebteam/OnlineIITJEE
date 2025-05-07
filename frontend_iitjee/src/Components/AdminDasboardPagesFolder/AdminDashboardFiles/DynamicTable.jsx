@@ -6,7 +6,7 @@ import ViewDocumentData from './ViewDocumentData.jsx'
 import ViewResults from "./ViewResults.jsx";
 import { encryptBatch } from '../../../utils/cryptoUtils.jsx';
 import AssignToTest from "./AssignToTest.jsx";
-
+import axios from "axios";
 const DynamicTable = ({
   columns,
   isOpen,
@@ -276,7 +276,7 @@ const DynamicTable = ({
       )}
       {popupType === "assignTest" && selectedRow && (
         <div className={styles.popupWrapper}>
-          <AssignToTest   testCreationTableId={selectedRow.test_creation_table_id} data={selectedRow} onClose={handleClosePopup} />
+          <AssignToTest    testCreationTableId={selectedRow.test_creation_table_id} data={selectedRow} onClose={handleClosePopup} />
         </div>
       )}
       {popupType === "viewDocument" && selectedRow && (
