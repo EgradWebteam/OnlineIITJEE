@@ -98,7 +98,7 @@ export default function OrvlTopicCards({
         ) : (
           <div className={globalCSS.noTopicsContainer}>
             <p className={globalCSS.noTopicsMsg}>
-              No topics available for {selectedSubject.subject_name}.
+              No topics available for {selectedSubject.subject_name}....
             </p>
           </div>
         )}

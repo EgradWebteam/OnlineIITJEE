@@ -3,7 +3,7 @@ import Styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import axios from "axios";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
-import { useAlert } from "../StudentDashboardFiles/AlertContext";
+import { useAlert } from "../../StudentDashboardFilesFolder/StudentDashboardFiles/AlertContext.jsx";
 const SolutionsTab = ({ testId, userData, studentId }) => {
   const [testPaperData, setTestPaperData] = useState([]);
   const [selectedSubjectSection, setSelectedSubjectSection] = useState(null);
@@ -219,13 +219,13 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
         <div>
           {selectedSubjectSection && (
             <div>
-              {selectedSubjectSection.questions.map((question) => (
+              {selectedSubjectSection.questions.map((question, index)=>(
                 <div
                   key={question.question_id}
                   className={`${Styles.questionSolutionsDiv} ${Styles.watermarkForSolution}`}
                 >
                   <div className={Styles.QuestionNoAnsBookmarkHolder}>
-                    <p>Question No: {question.question_id}</p>
+                  <p>Question No: {index + 1}</p>
                     <button
                       onClick={() => toggleBookmark(question.question_id)}
                       className={`${Styles.bookmarkButton} ${

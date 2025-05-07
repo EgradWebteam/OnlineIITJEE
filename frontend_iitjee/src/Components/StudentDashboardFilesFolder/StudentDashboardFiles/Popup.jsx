@@ -524,15 +524,16 @@ const Popup = ({
                   {/* Navigation Buttons */}
                   <div className={styles.navigation_buttons}>
                     {currentQuestionIndex > 0 && (
-                      <button onClick={previousQuestion}>
+                      <button className={styles.PrevandSubmitBtn} onClick={previousQuestion}>
                         Previous Question
                       </button>
                     )}
                     {!answerDisabled && (
-                      <button onClick={handleSubmitAnswer}>Submit</button>
+                      <button className={styles.PrevandSubmitBtn} onClick={handleSubmitAnswer}>Submit</button>
                     )}
                     {answerDisabled && (
                       <button
+                      className={styles.ViewSolBtn}
                         onClick={() => {
                           setSolutionVisibility(
                             currentQuestion.exercise_question_id
@@ -549,7 +550,7 @@ const Popup = ({
                     )}
 
                     {currentQuestionIndex < exercise.questions.length - 1 && (
-                      <button onClick={nextQuestion}>Next Question</button>
+                      <button className={styles.PrevandSubmitBtn} onClick={nextQuestion}>Next Question</button>
                     )}
                   </div>
                 </div>

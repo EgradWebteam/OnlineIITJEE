@@ -188,17 +188,17 @@ const itemsPerPage = 5;
           onDownload={handleDownload}
         />
       </div>
-      <div className={styles.pagination}>
-  {Array.from({ length: Math.ceil(filteredTests.length / itemsPerPage) }, (_, i) => (
-    <button
-      key={i + 1}
-      onClick={() => setCurrentPage(i + 1)}
-      className={currentPage === i + 1 ? styles.pageButtonActive : styles.pageButton}
-    >
-      {i + 1}
-    </button>
-  ))}
-</div>
+     <div className={styles.pagination}>
+       {Array.from({ length: Math.ceil(filteredTests.length / itemsPerPage) }, (_, i) => (
+         <button
+           key={i + 1}
+           onClick={() => setCurrentPage(i + 1)}
+           className={currentPage === i + 1 ? styles.pageButtonActive : styles.pageButton}
+         >
+           {i + 1}
+         </button>
+       ))}
+     </div>
 
     </div>
   );
