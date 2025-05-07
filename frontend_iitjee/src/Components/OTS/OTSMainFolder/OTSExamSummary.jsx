@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import { useQuestionStatus } from "../../../ContextFolder/CountsContext.jsx";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
-import { useAlert } from "../StudentDashboardFiles/AlertContext";
+import { useAlert } from "../../StudentDashboardFilesFolder/StudentDashboardFiles/AlertContext.jsx";
 const ExamSummaryComponent = ({
 
   onCancelSubmit,

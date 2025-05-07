@@ -133,8 +133,16 @@
   align-items: center;
   justify-content: center;
 }
-}
 
+}
+@media (max-width:600px) {
+  .cardHolderOTSORVLHome{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1rem;
+    gap: 1rem;
+  }
+}
 @media (max-width:425px) {
   .stuentDashboardGlobalHeading{
     background-color: #444444;
@@ -156,7 +164,8 @@
 
 }
 .examButtons{
-  padding: 10px;
+  padding: 8px;
+  font-size: 13px;
 }
  .OrvlCourseTopicHeader{
   font-size: 25px;
