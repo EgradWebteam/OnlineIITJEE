@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import { useQuestionStatus } from "../../../ContextFolder/CountsContext.jsx";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
-
+import  {useAlert} from "../../StudentDashboardFilesFolder/StudentDashboardFiles/AlertContext.jsx"
 const ExamSummaryComponent = ({
 
   onCancelSubmit,
@@ -23,7 +23,7 @@ const ExamSummaryComponent = ({
     totalQuestionsInTest,
   } = useQuestionStatus();
   const [courseCreationId, setCourseCreationId] = useState([]);
-
+  const { alert } = useAlert();
   
   useEffect(() => {
     const handleBeforeUnload = (e) => {
@@ -107,7 +107,7 @@ const ExamSummaryComponent = ({
       // console.log("Update result:", updateResult);
 
       if (updateResult.message?.includes("No matching")) {
-        alert(
+       await  alert(
           "Alert: Your test attempt status could not be updated in the database."
         );
         return;
@@ -138,12 +138,12 @@ const ExamSummaryComponent = ({
         marksRes.status === "fulfilled" ? await marksRes.value.json() : null;
 
       if (!examSummary) {
-        alert("Failed to fetch exam summary.");
+        await alert("Failed to fetch exam summary.");
         return;
       }
 
       if (!studentMarks) {
-        alert("Failed to fetch student marks.");
+        await alert("Failed to fetch student marks.");
         return;
       }
 
@@ -151,7 +151,7 @@ const ExamSummaryComponent = ({
       // console.log("Student Marks:", studentMarks);
     } catch (error) {
       console.error("Unexpected error during submission process:", error);
-      alert("An unexpected error occurred. Please try again.");
+      await alert("An unexpected error occurred. Please try again.");
     }
   };
 

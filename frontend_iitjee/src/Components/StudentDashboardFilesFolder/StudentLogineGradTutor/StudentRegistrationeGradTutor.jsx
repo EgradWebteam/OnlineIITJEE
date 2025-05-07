@@ -6,6 +6,7 @@ import MainFooter from "../../LandingPagesFolder/MainPageHeaderFooterFiles/MainF
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import TermsAndConditions from "../../GlobalFiles/TermsAndConditions.jsx";
 import { useLocation, Link, useNavigate } from "react-router-dom";
+import { useAlert } from "../StudentDashboardFiles/AlertContext";
 import axios from "axios";
 import { useRef } from "react";
 const StudentRegistrationeGradTutor = () => {
@@ -43,7 +44,7 @@ const StudentRegistrationeGradTutor = () => {
   const [popupMessage, setPopupMessage] = useState("");
   const photoInputRef = useRef(null);
   const proofInputRef = useRef(null);
-
+  const { alert } = useAlert();
   // console.log(courseid);
 
   const validateForm = () => {
@@ -830,14 +831,12 @@ if (message) {
   
         //console.log("Success:", result);
   
-        alert(
-          "Registration successful! Please check your email for further instructions."
-        );
-        navigate("/LoginPage");
+        await alert("Registration successful! Please check your email for further instructions.");
+    navigate("/LoginPage");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Something went wrong. Please try again later.");
+       await alert("Something went wrong. Please try again later.");
     }
   };
   

@@ -6,6 +6,7 @@ import { useLocation,useNavigate, useParams  } from 'react-router-dom';
 import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx'
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js'; 
 
+import { useAlert } from "../StudentDashboardFiles/AlertContext";
 const StudentDashboardBookmarks = lazy(() => import('./StudentDashboardBookmarks.jsx'));
 const StudentDashboardHome = lazy(() => import("./StudentDashboardHome.jsx"));
 const StudentDashboard_MyCourses = lazy(() => import("./StudentDashboard_MyCourses.jsx"));
@@ -22,7 +23,7 @@ export default function StudentDashboard() {
   const studentName = studentData?.userDetails?.candidate_name;
   const studentId = sessionStorage.getItem('decryptedId');
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
-
+  const { alert } = useAlert();
   const navigate = useNavigate();
     useEffect(() => {
       const savedSection = localStorage.getItem("activeSection");
@@ -150,7 +151,7 @@ export default function StudentDashboard() {
       const sessionId = localStorage.getItem("sessionId");
     
       if (!sessionId) {
-        alert("No session found. Please log in again.");
+         await alert("No session found. Please log in again.", "error");
         navigate("/LoginPage");
         return;
       }
@@ -169,7 +170,7 @@ export default function StudentDashboard() {
           localStorage.clear();  
           navigate("/LoginPage");
         } else {
-          alert(data.message || "Logout failed. Please try again.");
+          await alert("No session found. Please log in again.", "error");
         }
       } catch (error) {
         //console.error("Logout error:", error);
@@ -228,6 +229,7 @@ export default function StudentDashboard() {
           </div>
         </div>
       </div>
+     
       {showLogoutPopup && (
   <CustomLogoutPopup
     onConfirm={() => {

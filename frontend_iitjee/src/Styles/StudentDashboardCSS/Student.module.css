@@ -266,7 +266,19 @@ input[type="password"]::-webkit-textfield-decoration-container {
     background-color: white;
     color: blue;
  }
-  
+  .forgotPasswordButton{
+    background: none;
+    color: blue;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 14px;
+  }
+  .forgotPasswordButton:hover {
+    color: darkblue; 
+    text-decoration: underline;
+  }
   @media(max-width:1150px){
     .studentLoginHomePage{
       width: 100%;

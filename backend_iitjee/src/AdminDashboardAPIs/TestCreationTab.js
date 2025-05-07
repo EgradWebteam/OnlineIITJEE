@@ -526,114 +526,196 @@ ORDER BY s.subject_id, sec.section_id, q.question_id, o.option_index;
 });
 router.get("/getNotAssignedCourses/:testCreationTableId", async (req, res) => {
   const { testCreationTableId } = req.params;
-  // console.log("For the test creation table ID", testCreationTableId);
 
   try {
-    // Query for courses not assigned to the test creation table
-    const sqlNA = `
-      SELECT cct.course_name, cct.course_creation_id
-      FROM iit_course_creation_table cct
-      WHERE cct.course_creation_id NOT IN (
-          SELECT crt.course_creation_id
-          FROM iit_course_reference_for_test crt
-          WHERE crt.test_creation_table_id = ?
-      );
-    `;
-    const [rowsNA] = await db.query(sqlNA, [testCreationTableId]);
-
-    // Query for courses already assigned to the test creation table
+    // ✅ Assigned Courses (from course_reference table)
     const sqlAssigned = `
-      SELECT cct.course_name, cct.course_creation_id
-      FROM iit_course_creation_table cct
-      WHERE cct.course_creation_id IN (
-          SELECT crt.course_creation_id
-          FROM iit_course_reference_for_test crt
-          WHERE crt.test_creation_table_id = ?
-      );
+        SELECT 
+        crt.referenceId,
+        crt.course_creation_id,
+        crt.test_creation_table_id,
+        crt.testName,
+        cct.course_name
+      FROM iit_course_reference_for_test crt
+      INNER JOIN iit_course_creation_table cct
+        ON cct.course_creation_id = crt.course_creation_id
+      WHERE crt.test_creation_table_id = ?;
+      
     `;
     const [rowsAssigned] = await db.query(sqlAssigned, [testCreationTableId]);
 
-    // Return both sets of courses in the response
+    // ✅ Not Assigned Courses
+    const sqlNotAssigned = `
+      SELECT 
+        cct.course_creation_id, cct.course_name, cct.course_year, cct.exam_id,
+        cct.course_start_date, cct.course_end_date, cct.cost, cct.discount,
+        cct.total_price, cct.portal_id, cct.active_course, cct.card_image
+      FROM iit_course_creation_table cct
+      WHERE cct.course_creation_id NOT IN (
+        SELECT course_creation_id
+        FROM iit_course_reference_for_test
+        WHERE test_creation_table_id = ?
+      )
+      AND cct.course_creation_id NOT IN (
+        SELECT course_creation_id
+        FROM iit_test_creation_table
+        WHERE test_creation_table_id = ?
+      )
+      AND cct.portal_id = 1;
+    `;
+    const [rowsNotAssigned] = await db.query(sqlNotAssigned, [testCreationTableId, testCreationTableId]);
+
     res.status(200).json({
-      rowsNotAssigned: rowsNA, // Not assigned courses
-      rowsAssigned: rowsAssigned, // Assigned courses
+      rowsAssigned,
+      rowsNotAssigned
     });
+
   } catch (error) {
-    console.error("Error while getting courses:", error);
+    console.error("Error fetching course assignment data:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+
+
+
 
 router.post("/assignToTest/:testCreationTableId", async (req, res) => {
   const { coursesToBeAssigned } = req.body;
   const { testCreationTableId } = req.params;
 
-  // console.log(testCreationTableId, "testCreationTableId");
-  // console.log(coursesToBeAssigned);
-
   try {
-    const sql = `
+    // Step 1: Get the original test details
+    const [testRows] = await db.query(
+      `SELECT * FROM iit_test_creation_table WHERE test_creation_table_id = ?`,
+      [testCreationTableId]
+    );
+
+    if (testRows.length === 0) {
+      return res.status(404).json({ message: "Original test not found" });
+    }
+
+    const originalTest = testRows[0];
+    const testName = originalTest.test_name;
+
+    // Step 2: Prepare queries
+    const insertRefSQL = `
       INSERT INTO iit_course_reference_for_test
       (course_creation_id, test_creation_table_id, testName)
       VALUES (?, ?, ?)
     `;
 
-    for (const course of coursesToBeAssigned) {
-      const { course_creation_id, course_name } = course;
+    const insertTestSQL = `
+      INSERT INTO iit_test_creation_table 
+      (test_name, course_creation_id, course_type_of_test_id, test_start_date, test_end_date, 
+       test_start_time, test_end_time, duration, total_questions, total_marks, status, 
+       instruction_id, options_pattern_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
 
-      const [rows] = await db.query(sql, [
+    // Step 3: Assign each course
+    for (const course of coursesToBeAssigned) {
+      const { course_creation_id } = course;
+
+      // Insert into test_creation_table with new course ID
+      const [insertTestResult] = await db.query(insertTestSQL, [
+        originalTest.test_name,
         course_creation_id,
-        testCreationTableId,
-        course_name, // assuming testName is same as course name for now
+        originalTest.course_type_of_test_id,
+        originalTest.test_start_date,
+        originalTest.test_end_date,
+        originalTest.test_start_time,
+        originalTest.test_end_time,
+        originalTest.duration,
+        originalTest.total_questions,
+        originalTest.total_marks,
+        originalTest.status,
+        originalTest.instruction_id,
+        originalTest.options_pattern_id,
       ]);
 
-      // console.log(rows, "Inserted Row");
+      const newTestCreationTableId = insertTestResult.insertId;
+
+      // Insert into reference table
+      await db.query(insertRefSQL, [
+        course_creation_id,
+        newTestCreationTableId,
+        testName
+      ]);
     }
 
-    res.status(200).json({ message: "Courses assigned successfully" });
+    res.status(200).json({ message: "Courses assigned and test cloned successfully." });
+
   } catch (error) {
     console.error("Error while assigning courses to test:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
 router.delete(
   "/assignedTestDel/:courseCreationId/:testCreationTableId",
   async (req, res) => {
     const { courseCreationId, testCreationTableId } = req.params;
 
-    // console.log(
-    //   "Unassigning course:",
-    //   courseCreationId,
-    //   "from test creation table ID:",
-    //   testCreationTableId
-    // );
+    const connection = await db.getConnection();
 
     try {
-      // SQL query to delete the association between the course and the test creation table
-      const sql = `
-      DELETE FROM iit_course_reference_for_test
-      WHERE course_creation_id = ? AND test_creation_table_id = ?
-    `;
+      await connection.beginTransaction(); 
 
-      const [rows] = await db.query(sql, [
+      // ✅ Delete from iit_course_reference_for_test
+      const sqlReferenceDel = `
+        DELETE FROM iit_course_reference_for_test
+        WHERE course_creation_id = ? AND test_creation_table_id = ?
+      `;
+      const [referenceResult] = await connection.query(sqlReferenceDel, [
         courseCreationId,
         testCreationTableId,
       ]);
 
-      if (rows.affectedRows === 0) {
-        return res
-          .status(404)
-          .json({
-            message: "Course not found for the specified test creation table",
-          });
+      if (referenceResult.affectedRows === 0) {
+        // If no record was deleted, return a message
+        return res.status(404).json({
+          message: "No matching record found to delete in course_reference_for_test.",
+        });
       }
 
-      res.status(200).json({ message: "Course unassigned successfully" });
+      // ✅ Delete from iit_test_creation_table (unlink the course from the test)
+      const sqlTestDel = `
+        DELETE FROM iit_test_creation_table
+        WHERE course_creation_id = ? AND test_creation_table_id = ?
+      `;
+      const [testResult] = await connection.query(sqlTestDel, [
+        courseCreationId,
+        testCreationTableId,
+      ]);
+
+      if (testResult.affectedRows === 0) {
+        // If no record was deleted from the test creation table, handle the error
+        return res.status(404).json({
+          message: "No matching record found to delete in test_creation_table.",
+        });
+      }
+
+      // ✅ Commit transaction if both deletions were successful
+      await connection.commit();
+
+      // Send success response
+      res.status(200).json({ message: "Course unassigned and test deleted successfully." });
+
     } catch (error) {
-      console.error("Error while unassigning course:", error);
+      // In case of any error, rollback the transaction
+      await connection.rollback();
+
+      console.error("Error while unassigning course and deleting test:", error);
       res.status(500).json({ message: "Internal Server Error" });
+    } finally {
+      // Always release the connection back to the pool
+      connection.release();
     }
   }
 );
+
+
+
 
 module.exports = router;

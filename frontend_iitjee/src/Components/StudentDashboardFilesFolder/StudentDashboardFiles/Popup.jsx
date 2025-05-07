@@ -8,7 +8,7 @@ import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.
 export const MemoizedIoClose = memo(IoClose);
 export const MemoizedGrPrevious = memo(GrPrevious);
 export const MemoizedGrNext = memo(GrNext);
-
+import { useAlert } from "../StudentDashboardFiles/AlertContext";
 const Popup = ({
   lecture,
   topicid,
@@ -42,7 +42,7 @@ const Popup = ({
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [showPalette, setShowPalette] = useState(window.innerWidth >= 768);
   // DisableKeysAndMouseInteractions();
-
+  const { alert } = useAlert();
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth < 768;
@@ -255,12 +255,12 @@ const Popup = ({
     let submittedAnswer;
     if (currentQuestion.exercise_question_type === 'NATD' || currentQuestion.exercise_question_type === 'MCQ') {
       if (userAnswer.trim() === '') {
-        alert('Please submit an answer before proceeding.');
+        await alert('Please submit an answer before proceeding.');
         return; 
       }
     } else if (currentQuestion.exercise_question_type === 'MSQ') {
       if (selectedOptions.length === 0) {
-        alert('Please submit an answer before proceeding.');
+        await alert('Please submit an answer before proceeding.');
         return; 
       }
     }

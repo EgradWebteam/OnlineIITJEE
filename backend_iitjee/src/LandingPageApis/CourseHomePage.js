@@ -128,36 +128,17 @@ const sasToken = process.env.AZURE_SAS_TOKEN_FOR_FETCHING;
 const containerName = process.env.AZURE_CONTAINER_NAME;
 const CourseCardImagesFolderName = process.env.AZURE_COURSECARDS_FOLDER;
 const BASE_URL = process.env.BASE_URL;
+const frontEndURL=process.env.frontEndURL;
 
 // Helper to return proxy URL instead of exposing SAS token
 const getImageUrl = (fileName) => {
   if (!fileName) return null;
-  return `${BASE_URL}/CourseHomePage/CourseImage/${fileName}`; // or use your production domain
+
+  const cleanFileName = fileName.split('-').slice(1).join('-');
+  console.log("✅ Cleaned File Name:", cleanFileName); // Logs the result
+  return cleanFileName;
 };
-
-// ✅ Route to serve the actual course card image securely (proxy)
-router.get('/CourseImage/:fileName', async (req, res) => {
-  const { fileName } = req.params;
-
-  if (!fileName) return res.status(400).send("File name is required");
-
-  const imageUrl = `https://${accountName}.blob.core.windows.net/${containerName}/${CourseCardImagesFolderName}/${fileName}?${sasToken}`;
-
-  try {
-    const response = await fetch(imageUrl);
-    if (!response.ok) {
-      return res.status(response.status).send("Failed to fetch image from Azure");
-    }
-
-    res.setHeader("Content-Type", response.headers.get("Content-Type"));
-    response.body.pipe(res); // Stream the image directly
-  } catch (error) {
-    console.error("Error fetching image from Azure Blob:", error);
-    res.status(500).send("Error fetching image");
-  }
-});
-
-
+ 
 
 
 // ✅ Route to get available courses

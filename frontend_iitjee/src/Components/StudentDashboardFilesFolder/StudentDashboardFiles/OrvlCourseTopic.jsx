@@ -8,6 +8,7 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import LoadingSpinner from "../../../ContextFolder/LoadingSpinner.jsx";
 
+import { useAlert } from "../StudentDashboardFiles/AlertContext";
 const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
   const [courseData, setCourseData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -28,6 +29,7 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const { alert } = useAlert();
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
@@ -334,7 +336,7 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
     setShowPopup(false);
   };
 
-  const nextLectureOrExercise = () => {
+  const nextLectureOrExercise = async() => {
     if (!courseData || !selectedLecture) return;
 
     const currentLectureIndex = courseData.lectures.findIndex(
@@ -357,7 +359,7 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
           setSelectedExercise(null);
           setShowExercise(false);
         } else {
-          alert("You're already at the last lecture.");
+          await alert("You're already at the last lecture.");
         }
       }
     } else {
@@ -377,7 +379,7 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
           setSelectedExercise(null);
           setShowExercise(false);
         } else {
-          alert("You're already at the last lecture.");
+          await alert("You're already at the last lecture.");
         }
       }
     }
@@ -402,7 +404,7 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
       fetchUserStatus();
     }
   }, [studentId, courseCreationId, topicid, refetchTrigger]);
-  const previousLectureOrExercise = () => {
+  const previousLectureOrExercise =async () => {
     if (!courseData || !selectedLecture) return;
 
     const currentLectureIndex = courseData.lectures.findIndex(
@@ -440,7 +442,7 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
           setShowExercise(false);
         }
       } else {
-        alert("You're already at the first lecture.");
+        await alert("You're already at the first lecture.");
       }
     }
   };
