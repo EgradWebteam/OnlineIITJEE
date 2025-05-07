@@ -58,7 +58,7 @@ const StudentDashboardBookmarks = ({ studentId }) => {
   // };
 
   const handleDelete = async (studentId, questionId) => {
-    if (window.confirm("Are you sure you want to delete this bookmark?")) {
+    // if (window.confirm("Are you sure you want to delete this bookmark?")) {
       try {
         await axios.delete(
           `${BASE_URL}/studentBookMarks/DeleteBookmark/${studentId}/${questionId}`
@@ -97,7 +97,7 @@ const StudentDashboardBookmarks = ({ studentId }) => {
       } catch (err) {
         console.error("Error deleting bookmark:", err);
       }
-    }
+    // }
   };
 
   const toggleSolution = (questionId) => {
