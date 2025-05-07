@@ -47,14 +47,29 @@ const OrvlDashborad = () => {
         if (totalVideos > 0) animateNumber(totalVideos, setAnimatedVideos);
         if (totalCourses > 0) animateNumber(totalCourses, setAnimatedCourses);
     }, [totalTopics, totalVideos, totalCourses]);
-
+    const adminCardData = [
+        { icon: <FaClipboardList />, label: "Total Topics", value: animatedTopics },
+        { icon: <FaFilm />, label: "Total Videos", value: animatedVideos },
+        {
+          icon: <FaClipboardList />,
+          label: "Total Courses",
+          value: animatedCourses,
+        },
+      ];
     return (
         <div className={styles.dashboardContent}>
             <div className={styles.dashboardTitle}>DASHBOARD</div>
             <div className={styles.statGrid}>
-                <AdminCards icon={<FaClipboardList />} label="Total Topics" value={animatedTopics} />
-                <AdminCards icon={<FaFilm />} label="Total Videos" value={animatedVideos} />
-                <AdminCards icon={<FaBook />} label="Total Courses" value={animatedCourses} />
+            {adminCardData.map((item, index) => {
+          return (
+            <AdminCards
+              key={item.label}
+              icon={item.icon}
+              label={item.label}
+              value={item.value}
+            />
+          );
+        })}
             </div>
         </div>
     );
