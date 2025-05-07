@@ -19,7 +19,9 @@ jobs:
             npm install
 
       - name: Build project
-        run: npm run build  # or 'yarn build' based on your setup
+        run: |
+            cd frontend_iitjee
+            npm run build
 
       - name: Sync files to S3
         uses: jakejarvis/s3-sync-action@master
@@ -30,7 +32,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-          SOURCE_DIR: "dist"
+          SOURCE_DIR: "frontend_iitjee/build"
           
       - name: Ignore Warnings
         run: echo "CI=false" >> $GITHUB_ENV
