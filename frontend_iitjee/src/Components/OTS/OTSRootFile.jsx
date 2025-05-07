@@ -205,43 +205,43 @@ console.log("summaryData",summaryData.current)
     console.error("Error calling termination APIs:", error);
   }
 };
-      const handleBeforeUnload = useCallback(
-          async (event) => {
+      // const handleBeforeUnload = useCallback(
+      //     async (event) => {
       
       
-            try {
-              await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId.current}`, {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  studentId: realStudentId.current, // User ID
-                  testCreationTableId: realTestId.current, // Test ID
-                }),
-              });
-              console.log(
-                "User data deleted successfully before closing the window."
-              );
-            } catch (error) {
-              console.error("Error deleting user data:", error);
-            }
+      //       try {
+      //         await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId.current}`, {
+      //           method: "PUT",
+      //           headers: {
+      //             "Content-Type": "application/json",
+      //           },
+      //           body: JSON.stringify({
+      //             studentId: realStudentId.current, // User ID
+      //             testCreationTableId: realTestId.current, // Test ID
+      //           }),
+      //         });
+      //         console.log(
+      //           "User data deleted successfully before closing the window."
+      //         );
+      //       } catch (error) {
+      //         console.error("Error deleting user data:", error);
+      //       }
            
       
-            // Once deletion is successful, remove the 'beforeunload' listener
-            window.removeEventListener("beforeunload", preventUnload);
+      //       // Once deletion is successful, remove the 'beforeunload' listener
+      //       window.removeEventListener("beforeunload", preventUnload);
         
          
-          },
-          [realStudentId.current,realTestId.current]
-        );
+      //     },
+      //     [realStudentId.current,realTestId.current]
+        // );
   
-        useEffect(() => {
-          window.addEventListener("beforeunload", handleBeforeUnload);
-          return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-          };
-        }, [handleBeforeUnload]);
+        // useEffect(() => {
+        //   window.addEventListener("beforeunload", handleBeforeUnload);
+        //   return () => {
+        //     window.removeEventListener("beforeunload", handleBeforeUnload);
+        //   };
+        // }, [handleBeforeUnload]);
   //WINDOW CLOSE DATA DELETE CODE START
 
 

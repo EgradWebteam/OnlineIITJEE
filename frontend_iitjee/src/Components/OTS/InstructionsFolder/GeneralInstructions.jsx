@@ -98,27 +98,27 @@ const GeneralInstructions = () => {
     //     };
     //   }, [handleBeforeUnload]);
 
-    useEffect(() => {
-        const handleBeforeUnload = () => {
-          if (realTestId && realStudentId) {
-            const url = `${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`;
+    // useEffect(() => {
+    //     const handleBeforeUnload = () => {
+    //       if (realTestId && realStudentId) {
+    //         const url = `${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`;
      
-            const data = JSON.stringify({
-              studentId: realStudentId,
-              testCreationTableId: realTestId,
-            });
+    //         const data = JSON.stringify({
+    //           studentId: realStudentId,
+    //           testCreationTableId: realTestId,
+    //         });
      
-            const blob = new Blob([data], { type: "application/json" });
-            navigator.sendBeacon(url, blob);
-          }
-        };
+    //         const blob = new Blob([data], { type: "application/json" });
+    //         navigator.sendBeacon(url, blob);
+    //       }
+    //     };
      
-        window.addEventListener("beforeunload", handleBeforeUnload);
+    //     window.addEventListener("beforeunload", handleBeforeUnload);
      
-        return () => {
-          window.removeEventListener("beforeunload", handleBeforeUnload);
-        };
-      }, [realStudentId, realTestId]);
+    //     return () => {
+    //       window.removeEventListener("beforeunload", handleBeforeUnload);
+    //     };
+    //   }, [realStudentId, realTestId]);
 
       useEffect(() => {
         const handleBeforeUnload = () => {

@@ -29,7 +29,7 @@ export default function OTSMain({ testData, realStudentId, realTestId,warningMes
   useEffect(() => {
     setActiveQuestionIndex(0); // This resets to 1st question when section changes
   }, [activeSection]);
-  console.log("summaryData",summaryData.current)
+
   // console.log("studentid, testid:", realStudentId, realTestId);
 
   // useEffect(() => {
@@ -519,16 +519,25 @@ useEffect(() => {
             setNatValue={setNatValue}
             setSelectedOption={setSelectedOption}
           />
-             <ExamSummaryCollector
+            
+          </TimerProvider>
+        </QuestionStatusProvider>
+      </div>
+      <QuestionStatusProvider
+          testData={testData}
+          activeSubject={activeSubject}
+          activeSection={activeSection}
+          userAnswers={userAnswers}
+        >
+          <TimerProvider testData={testData} resumeTime = {resumeTime}><ExamSummaryCollector
           onDataReady={true}
           realStudentId={realStudentId}
           realTestId={realTestId}
          
           summaryData = {summaryData}
-        />
+        /> 
           </TimerProvider>
         </QuestionStatusProvider>
-      </div>
     </div>
   );
 }
