@@ -419,7 +419,7 @@ color: black;
   overflow: hidden;
 }
 .studentDashboardLeftsidebar {
-  width: 280px;
+  width: 250px;
   display: flex;
   flex-direction: column;
   background: #fcfcfc;
@@ -674,9 +674,15 @@ align-items: center;
   align-items: center;
   justify-content: center;
 }
-.navigation_buttons button{
+.PrevandSubmitBtn{
   color:white;
-  background-color: #204e31;
+  background-color: rgb(45, 105, 173);
+  padding: 10px;
+  border-radius: 10px;
+}
+.ViewSolBtn{
+  color:white;
+  background-color: #15803d;;
   padding: 10px;
   border-radius: 10px;
 }
@@ -787,7 +793,7 @@ height: 100%;
 
 }
 .breadcrumbContainer {
-  margin: 10px 0 0;
+  margin: 45px 0 0;
   font-size: 16px;
   color: #444;
   display: flex;
@@ -1074,6 +1080,12 @@ height: 100%;
   font-size: 13px;
 }
   }
+  @media(max-width:900px){
+    .studentDashboardLeftsidebar {
+      width: 200px;
+    }
+  }
+  
   @media(max-width:768px){
     .myResultsSubContainer{
       display: flex;
@@ -1153,22 +1165,22 @@ height: 100%;
       .testDetailsConatinerMainDiv {
         padding: 10px;
       } 
-      
+      .breadcrumbContainer {
+        font-size:12px ;
+        margin-top: 3.5rem;
+      }
     }
 
   
   @media (max-width:600px) {
-    .breadcrumbContainer {
-      font-size:9px ;
-      margin: 0px 15px;
-    }
+    
     .status_pallete{
   min-height: 42%;
     }
     .exercise_question_Subcontainer {
-      height: 43vh;
+      height: 37vh;
         right: 14px;
-        top: 161px;
+        top: 172px;
     }
    .popup_body {
       margin: 3.5rem auto;
@@ -1180,12 +1192,12 @@ height: 100%;
     }
     .previousBtn {
       top: 52px;
-        left: 215px;
+        left: 196px;
     }
     
     .nextBtn {
       bottom: 0px;
-      left: 215px;
+      left: 196px;
     }
     .navigation_buttons button{
       font-size: 10px;

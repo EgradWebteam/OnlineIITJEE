@@ -3,7 +3,7 @@ import Styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import axios from "axios";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
-import { useAlert } from "../StudentDashboardFiles/AlertContext";
+import { useAlert } from "../../StudentDashboardFilesFolder/StudentDashboardFiles/AlertContext.jsx";
 const SolutionsTab = ({ testId, userData, studentId }) => {
   const [testPaperData, setTestPaperData] = useState([]);
   const [selectedSubjectSection, setSelectedSubjectSection] = useState(null);
