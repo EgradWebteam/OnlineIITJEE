@@ -191,6 +191,33 @@ router.post(
     }
   }
 );
+router.post("/checkCourseNameExists", async (req, res) => {
+  const { courseName } = req.body;
+
+  // Ensure that courseName is provided
+  if (!courseName) {
+    return res.status(400).json({ message: "Course name is required" });
+  }
+
+  try {
+    // SQL query to check if the course name already exists in the database
+    const sql = `SELECT * FROM iit_course_creation_table WHERE course_name = ?`;
+    const [result] = await db.query(sql, [courseName]);
+
+    // Check if course name exists
+    if (result.length > 0) {
+      return res.json({ message: "Course name already exists. Please choose a different name." });
+    } else {
+      return res.json({ message: "Course name is available" });
+    }
+  } catch (error) {
+    console.error("Error checking course name:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
 
 // ENV VARIABLES (can also use dotenv)
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;

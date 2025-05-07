@@ -842,7 +842,7 @@ if (message) {
   
   const handleBackButtonClick = () => {
     if (courseCreationId) {
-      navigate("/buycourses");
+      navigate("/OTSHomePage");
     } else {
       navigate("/LoginPage");
     }
