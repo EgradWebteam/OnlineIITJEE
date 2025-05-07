@@ -29,14 +29,7 @@ const DynamicTable = ({
   const [popupType, setPopupType] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [dropdownValues, setDropdownValues] = useState({});
-  const fetchTestData = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/TestCreation/FetchTestDataFortable');
-      setTestTableData(response.data); 
-    } catch (error) {
-      console.error('Error fetching test table data:', error);
-    }
-  };
+
   const handleOptionSelect = (e, row, index) => {
     const selectedOption = e.target.value;
   
@@ -283,7 +276,7 @@ const DynamicTable = ({
       )}
       {popupType === "assignTest" && selectedRow && (
         <div className={styles.popupWrapper}>
-          <AssignToTest  onRefreshTable={fetchTestData}  testCreationTableId={selectedRow.test_creation_table_id} data={selectedRow} onClose={handleClosePopup} />
+          <AssignToTest    testCreationTableId={selectedRow.test_creation_table_id} data={selectedRow} onClose={handleClosePopup} />
         </div>
       )}
       {popupType === "viewDocument" && selectedRow && (

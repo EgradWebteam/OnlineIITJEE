@@ -180,7 +180,14 @@ export default function StudentDashboard() {
     }
     
     const renderStudentDashboardContent = () => {
-    
+      const localSessionId = localStorage.getItem('sessionId');
+  const sessionSessionId = sessionStorage.getItem('sessionId');
+
+  if (!localSessionId || !sessionSessionId || localSessionId !== sessionSessionId) {
+
+    navigate('/LoginPage');
+    return null;
+  }
       switch (activeSection) {
         case "dashboard":
           return <StudentDashboardHome studentName ={studentName}

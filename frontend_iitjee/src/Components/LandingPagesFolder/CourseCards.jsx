@@ -3,7 +3,7 @@ import styles from "../../Styles/CourseCards.module.css";
 import { frontEndURL } from "../../ConfigFile/ApiConfigURL";
 const CourseCard = React.memo(
   ({ title, cardImage, price, context, onBuy, onGoToTest, portalId, type }) => {
-    console.log("CourseCard rendered",cardImage); // Log when the component is rendered
+   
     // Show Buy Now if on OTS/ORVL landing or Buy Courses page
     const showBuySection =
       context === "buyCourses" ||

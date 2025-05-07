@@ -3,7 +3,7 @@ import axios from "axios";
 import styles from "../../../Styles/AdminDashboardCSS/Assigntotest.module.css";
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 
-const AssignToTest = ({ testCreationTableId, onClose, onRefreshTable }) => {
+const AssignToTest = ({ testCreationTableId, onClose }) => {
   const [notAssignedCourses, setNotAssignedCourses] = useState([]);
   const [assignedCourses, setAssignedCourses] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
@@ -54,7 +54,7 @@ const AssignToTest = ({ testCreationTableId, onClose, onRefreshTable }) => {
         alert("Courses assigned successfully!");
         setSelectedCourses([]); 
         fetchCourses();
-        if (onRefreshTable) onRefreshTable(); 
+      
         onClose(); 
       } else {
         alert("Failed to assign courses.");
@@ -77,7 +77,7 @@ const AssignToTest = ({ testCreationTableId, onClose, onRefreshTable }) => {
       if (response.status === 200) {
         alert("Course unassigned successfully!");
         fetchCourses(); 
-        if (onRefreshTable) onRefreshTable(); 
+       
       } else {
         alert("Failed to unassign course.");
       }
