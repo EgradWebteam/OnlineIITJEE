@@ -8,7 +8,7 @@ import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import StudentLoginFormeGradTutor from './StudentLoginFormeGradTutor.jsx';
 import { useStudent } from '../../../ContextFolder/StudentContext.jsx';
 import { v4 as uuidv4 } from 'uuid';
-
+import { useAlert } from "../StudentDashboardFiles/AlertContext";
 export default function StudentLogineGradTutor() {
   const [username, setUsername] = useState(""); 
   const [password, setPassword] = useState("");  
@@ -20,6 +20,7 @@ export default function StudentLogineGradTutor() {
   const [failedAttempts, setFailedAttempts] = useState(0); 
   const navigate = useNavigate();
   const { setStudentData } = useStudent();
+  const { alert } = useAlert();
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent form submission
   
@@ -55,7 +56,7 @@ export default function StudentLogineGradTutor() {
   
     // Proceed with login process
     if (!username || !password) {
-      alert("Please enter both username and password");
+      await alert("Please enter both username and password");
       return;
     }
   
@@ -103,23 +104,23 @@ export default function StudentLogineGradTutor() {
         setFailedAttempts((prev) => prev + 1);
   
         if (data.message === "You are already logged in. Please log out before logging in again.") {
-          alert(data.message);
+          await alert(data.message);
           return;
         }
   
         // Check for max login attempts
         if (failedAttempts >= 3) {
-          alert("You have exceeded the maximum number of login attempts. Please reset your password.");
+          await alert("You have exceeded the maximum number of login attempts. Please reset your password.");
           setIsForgotPassword(true);
           return;
         }
   
         const remainingAttempts = 3 - failedAttempts;
-        alert(`You have ${remainingAttempts} attempt${remainingAttempts > 1 ? "s" : ""} left. Please try again.`);
+        await alert(`You have ${remainingAttempts} attempt${remainingAttempts > 1 ? "s" : ""} left. Please try again.`);
       }
     } catch (error) {
       console.error("Error during login:", error);
-      alert("Something went wrong. Please try again later.");
+      await alert("Something went wrong. Please try again later.");
     }
   };
   
@@ -130,7 +131,7 @@ export default function StudentLogineGradTutor() {
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     if (!username) {
-      alert("Please enter your email to reset the password.");
+      await alert("Please enter your email to reset the password.");
       return;
     }
 
@@ -148,12 +149,12 @@ export default function StudentLogineGradTutor() {
         setFailedAttempts(0);
         setIsForgotPassword(true);  
         setIsResetPassword(true);  
-        alert("Password reset instructions have been sent to your email.");
+        await alert("Password reset instructions have been sent to your email.");
       } else {
-        alert(data.message || "Something went wrong. Please try again.");
+        await alert(data.message || "Something went wrong. Please try again.");
       }
     } catch (error) {
-      alert("Something went wrong. Please try again later.");
+      await alert("Something went wrong. Please try again later.");
     }
   };
 
@@ -162,12 +163,12 @@ export default function StudentLogineGradTutor() {
     e.preventDefault();
   
     if (!resetCode || !newPassword || !confirmPassword) {
-      alert("Please enter reset code, new password, and confirm password.");
+      await alert("Please enter reset code, new password, and confirm password.");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      alert("Passwords do not match.");
+      await alert("Passwords do not match.");
       return;
     }
 
@@ -186,14 +187,14 @@ export default function StudentLogineGradTutor() {
 
       const data = await response.json();
       if (response.ok) {
-        alert("Password has been reset successfully. You can now log in.");
+        await alert("Password has been reset successfully. You can now log in.");
         setIsForgotPassword(false);   
         setIsResetPassword(false);    
       } else {
-        alert(data.message || "Something went wrong. Please try again.");
+        await alert(data.message || "Something went wrong. Please try again.");
       }
     } catch (error) {
-      alert("Something went wrong. Please try again later.");
+      await alert("Something went wrong. Please try again later.");
     }
   };
 
@@ -246,6 +247,7 @@ export default function StudentLogineGradTutor() {
             </div>
           )}
         </div>
+
       </div>
       <MainFooter />
     </div>

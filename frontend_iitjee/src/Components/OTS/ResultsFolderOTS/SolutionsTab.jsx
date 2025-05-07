@@ -3,7 +3,7 @@ import Styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import axios from "axios";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
-
+import { useAlert } from "../../StudentDashboardFilesFolder/StudentDashboardFiles/AlertContext.jsx";
 const SolutionsTab = ({ testId, userData, studentId }) => {
   const [testPaperData, setTestPaperData] = useState([]);
   const [selectedSubjectSection, setSelectedSubjectSection] = useState(null);
@@ -12,7 +12,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
   const [videoVisible, setVideoVisible] = useState({});
   const [videoPopup, setVideoPopup] = useState(null); // null or question_id
   const [bookmarkedQuestions, setBookmarkedQuestions] = useState([]);
-
+  const { alert } = useAlert();
   useEffect(() => {
     const fetchTestPaper = async () => {
       try {
@@ -132,11 +132,11 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
           setBookmarkedQuestions([...bookmarkedQuestions, questionId]);
         }
       } else {
-        alert("Error bookmarking/unbookmarking");
+        await alert("Error bookmarking/unbookmarking");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("An error occurred while bookmarking");
+      await alert("An error occurred while bookmarking");
     }
   };
 
@@ -219,13 +219,13 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
         <div>
           {selectedSubjectSection && (
             <div>
-              {selectedSubjectSection.questions.map((question) => (
+              {selectedSubjectSection.questions.map((question, index)=>(
                 <div
                   key={question.question_id}
                   className={`${Styles.questionSolutionsDiv} ${Styles.watermarkForSolution}`}
                 >
                   <div className={Styles.QuestionNoAnsBookmarkHolder}>
-                    <p>Question No: {question.question_id}</p>
+                  <p>Question No: {index + 1}</p>
                     <button
                       onClick={() => toggleBookmark(question.question_id)}
                       className={`${Styles.bookmarkButton} ${

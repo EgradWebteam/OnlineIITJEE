@@ -4,6 +4,7 @@ import globalCSS from "../../../Styles/Global.module.css";
 import CourseCard from "../../LandingPagesFolder/CourseCards.jsx";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import LoadingSpinner from "../../../ContextFolder/LoadingSpinner.jsx";
+
 export default function StudentDashboard_BuyCourses({
   setActiveSection,
   studentId,
