@@ -184,7 +184,7 @@ const StudentDashboardBookmarks = ({ studentId }) => {
             </div>
 
             {testPaperData.subjects?.map((subject) => (
-              <div key={subject.subjectId}>
+              <div key={subject.subjectId} className={styles.bookMarksHeightForScroll}>
                 {subject.sections.map((section) => (
                   <div key={section.sectionId}>
                     {section.questions.map((question, index) => (

@@ -6,7 +6,7 @@ import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import TestDetailsContainer from "./TestDetailsContainer.jsx";
 import OrvlTopicCards from "./OrvlTopicCards.jsx";
 import OrvlCourseTopic from "./OrvlCourseTopic.jsx";
-
+import LoadingSpinner from "../../../ContextFolder/LoadingSpinner.jsx";
 
 export default function StudentDashboard_MyCourses({ studentId,userData }) {
   const [structuredCourses, setStructuredCourses] = useState([]);
@@ -180,7 +180,7 @@ export default function StudentDashboard_MyCourses({ studentId,userData }) {
           </div>
           {loading ? (
             <div className={globalCSS.loadingContainer}>
-              <p className={globalCSS.loadingText}>Loading your courses...</p>
+              <p className={globalCSS.loadingText}><LoadingSpinner/></p>
             </div>
           ) : !structuredCourses.length ||
             !selectedPortal ||

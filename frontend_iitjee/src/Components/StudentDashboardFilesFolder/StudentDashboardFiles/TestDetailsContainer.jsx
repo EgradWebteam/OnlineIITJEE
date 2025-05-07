@@ -260,7 +260,7 @@ const handleStartTestClick = async (testCreationTableId) => {
         {selectedTestType === 'Select Type Of Test' ? (
           Object.entries(groupedTests).map(([type, tests]) => (
             <div key={type} className={styles.testContainerDivForflex}>
-              <h3 style={{ textAlign: 'center', margin: '1rem 0', color: '#0f172a' }}>{type}</h3>
+              <h3 style={{ textAlign: 'center', color: '#0f172a' }}>{type}</h3>
               {tests.map(test => (
                 <div key={test.test_creation_table_id} className={styles.testCard}>
                   <div className={styles.testContainerSub}>
