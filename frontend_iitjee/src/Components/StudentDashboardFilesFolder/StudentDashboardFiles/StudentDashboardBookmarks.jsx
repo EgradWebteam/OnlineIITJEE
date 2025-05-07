@@ -187,13 +187,13 @@ const StudentDashboardBookmarks = ({ studentId }) => {
               <div key={subject.subjectId}>
                 {subject.sections.map((section) => (
                   <div key={section.sectionId}>
-                    {section.questions.map((question) => (
+                    {section.questions.map((question, index) => (
                       <div
                         key={question.question_id}
                         className={styles.questionsContainerInBookMarks}
                       >
                         <div className={styles.bookDeleteConatainer}>
-                          <p>Question No: {question.question_id}</p>
+                          <p>Question No: {index + 1}</p>
                           <MdOutlineDeleteForever
                             className={styles.deleteIconForBookMarks}
                             onClick={() =>

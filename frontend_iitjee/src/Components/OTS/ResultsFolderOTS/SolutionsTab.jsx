@@ -219,13 +219,13 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
         <div>
           {selectedSubjectSection && (
             <div>
-              {selectedSubjectSection.questions.map((question) => (
+              {selectedSubjectSection.questions.map((question, index)=>(
                 <div
                   key={question.question_id}
                   className={`${Styles.questionSolutionsDiv} ${Styles.watermarkForSolution}`}
                 >
                   <div className={Styles.QuestionNoAnsBookmarkHolder}>
-                    <p>Question No: {question.question_id}</p>
+                  <p>Question No: {index + 1}</p>
                     <button
                       onClick={() => toggleBookmark(question.question_id)}
                       className={`${Styles.bookmarkButton} ${
