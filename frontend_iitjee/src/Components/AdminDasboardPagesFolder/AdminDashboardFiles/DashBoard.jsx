@@ -5,6 +5,7 @@ import { FaBook, FaFileAlt, FaUserGraduate, FaQuestionCircle } from 'react-icons
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 
 const DashBoard = () => {
+    
     const [totalCourses, setTotalCourses] = useState(0);
     const [totalTests, setTotalTests] = useState(0);
     const [totalUsersRegistered, setTotalUsersRegistered] = useState(0);
@@ -57,16 +58,33 @@ const DashBoard = () => {
         if (totalQuestions > 0) animateNumber(totalQuestions, setAnimatedQuestions);
         if (totalQuestionsUploaded > 0) animateNumber(totalQuestionsUploaded, setAnimatedQuestionsUploaded);
     }, [totalCourses, totalTests, totalUsersRegistered, totalQuestions, totalQuestionsUploaded]);
-
+    
+    const cardData=[{icon:<FaBook />,label:"Total Courses", value:animatedCourses},
+        {icon:<FaFileAlt />,label:"Total Tests", value:animatedTests},
+        {icon:<FaUserGraduate />,label:"User Registrations", value:animatedUsers},
+        {icon:<FaQuestionCircle />,label:"Total Questions", value:animatedQuestions},
+        {icon:<FaQuestionCircle />,label:"Questions Uploaded", value:animatedQuestionsUploaded},
+    ]
     return (
         <div className={styles.dashboardContent}>
             <div className={styles.dashboardTitle}>DASHBOARD</div>
             <div className={styles.statGrid}>
-                <AdminCards icon={<FaBook />} label="Total Courses" value={animatedCourses} />
+                {/* <AdminCards icon={<FaBook />} label="Total Courses" value={animatedCourses} />
                 <AdminCards icon={<FaFileAlt />} label="Total Tests" value={animatedTests} />
                 <AdminCards icon={<FaUserGraduate />} label="User Registrations" value={animatedUsers} />
                 <AdminCards icon={<FaQuestionCircle />} label="Total Questions" value={animatedQuestions} />
-                <AdminCards icon={<FaQuestionCircle />} label="Questions Uploaded" value={animatedQuestionsUploaded} />
+                <AdminCards icon={<FaQuestionCircle />} label="Questions Uploaded" value={animatedQuestionsUploaded} /> */}
+               
+        {cardData.map((item,index)=>{
+            return (
+            <AdminCards 
+            key={item.label}
+            icon={item.icon}
+            label={item.label}
+            value={item.value}
+             />
+            )
+        })}
             </div>
         </div>
     );
