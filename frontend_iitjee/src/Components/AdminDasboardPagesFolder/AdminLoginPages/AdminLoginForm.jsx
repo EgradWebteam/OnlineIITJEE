@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import Styles from "../../../Styles/AdminDashboardCSS/AdminLoginPage.module.css";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
-
+import LoadingSpinner from "../../../ContextFolder/LoadingSpinner.jsx";
 const AdminLoginForm = () => {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [isResetCodeStage, setIsResetCodeStage] = useState(false);
@@ -276,7 +276,7 @@ console.log(email,password)
               </div>
               <div className={Styles.AdminLoginButton}>
                 {loading ? (
-                  <div>Loading...</div>
+                  <div><LoadingSpinner/></div>
                 ) : (
                   <button type="submit" disabled={loading}>
   {loading ? "Loging..." : "Login"}
@@ -404,7 +404,7 @@ console.log(email,password)
               </div>
               <div className={Styles.AdminLoginButton}>
                 {loading ? (
-                  <div>Loading...</div>
+                  <div><LoadingSpinner/></div>
                 ) : (
                   <button type="submit" disabled={loading}>
   {loading ? "Submitting..." : "Submit New Password"}
@@ -429,7 +429,7 @@ console.log(email,password)
               </div>
               <div className={Styles.AdminLoginButton}>
                 {loading ? (
-                  <div>Loading...</div>
+                  <div><LoadingSpinner/></div>
                 ) : (
                   <button type="submit">Send Reset Code</button>
                 )}
