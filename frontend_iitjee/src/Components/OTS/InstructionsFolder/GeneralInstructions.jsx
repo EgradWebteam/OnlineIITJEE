@@ -99,12 +99,14 @@ const GeneralInstructions = () => {
     //   }, [handleBeforeUnload]);
 
 
-
-    // main code for delete student api
     // useEffect(() => {
     //     const handleBeforeUnload = () => {
     //       if (realTestId && realStudentId) {
-    //         const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`;
+    //         const url = `${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`;
+=======
+
+
+
      
     //         const data = JSON.stringify({
     //           studentId: realStudentId,
@@ -123,6 +125,21 @@ const GeneralInstructions = () => {
     //     };
     //   }, [realStudentId, realTestId]);
 
+
+//       useEffect(() => {
+//         const handleBeforeUnload = () => {
+//           if (realTestId && realStudentId) {
+//             const url = `${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`;
+//             const data = new Blob(
+//               [JSON.stringify({ studentId: realStudentId, testCreationTableId: realTestId })],
+//               { type: "application/json" }
+//             );
+//             navigator.sendBeacon(url, data);
+//           }
+//         };
+      
+//         window.addEventListener("beforeunload", handleBeforeUnload);
+
     //   useEffect(() => {
     //     const handleBeforeUnload = () => {
     //       if (realTestId && realStudentId) {
@@ -134,6 +151,7 @@ const GeneralInstructions = () => {
     //         navigator.sendBeacon(url, data);
     //       }
     //     };
+
       
     //     window.addEventListener("beforeunload", handleBeforeUnload);
       

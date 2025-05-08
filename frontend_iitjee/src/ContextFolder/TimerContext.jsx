@@ -3,19 +3,30 @@ import React, { createContext, useContext, useEffect, useState, useRef } from "r
 const TimerContext = createContext();
 export const useTimer = () => useContext(TimerContext);
 
-export const TimerProvider = ({ testData, children }) => {
-  const [timeLeft, setTimeLeft] = useState(null); // null until testData is ready
+export const TimerProvider = ({ testData, resumeTime, children }) => {
+  const [timeLeft, setTimeLeft] = useState(null);
   const intervalRef = useRef(null);
 
-  const totalDurationInSeconds = (testData?.TestDuration || 0) * 60;
+  const parseTimeToSeconds = (time) => {
+    if (typeof time === "number") return time;
+    if (typeof time === "string") {
+      const [h, m, s] = time.split(":").map(Number);
+      return h * 3600 + m * 60 + s;
+    }
+    return 0;
+  };
 
+  const totalDurationInSeconds = parseTimeToSeconds( (testData?.TestDuration || 0) * 60);
+  const resumeTimeInSeconds = resumeTime;
+  const initialTimeLeft = parseTimeToSeconds(resumeTime ? resumeTimeInSeconds : totalDurationInSeconds  );;
+// console.log(resumeTimeInSeconds, initialTimeLeft )
   useEffect(() => {
     if (!testData || !testData.TestDuration) return;
 
-    setTimeLeft(totalDurationInSeconds);
+    setTimeLeft(initialTimeLeft);
 
     intervalRef.current = setInterval(() => {
-      setTimeLeft(prev => {
+      setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(intervalRef.current);
           return 0;
@@ -25,10 +36,20 @@ export const TimerProvider = ({ testData, children }) => {
     }, 1000);
 
     return () => clearInterval(intervalRef.current);
-  }, [testData]); // <-- Runs when testData is ready
+  }, [testData, resumeTime]);
 
   const timeSpent = timeLeft !== null ? totalDurationInSeconds - timeLeft : 0;
-
+  // useEffect(() => {
+  //   if (timeLeft !== null) {
+  //     const event = new CustomEvent("timerUpdate", {
+  //       detail: {
+  //         timeLeft: timeLeft,
+  //         timeSpent: totalDurationInSeconds - timeLeft,
+  //       },
+  //     });
+  //     window.dispatchEvent(event);
+  //   }
+  // }, [timeLeft]);
   const formatTime = (seconds) => {
     const h = String(Math.floor(seconds / 3600)).padStart(2, "0");
     const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
@@ -42,7 +63,6 @@ export const TimerProvider = ({ testData, children }) => {
         timeLeft,
         timeSpent,
         formattedTime: timeLeft !== null ? formatTime(timeLeft) : "Loading...",
-      
       }}
     >
       {children}

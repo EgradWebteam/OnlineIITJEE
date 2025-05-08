@@ -7,17 +7,25 @@ import OTSNavbar from "./OTSHeaderFolder/OTSNavbar.jsx";
 import OTSMain from "./OTSMainFolder/OTSMain.jsx";
 import axios from "axios";
 import { BASE_URL } from "../../ConfigFile/ApiConfigURL.js";
-
+import { TimerProvider } from "../../ContextFolder/TimerContext.jsx";
+import { useTimer } from "../../ContextFolder/TimerContext.jsx";
+import { useQuestionStatus } from "../../ContextFolder/CountsContext.jsx";
 export default function OTSRootFile() {
   const { testId, studentId } = useParams();
   const navigate = useNavigate();
-
-  const [realTestId, setRealTestId] = useState("");
-  const [realStudentId, setRealStudentId] = useState("");
+  // const { timeSpent } = useTimer();
+  // const [realTestId, setRealTestId] = useState("");
+  // const [realStudentId, setRealStudentId] = useState("");
+  const realTestId = useRef('');
+  const realStudentId = useRef('');
   const [testPaperData, setTestPaperData] = useState([]);
   const [showCustomPopup, setShowCustomPopup] = useState(false);
   const pressedKeys = useRef(new Set());
+  const terminationCalledRef = useRef(false);
+  const summaryData = useRef({});
 
+
+console.log("summaryData",summaryData.current)
   useEffect(() => {
     const token = sessionStorage.getItem("navigationToken");
     if (!token) {
@@ -41,8 +49,8 @@ export default function OTSRootFile() {
           [testIdValue] = await decryptBatch([decodeURIComponent(testId)]);
         }
 
-        setRealTestId(testIdValue);
-        setRealStudentId(studentIdValue);
+        realTestId.current = testIdValue;
+        realStudentId.current = studentIdValue;
 
         //  Move fetchTestPaper logic here
         const response = await axios.get(
@@ -93,20 +101,129 @@ export default function OTSRootFile() {
   //   };
   // }, [realTestId, realStudentId]);
 
-  //main code for delete student api
+
+  const formatTime = (seconds) => {
+    const h = String(Math.floor(seconds / 3600)).padStart(2, "0");
+    const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
+    const s = String(seconds % 60).padStart(2, "0");
+    return `${h}:${m}:${s}`;
+  };
+
+  // To submit the test on termination
+  const[courseCreationId, setCourseCreationId] = useState([]);
+
+ const callTerminationAPIs = async () => {
+  try {
+    const {
+      answeredCount,
+      answeredAndMarkedForReviewCount,
+      markedForReviewCount,
+      notAnsweredCount,
+      notVisitedCount,
+      visitedCount,
+      totalQuestionsInTest,
+      timeSpent,
+    } = summaryData.current
+   
+    // ✅ Parse all values to numbers safely
+    const answered = parseInt(answeredCount) || 0;
+    const answeredAndMarked = parseInt(answeredAndMarkedForReviewCount) || 0;
+    const marked = parseInt(markedForReviewCount) || 0;
+    const notAnswered = parseInt(notAnsweredCount) || 0;
+    const notVisited = parseInt(notVisitedCount) || 0;
+    const visited = parseInt(visitedCount) || 0;
+    const totalQuestions = parseInt(totalQuestionsInTest) || 0;
+    const spentTime = parseInt(timeSpent) || 0;
+
+    const attemptedCount = answered + answeredAndMarked;
+    const notAttemptedCount = marked + notAnswered;
+
+    const formattedTimeSpent = formatTime(spentTime); // e.g. "00:14:20"
+
+    const examSummaryData = {
+      studentId: realStudentId.current,
+      test_creation_table_id: realTestId.current,
+      totalQuestions: totalQuestions,
+      totalAnsweredQuestions: answered,
+      totalAnsweredMarkForReviewQuestions: answeredAndMarked,
+      totalMarkForReviewQuestions: marked,
+      totalNotAnsweredQuestions: notAnswered,
+      totalVisitedQuestionQuestions: visited,
+      totalNotVisitedQuestions: notVisited,
+      totalAttemptedQuestions: attemptedCount,
+      totalNotAttemptedQuestions: notAttemptedCount,
+      TimeSpent: formattedTimeSpent,
+    };
+    // 1. Save Exam Summary (POST)
+    await axios.post(`${BASE_URL}/OTSExamSummary/SaveExamSummary`, examSummaryData);
+
+    // 2. Get OTSTestData (GET)
+    const otsTestDataResponse = await axios.get(` ${BASE_URL}/OTSExamSummary/OTSTestData/${realTestId.current}`);
+    const courseId = otsTestDataResponse?.data?.course_creation_id;
+    setCourseCreationId(courseId); // update state if needed elsewhere
+
+    // 3. Update Test Attempt Status (POST)
+    await axios.post(`${BASE_URL}/OTSExamSummary/UpdateTestAttemptStatus`, {
+      studentId: realStudentId.current,
+      courseCreationId: courseId,
+      test_creation_table_id: realTestId.current,
+      test_status: "completed",
+      connection_status: "disconnected",
+    });
+      const [summaryRes, marksRes] = await Promise.allSettled([
+        fetch(
+          `${BASE_URL}/OTSExamSummary/FetchExamSummaryCounts/${realTestId.current}/${realStudentId.current}`
+        ),
+        fetch(
+          `${BASE_URL}/OTSExamSummary/FetchStudentMarks/${realTestId.current}/${realStudentId.current}`
+        ),
+      ]);
+
+      const examSummary =
+        summaryRes.status === "fulfilled"
+          ? await summaryRes.value.json()
+          : null;
+      const studentMarks =
+        marksRes.status === "fulfilled" ? await marksRes.value.json() : null;
+
+      if (!examSummary) {
+        alert("Failed to fetch exam summary.");
+        return;
+      }
+
+      if (!studentMarks) {
+        alert("Failed to fetch student marks.");
+        return;
+      }
+    // // 4. Fetch Exam Summary Counts (GET with correct path params)
+    // await fetch(`${BASE_URL}/OTSExamSummary/FetchExamSummaryCounts/${realTestId}/${realStudentId}`);
+
+    // // 5. Fetch Student Marks (GET with correct path params)
+    // await fetch(`${BASE_URL}/OTSExamSummary/FetchStudentMarks/${realTestId}/${realStudentId}`);
+
+    console.log("All termination APIs called successfully.");
+  } catch (error) {
+    console.error("Error calling termination APIs:", error);
+  }
+};
+
       // const handleBeforeUnload = useCallback(
       //     async (event) => {
       
       
       //       try {
-      //         await fetch(`${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`, {
-      //           method: "DELETE",
+
+      //         await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId.current}`, {
+      //           method: "PUT",
+
       //           headers: {
       //             "Content-Type": "application/json",
       //           },
       //           body: JSON.stringify({
-      //             studentId: realStudentId, // User ID
-      //             testCreationTableId: realTestId, // Test ID
+
+      //             studentId: realStudentId.current, // User ID
+      //             testCreationTableId: realTestId.current, // Test ID
+
       //           }),
       //         });
       //         console.log(
@@ -122,6 +239,17 @@ export default function OTSRootFile() {
         
          
       //     },
+
+      //     [realStudentId.current,realTestId.current]
+        // );
+  
+        // useEffect(() => {
+        //   window.addEventListener("beforeunload", handleBeforeUnload);
+        //   return () => {
+        //     window.removeEventListener("beforeunload", handleBeforeUnload);
+        //   };
+        // }, [handleBeforeUnload]);
+
       //     [realStudentId,realTestId]
       //   );
   
@@ -134,7 +262,6 @@ export default function OTSRootFile() {
 //main code for delte student api end
 
 
-  //WINDOW CLOSE DATA DELETE CODE START
 
 
   //KEYBOARD KEYS DISABLE ALERT CODE START
@@ -227,25 +354,60 @@ export default function OTSRootFile() {
     }, 10000); // 60,000 milliseconds = 1 minute
     }
   };
-  const handleBlur = () => {
-    //("Window is not focused");
+  // const handleBlur = async () => {
+  //   // Update state and get the new count
+  //   setViolationCount((prevCount) => {
+  //     const newCount = prevCount + 1;
+  // console.log("Blur event triggered. Violation count:", newCount);
+  //     // Trigger side effects based on the new value
+  //     if (newCount >= 4) {
+  //       // We'll handle this after state update
+  //       setTimeout(async () => {
+  //         await callTerminationAPIs();
+  //         navigate("/OTSTerminationPage");
+  //         localStorage.removeItem("popupWindowURL1");
+  //         localStorage.removeItem("popupWindowURL2");
+  //         localStorage.removeItem("popupWindowURL3");
+  //       }, 0);
+  //     }
+  
+  //     return newCount;
+  //   });
+  // };
+  
+
+  const handleBlur = async () => {
+    console.log("Blur event triggered");
     setViolationCount((prevCount) => {
       const newCount = prevCount + 1;
-
-      if (newCount < 4) {
- 
-      } else {
-        navigate("/OTSTerminationPage");
-        localStorage.removeItem("popupWindowURL1");
-        localStorage.removeItem("popupWindowURL2");
-        localStorage.removeItem("popupWindowURL3");
+      console.log("Blur event triggered. Violation count:", newCount);
+  
+      // Handle side-effects outside
+      if (newCount >= 4) {
+        // We can't await here, so do it in next step
+        handleTermination(); // Separate async function
       }
-
+  
       return newCount;
     });
-
   };
+  
+  const handleTermination = async () => {
 
+    if (terminationCalledRef.current) return; // ✅ Avoid multiple calls
+
+  terminationCalledRef.current = true;
+    await callTerminationAPIs();
+  
+    localStorage.removeItem("popupWindowURL1");
+    localStorage.removeItem("popupWindowURL2");
+    localStorage.removeItem("popupWindowURL3");
+  
+    navigate("/OTSTerminationPage");
+  };
+  
+  
+  
   useEffect(() => {
     if ("hidden" in document) {
       document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -274,16 +436,22 @@ export default function OTSRootFile() {
       <div className={styles.OTSPC}>
       <OTSHeader />
       <OTSNavbar
-        realTestId={realTestId}
+        realTestId={realTestId.current}
         testName={testName}
         testData={testPaperData}
       />
+      <TimerProvider testData={testPaperData}>
       <OTSMain
         testData={testPaperData}
-        realStudentId={realStudentId}
-        realTestId={realTestId}
+        realStudentId={realStudentId.current}
+        realTestId={realTestId.current}
         warningMessage={warningMessage}
+      
+       
+       summaryData={summaryData}
+
       />
+      </TimerProvider>
       {showCustomPopup && (
         <>
           <div className={styles.functionKeyActionAlertPopup}></div>

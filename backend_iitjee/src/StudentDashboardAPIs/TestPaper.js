@@ -598,49 +598,54 @@ router.post("/SaveResponse", async (req, res) => {
 });
 
 //CLEAR RESPONSE API
-router.delete(
+router.put(
   "/ClearResponse/:studentId/:testCreationTableId/:questionId",
   async (req, res) => {
     let connection;
     try {
       const { studentId, testCreationTableId, questionId } = req.params;
 
-      // console.log(Clearing response for studentId: ${studentId}, testCreationTableId: ${testCreationTableId}, questionId: ${questionId});
-
       connection = await db.getConnection();
 
-      const deleteQuery = `  DELETE FROM iit_user_responses
-      WHERE student_registration_id = ? AND test_creation_table_id = ? AND question_id = ?`;
-      const deleteValues = [
+      const updateQuery = `
+        UPDATE iit_user_responses
+        SET user_answer = NULL,
+            option_id = NULL,
+            question_status = 3
+        WHERE student_registration_id = ? 
+          AND test_creation_table_id = ? 
+          AND question_id = ?
+      `;
+      const updateValues = [
         parseInt(studentId, 10),
         parseInt(testCreationTableId, 10),
         parseInt(questionId, 10),
       ];
 
-      const [deleteResult] = await connection.query(deleteQuery, deleteValues);
+      const [updateResult] = await connection.query(updateQuery, updateValues);
 
-      if (deleteResult.affectedRows === 0) {
-        return res
-          .status(404)
-          .json({
-            success: false,
-            message: "No matching response found to clear",
-          });
+      if (updateResult.affectedRows === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "No matching response found to update",
+        });
       }
 
-      // console.log("Response cleared successfully");
-      res
-        .status(200)
-        .json({ success: true, message: "Response cleared successfully" });
+      res.status(200).json({
+        success: true,
+        message: "Response cleared successfully (fields set to NULL)",
+      });
     } catch (error) {
       console.error("ClearResponse Error:", error);
-      res
-        .status(500)
-        .json({ success: false, message: "Internal server error" });
+      res.status(500).json({
+        success: false,
+        message: "Internal server error",
+      });
     } finally {
       if (connection) connection.release();
     }
   }
 );
+
 
 module.exports = router;

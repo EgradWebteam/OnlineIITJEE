@@ -3,66 +3,18 @@ import Styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import axios from "axios";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
-import { useAlert } from "../../StudentDashboardFilesFolder/StudentDashboardFiles/AlertContext.jsx";
-const SolutionsTab = ({ testId, userData, studentId }) => {
-  const [testPaperData, setTestPaperData] = useState([]);
-  const [selectedSubjectSection, setSelectedSubjectSection] = useState(null);
+ 
+const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQuestions,setBookmarkedQuestions,selectedSubjectSection,setSelectedSubjectSection}) => {
+ 
+ 
   const studentContact = userData?.mobile_no;
   const [visibleSolutions, setVisibleSolutions] = useState({});
   const [videoVisible, setVideoVisible] = useState({});
   const [videoPopup, setVideoPopup] = useState(null); // null or question_id
-  const [bookmarkedQuestions, setBookmarkedQuestions] = useState([]);
-  const { alert } = useAlert();
-  useEffect(() => {
-    const fetchTestPaper = async () => {
-      try {
-        const response = await axios.get(
-          `${BASE_URL}/MyResults/StudentReportQuestionPaper/${testId}/${studentId}`
-        );
-        const data = response.data;
-        setTestPaperData(data);
-
-        // Automatically select first subject-section
-        if (data?.subjects?.length > 0) {
-          const firstSubject = data.subjects[0];
-
-          if (firstSubject.sections && firstSubject.sections.length > 0) {
-            const firstSection = firstSubject.sections[0];
-            setSelectedSubjectSection({
-              SubjectName: firstSubject.SubjectName,
-              SectionName: firstSection.SectionName,
-              questions: firstSection.questions || [],
-            });
-          } else {
-            // No sections present, just use subject
-            setSelectedSubjectSection({
-              SubjectName: firstSubject.SubjectName,
-              SectionName: null,
-              questions: firstSubject.sections?.[0]?.questions || [],
-            });
-          }
-        }
-
-        // Extract and store only the bookMark_Qid values in the array
-        const bookmarkedQuestions = data.subjects.flatMap((subject) =>
-          subject.sections.flatMap(
-            (section) =>
-              section.questions
-                .filter((question) => question.bookMark_Qid !== null) // Filter questions with non-null bookMark_Qid
-                .map((question) => question.bookMark_Qid) // Map to just the bookMark_Qid values
-          )
-        );
-
-        // Set the bookmarked question IDs in state
-        setBookmarkedQuestions(bookmarkedQuestions);
-      } catch (err) {
-        console.error("Error fetching test paper:", err);
-      }
-    };
-
-    fetchTestPaper();
-  }, [testId]);
-
+ 
+ 
+ 
+ 
   const handleDropdownChange = (e) => {
     const [subjectIdx, sectionIdx] = e.target.value.split("-");
     const subject = testPaperData.subjects[subjectIdx];
@@ -73,7 +25,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
             SectionName: null,
             questions: subject?.sections?.[0]?.questions || [],
           };
-
+ 
     setSelectedSubjectSection({
       SubjectName: subject.SubjectName,
       SectionName: section?.SectionName,
@@ -85,7 +37,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
       ...prev,
       [questionId]: !prev[questionId],
     }));
-
+ 
     // If hiding the solution, also hide video
     if (visibleSolutions[questionId]) {
       setVideoVisible((prev) => ({
@@ -94,16 +46,16 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
       }));
     }
   };
-
+ 
   const openVideoPopup = (questionId) => {
     setVideoPopup(questionId);
     setVisibleSolutions(false);
   };
-
+ 
   const closeVideoPopup = () => {
     setVideoPopup(null);
   };
-
+ 
   // Handle bookmark toggle
   const toggleBookmark = async (questionId) => {
     try {
@@ -119,7 +71,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
           }),
         }
       );
-
+ 
       const data = await response.json();
       // console.log("data", data);
       if (response.ok) {
@@ -132,22 +84,22 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
           setBookmarkedQuestions([...bookmarkedQuestions, questionId]);
         }
       } else {
-        await alert("Error bookmarking/unbookmarking");
+        alert("Error bookmarking/unbookmarking");
       }
     } catch (error) {
       console.error("Error:", error);
-      await alert("An error occurred while bookmarking");
+      alert("An error occurred while bookmarking");
     }
   };
-
+ 
   const PlayVideoById = (url) => {
     if (typeof url !== "string" || !url || url === "null") {
       console.error("Invalid URL:", url);
       return "";
     }
-
+ 
     let videoId = "";
-
+ 
     // Handle 'youtu.be' format
     if (url.includes("youtu.be")) {
       videoId = url.split("youtu.be/")[1].split("?")[0];
@@ -160,17 +112,17 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
     else if (url.includes("/v/")) {
       videoId = url.split("/v/")[1].split("?")[0];
     }
-
+ 
     // If a valid video ID is found, return the embed link
     if (videoId) {
       // console.log("Extracted Video ID:", videoId);
       return `https://www.youtube.com/embed/${videoId}?rel=0`;
     }
-
+ 
     console.error("Unrecognized URL format:", url); // Log for debugging
     return "";
   };
-
+ 
   return (
     <div className={Styles.solutionContainerMain}>
       <div className={Styles.subjectDropDownContainer}>
@@ -188,7 +140,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                       (sec) =>
                         sec?.SectionName === selectedSubjectSection.SectionName
                     ) ?? "null";
-
+ 
                   return `${subjectIdx}-${
                     sectionIdx !== -1 ? sectionIdx : "null"
                   }`;
@@ -215,17 +167,17 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
             )
           )}
         </select>
-
+ 
         <div>
           {selectedSubjectSection && (
             <div>
-              {selectedSubjectSection.questions.map((question, index)=>(
+              {selectedSubjectSection.questions.map((question) => (
                 <div
                   key={question.question_id}
                   className={`${Styles.questionSolutionsDiv} ${Styles.watermarkForSolution}`}
                 >
                   <div className={Styles.QuestionNoAnsBookmarkHolder}>
-                  <p>Question No: {index + 1}</p>
+                    <p>Question No: {question.question_id}</p>
                     <button
                       onClick={() => toggleBookmark(question.question_id)}
                       className={`${Styles.bookmarkButton} ${
@@ -248,10 +200,10 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                       alt={`Question ${question.question_id}`}
                     />
                   </div>
-                  
+                 
                     {(() => {
                       const qTypeId = question.questionType?.quesionTypeId;
-
+ 
                       // NAT: Just show text answers
                       if (qTypeId === 5 || qTypeId === 6) {
                         return (
@@ -268,14 +220,14 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                           </div>
                         );
                       }
-
+ 
                       // MSQ: Multiple select with icons
                       if (qTypeId === 3 || qTypeId === 4) {
                         const correctAnswers =
                           question.answer?.split(",") || [];
                         const userAnswers =
                           question.userAnswer?.user_answer?.split(",") || [];
-
+ 
                         return question.options.map((option) => {
                           const isCorrect = correctAnswers.includes(
                             option.option_index
@@ -283,10 +235,10 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                           const isUserSelected = userAnswers.includes(
                             option.option_index
                           );
-
+ 
                           let icon = null;
                           let color = "black";
-
+ 
                           if (isCorrect && isUserSelected) {
                             icon = "✅";
                           } else if (!isCorrect && isUserSelected) {
@@ -294,7 +246,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                           } else if (isCorrect) {
                             icon = "✅";
                           }
-
+ 
                           return (
                             <div
                               key={option.option_id}
@@ -319,7 +271,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                           );
                         });
                       }
-
+ 
                       // MCQ (1 or 2)
                       return question.options.map((option) => {
                         const isCorrect =
@@ -327,10 +279,10 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                         const isUserAnswer =
                           option.option_index ===
                           question.userAnswer?.user_answer;
-
+ 
                         let icon = null;
                         let color = "black";
-
+ 
                         if (isCorrect && isUserAnswer) {
                           icon = "✅";
                         } else if (isUserAnswer && !isCorrect) {
@@ -338,7 +290,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                         } else if (isCorrect) {
                           icon = "✅";
                         }
-
+ 
                         return (
                           <div
                             key={option.option_id}
@@ -366,7 +318,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
    </div>
                     {question.solution?.solutionImgName && (
                       <div className={Styles.solutionButtonsContainer}>
-                        
+                       
                           {/* View Solution Button */}
                           <button
                             onClick={() =>
@@ -382,7 +334,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                         {/* View Video Solution Button */}
                         {question.solution?.solutionImgName &&
                           question.solution?.video_solution_link !== "" && (
-                            
+                           
                               <button
                                 onClick={() =>
                                   openVideoPopup(question.question_id)
@@ -396,7 +348,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                           )}
                       </div>
                     )}
-
+ 
                     {visibleSolutions[question.question_id] &&
                       question.solution?.solutionImgName && (
                         <div className={Styles.solutionImageInSolutionTab}>
@@ -420,9 +372,9 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
                           )}
                         </div>
                       )}
-
+ 
                     {/* Check for video solution link and display button if available */}
-
+ 
                     {videoPopup === question.question_id && (
                       <div className={Styles.videoModalOverlay}>
                         <div className={Styles.videoModalContent}>
@@ -453,7 +405,7 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
             </div>
           )}
         </div>
-
+ 
         {/* Watermarks */}
         {/* <span className={`${Styles.waterMark} ${Styles.topWaterMark}`}>
           {studentContact}
@@ -471,5 +423,8 @@ const SolutionsTab = ({ testId, userData, studentId }) => {
     </div>
   );
 };
-
+ 
 export default SolutionsTab;
+ 
+
+ 
