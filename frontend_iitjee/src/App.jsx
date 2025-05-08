@@ -25,10 +25,10 @@ const ExamInstrctions = React.lazy(() => import('./Components/OTS/InstructionsFo
 const AdminProfiler = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminDashboardFiles/AdminProfiler.jsx'));
 const OrvlDashboard = React.lazy(() => import("./Components/AdminDasboardPagesFolder/OrvlAdminDashboard/OrvlAdminDashboard.jsx"))
 const StudentReportMain = React.lazy(() => import('./Components/OTS/ResultsFolderOTS/StudentReportMain.jsx'));
-
+import LoadingSpinner from './ContextFolder/LoadingSpinner.jsx';
 function App() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div><LoadingSpinner/></div>}>
       <BrowserRouter>
         <AlertProvider>
           <Routes>
