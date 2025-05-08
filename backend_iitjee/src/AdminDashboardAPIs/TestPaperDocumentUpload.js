@@ -20,6 +20,44 @@ const sasTokenForFetching = process.env.AZURE_SAS_TOKEN_FOR_FETCHING;
 const containerName = process.env.AZURE_CONTAINER_NAME;
 const testDocumentFolderName = process.env.AZURE_DOCUMENT_FOLDER;
 const BackendBASE_URL = process.env.BASE_URL;
+const blobServiceClient = new BlobServiceClient(
+  `https://${accountName}.blob.core.windows.net?${sasToken}`
+);
+
+
+const containerClient = blobServiceClient.getContainerClient(containerName);
+async function deleteFromAzure(blobNameOrPrefix) {
+  try {
+    const blobsToDelete = [];
+
+    // ✅ List all blobs under the prefix
+    for await (const blob of containerClient.listBlobsFlat({ prefix: blobNameOrPrefix })) {
+      console.log("🔍 Found blob:", blob.name);
+      blobsToDelete.push(blob.name);
+    }
+
+    if (blobsToDelete.length === 0) {
+      console.log(`⚠️ No blobs found under prefix: ${blobNameOrPrefix}`);
+      return;
+    }
+
+    // ✅ Attempt to delete each blob
+    for (const blobName of blobsToDelete) {
+      const blobClient = containerClient.getBlockBlobClient(blobName);
+      const deleted = await blobClient.deleteIfExists();
+      if (deleted.succeeded) {
+        console.log(`🗑️ Deleted: ${blobName}`);
+      } else {
+        console.warn(`⚠️ Blob not deleted (maybe not found): ${blobName}`);
+      }
+    }
+
+    console.log(`✅ Deleted ${blobsToDelete.length} blob(s) from Azure`);
+  } catch (err) {
+    console.error("❌ Error deleting blobs:", err.message);
+    throw err;
+  }
+}
 
 router.get("/TestNameFormData", async (req, res) => {
   try {
@@ -71,7 +109,21 @@ router.delete("/DeleteTestPaperDocument/:documentId", async (req, res) => {
       "SELECT question_id FROM iit_questions WHERE document_id = ?",
       [documentId]
     );
+    const [doc] = await connection.query(
 
+      "select document_name from iit_ots_document where document_id = ?",
+
+      [documentId]
+
+    );
+    const documentFolder = `exam-resources-ots/${doc[0]?.document_name}`;
+
+    console.log(documentFolder)
+
+    
+  console.log("📄 Fetched document details:", doc,doc[0]?.document_name
+
+);
     const questionIds = questions.map((q) => q.question_id);
     // console.log("❓ Fetched Question IDs:", questionIds);
 
@@ -108,7 +160,7 @@ router.delete("/DeleteTestPaperDocument/:documentId", async (req, res) => {
       [documentId]
     );
     // console.log(`📄 Deleted ${documentDeleteResult.affectedRows} row from iit_ots_document`);
-
+    await deleteFromAzure(documentFolder);
     // Step 4: Commit transaction
     await connection.commit();
     res.status(200).json({ message: "Document and related data deleted successfully." });
@@ -159,10 +211,6 @@ router.get(
   }
 );
 
-const blobServiceClient = new BlobServiceClient(
-  `https://${accountName}.blob.core.windows.net?${sasToken}`
-);
-const containerClient = blobServiceClient.getContainerClient(containerName);
 
 async function uploadToAzure(fileBuffer, blobName) {
   try {

@@ -475,10 +475,10 @@ router.get('/TestSubjectWiseStudentMarks/:studentId/:testId', async (req, res) =
         COUNT(DISTINCT q.question_id) AS total_questions,
         SUM(CASE WHEN sm.status = 1 THEN 1 ELSE 0 END) AS total_correct,
         SUM(CASE WHEN sm.status = 0 THEN 1 ELSE 0 END) AS total_incorrect,
-        SUM(CASE WHEN sm.status = 1 THEN q.marks_text ELSE 0 END) AS positive_marks,
-        SUM(CASE WHEN sm.status = 0 THEN q.nmarks_text ELSE 0 END) AS negative_marks,
-        SUM(CASE WHEN sm.status = 1 THEN q.marks_text ELSE 0 END) - 
-        SUM(CASE WHEN sm.status = 0 THEN q.nmarks_text ELSE 0 END) AS total_marks
+        SUM(CASE WHEN sm.status = 1 THEN sm.student_marks ELSE 0 END) AS positive_marks,
+        SUM(CASE WHEN sm.status = 0 THEN sm.student_marks ELSE 0 END) AS negative_marks,
+        SUM(CASE WHEN sm.status = 1 THEN sm.student_marks ELSE 0 END) - 
+        SUM(CASE WHEN sm.status = 0 THEN sm.student_marks ELSE 0 END) AS total_marks
       FROM iit_subjects AS sub
       LEFT JOIN iit_questions AS q ON q.subject_id = sub.subject_id
       LEFT JOIN iit_student_marks AS sm 
