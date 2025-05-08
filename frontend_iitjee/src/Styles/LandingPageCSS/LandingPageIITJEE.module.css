@@ -10,7 +10,11 @@
  gap: 1.5rem;
 }
 .navBarLinks li {
+  position: relative;
     list-style: none;
+}
+.coursesDropDownMenu li:hover {
+  background-color:#efefefb3
 }
 .navBarBtn{
     border-radius: 10px;
@@ -22,10 +26,7 @@
     color: white;
     padding: 0.5rem;
 }
-.navBarLinks li {
-    position: relative;
-  }
-  
+
   .coursesDropDownMenu {
     position: absolute;
     top: 135%;
