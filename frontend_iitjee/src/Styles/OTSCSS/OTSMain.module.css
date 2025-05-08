@@ -1547,6 +1547,11 @@ display: none;
     width: 17%;
     border-left: 1px solid gray;
 }
+.rightChevronBtn{
+  position: absolute;
+    top: 29rem;
+    left: -7%;
+}
 }
 
 @media (max-width:1024px) {
