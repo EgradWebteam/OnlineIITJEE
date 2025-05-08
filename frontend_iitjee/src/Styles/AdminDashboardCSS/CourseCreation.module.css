@@ -224,21 +224,34 @@ margin: 1rem;
   justify-content: center;
   margin-top: 2rem;
 }
+.pageButton {
+  padding: 8px 12px;
+  margin: 0 4px;
+  background-color: #f4f4f4;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 4px;
+}
 
-.pagination button {
+.pageButton:hover {
+  background-color: #e0e0e0;
+}
+/* .addbutton {
+  background-color: #00b94a;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  margin: 2%; */
+/* } */
+.pageButtonActive {
   background-color: #007bff;
   color: white;
-  border: none;
-  border-radius: 0.3rem;
-  padding: 0.5rem 1rem; /* Using rem for padding */
-  margin: 0 0.5rem; /* Margin between buttons */
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  border-color: #007bff;
 }
 
-.pagination button:hover {
-  background-color: #0056b3;
-}
 @media(max-width:1200px){
   .modalContent{
     width: 95%;

@@ -5,6 +5,7 @@ import TestCreationForm from "./TestCreationForm.jsx";
 import axios from "axios";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import { FaSearch } from 'react-icons/fa';
+
 const TestCreationTab = () => {
   const [showAddTestForm, setShowAddTestForm] = useState(false);
   const [selectedTestData, setSelectedTestData] = useState(null);
@@ -187,17 +188,17 @@ const itemsPerPage = 5;
           onDownload={handleDownload}
         />
       </div>
-      <div className={styles.pagination}>
-  {Array.from({ length: Math.ceil(filteredTests.length / itemsPerPage) }, (_, i) => (
-    <button
-      key={i + 1}
-      onClick={() => setCurrentPage(i + 1)}
-      className={currentPage === i + 1 ? styles.pageButtonActive : styles.pageButton}
-    >
-      {i + 1}
-    </button>
-  ))}
-</div>
+     <div className={styles.pagination}>
+       {Array.from({ length: Math.ceil(filteredTests.length / itemsPerPage) }, (_, i) => (
+         <button
+           key={i + 1}
+           onClick={() => setCurrentPage(i + 1)}
+           className={currentPage === i + 1 ? styles.pageButtonActive : styles.pageButton}
+         >
+           {i + 1}
+         </button>
+       ))}
+     </div>
 
     </div>
   );

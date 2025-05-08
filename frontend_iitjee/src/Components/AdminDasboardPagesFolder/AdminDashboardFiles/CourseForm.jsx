@@ -142,9 +142,49 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
     const selectedValue = e.target.value;
     setSelectedType(selectedValue);
   };
+  const handleCourseNameBlur = async (name) => {
+    if (!name) return;
+  
+    const bodyData = {
+      courseName: name.trim(),
+    };
+  
+    // If you're editing a course, send the course ID as well
+    if (isEditMode && courseData?.course_creation_id) {
+      bodyData.courseId = courseData.course_creation_id;
+    }
+  
+    try {
+      const res = await fetch(`${BASE_URL}/CourseCreation/checkCourseNameExists`, {
+        method: "POST",  // Use POST method instead of GET
+        headers: {
+          "Content-Type": "application/json",  // Specify the content type as JSON
+        },
+        body: JSON.stringify(bodyData),  // Send the data as JSON
+      });
+  
+      const data = await res.json();
+  
+      // Check if course already exists
+      if (data.message && data.message.includes("already exists")) {
+        alert("❌ A course with this name already exists.");
+      }
+    } catch (err) {
+      console.error("Error checking course existence:", err);
+      alert("❌ There was an error checking the course name.");
+    }
+  };
+  
+  
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    const courseExists = await checkCourseNameExists(courseName);
+
+    if (courseExists) {
+      alert("❌ This course name already exists!");
+      return;
+    }
     const formData = new FormData();
     formData.append("courseName", courseName);
     formData.append("selectedYear", selectedYear);
@@ -237,6 +277,7 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
                   type="text"
                   value={courseName}
                   onChange={(e) => setCourseName(e.target.value)}
+                  onBlur={() => handleCourseNameBlur(courseName)}
                   required
                 />
               </div>

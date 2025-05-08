@@ -98,10 +98,15 @@ const GeneralInstructions = () => {
     //     };
     //   }, [handleBeforeUnload]);
 
+
     // useEffect(() => {
     //     const handleBeforeUnload = () => {
     //       if (realTestId && realStudentId) {
     //         const url = `${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`;
+=======
+
+
+
      
     //         const data = JSON.stringify({
     //           studentId: realStudentId,
@@ -120,25 +125,43 @@ const GeneralInstructions = () => {
     //     };
     //   }, [realStudentId, realTestId]);
 
-      useEffect(() => {
-        const handleBeforeUnload = () => {
-          if (realTestId && realStudentId) {
-            const url = `${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`;
-            const data = new Blob(
-              [JSON.stringify({ studentId: realStudentId, testCreationTableId: realTestId })],
-              { type: "application/json" }
-            );
-            navigator.sendBeacon(url, data);
-          }
-        };
+
+//       useEffect(() => {
+//         const handleBeforeUnload = () => {
+//           if (realTestId && realStudentId) {
+//             const url = `${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`;
+//             const data = new Blob(
+//               [JSON.stringify({ studentId: realStudentId, testCreationTableId: realTestId })],
+//               { type: "application/json" }
+//             );
+//             navigator.sendBeacon(url, data);
+//           }
+//         };
       
-        window.addEventListener("beforeunload", handleBeforeUnload);
+//         window.addEventListener("beforeunload", handleBeforeUnload);
+
+    //   useEffect(() => {
+    //     const handleBeforeUnload = () => {
+    //       if (realTestId && realStudentId) {
+    //         const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`;
+    //         const data = new Blob(
+    //           [JSON.stringify({ studentId: realStudentId, testCreationTableId: realTestId })],
+    //           { type: "application/json" }
+    //         );
+    //         navigator.sendBeacon(url, data);
+    //       }
+    //     };
+
       
-        return () => {
-          window.removeEventListener("beforeunload", handleBeforeUnload);
-        };
-      }, [realStudentId, realTestId]);
+    //     window.addEventListener("beforeunload", handleBeforeUnload);
       
+    //     return () => {
+    //       window.removeEventListener("beforeunload", handleBeforeUnload);
+    //     };
+    //   }, [realStudentId, realTestId]);
+  //main code for delete student api end    
+
+  
 
     useEffect(() => {
         const token = sessionStorage.getItem("navigationToken");

@@ -101,6 +101,7 @@ console.log("summaryData",summaryData.current)
   //   };
   // }, [realTestId, realStudentId]);
 
+
   const formatTime = (seconds) => {
     const h = String(Math.floor(seconds / 3600)).padStart(2, "0");
     const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
@@ -205,19 +206,24 @@ console.log("summaryData",summaryData.current)
     console.error("Error calling termination APIs:", error);
   }
 };
+
       // const handleBeforeUnload = useCallback(
       //     async (event) => {
       
       
       //       try {
+
       //         await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId.current}`, {
       //           method: "PUT",
+
       //           headers: {
       //             "Content-Type": "application/json",
       //           },
       //           body: JSON.stringify({
+
       //             studentId: realStudentId.current, // User ID
       //             testCreationTableId: realTestId.current, // Test ID
+
       //           }),
       //         });
       //         console.log(
@@ -233,6 +239,7 @@ console.log("summaryData",summaryData.current)
         
          
       //     },
+
       //     [realStudentId.current,realTestId.current]
         // );
   
@@ -242,7 +249,19 @@ console.log("summaryData",summaryData.current)
         //     window.removeEventListener("beforeunload", handleBeforeUnload);
         //   };
         // }, [handleBeforeUnload]);
-  //WINDOW CLOSE DATA DELETE CODE START
+
+      //     [realStudentId,realTestId]
+      //   );
+  
+      //   useEffect(() => {
+      //     window.addEventListener("beforeunload", handleBeforeUnload);
+      //     return () => {
+      //       window.removeEventListener("beforeunload", handleBeforeUnload);
+      //     };
+      //   }, [handleBeforeUnload]);
+//main code for delte student api end
+
+
 
 
   //KEYBOARD KEYS DISABLE ALERT CODE START

@@ -4,10 +4,10 @@ import headerImage from "../../../assets/EGTLogoExamHeaderCompressed.png";
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
-
+import { useAlert } from "../StudentDashboardFiles/AlertContext";
 const StudentDashboardHeader = ({ userData, setActiveSection, setActiveSubSection }) => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-
+  const { alert } = useAlert();
   const navigate = useNavigate(); 
 
 const studentProfile = userData?.uploaded_photo;
@@ -44,11 +44,11 @@ const studentProfile = userData?.uploaded_photo;
         localStorage.clear(); 
         navigate("/LoginPage");
       } else {
-        alert(data.message || "Logout failed. Please try again.");
+        await alert(data.message || "Logout failed. Please try again.");
       }
     } catch (error) {
       console.error("Error during logout:", error);
-      alert("Something went wrong. Please try again later.");
+     await  alert("Something went wrong. Please try again later.");
     }
   };
   

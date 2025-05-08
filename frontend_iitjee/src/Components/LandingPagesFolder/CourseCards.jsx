@@ -1,8 +1,9 @@
 import React,{useEffect} from "react";
 import styles from "../../Styles/CourseCards.module.css";
-
+import { frontEndURL } from "../../ConfigFile/ApiConfigURL";
 const CourseCard = React.memo(
   ({ title, cardImage, price, context, onBuy, onGoToTest, portalId, type }) => {
+   
     // Show Buy Now if on OTS/ORVL landing or Buy Courses page
     const showBuySection =
       context === "buyCourses" ||
@@ -32,7 +33,7 @@ const CourseCard = React.memo(
           </div>
           
           <div className={styles.imageSectionCard}>
-            <img src={cardImage} alt={title} />
+            <img  src={`${frontEndURL}/OtsCourseCardImages/${cardImage}`} alt={title} />
           </div>
 
           {showBuySection ? (

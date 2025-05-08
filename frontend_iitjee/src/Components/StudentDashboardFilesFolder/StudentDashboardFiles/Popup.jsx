@@ -8,7 +8,7 @@ import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.
 export const MemoizedIoClose = memo(IoClose);
 export const MemoizedGrPrevious = memo(GrPrevious);
 export const MemoizedGrNext = memo(GrNext);
-
+import { useAlert } from "../StudentDashboardFiles/AlertContext";
 const Popup = ({
   lecture,
   topicid,
@@ -42,7 +42,7 @@ const Popup = ({
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [showPalette, setShowPalette] = useState(window.innerWidth >= 768);
   // DisableKeysAndMouseInteractions();
-
+  const { alert } = useAlert();
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth < 768;
@@ -255,12 +255,12 @@ const Popup = ({
     let submittedAnswer;
     if (currentQuestion.exercise_question_type === 'NATD' || currentQuestion.exercise_question_type === 'MCQ') {
       if (userAnswer.trim() === '') {
-        alert('Please submit an answer before proceeding.');
+        await alert('Please submit an answer before proceeding.');
         return; 
       }
     } else if (currentQuestion.exercise_question_type === 'MSQ') {
       if (selectedOptions.length === 0) {
-        alert('Please submit an answer before proceeding.');
+        await alert('Please submit an answer before proceeding.');
         return; 
       }
     }
@@ -524,15 +524,16 @@ const Popup = ({
                   {/* Navigation Buttons */}
                   <div className={styles.navigation_buttons}>
                     {currentQuestionIndex > 0 && (
-                      <button onClick={previousQuestion}>
+                      <button className={styles.PrevandSubmitBtn} onClick={previousQuestion}>
                         Previous Question
                       </button>
                     )}
                     {!answerDisabled && (
-                      <button onClick={handleSubmitAnswer}>Submit</button>
+                      <button className={styles.PrevandSubmitBtn} onClick={handleSubmitAnswer}>Submit</button>
                     )}
                     {answerDisabled && (
                       <button
+                      className={styles.ViewSolBtn}
                         onClick={() => {
                           setSolutionVisibility(
                             currentQuestion.exercise_question_id
@@ -549,7 +550,7 @@ const Popup = ({
                     )}
 
                     {currentQuestionIndex < exercise.questions.length - 1 && (
-                      <button onClick={nextQuestion}>Next Question</button>
+                      <button className={styles.PrevandSubmitBtn} onClick={nextQuestion}>Next Question</button>
                     )}
                   </div>
                 </div>
@@ -585,21 +586,21 @@ showPalette ? styles.showPaletteMobile : ""
                     <div className={styles.HeadingForLegend}>Legend</div>
 
                     <div className={styles.circleWrapper}>
-                      <div className={`${styles.circle} ${styles.unanswered}`}>
-                        {unansweredCount}
-                      </div>
-                      <span>Unanswered</span>
+                      <p className={`${styles.circle} ${styles.unanswered}`}>
+                        <span>{unansweredCount}</span>
+                      </p>
+                      <span className={styles.fntSize}>Not answered</span>
                     </div>
                     <div className={styles.circleWrapper}>
-                      <div className={`${styles.circle} ${styles.answered}`}>
-                        {answeredCount}
-                      </div>
+                      <p className={`${styles.circle} ${styles.answered}`}>
+                        <span>{answeredCount}</span>
+                      </p>
                       <span>Answered</span>
                     </div>
                     <div className={styles.circleWrapper}>
-                      <div className={`${styles.circle} ${styles.notVisited}`}>
-                        {notVisitedCount}
-                      </div>
+                      <p className={`${styles.circle} ${styles.unvisited}`}>
+                       <span>{notVisitedCount}</span> 
+                      </p>
                       <span>Not Visited</span>
                     </div>
                   </div>

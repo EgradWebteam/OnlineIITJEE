@@ -5,7 +5,7 @@ import DynamicTable from "../AdminDashboardFiles/DynamicTable.jsx";
 import styles from "../../../Styles/AdminDashboardCSS/CourseCreation.module.css";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import { FaSearch } from "react-icons/fa"; 
-
+import LoadingSpinner from "../../../ContextFolder/LoadingSpinner.jsx";
 const OrvlTopicCreation = () => {
   const [showForm, setShowForm] = useState(false);
   const [topics, setTopics] = useState([]);
@@ -123,7 +123,7 @@ const OrvlTopicCreation = () => {
         <OrvlTopicForm topic={selectedTopic} onSuccess={fetchTopics} onClose={handleClose} />
       )}
 
-      {loading && <div className={styles.loading}>Loading...</div>}
+      {loading && <div className={styles.loading}><LoadingSpinner/></div>}
 
       <div style={{ padding: "2%" }}>
         <DynamicTable

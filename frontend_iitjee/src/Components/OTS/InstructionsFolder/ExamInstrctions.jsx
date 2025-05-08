@@ -64,10 +64,12 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
     //     window.removeEventListener("unload", handleUnload);
     //   };
     // }, [realTestId, realStudentId]);
+
     // useEffect(() => {
     //     const handleBeforeUnload = () => {
     //       if (realTestId && realStudentId) {
     //         const url = `${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`;
+
      
     //         const data = JSON.stringify({
     //           studentId: realStudentId,
@@ -85,6 +87,8 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
     //       window.removeEventListener("beforeunload", handleBeforeUnload);
     //     };
     //   }, [realStudentId, realTestId]);
+
+
 
     // const handleBeforeUnload = useCallback(
     //   async (event) => {

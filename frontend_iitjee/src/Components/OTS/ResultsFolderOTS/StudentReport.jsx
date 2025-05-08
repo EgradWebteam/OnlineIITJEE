@@ -232,7 +232,7 @@ const StudentReport = ({ testId, studentId ,data,subjectMarks}) => {
                 <td>
                   <strong>Total</strong>
                 </td>
-                <td className={styles.tableTd}>
+                {/* <td className={styles.tableTd}>
                   {" "}
                   {subjectMarks.reduce(
                     (sum, item) => sum + item.total_questions,
@@ -271,7 +271,26 @@ const StudentReport = ({ testId, studentId ,data,subjectMarks}) => {
                     (sum, item) => sum + item.total_marks,
                     0
                   )}
+                </td> */}
+                <td className={styles.tableTd}>
+                  {subjectMarks.reduce((sum, item) => sum + Number(item.total_questions), 0)}
                 </td>
+                <td className={styles.tableTd}>
+                  {subjectMarks.reduce((sum, item) => sum + Number(item.total_correct), 0)}
+                </td>
+                <td className={styles.tableTd}>
+                  {subjectMarks.reduce((sum, item) => sum + Number(item.total_incorrect), 0)}
+                </td>
+                <td className={styles.tableTd}>
+                  {subjectMarks.reduce((sum, item) => sum + Number(item.positive_marks), 0)}
+                </td>
+                <td className={styles.tableTd}>
+                  {subjectMarks.reduce((sum, item) => sum + Number(item.negative_marks), 0)}
+                </td>
+                <td className={styles.tableTd}>
+                  {subjectMarks.reduce((sum, item) => sum + Number(item.total_marks), 0)}
+                </td>
+
               </tr>
             </tbody>
           </table>

@@ -58,7 +58,7 @@ const StudentDashboardBookmarks = ({ studentId }) => {
   // };
 
   const handleDelete = async (studentId, questionId) => {
-    if (window.confirm("Are you sure you want to delete this bookmark?")) {
+    // if (window.confirm("Are you sure you want to delete this bookmark?")) {
       try {
         await axios.delete(
           `${BASE_URL}/studentBookMarks/DeleteBookmark/${studentId}/${questionId}`
@@ -97,7 +97,7 @@ const StudentDashboardBookmarks = ({ studentId }) => {
       } catch (err) {
         console.error("Error deleting bookmark:", err);
       }
-    }
+    // }
   };
 
   const toggleSolution = (questionId) => {
@@ -184,16 +184,16 @@ const StudentDashboardBookmarks = ({ studentId }) => {
             </div>
 
             {testPaperData.subjects?.map((subject) => (
-              <div key={subject.subjectId}>
+              <div key={subject.subjectId} className={styles.bookMarksHeightForScroll}>
                 {subject.sections.map((section) => (
                   <div key={section.sectionId}>
-                    {section.questions.map((question) => (
+                    {section.questions.map((question, index) => (
                       <div
                         key={question.question_id}
                         className={styles.questionsContainerInBookMarks}
                       >
                         <div className={styles.bookDeleteConatainer}>
-                          <p>Question No: {question.question_id}</p>
+                          <p>Question No: {index + 1}</p>
                           <MdOutlineDeleteForever
                             className={styles.deleteIconForBookMarks}
                             onClick={() =>

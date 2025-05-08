@@ -3,18 +3,18 @@ import Styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import axios from "axios";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
-
+ 
 const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQuestions,setBookmarkedQuestions,selectedSubjectSection,setSelectedSubjectSection}) => {
-
-
+ 
+ 
   const studentContact = userData?.mobile_no;
   const [visibleSolutions, setVisibleSolutions] = useState({});
   const [videoVisible, setVideoVisible] = useState({});
   const [videoPopup, setVideoPopup] = useState(null); // null or question_id
-
-
-
-
+ 
+ 
+ 
+ 
   const handleDropdownChange = (e) => {
     const [subjectIdx, sectionIdx] = e.target.value.split("-");
     const subject = testPaperData.subjects[subjectIdx];
@@ -25,7 +25,7 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
             SectionName: null,
             questions: subject?.sections?.[0]?.questions || [],
           };
-
+ 
     setSelectedSubjectSection({
       SubjectName: subject.SubjectName,
       SectionName: section?.SectionName,
@@ -37,7 +37,7 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
       ...prev,
       [questionId]: !prev[questionId],
     }));
-
+ 
     // If hiding the solution, also hide video
     if (visibleSolutions[questionId]) {
       setVideoVisible((prev) => ({
@@ -46,16 +46,16 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
       }));
     }
   };
-
+ 
   const openVideoPopup = (questionId) => {
     setVideoPopup(questionId);
     setVisibleSolutions(false);
   };
-
+ 
   const closeVideoPopup = () => {
     setVideoPopup(null);
   };
-
+ 
   // Handle bookmark toggle
   const toggleBookmark = async (questionId) => {
     try {
@@ -71,7 +71,7 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
           }),
         }
       );
-
+ 
       const data = await response.json();
       // console.log("data", data);
       if (response.ok) {
@@ -91,15 +91,15 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
       alert("An error occurred while bookmarking");
     }
   };
-
+ 
   const PlayVideoById = (url) => {
     if (typeof url !== "string" || !url || url === "null") {
       console.error("Invalid URL:", url);
       return "";
     }
-
+ 
     let videoId = "";
-
+ 
     // Handle 'youtu.be' format
     if (url.includes("youtu.be")) {
       videoId = url.split("youtu.be/")[1].split("?")[0];
@@ -112,17 +112,17 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
     else if (url.includes("/v/")) {
       videoId = url.split("/v/")[1].split("?")[0];
     }
-
+ 
     // If a valid video ID is found, return the embed link
     if (videoId) {
       // console.log("Extracted Video ID:", videoId);
       return `https://www.youtube.com/embed/${videoId}?rel=0`;
     }
-
+ 
     console.error("Unrecognized URL format:", url); // Log for debugging
     return "";
   };
-
+ 
   return (
     <div className={Styles.solutionContainerMain}>
       <div className={Styles.subjectDropDownContainer}>
@@ -140,7 +140,7 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
                       (sec) =>
                         sec?.SectionName === selectedSubjectSection.SectionName
                     ) ?? "null";
-
+ 
                   return `${subjectIdx}-${
                     sectionIdx !== -1 ? sectionIdx : "null"
                   }`;
@@ -167,7 +167,7 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
             )
           )}
         </select>
-
+ 
         <div>
           {selectedSubjectSection && (
             <div>
@@ -200,10 +200,10 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
                       alt={`Question ${question.question_id}`}
                     />
                   </div>
-                  
+                 
                     {(() => {
                       const qTypeId = question.questionType?.quesionTypeId;
-
+ 
                       // NAT: Just show text answers
                       if (qTypeId === 5 || qTypeId === 6) {
                         return (
@@ -220,14 +220,14 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
                           </div>
                         );
                       }
-
+ 
                       // MSQ: Multiple select with icons
                       if (qTypeId === 3 || qTypeId === 4) {
                         const correctAnswers =
                           question.answer?.split(",") || [];
                         const userAnswers =
                           question.userAnswer?.user_answer?.split(",") || [];
-
+ 
                         return question.options.map((option) => {
                           const isCorrect = correctAnswers.includes(
                             option.option_index
@@ -235,10 +235,10 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
                           const isUserSelected = userAnswers.includes(
                             option.option_index
                           );
-
+ 
                           let icon = null;
                           let color = "black";
-
+ 
                           if (isCorrect && isUserSelected) {
                             icon = "✅";
                           } else if (!isCorrect && isUserSelected) {
@@ -246,7 +246,7 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
                           } else if (isCorrect) {
                             icon = "✅";
                           }
-
+ 
                           return (
                             <div
                               key={option.option_id}
@@ -271,7 +271,7 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
                           );
                         });
                       }
-
+ 
                       // MCQ (1 or 2)
                       return question.options.map((option) => {
                         const isCorrect =
@@ -279,10 +279,10 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
                         const isUserAnswer =
                           option.option_index ===
                           question.userAnswer?.user_answer;
-
+ 
                         let icon = null;
                         let color = "black";
-
+ 
                         if (isCorrect && isUserAnswer) {
                           icon = "✅";
                         } else if (isUserAnswer && !isCorrect) {
@@ -290,7 +290,7 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
                         } else if (isCorrect) {
                           icon = "✅";
                         }
-
+ 
                         return (
                           <div
                             key={option.option_id}
@@ -318,7 +318,7 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
    </div>
                     {question.solution?.solutionImgName && (
                       <div className={Styles.solutionButtonsContainer}>
-                        
+                       
                           {/* View Solution Button */}
                           <button
                             onClick={() =>
@@ -334,7 +334,7 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
                         {/* View Video Solution Button */}
                         {question.solution?.solutionImgName &&
                           question.solution?.video_solution_link !== "" && (
-                            
+                           
                               <button
                                 onClick={() =>
                                   openVideoPopup(question.question_id)
@@ -348,7 +348,7 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
                           )}
                       </div>
                     )}
-
+ 
                     {visibleSolutions[question.question_id] &&
                       question.solution?.solutionImgName && (
                         <div className={Styles.solutionImageInSolutionTab}>
@@ -372,9 +372,9 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
                           )}
                         </div>
                       )}
-
+ 
                     {/* Check for video solution link and display button if available */}
-
+ 
                     {videoPopup === question.question_id && (
                       <div className={Styles.videoModalOverlay}>
                         <div className={Styles.videoModalContent}>
@@ -405,7 +405,7 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
             </div>
           )}
         </div>
-
+ 
         {/* Watermarks */}
         {/* <span className={`${Styles.waterMark} ${Styles.topWaterMark}`}>
           {studentContact}
@@ -423,5 +423,8 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
     </div>
   );
 };
-
+ 
 export default SolutionsTab;
+ 
+
+ 

@@ -94,7 +94,7 @@ router.post("/forgot-passwordadmin", async (req, res) => {
 
         // Generate a 6-character reset code (e.g., 'a1b2c3')
         const resetCode = generateResetCode();
-        // console.log("Generated reset code:", resetCode);
+         console.log("Generated reset code:", resetCode);
         const updateQuery =
         "UPDATE iit_admin_data SET reset_code = ? WHERE admin_email_id = ?";
       await connection.query(updateQuery, [resetCode, email]);
@@ -166,11 +166,11 @@ router.get('/fetchTotalData', async (req, res) => {
   const portalid = 1;
   let sql = `
     SELECT
-      (SELECT COUNT(*) FROM iit_db.iit_questions) AS total_questions,
-      (SELECT COUNT(*) FROM iit_db.iit_student_registration) AS total_users_registered,
-      (SELECT COUNT(*) FROM iit_db.iit_questions WHERE question_id IS NOT NULL) AS total_questions_uploaded,
-      (SELECT COUNT(*) FROM iit_db.iit_course_creation_table WHERE portal_id = ?) AS total_courses,
-      (SELECT COUNT(*) FROM iit_db.iit_test_creation_table) AS total_tests;
+      (SELECT COUNT(*) FROM iit_questions) AS total_questions,
+      (SELECT COUNT(*) FROM iit_student_registration) AS total_users_registered,
+      (SELECT COUNT(*) FROM iit_questions WHERE question_id IS NOT NULL) AS total_questions_uploaded,
+      (SELECT COUNT(*) FROM iit_course_creation_table WHERE portal_id = ?) AS total_courses,
+      (SELECT COUNT(*) FROM iit_test_creation_table) AS total_tests;
   `;
 
   try {
@@ -187,16 +187,16 @@ router.get('/fetchOrvlCounts', async (req, res) => {
     SELECT 
   -- Count of courses for portal_id 3
   (SELECT COUNT(*) 
-   FROM iit_db.iit_course_creation_table 
+   FROM iit_course_creation_table 
    WHERE portal_id = ?) AS total_courses,
 
   -- Count of topics (no portal_id filter)
   (SELECT COUNT(*) 
-   FROM iit_db.iit_orvl_topic_creation) AS total_topics,
+   FROM iit_orvl_topic_creation) AS total_topics,
 
   -- Count of non-null lecture_video_link entries (from iit_orvl_lecture_names)
   (SELECT COUNT(*) 
-   FROM iit_db.iit_orvl_lecture_names 
+   FROM iit_orvl_lecture_names 
    WHERE lecture_video_link IS NOT NULL) AS total_videos
   `;
 

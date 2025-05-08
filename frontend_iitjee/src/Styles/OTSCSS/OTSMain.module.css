@@ -95,6 +95,10 @@ padding: 0px ;
   width: calc(100vw - 300px);
   color: red;
 }
+.otsSectionsDiv{
+  font-size: 18px;
+  font-weight: 600;
+}
 
 @media (max-width: 690px) {
   .warning_message  {
@@ -140,6 +144,7 @@ text-transform: uppercase;
     display: flex;
     align-items: center;
     justify-content: center;
+    height: inherit;
 }
 .OTSInstrctionsDivHolder button{
  color: white;
@@ -196,8 +201,11 @@ height: 100%;
     gap: 1rem;
     padding: 4px;
 }
+.OTSSubjectandSectionButtonsGroup{
+  gap: 0;
+}
 .QuestionTypeHolderContainer{
-  padding: 4px 25px;
+  padding: 4px 4x;
 }
 .hideSections{
   display: none !important;
@@ -439,7 +447,7 @@ height: 100%;
     background-repeat: no-repeat;
     background-size: contain;
     color: white;
-    line-height: 34px;
+    line-height: 45px;
   }
   .NotAnsweredBehaviourBtns{
     background-image: url(../../assets//OTSTestInterfaceImages/NotAnswered.png);
@@ -453,15 +461,15 @@ height: 100%;
     background-repeat: no-repeat;
     background-size: contain;
     color: black;
-    line-height: 34px;
+    line-height: 40px;
   }
   .MarkedforReviewBehaviourBtns{
     background-image: url(../../assets/OTSTestInterfaceImages/MarkedForReview.png);
     background-repeat: no-repeat;
     background-size: contain;
     color: white;
-    line-height: 43px;
-    width: 50%;
+    line-height: 44px;
+    width:45%;
   }
   .AnsMarkedforReviewBehaviourBtns{
     background-image: url(/src/assets/OTSTestInterfaceImages/AnsMarkedForReview.png);
@@ -470,7 +478,7 @@ height: 100%;
     color: white;
     width: 20%;
     height: 60px;
-    line-height: 38px;
+    line-height: 45px;
   }
   .SectionsAndSubjectDiv{
     background-color: #587dbd;
@@ -507,7 +515,7 @@ height: 100%;
   }
   .AllQuestionRenderBox{
     padding: 10px;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
   .QuestionsBtnsConatiner{
     margin-top: 5px;
@@ -550,11 +558,17 @@ height: 100%;
   position: fixed;
   bottom: 0;
   border-left: none;
+  background-color: white;
 }
 .markedForReviewNavigationBtn,.clearResponseBtn, .previousBtn,.saveandnextNavigationBtn,.submitNavigationBtn{
   border: 1px solid rgb(153, 151, 151);
   padding: 10px;
   cursor: pointer;
+}
+.submitNavigationBtn{
+  border: none;
+  background-color: #5ac7ef;
+  color: white;
 }
 .saveandnextNavigationBtn{
   background-color: rgb(69, 140, 207);
@@ -764,7 +778,6 @@ height: 100%;
   display: flex;
   flex-direction: column;
   height: 100vh; /* Full viewport height */
-  overflow: hidden; /* Prevent body scroll */
 }
 
 .instrcutionstudentProfileDiv{
@@ -868,6 +881,8 @@ height: 100%;
 .StdNameForData{
   display: flex;
   width: 100%;
+  align-items: center;
+  justify-content: center
 }
 .StdNameForData p{
 
@@ -1012,7 +1027,7 @@ border-radius: 10px;
 .StudentReportMainDiv{
   background: #eef1fbff;
   height: 100vh;
-  overflow: hidden;
+  
 }
 .StudentReportSubDiv{
   background: rgb(255, 255, 255);
@@ -1023,7 +1038,7 @@ border-radius: 10px;
   display: flex;
   background: #eef1fb;
   justify-content: space-between;
-  padding: 9px 0;
+  padding: 5px 0;
 }
 .studentReportHeaderDiv{
   color: #00aff0;
@@ -1048,7 +1063,7 @@ border-radius: 10px;
   font-size: 30px;
 }
 .studentReportTestDetailsContiner{
-  margin: 2rem;
+  margin:1rem 2rem;
   padding: 10px 0px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;;
 }
@@ -1058,6 +1073,7 @@ border-radius: 10px;
   justify-content: center;
   list-style: none;
   gap: 3rem;
+  padding-left: 10px;
 }
 .testDetailsContainerSub li{
  font-size: 20px;
@@ -1188,8 +1204,8 @@ border-radius: 10px;
   color: white;
 }
 .subjectDropDownContainer{
-  margin: 1rem;
-  padding: 10px;
+  /* margin: 1rem; */
+  padding: 1rem;
 }
 .subjectWiseDropDown{
   width: 245px !important;
@@ -1198,11 +1214,12 @@ border-radius: 10px;
   padding: 3px;
 }
 .questionSolutionsDiv{
-  margin: 2rem 2rem 1rem 2rem;
+  /* margin: 2rem 2rem 1rem 2rem; */
+  margin: 1rem;
   display: flex;
   flex-direction: column;
   height: fit-content;
-  padding: 1.5rem;
+  padding: 1rem;
   gap: 7px;
   position: relative;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
@@ -1298,11 +1315,11 @@ margin-left: 10px;
     font-size: 15px;
 }
 .solutionImageInSolutionTab{
-  margin: 1rem;
-  padding: 2rem;
+  margin: 10px;
+  padding: 13px;
   gap: 7px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  width: 100%;
+  width: 90%;
   background-color: white;
 }
 .solutionImageInSolutionTab img{
@@ -1526,6 +1543,15 @@ display: none;
   padding: 0px ;
         margin: 0 21px;
   } 
+  .userImageDivInst{
+    width: 17%;
+    border-left: 1px solid gray;
+}
+.rightChevronBtn{
+  position: absolute;
+    top: 29rem;
+    left: -7%;
+}
 }
 
 @media (max-width:1024px) {
@@ -2099,5 +2125,113 @@ margin: 0px;
 }
 .questionImageInSolutionTab{
   width: 200px;
+}
+}
+@media (max-height:800px) {
+  .OTSMainHeader{
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    height: 9vh;
+}
+.OTSNavbarMainContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: black;
+  padding: 6px;
+  height: 8vh;
+}
+.readytoBeginDiv{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem 1rem;
+}
+.AllQuestionRenderBox{
+  padding: 10px;
+  overflow-y: auto;
+  height: 20vh;
+}
+.QuestionNavigationButtonsMainContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* border: 1px solid rgb(204, 204, 204); */
+  width: 100vw;
+  height: 10vh;
+  position: fixed;
+  bottom: 0;
+  border-left: none;
+}
+}
+@media (max-height:700px) {
+  .OTSMainHeader{
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    height: 9vh;
+}
+.OTSNavbarMainContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: black;
+  padding: 6px;
+  height: 8vh;
+}
+.readytoBeginDiv{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem 1rem;
+}
+.AllQuestionRenderBox{
+  padding: 10px;
+  overflow-y: auto;
+  height: 200px;
+}
+.QuestionNavigationButtonsMainContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* border: 1px solid rgb(204, 204, 204); */
+  width: 100vw;
+  height: 10vh;
+  position: fixed;
+  bottom: 0;
+  border-left: none;
+}
+}
+@media (max-height:600px) {
+  .OTSMainHeader{
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    height: 9vh;
+}
+.OTSNavbarMainContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: black;
+  padding: 6px;
+  height: 8vh;
+}
+.readytoBeginDiv{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem 1rem;
+}
+.AllQuestionRenderBox{
+  padding: 10px;
+  overflow-y: auto;
+  height: 200px;
+}
+.QuestionNavigationButtonsMainContainer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* border: 1px solid rgb(204, 204, 204); */
+  width: 100vw;
+  height: 10vh;
+  position: fixed;
+  bottom: 0;
+  border-left: none;
 }
 }

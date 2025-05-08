@@ -4,13 +4,13 @@ import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import { encryptBatch } from '../../../utils/cryptoUtils.jsx';
 import { useNavigate } from 'react-router-dom';
 import { FaBookReader } from "react-icons/fa";
-
+ 
 export default function TestDetailsContainer({ course, onBack, studentId,userData }) {
   const [groupedTests, setGroupedTests] = useState({});
   const [courseName, setCourseName] = useState('');
   const [selectedTestType, setSelectedTestType] = useState('Select Type Of Test');
   const [showPopup, setShowPopup] = useState(false);
-
+ 
   const course_creation_id = course?.course_creation_id;
   const navigate = useNavigate();
   // const [timeSpent, setTimeSpent] = useState(null);
@@ -23,10 +23,10 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
   //     setTimeLeft(timeLeft);
   //     setTimeSpent(timeSpent);
   //   };
-
+ 
   //   // Add event listener for 'timerUpdate' event
   //   window.addEventListener("timerUpdate", handleTimerUpdate);
-
+ 
   //   // Cleanup the event listener on unmount
   //   return () => {
   //     window.removeEventListener("timerUpdate", handleTimerUpdate);
@@ -39,53 +39,53 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
           `${BASE_URL}/studentmycourses/coursetestdetails/${course_creation_id}/${studentId}`
         );
         const data = await res.json();
-  
+ 
         // Updated structure: data.test_details is an array
         const grouped = {};
-  
+ 
         data.test_details.forEach(group => {
           const testType = group.type_of_test_name;
           grouped[testType] = group.tests;
         });
-  
+ 
         setGroupedTests(grouped);
         setCourseName(data.course_name);
       } catch (err) {
         console.error("Failed to fetch test details", err);
       }
     };
-  
+ 
     if (course_creation_id && studentId) {
       fetchCourseTests();
     }
   }, [course_creation_id, studentId]);
-  
-
+ 
+ 
   const allTestTypes = ['Select Type Of Test', ...Object.keys(groupedTests)];
-
+ 
   function getCurrentLocalMySQLTime() {
     const now = new Date();
     const offset = now.getTimezoneOffset() * 60000;
     const localTime = new Date(now - offset).toISOString().slice(0, 19).replace('T', ' ');
     return localTime;
   }
-
+ 
   const formattedTime = getCurrentLocalMySQLTime();
   // let newWinRef = null;
-
+ 
   // const handleStartTestClick = async (testCreationTableId) => {
   //   try {
   //       // calling test attemt status api
   //   const checkActiveTestResponse = await fetch(`${BASE_URL}/studentmycourses/CheckActiveTestOfStudent/${studentId}`);
   //   const checkActiveTestData = await checkActiveTestResponse.json();
-
+ 
   //   // If there's already an active test, block the user
   //   if (checkActiveTestData.activeTestExists) {
   //     alert("You already have an active test in progress. Please complete it before starting another one.");
   //     return;
   //   }
   //     const [encryptedTestId, encryptedStudentId] = await encryptBatch([testCreationTableId, studentId]);
-
+ 
   //     const testStatusData = {
   //       studentregistrationId: studentId,
   //       courseCreationId: course_creation_id,
@@ -95,7 +95,7 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
   //       testConnectionStatus: 'active',
   //       testConnectionTime: formattedTime
   //     };
-
+ 
   //     const response = await fetch(`${BASE_URL}/studentmycourses/InsertOrUpdateTestAttemptStatus`, {
   //       method: 'POST',
   //       headers: {
@@ -103,19 +103,19 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
   //       },
   //       body: JSON.stringify(testStatusData),
   //     });
-
+ 
   //     const result = await response.json();
-
+ 
   //     if (response.ok) {
   //       // console.log(result.message);
-
+ 
   //       sessionStorage.setItem('navigationToken', 'valid');
-
+ 
   //       const screenWidth = window.screen.availWidth;
   //       const screenHeight = window.screen.availHeight;
   //       const url = `/GeneralInstructions/${encodeURIComponent(encryptedTestId)}/${encodeURIComponent(encryptedStudentId)}`;
   //       const features = `width=${screenWidth},height=${screenHeight},top=0,left=0`;
-
+ 
   //       window.open(url, '_blank', features);
   //         // Now 'url' will be set based on the value of param4
   //         newWinRef = window.open(
@@ -123,12 +123,12 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
   //           "_blank",
   //           `width=${screenWidth},height=${screenHeight},fullscreen=yes`
   //       );
-
+ 
   //       const monitorWindow = setInterval(() => {
   //           if (newWinRef.closed) {
   //               console.log("Quiz window closed");
   //               clearInterval(monitorWindow);
-
+ 
   //               if (!finalHeartbeatSent) {
   //                   fetch(`${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${studentId}/${testCreationTableId}`, {
   //                       method: "DELETE",
@@ -142,8 +142,8 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
   //                   }).catch((error) => {
   //                       console.error("Error deleting data on window close:", error);
   //                   });
-                    
-              
+                   
+             
   //               }
   //           }
   //       }, 1000);
@@ -154,23 +154,23 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
   //     console.error('Error during test status insertion/update:', error);
   //   }
   // };
-
+ 
   // let newWinRef = null;
-
+ 
 const handleStartTestClick = async (testCreationTableId) => {
   try {
     // calling test attempt status API
     const checkActiveTestResponse = await fetch(`${BASE_URL}/studentmycourses/CheckActiveTestOfStudent/${studentId}`);
     const checkActiveTestData = await checkActiveTestResponse.json();
-
+ 
     if (checkActiveTestData.activeTestExists) {
       // alert("You already have an active test in progress. Please complete it before starting another one.");
       setShowPopup(true);
       return;
     }
-
+ 
     const [encryptedTestId, encryptedStudentId] = await encryptBatch([testCreationTableId, studentId]);
-
+ 
     const testStatusData = {
       studentregistrationId: studentId,
       courseCreationId: course_creation_id,
@@ -180,7 +180,7 @@ const handleStartTestClick = async (testCreationTableId) => {
       testConnectionStatus: 'active',
       testConnectionTime: formattedTime
     };
-
+ 
     const response = await fetch(`${BASE_URL}/studentmycourses/InsertOrUpdateTestAttemptStatus`, {
       method: 'POST',
       headers: {
@@ -188,28 +188,28 @@ const handleStartTestClick = async (testCreationTableId) => {
       },
       body: JSON.stringify(testStatusData),
     });
-
+ 
     const result = await response.json();
-
+ 
     if (response.ok) {
       sessionStorage.setItem('navigationToken', 'valid');
-
+ 
       const screenWidth = window.screen.availWidth;
       const screenHeight = window.screen.availHeight;
       const url = `/GeneralInstructions/${encodeURIComponent(encryptedTestId)}/${encodeURIComponent(encryptedStudentId)}`;
       const features = `width=${screenWidth},height=${screenHeight},top=0,left=0`;
-
+ 
       // Open the new window
       const newWinRef = window.open(url, "_blank", `width=${screenWidth},height=${screenHeight},fullscreen=yes`);
-
+ 
       if (newWinRef) {
         window.addEventListener('beforeunload', () => {
           if (newWinRef && !newWinRef.closed) {
             const key = `OTS_FormattedTime`;
             const timeLeft = localStorage.getItem(key);
-        
+       
             console.log("Sending timeLeft to API:", timeLeft);
-        
+       
             // if (!timeLeft) {
             //   console.warn("No timeLeft found in localStorage.");
             //   return;
@@ -228,9 +228,9 @@ const handleStartTestClick = async (testCreationTableId) => {
               }).catch((error) => {
                 console.error("Error deleting data on window close:", error);
               });
-
+ 
               localStorage.removeItem(`OTS_FormattedTime`)
-            
+           
             newWinRef.close();
           }
         });
@@ -238,13 +238,13 @@ const handleStartTestClick = async (testCreationTableId) => {
           if (newWinRef.closed) {
             console.log("Quiz window closed");
             clearInterval(monitorWindow);
-
-
+ 
+ 
             const key = `OTS_FormattedTime`;
             const timeLeft = localStorage.getItem(key);
-        
+       
             console.log("Sending timeLeft to API:", timeLeft);
-        
+       
             // if (!timeLeft) {
             //   console.warn("No timeLeft found in localStorage.");
             //   return;
@@ -263,9 +263,9 @@ const handleStartTestClick = async (testCreationTableId) => {
               }).catch((error) => {
                 console.error("Error deleting data on window close:", error);
               });
-
+ 
               localStorage.removeItem(`OTS_FormattedTime`)
-            
+           
           }
         }, 1000);
       } else {
@@ -278,8 +278,8 @@ const handleStartTestClick = async (testCreationTableId) => {
     console.error('Error during test status insertion/update:', error);
   }
 };
-
-
+ 
+ 
   const handleViewReportClickMycourses = (testId,test) => {
     // console.log("test",test)
     navigate(`/StudentReport/${testId}`, {
@@ -290,20 +290,20 @@ const handleStartTestClick = async (testCreationTableId) => {
         duration: test.duration,
         userData:userData
       }
-      
+     
     });
   };
-
+ 
   return (
     <div className={styles.testDetailsConatinerMainDiv}>
       <div className={styles.goBackInTestContainerDiv}>
         <button className={styles.goBackBtn} onClick={onBack}>Go Back</button>
       </div>
-
+ 
       <div className={styles.courseNameHolderDiv}>
         <h2 className={styles.CourseNameForTest}>{courseName}</h2>
       </div>
-
+ 
       <div className={styles.typeOfTestsSelector}>
         <select
           value={selectedTestType}
@@ -314,7 +314,7 @@ const handleStartTestClick = async (testCreationTableId) => {
           ))}
         </select>
       </div>
-
+ 
       <div className={styles.testsContainer}>
         {selectedTestType === 'Select Type Of Test' ? (
           Object.entries(groupedTests).map(([type, tests]) => (
@@ -333,7 +333,7 @@ const handleStartTestClick = async (testCreationTableId) => {
                       </div>
                     </div>
                   </div>
-
+ 
                   {/* {test.test_attempt_status?.toLowerCase().trim() === 'completed' ? (
                     <button
                       className={styles.viewReportBtn}
@@ -455,7 +455,7 @@ const handleStartTestClick = async (testCreationTableId) => {
           </div>
         )}
       </div>
-
+ 
       {showPopup && (
         <div className={styles.modalOverlayTest}>
           <div className={styles.modalContentTest}>
@@ -465,7 +465,9 @@ const handleStartTestClick = async (testCreationTableId) => {
           </div>
         </div>
       )}
-
+ 
     </div>
   );
 }
+ 
+ 
