@@ -103,7 +103,6 @@ const GeneralInstructions = () => {
     //     const handleBeforeUnload = () => {
     //       if (realTestId && realStudentId) {
     //         const url = `${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`;
-=======
 
 
 
