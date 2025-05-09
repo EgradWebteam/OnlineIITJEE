@@ -501,11 +501,11 @@ margin: 1rem ;
   margin: 1rem;
 }
 .poupBtns .adminYesBtn{
-  background-color:  #00b94a;
+  background-color:  #d32f2f;
   color: white;
 }
  .poupBtns .adminNoBtn{
-  background-color:  #f44336;
+  background-color:  #1976d2;
   color: white;
 }
 /* Tablet scaling */

@@ -6,7 +6,9 @@ import TestCreationTab from './TestCreationTab.jsx';
 import DocumentUpload from '../AdminDashboardFiles/DocumentUpload.jsx';
 import InstructionsTab from '../AdminDashboardFiles/InstructionsTab.jsx';
 
+
 const AdminDashboardMainContent = ({ activeComponent }) => {
+  
   const renderMainContent = () => {
     switch (activeComponent) {
       case 'dashboard':
@@ -25,8 +27,11 @@ const AdminDashboardMainContent = ({ activeComponent }) => {
   };
 
   return (
+    <div>
     <div className="main-content">
       {renderMainContent()}
+    </div>
+    
     </div>
   );
 };

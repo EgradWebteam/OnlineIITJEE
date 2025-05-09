@@ -983,10 +983,10 @@ height: 100%;
     padding: 1rem;
     margin: 1rem;
   }
-  .bookMarksHeightForScroll{
+  /* .bookMarksHeightForScroll{
     height: 70vh;
     overflow-y: auto;
-  }
+  } */
   
   /* .BookMarksSubDivForScroll{
      height: 90vh; 

@@ -5,7 +5,7 @@
 /* ots test interface styles(unique to this fiel only) */
 .OTSPC{
   height: 100vh;
-  width: 100vw;
+  width: 99vw;
 }
 .OTSTestForCalcHeight{
   height: calc(100vh - 20vh);
@@ -511,7 +511,7 @@ height: 100%;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    width: calc(100vw - 300px);;
+    width: calc(100vw - 315px);;
   }
   .AllQuestionRenderBox{
     padding: 10px;
@@ -787,10 +787,10 @@ height: 100%;
   display: flex;
   flex-direction: column;
   height: auto;
-  overflow: auto;
+  /* overflow: auto; */
   overflow-y: auto;
   padding: 1rem 1rem 1rem 3rem;
-  height: 80vh;
+  height: 76vh;
 }
 
 .instructionSection ul {
@@ -2149,7 +2149,7 @@ margin: 0px;
 .AllQuestionRenderBox{
   padding: 10px;
   overflow-y: auto;
-  height: 20vh;
+  height: 25vh;
 }
 .QuestionNavigationButtonsMainContainer{
   display: flex;
@@ -2166,7 +2166,7 @@ margin: 0px;
 @media (max-height:700px) {
   .OTSMainHeader{
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    height: 9vh;
+    height: 8vh;
 }
 .OTSNavbarMainContainer{
   display: flex;

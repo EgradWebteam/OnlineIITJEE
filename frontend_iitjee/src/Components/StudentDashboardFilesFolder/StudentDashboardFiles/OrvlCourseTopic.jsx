@@ -539,7 +539,7 @@ const OrvlCourseTopic = ({ topicid, onBack, studentId, courseCreationId }) => {
   return (
     <div className={globalCSS.OrvlCourseTopicContainer}>
       <div className={globalCSS.OrvlCourseTopicbtn}>
-        <button onClick={onBack}>Back</button>
+        <button onClick={onBack}>Go Back</button>
       </div>
       <div className={globalCSS.OrvlCourseTopicHeaderContainer}>
       <div className={globalCSS.OrvlCourseTopicHeader}>
