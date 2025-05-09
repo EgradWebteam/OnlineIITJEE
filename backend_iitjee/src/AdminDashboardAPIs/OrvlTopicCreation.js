@@ -763,32 +763,32 @@ router.put("/updateTopic/:topicId", upload.fields([
     ]);
 
     // Step 5: Handle document file update (topic_doc)
-    if (req.files["topic_doc"]) {
-      const documentFile = req.files["topic_doc"][0];
-      const { buffer, originalname } = documentFile;
-      const blobFolder = path.basename(originalname, path.extname(originalname));
-      const baseFolder = `exam-resources-orvl/${blobFolder}`;
-      const documentBlobName = `${baseFolder}/${Date.now()}_${originalname}`;
+    // if (req.files["topic_doc"]) {
+    //   const documentFile = req.files["topic_doc"][0];
+    //   const { buffer, originalname } = documentFile;
+    //   const blobFolder = path.basename(originalname, path.extname(originalname));
+    //   const baseFolder = `exam-resources-orvl/${blobFolder}`;
+    //   const documentBlobName = `${baseFolder}/${Date.now()}_${originalname}`;
 
-      // Step 6: Delete old document from Azure if it exists
-      if (topic.orvl_document_name) {
-        const oldDocPath = `exam-resources-orvl/${topic.orvl_document_name}/`;
-        await deleteFromAzure(oldDocPath); // Delete old document folder from Azure
-        // console.log(`✅ Document Deleted: ${oldDocPath}`);
-      }
+    //   // Step 6: Delete old document from Azure if it exists
+    //   if (topic.orvl_document_name) {
+    //     const oldDocPath = `exam-resources-orvl/${topic.orvl_document_name}/`;
+    //     await deleteFromAzure(oldDocPath); // Delete old document folder from Azure
+    //     // console.log(`✅ Document Deleted: ${oldDocPath}`);
+    //   }
 
-      // Step 7: Upload new document to Azure Blob Storage
-      const blobUrl = await uploadToAzure(buffer, documentBlobName);
+    //   // Step 7: Upload new document to Azure Blob Storage
+    //   const blobUrl = await uploadToAzure(buffer, documentBlobName);
 
-      // Step 8: Update document name in the `iit_orvl_documents` table
-      const updateDocumentQuery = `
-        UPDATE iit_orvl_documents 
-        SET 
-          orvl_document_name = ? 
-        WHERE orvl_topic_id = ?;
-      `;
-      await connection.execute(updateDocumentQuery, [blobFolder, topicId]);
-    }
+    //   // Step 8: Update document name in the `iit_orvl_documents` table
+    //   const updateDocumentQuery = `
+    //     UPDATE iit_orvl_documents 
+    //     SET 
+    //       orvl_document_name = ? 
+    //     WHERE orvl_topic_id = ?;
+    //   `;
+    //   await connection.execute(updateDocumentQuery, [blobFolder, topicId]);
+    // }
 
     // Step 9: Commit the transaction to apply the updates
     await connection.commit();
@@ -804,78 +804,163 @@ router.put("/updateTopic/:topicId", upload.fields([
 
 
 // 🔥 DELETE Topic API
+// router.delete("/deleteTopic/:topicId", async (req, res) => {
+//   const topicId = parseInt(req.params.topicId);
+//   const connection = await db.getConnection();
+//   await connection.beginTransaction();
+
+//   try {
+//     // 1. Get PDF filename and Document folder name
+//     const [[topic]] = await connection.query(
+//       "SELECT orvl_topic_pdf FROM iit_orvl_topic_creation WHERE orvl_topic_id = ?",
+//       [topicId]
+//     );
+
+//     const [[doc]] = await connection.query(
+//       "SELECT orvl_document_name FROM iit_orvl_documents WHERE orvl_topic_id = ?",
+//       [topicId]
+//     );
+
+//     // 2. Delete PDF from Azure if it exists
+//     if (topic?.orvl_topic_pdf) {
+//       const pdfBlobPath = `exam-resources-orvl/orvl-topic-pdfs/${topic.orvl_topic_pdf}`;
+//       await deleteFromAzure(pdfBlobPath); // Delete PDF from Azure
+//       // console.log(`✅ PDF Deleted: ${pdfBlobPath}`);
+//     }
+
+//     // 3. Delete all related DB records (lectures, exercises, questions, etc.)
+//     const [lectures] = await connection.query(
+//       "SELECT orvl_lecture_name_id FROM iit_orvl_lecture_names WHERE orvl_topic_id = ?",
+//       [topicId]
+//     );
+
+//     for (const lecture of lectures) {
+//       const [exercises] = await connection.query(
+//         "SELECT exercise_name_id FROM iit_orvl_exercise_names WHERE orvl_lecture_name_id = ?",
+//         [lecture.orvl_lecture_name_id]
+//       );
+
+//       for (const exercise of exercises) {
+//         const [questions] = await connection.query(
+//           "SELECT exercise_question_id FROM iit_orvl_exercise_questions WHERE exercise_name_id = ?",
+//           [exercise.exercise_name_id]
+//         );
+
+//         for (const q of questions) {
+//           await connection.query(
+//             "DELETE FROM iit_orvl_exercise_solutions WHERE exercise_question_id = ?",
+//             [q.exercise_question_id]
+//           );
+//           await connection.query(
+//             "DELETE FROM iit_orvl_exercise_options WHERE exercise_question_id = ?",
+//             [q.exercise_question_id]
+//           );
+//         }
+
+//         await connection.query(
+//           "DELETE FROM iit_orvl_exercise_questions WHERE exercise_name_id = ?",
+//           [exercise.exercise_name_id]
+//         );
+//       }
+
+//       await connection.query(
+//         "DELETE FROM iit_orvl_exercise_names WHERE orvl_lecture_name_id = ?",
+//         [lecture.orvl_lecture_name_id]
+//       );
+//     }
+
+//     await connection.query("DELETE FROM iit_orvl_lecture_names WHERE orvl_topic_id = ?", [topicId]);
+//     await connection.query("DELETE FROM iit_orvl_documents WHERE orvl_topic_id = ?", [topicId]);
+//     await connection.query("DELETE FROM iit_orvl_topic_creation WHERE orvl_topic_id = ?", [topicId]);
+
+//     // 4. Delete the document folder from Azure (if any)
+//     const documentFolder = `exam-resources-orvl/${doc?.orvl_document_name}/`;
+//     await deleteFromAzure(documentFolder); // Delete document folder from Azure
+
+//     await connection.commit();
+//     res.status(200).send("✅ Topic, PDF, and related data deleted successfully.");
+//   } catch (err) {
+//     await connection.rollback();
+//     console.error("❌ Deletion error:", err.message);
+//     res.status(500).send("❌ Failed to delete topic.");
+//   } finally {
+//     connection.release();
+//   }
+// });
 router.delete("/deleteTopic/:topicId", async (req, res) => {
   const topicId = parseInt(req.params.topicId);
   const connection = await db.getConnection();
-  await connection.beginTransaction();
 
   try {
-    // 1. Get PDF filename and Document folder name
-    const [[topic]] = await connection.query(
-      "SELECT orvl_topic_pdf FROM iit_orvl_topic_creation WHERE orvl_topic_id = ?",
-      [topicId]
-    );
+    await connection.beginTransaction();
 
-    const [[doc]] = await connection.query(
-      "SELECT orvl_document_name FROM iit_orvl_documents WHERE orvl_topic_id = ?",
-      [topicId]
-    );
+    // Step 1: Fetch everything needed in fewer queries
+    const [[info]] = await connection.query(`
+      SELECT 
+        t.orvl_topic_pdf AS topicPdf,
+        d.orvl_document_name AS documentName
+      FROM iit_orvl_topic_creation t
+      LEFT JOIN iit_orvl_documents d ON t.orvl_topic_id = d.orvl_topic_id
+      WHERE t.orvl_topic_id = ?
+    `, [topicId]);
 
-    // 2. Delete PDF from Azure if it exists
-    if (topic?.orvl_topic_pdf) {
-      const pdfBlobPath = `exam-resources-orvl/orvl-topic-pdfs/${topic.orvl_topic_pdf}`;
-      await deleteFromAzure(pdfBlobPath); // Delete PDF from Azure
-      // console.log(`✅ PDF Deleted: ${pdfBlobPath}`);
-    }
+    const [questionData] = await connection.query(`
+      SELECT 
+        q.exercise_question_id, 
+        e.exercise_name_id, 
+        l.orvl_lecture_name_id
+      FROM iit_orvl_lecture_names l
+      LEFT JOIN iit_orvl_exercise_names e ON l.orvl_lecture_name_id = e.orvl_lecture_name_id
+      LEFT JOIN iit_orvl_exercise_questions q ON e.exercise_name_id = q.exercise_name_id
+      WHERE l.orvl_topic_id = ?
+    `, [topicId]);
 
-    // 3. Delete all related DB records (lectures, exercises, questions, etc.)
-    const [lectures] = await connection.query(
-      "SELECT orvl_lecture_name_id FROM iit_orvl_lecture_names WHERE orvl_topic_id = ?",
-      [topicId]
-    );
+    // Step 2: Batch delete questions, solutions, and options
+    const questionIds = [...new Set(questionData.map(q => q.exercise_question_id).filter(Boolean))];
+    const exerciseIds = [...new Set(questionData.map(q => q.exercise_name_id).filter(Boolean))];
+    const lectureIds = [...new Set(questionData.map(q => q.orvl_lecture_name_id).filter(Boolean))];
 
-    for (const lecture of lectures) {
-      const [exercises] = await connection.query(
-        "SELECT exercise_name_id FROM iit_orvl_exercise_names WHERE orvl_lecture_name_id = ?",
-        [lecture.orvl_lecture_name_id]
-      );
+    const deletePromises = [];
 
-      for (const exercise of exercises) {
-        const [questions] = await connection.query(
-          "SELECT exercise_question_id FROM iit_orvl_exercise_questions WHERE exercise_name_id = ?",
-          [exercise.exercise_name_id]
-        );
-
-        for (const q of questions) {
-          await connection.query(
-            "DELETE FROM iit_orvl_exercise_solutions WHERE exercise_question_id = ?",
-            [q.exercise_question_id]
-          );
-          await connection.query(
-            "DELETE FROM iit_orvl_exercise_options WHERE exercise_question_id = ?",
-            [q.exercise_question_id]
-          );
-        }
-
-        await connection.query(
-          "DELETE FROM iit_orvl_exercise_questions WHERE exercise_name_id = ?",
-          [exercise.exercise_name_id]
-        );
-      }
-
-      await connection.query(
-        "DELETE FROM iit_orvl_exercise_names WHERE orvl_lecture_name_id = ?",
-        [lecture.orvl_lecture_name_id]
+    if (questionIds.length) {
+      deletePromises.push(
+        connection.query("DELETE FROM iit_orvl_exercise_solutions WHERE exercise_question_id IN (?)", [questionIds]),
+        connection.query("DELETE FROM iit_orvl_exercise_options WHERE exercise_question_id IN (?)", [questionIds]),
+        connection.query("DELETE FROM iit_orvl_exercise_questions WHERE exercise_question_id IN (?)", [questionIds])
       );
     }
 
-    await connection.query("DELETE FROM iit_orvl_lecture_names WHERE orvl_topic_id = ?", [topicId]);
-    await connection.query("DELETE FROM iit_orvl_documents WHERE orvl_topic_id = ?", [topicId]);
-    await connection.query("DELETE FROM iit_orvl_topic_creation WHERE orvl_topic_id = ?", [topicId]);
+    if (exerciseIds.length) {
+      deletePromises.push(
+        connection.query("DELETE FROM iit_orvl_exercise_names WHERE exercise_name_id IN (?)", [exerciseIds])
+      );
+    }
 
-    // 4. Delete the document folder from Azure (if any)
-    const documentFolder = `exam-resources-orvl/${doc?.orvl_document_name}/`;
-    await deleteFromAzure(documentFolder); // Delete document folder from Azure
+    if (lectureIds.length) {
+      deletePromises.push(
+        connection.query("DELETE FROM iit_orvl_lecture_names WHERE orvl_lecture_name_id IN (?)", [lectureIds])
+      );
+    }
+
+    // Step 3: Delete topic & document records
+    deletePromises.push(
+      connection.query("DELETE FROM iit_orvl_documents WHERE orvl_topic_id = ?", [topicId]),
+      connection.query("DELETE FROM iit_orvl_topic_creation WHERE orvl_topic_id = ?", [topicId])
+    );
+
+    // Step 4: Delete files from Azure in parallel
+    const azureDeletes = [];
+
+    if (info?.topicPdf) {
+      azureDeletes.push(deleteFromAzure(`exam-resources-orvl/orvl-topic-pdfs/${info.topicPdf}`));
+    }
+
+    if (info?.documentName) {
+      azureDeletes.push(deleteFromAzure(`exam-resources-orvl/${info.documentName}/`));
+    }
+
+    // Run all deletions in parallel
+    await Promise.all([...deletePromises, ...azureDeletes]);
 
     await connection.commit();
     res.status(200).send("✅ Topic, PDF, and related data deleted successfully.");

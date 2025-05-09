@@ -8,12 +8,17 @@ const AdminDashboardHeader = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState();
+  const [adminPopup , setAdminPopup] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
    
   const isActive = (path) => location.pathname === path;
-  const handleLogout = async () => {
-       localStorage.removeItem('adminInfo');
-      navigate('/AdminLoginPage');
+  const confirmLogout = async () => {
+    localStorage.removeItem('adminInfo');
+  window.location.replace('/AdminLoginPage');
+  }
+  const handleLogout=()=>{
+    setAdminPopup(true)
+   
   }
   
    const handleResize = () => {
@@ -77,10 +82,23 @@ setMenuOpen(prev => !prev)
             {isActive('/StudentInfo') && <span className={styles.activeDot}></span>}
           </button>
         </Link>
+        <button  onClick={()=>{ handleLogout();}} className={styles.logoutButton}>
+ LogOut
+ </button>
+        
+ {adminPopup && (
+  <div className={styles.adminLogoutPopup}>
+    <div className={styles.adminPopupContent}>
+      <p>Are you sure you want to logout?</p>
+      <div className={styles.poupBtns}>
+        <button className={styles.adminYesBtn} onClick={confirmLogout}>Yes</button>
+        <button  className={styles.adminNoBtn} onClick={() => setAdminPopup(false)}>No</button>
+      </div>
+    </div>
+  </div>
+)}
+
  
-        <button  onClick={()=>{handleLogout(); closeMenu()}} className={styles.logoutButton}>
-          LogOut
-        </button>
       </div>
       )}
     </div>
