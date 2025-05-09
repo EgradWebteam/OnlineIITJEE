@@ -147,6 +147,7 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
               accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
               onChange={(e) => setTopicDoc(e.target.files[0])}
               className={styles.inputFile}
+              disabled = {topic}
             />
           </div>
 
