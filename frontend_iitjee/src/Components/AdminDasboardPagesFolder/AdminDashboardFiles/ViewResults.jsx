@@ -13,7 +13,7 @@ import {
 } from 'chart.js';
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL";
 import styles from "../../../Styles/AdminDashboardCSS/ViewResults.module.css";
-
+import LoadingSpinner from "../../../ContextFolder/LoadingSpinner";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -130,7 +130,7 @@ const ViewResults = ({ onClose, testCreationTableId }) => {
       </div>
 
       {loading ? (
-        <div className={styles.loader}>Loading...</div>
+        <div className={styles.loader}><LoadingSpinner/></div>
       ) : error ? (
         <div className={styles.error}>{error}</div>
       ) : (
