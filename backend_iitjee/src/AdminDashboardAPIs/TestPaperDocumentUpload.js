@@ -98,80 +98,78 @@ router.get("/subject/:test_creation_table_id", async (req, res) => {
 });
 router.delete("/DeleteTestPaperDocument/:documentId", async (req, res) => {
   const { documentId } = req.params;
+  
+  if (!documentId || isNaN(documentId)) {
+    return res.status(400).json({ error: "Invalid document ID." });
+  }
+
   const connection = await db.getConnection();
   await connection.beginTransaction();
 
   try {
-    // console.log("📥 Received request to delete document:", documentId);
-
-    // Step 1: Get all related question IDs
-    const [questions] = await connection.query(
-      "SELECT question_id FROM iit_questions WHERE document_id = ?",
-      [documentId]
+    // Combine queries to fetch both questions and document details
+    const [docAndQuestions] = await connection.query(
+      `
+      SELECT q.question_id, d.document_name
+      FROM iit_ots_document d
+      LEFT JOIN iit_questions q ON q.document_id = d.document_id
+      WHERE d.document_id = ?
+      `, [documentId]
     );
-    const [doc] = await connection.query(
 
-      "select document_name from iit_ots_document where document_id = ?",
+    if (!docAndQuestions.length) {
+      await connection.rollback();
+      return res.status(404).json({ error: "Document not found." });
+    }
 
-      [documentId]
+    // Extract document details
+    const { document_name } = docAndQuestions[0];
+    const documentFolder = `exam-resources-ots/${document_name}`;
 
-    );
-    const documentFolder = `exam-resources-ots/${doc[0]?.document_name}`;
-
-    console.log(documentFolder)
-
-    
-  console.log("📄 Fetched document details:", doc,doc[0]?.document_name
-
-);
-    const questionIds = questions.map((q) => q.question_id);
-    // console.log("❓ Fetched Question IDs:", questionIds);
+    // Extract related question IDs
+    const questionIds = docAndQuestions.map((q) => q.question_id).filter((id) => id != null);
 
     if (questionIds.length > 0) {
       const placeholders = questionIds.map(() => '?').join(',');
 
-      // Step 2: Delete related options
-      const [optionsDeleteResult] = await connection.query(
-        `DELETE FROM iit_options WHERE question_id IN (${placeholders})`,
-        questionIds
-      );
-      // console.log(`🗑️ Deleted ${optionsDeleteResult.affectedRows} rows from iit_options`);
-
-      // Step 2: Delete related solutions
-      const [solutionsDeleteResult] = await connection.query(
-        `DELETE FROM iit_solutions WHERE question_id IN (${placeholders})`,
-        questionIds
-      );
-      // console.log(`🗑️ Deleted ${solutionsDeleteResult.affectedRows} rows from iit_solutions`);
-
-      // Step 2: Delete questions
-      const [questionsDeleteResult] = await connection.query(
-        `DELETE FROM iit_questions WHERE question_id IN (${placeholders})`,
-        questionIds
-      );
-      // console.log(`🗑️ Deleted ${questionsDeleteResult.affectedRows} rows from iit_questions`);
-    } else {
-      // console.log("⚠️ No related questions found for this document.");
+      // Delete related data (options, solutions, and questions) in one go
+      await Promise.all([
+        connection.query(`DELETE FROM iit_options WHERE question_id IN (${placeholders})`, questionIds),
+        connection.query(`DELETE FROM iit_solutions WHERE question_id IN (${placeholders})`, questionIds),
+        connection.query(`DELETE FROM iit_questions WHERE question_id IN (${placeholders})`, questionIds)
+      ]);
     }
 
-    // Step 3: Delete the document itself
-    const [documentDeleteResult] = await connection.query(
-      "DELETE FROM iit_ots_document WHERE document_id = ?",
-      [documentId]
-    );
-    // console.log(`📄 Deleted ${documentDeleteResult.affectedRows} row from iit_ots_document`);
-    await deleteFromAzure(documentFolder);
-    // Step 4: Commit transaction
+    // Delete the document itself
+    await connection.query("DELETE FROM iit_ots_document WHERE document_id = ?", [documentId]);
+
+    // Asynchronously delete the document from Azure Blob storage
+    deleteFromAzure(documentFolder)
+      .then(() => {
+        console.log(`Document deleted from Azure: ${documentFolder}`);
+      })
+      .catch((err) => {
+        console.error("Error deleting from Azure:", err);
+      });
+
+    // Commit the transaction
     await connection.commit();
-    res.status(200).json({ message: "Document and related data deleted successfully." });
+
+    res.status(200).json({
+      message: "✅ Document and related data deleted successfully.",
+      documentId,
+      deletedFile: document_name
+    });
+
   } catch (err) {
     await connection.rollback();
-    // console.error("❌ Deletion error:", err);
-    res.status(500).json({ error: "Deletion failed." });
+    console.error("❌ Deletion error:", err);
+    res.status(500).json({ error: "Deletion failed due to an error." });
   } finally {
     connection.release();
   }
 });
+
 
 
 
@@ -277,7 +275,7 @@ router.post(
 
     try {
       if (!req.file) return res.status(400).send("No file uploaded.");
-
+      if(!req.body.testCreationTableId || !req.body.subjectId) return res.status(400).send ("No testCreationTableId or subjectId found")
       const { buffer, originalname } = req.file;
       const baseFolder = `${path.basename(
         originalname,

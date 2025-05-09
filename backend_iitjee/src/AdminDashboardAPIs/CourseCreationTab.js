@@ -94,6 +94,7 @@ router.post(
         discount,
         totalPrice,
         selectedExamId,
+      
         courseImageFile,
         portal_id, // Extract portal_id from request body
       } = req.body;
@@ -111,20 +112,20 @@ router.post(
 
       const selectedSubjects = parseInputArray(req.body.selectedSubjects);
       const selectedTypes = parseInputArray(req.body.selectedTestTypes);
+      const selectedCourseTypes =  parseInputArray(req.body.selectedCourseTypes);
+      // const OriginalFileName = req.file.originalname;
+      // let imageUrl = "";
+      // if (req.file) {
+      //   const frontendBaseURL = "http://localhost:5173"; 
+      //   imageUrl = `${frontendBaseURL}/OtsCourseCardImages/${req.file.originalname}`;
+      // }
 
-      const OriginalFileName = req.file.originalname;
-      let imageUrl = "";
-      if (req.file) {
-        const frontendBaseURL = "http://localhost:5173"; 
-        imageUrl = `${frontendBaseURL}/OtsCourseCardImages/${req.file.originalname}`;
-      }
-
-      let azureUrl = "";
-      let azureFileName = "";
-      if (req.file) {
-        azureUrl = await uploadToAzureWithSAS(req.file, OriginalFileName); 
-        azureFileName = azureUrl.split("/").pop().split("?")[0]; 
-      }
+      // let azureUrl = "";
+      // let azureFileName = "";
+      // if (req.file) {
+      //   azureUrl = await uploadToAzureWithSAS(req.file, OriginalFileName); 
+      //   azureFileName = azureUrl.split("/").pop().split("?")[0]; 
+      // }
 
       const activeCourseStatus = "inactive"; // Set the initial course status to inactive
 
@@ -146,7 +147,7 @@ router.post(
         totalPrice,
         portal_id, // Use the portal_id from request body
         activeCourseStatus,
-        azureFileName,
+        courseImageFile,
       ];
 
       const [courseResult] = await conn.query(insertCourseQuery, courseValues);
@@ -171,7 +172,7 @@ router.post(
         }
       } else if (portal_id ==3) {
         // Insert into iit_orvl_course_type_for_course table if portal_id is 3
-        for (const typeId of selectedTypes) {
+        for (const typeId of selectedCourseTypes) {
           await conn.query(
             `INSERT INTO iit_orvl_course_type_for_course (course_creation_id, orvl_course_type_id) VALUES (?, ?)`,
             [courseCreationId, typeId]
@@ -272,123 +273,126 @@ async function deleteFromAzure(imageName) {
   const response = await blobClient.deleteIfExists();
   // console.log("🗑️ deleteIfExists response:", response);
 }
-router.post(
-  "/CreateCourse",
-  upload.single("courseImageFile"),
-  async (req, res) => {
-    const conn = await db.getConnection();
-    await conn.beginTransaction();
+// router.post(
+//   "/CreateCourse",
+//   upload.single("courseImageFile"),
+//   async (req, res) => {
+//     const conn = await db.getConnection();
+//     await conn.beginTransaction();
 
-    try {
-      const {
-        courseName,
-        selectedYear,
-        courseStartDate,
-        courseEndDate,
-        cost,
-        discount,
-        totalPrice,
-        selectedExamId,
-        portal_id,  // Getting portal_id from the frontend
-        selectedSubjects,
-        selectedTestTypes,
-      } = req.body;
+//     try {
+//       const {
+//         courseName,
+//         selectedYear,
+//         courseStartDate,
+//         courseEndDate,
+//         cost,
+//         discount,
+//         totalPrice,
+//         selectedExamId,
+//         portal_id,  // Getting portal_id from the frontend
+//         selectedSubjects,
+//         selectedTestTypes,
+//         selectedCourseTypes,
+//         courseImageFile
+//       } = req.body;
 
-      // Function to parse input arrays from the frontend
-      const parseInputArray = (input) => {
-        if (!input) return [];
-        if (Array.isArray(input)) return input.map(Number);
-        try {
-          const parsed = JSON.parse(input);
-          return Array.isArray(parsed) ? parsed.map(Number) : [Number(parsed)];
-        } catch {
-          return String(input).split(",").map(Number);
-        }
-      };
+//       // Function to parse input arrays from the frontend
+//       const parseInputArray = (input) => {
+//         if (!input) return [];
+//         if (Array.isArray(input)) return input.map(Number);
+//         try {
+//           const parsed = JSON.parse(input);
+//           return Array.isArray(parsed) ? parsed.map(Number) : [Number(parsed)];
+//         } catch {
+//           return String(input).split(",").map(Number);
+//         }
+//       };
 
-      const parsedSubjects = parseInputArray(selectedSubjects);
-      const parsedTestTypes = parseInputArray(selectedTestTypes);
+//       const parsedSubjects = parseInputArray(selectedSubjects);
+//       const parsedTestTypes = parseInputArray(selectedTestTypes);
+//       const parsedcourseTypes = parseInputArray(selectedCourseTypes);
 
-      const OriginalFileName = req.file.originalname;
-      let imageUrl = "";
-      if (req.file) {
-        const frontendBaseURL = "http://localhost:5173"; // Set your frontend URL
-        imageUrl = `${frontendBaseURL}/OtsCourseCardImages/${req.file.originalname}`;
-      }
+//       // const OriginalFileName = req.file.originalname;
+//       // let imageUrl = "";
+//       // if (req.file) {
+//       //   const frontendBaseURL = "http://localhost:5173"; // Set your frontend URL
+//       //   imageUrl = `${frontendBaseURL}/OtsCourseCardImages/${req.file.originalname}`;
+//       // }
 
-      let azureUrl = "";
-      let azureFileName = "";
-      if (req.file) {
-        azureUrl = await uploadToAzureWithSAS(req.file, OriginalFileName); 
-        azureFileName = azureUrl.split("/").pop().split("?")[0]; 
-      }
+//       // let azureUrl = "";
+//       // let azureFileName = "";
+//       // if (req.file) {
+//       //   azureUrl = await uploadToAzureWithSAS(req.file, OriginalFileName); 
+//       //   azureFileName = azureUrl.split("/").pop().split("?")[0]; 
+//       // }
 
-      const activeCourseStatus = "inactive"; // Default course status
+//       const activeCourseStatus = "inactive"; // Default course status
 
-      // Insert course details into iit_course_creation_table
-      const insertCourseQuery = `
-        INSERT INTO iit_course_creation_table 
-        (course_name, course_year, exam_id, course_start_date, course_end_date, cost, discount, total_price, portal_id, active_course, card_image) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `;
+//       // Insert course details into iit_course_creation_table
+//       const insertCourseQuery = `
+//         INSERT INTO iit_course_creation_table 
+//         (course_name, course_year, exam_id, course_start_date, course_end_date, cost, discount, total_price, portal_id, active_course, card_image) 
+//         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+//       `;
 
-      const courseValues = [
-        courseName,
-        selectedYear,
-        selectedExamId,
-        courseStartDate,
-        courseEndDate,
-        cost,
-        discount,
-        totalPrice,
-        portal_id,
-        activeCourseStatus,
-        azureFileName, // Store the Azure image filename
-      ];
+//       const courseValues = [
+//         courseName,
+//         selectedYear,
+//         selectedExamId,
+//         courseStartDate,
+//         courseEndDate,
+//         cost,
+//         discount,
+//         totalPrice,
+//         portal_id,
+//         activeCourseStatus,
+//         courseImageFile, // Store the Azure image filename
+//       ];
 
-      const [courseResult] = await conn.query(insertCourseQuery, courseValues);
-      const courseCreationId = courseResult.insertId;
+//       const [courseResult] = await conn.query(insertCourseQuery, courseValues);
+//       const courseCreationId = courseResult.insertId;
 
-      // Insert selected subjects into iit_course_subjects table
-      for (const subjectId of parsedSubjects) {
-        await conn.query(
-          `INSERT INTO iit_course_subjects (course_creation_id, subject_id) VALUES (?, ?)`,
-          [courseCreationId, subjectId]
-        );
-      }
+//       // Insert selected subjects into iit_course_subjects table
+//       for (const subjectId of parsedSubjects) {
+//         await conn.query(
+//           `INSERT INTO iit_course_subjects (course_creation_id, subject_id) VALUES (?, ?)`,
+//           [courseCreationId, subjectId]
+//         );
+//       }
 
-      // Conditional logic based on portal_id value
-      if (portal_id === 1) {
-        // Insert test types into iit_course_type_of_tests for portal_id = 1
-        for (const typeId of parsedTestTypes) {
-          await conn.query(
-            `INSERT INTO iit_course_type_of_tests (course_creation_id, type_of_test_id) VALUES (?, ?)`,
-            [courseCreationId, typeId]
-          );
-        }
-      } else if (portal_id === 3) {
-        // Insert into iit_orvl_course_type_for_course for portal_id = 3
-        for (const typeId of parsedTestTypes) {
-          await conn.query(
-            `INSERT INTO iit_orvl_course_type_for_course (course_creation_id, orvl_course_type_id) VALUES (?, ?)`,
-            [courseCreationId, typeId]
-          );
-        }
-      }
+//       // Conditional logic based on portal_id value
+//       if (portal_id === 1) {
+//         // Insert test types into iit_course_type_of_tests for portal_id = 1
+//         for (const typeId of parsedTestTypes) {
+//           await conn.query(
+//             `INSERT INTO iit_course_type_of_tests (course_creation_id, type_of_test_id) VALUES (?, ?)`,
+//             [courseCreationId, typeId]
+//           );
+//         }
+//       } else if (portal_id === 3) {
+//         // Insert into iit_orvl_course_type_for_course for portal_id = 3
+//         for (const typeId of parsedcourseTypes) {
+//           await conn.query(
+//             `INSERT INTO iit_orvl_course_type_for_course (course_creation_id, orvl_course_type_id) VALUES (?, ?)`,
+//             [courseCreationId, typeId]
+//           );
+//         }
+//       }
 
-      await conn.commit();
+//       await conn.commit();
 
-      // Send success response
-      res.status(200).json({ success: true, message: "Course Created Successfully" });
-    } catch (err) {
-      await conn.rollback();
-      console.error("❌ Error in CreateCourse:", err);
-      res.status(500).json({ success: false, error: err.message });
-    } finally {
-      conn.release();
-    }
-  }
-);
+//       // Send success response
+//       res.status(200).json({ success: true, message: "Course Created Successfully" });
+//     } catch (err) {
+//       await conn.rollback();
+//       console.error("❌ Error in CreateCourse:", err);
+//       res.status(500).json({ success: false, error: err.message });
+//     } finally {
+//       conn.release();
+//     }
+//   }
+// );
 
 router.put(
   "/UpdateCourse/:courseId",
@@ -409,6 +413,7 @@ router.put(
         discount,
         totalPrice,
         selectedExamId,
+        courseImageFile,
       } = req.body;
 
       const parseInputArray = (input) => {
@@ -424,7 +429,7 @@ router.put(
 
       const selectedSubjects = parseInputArray(req.body.selectedSubjects);
       const selectedTypes = parseInputArray(req.body.selectedTestTypes);
-
+      const selectedCourseTypes =  parseInputArray(req.body.selectedCourseTypes);
       // console.log("📥 Incoming Update Data:", {
       //   courseId,
       //   courseName,
@@ -440,32 +445,32 @@ router.put(
       //   hasNewImage: !!req.file,
       // });
 
-      let newAzureFileName = null;
+      // let newAzureFileName = null;
 
-      // ✅ If a new image was uploaded, delete the old one and upload the new one
-      if (req.file) {
-        // console.log("🖼️ New image uploaded. Preparing to delete old image...");
+      // // ✅ If a new image was uploaded, delete the old one and upload the new one
+      // if (req.file) {
+      //   // console.log("🖼️ New image uploaded. Preparing to delete old image...");
 
-        const [oldImageResult] = await conn.query(
-          "SELECT card_image FROM iit_course_creation_table WHERE course_creation_id = ?",
-          [courseId]
-        );
+      //   const [oldImageResult] = await conn.query(
+      //     "SELECT card_image FROM iit_course_creation_table WHERE course_creation_id = ?",
+      //     [courseId]
+      //   );
 
-        const oldImageName = oldImageResult[0]?.card_image;
-        // console.log("🔍 Found old image in DB:", oldImageName);
+      //   const oldImageName = oldImageResult[0]?.card_image;
+      //   // console.log("🔍 Found old image in DB:", oldImageName);
 
-        if (oldImageName) {
-          await deleteFromAzure(oldImageName);
-          // console.log("🗑️ Deleted old image from Azure:", oldImageName);
-        }
+      //   if (oldImageName) {
+      //     await deleteFromAzure(oldImageName);
+      //     // console.log("🗑️ Deleted old image from Azure:", oldImageName);
+      //   }
 
-        const azureUrl = await uploadToAzureWithSAS(
-          req.file,
-          req.file.originalname
-        );
-        newAzureFileName = azureUrl.split("/").pop().split("?")[0];
-        // console.log("📤 Uploaded new image to Azure:", newAzureFileName);
-      }
+      //   const azureUrl = await uploadToAzureWithSAS(
+      //     req.file,
+      //     req.file.originalname
+      //   );
+      //   newAzureFileName = azureUrl.split("/").pop().split("?")[0];
+      //   // console.log("📤 Uploaded new image to Azure:", newAzureFileName);
+      // }
 
       // 🔄 Update course details in DB
       // console.log("🛠️ Updating course details in DB...");
@@ -479,7 +484,7 @@ router.put(
         cost = ?, 
         discount = ?, 
         total_price = ?
-        ${newAzureFileName ? ", card_image = ?" : ""}
+        ${courseImageFile ? ", card_image = ?" : ""}
       WHERE course_creation_id = ?
     `;
 
@@ -493,58 +498,54 @@ router.put(
         discount,
         totalPrice,
       ];
-      if (newAzureFileName) values.push(newAzureFileName);
+      if (courseImageFile) values.push(courseImageFile);
       values.push(courseId);
 
       await conn.query(updateQuery, values);
       // console.log("✅ Course updated successfully.");
 
-      // 🧹 Remove old subject and type mappings
-      // console.log("🧹 Cleaning up old subject and type mappings...");
-      await conn.query(
-        "DELETE FROM iit_course_subjects WHERE course_creation_id = ?",
-        [courseId]
-      );
-      await conn.query(
-        "DELETE FROM iit_course_type_of_tests WHERE course_creation_id = ?",
-        [courseId]
-      );
-      await conn.query(
-        "DELETE FROM iit_orvl_course_type_for_course WHERE course_creation_id = ?",
-        [courseId]
-      );
-
-      // ➕ Re-insert new subject mappings
-      // console.log("➕ Inserting new subject mappings...");
-      for (const subjectId of selectedSubjects) {
-        await conn.query(
-          "INSERT INTO iit_course_subjects (course_creation_id, subject_id) VALUES (?, ?)",
-          [courseId, subjectId]
-        );
-        // console.log(`   ✅ Subject ${subjectId} linked to course`);
+      if (selectedSubjects) {
+        await conn.query("DELETE FROM iit_course_subjects WHERE course_creation_id = ?", [courseId]);
+      
+        for (const subjectId of selectedSubjects) {
+          await conn.query(
+            "INSERT INTO iit_course_subjects (course_creation_id, subject_id) VALUES (?, ?)",
+            [courseId, subjectId]
+          );
+        }
       }
-
-      // ➕ Re-insert new test types (both normal and ORVL)
-      // console.log("➕ Inserting new test types...");
-      for (const typeId of selectedTypes) {
-        await conn.query(
-          "INSERT INTO iit_course_type_of_tests (course_creation_id, type_of_test_id) VALUES (?, ?)",
-          [courseId, typeId]
-        );
-        // console.log(`   ✅ Test Type ${typeId} (normal) linked to course`);
-
-        await conn.query(
-          "INSERT INTO iit_orvl_course_type_for_course (course_creation_id, orvl_course_type_id) VALUES (?, ?)",
-          [courseId, typeId]
-        );
-        // console.log(`   ✅ Test Type ${typeId} (ORVL) linked to course`);
+      
+      // 🔁 Conditionally update test types
+      if (selectedTypes) {
+        await conn.query("DELETE FROM iit_course_type_of_tests WHERE course_creation_id = ?", [courseId]);
+      
+      
+        for (const typeId of selectedTypes) {
+          await conn.query(
+            "INSERT INTO iit_course_type_of_tests (course_creation_id, type_of_test_id) VALUES (?, ?)",
+            [courseId, typeId]
+          );
+      
+       
+        }
+      }
+      
+      // 🔁 Conditionally update course types if needed later
+      if (selectedCourseTypes) {
+        // Implement logic here if you later need to update based on selectedCourseTypes
+        await conn.query("DELETE FROM iit_orvl_course_type_for_course WHERE course_creation_id = ?", [courseId]);
+        for (const typeId of selectedCourseTypes) {
+     
+          await conn.query(
+            "INSERT INTO iit_orvl_course_type_for_course (course_creation_id, orvl_course_type_id) VALUES (?, ?)",
+            [courseId, typeId]
+          );
+        }
       }
 
       await conn.commit();
       // console.log("🎉 Course update committed successfully.");
-      res
-        .status(200)
-        .json({ success: true, message: "✅ Course updated successfully." });
+      res.status(200).json({ success: true, message: "✅ Course updated successfully." });
     } catch (err) {
       console.error("❌ Error during course update:", err.message);
       await conn.rollback();
@@ -555,72 +556,106 @@ router.put(
   }
 );
 
+// router.delete("/delete/:courseId", async (req, res) => {
+//   const { courseId } = req.params;
+//   const conn = await db.getConnection();
+//   await conn.beginTransaction();
+
+//   try {
+//     // console.log(`🔄 Attempting to delete course with ID: ${courseId}`);
+
+//     // Step 1: Get course image before deleting
+//     const [imageResult] = await conn.query(
+//       "SELECT card_image FROM iit_course_creation_table WHERE course_creation_id = ?",
+//       [courseId]
+//     );
+//     const oldImageUrl = imageResult[0]?.card_image;
+
+//     // Step 2: Delete child data
+//     // console.log("🧹 Deleting related subjects...");
+//     await conn.query(
+//       "DELETE FROM iit_course_subjects WHERE course_creation_id = ?",
+//       [courseId]
+//     );
+
+//     // console.log("🧹 Deleting related test types...");
+//     await conn.query(
+//       "DELETE FROM iit_course_type_of_tests WHERE course_creation_id = ?",
+//       [courseId]
+//     );
+
+//     // console.log("🧹 Deleting related ORVL test types...");
+//     await conn.query(
+//       "DELETE FROM iit_orvl_course_type_for_course WHERE course_creation_id = ?",
+//       [courseId]
+//     );
+
+//     // Step 3: Delete the image from Azure
+//     if (oldImageUrl) {
+//       const imageName = oldImageUrl.split("/").pop().split("?")[0]; // Extract name from URL
+//       // console.log(`🧽 Attempting to delete image from Azure: ${imageName}`);
+
+//       try {
+//         await deleteFromAzure(imageName);
+//         // console.log("✅ Image deleted from Azure successfully.");
+//       } catch (azureErr) {
+//         console.warn("⚠️ Failed to delete image from Azure:", azureErr.message);
+//       }
+//     } else {
+//       // console.log("ℹ️ No image found for course, skipping Azure deletion.");
+//     }
+
+//     // Step 4: Delete course record
+//     // console.log("🗑️ Deleting main course entry...");
+//     await conn.query(
+//       "DELETE FROM iit_course_creation_table WHERE course_creation_id = ?",
+//       [courseId]
+//     );
+
+//     await conn.commit();
+//     // console.log("✅ Course and all related data deleted successfully.");
+
+//     res
+//       .status(200)
+//       .json({ success: true, message: "Course deleted successfully." });
+//   } catch (error) {
+//     console.error("❌ Error deleting course:", error.message);
+//     await conn.rollback();
+//     res.status(500).json({ success: false, error: "Failed to delete course." });
+//   } finally {
+//     conn.release();
+//   }
+// });
 router.delete("/delete/:courseId", async (req, res) => {
   const { courseId } = req.params;
+
   const conn = await db.getConnection();
   await conn.beginTransaction();
 
   try {
-    // console.log(`🔄 Attempting to delete course with ID: ${courseId}`);
 
-    // Step 1: Get course image before deleting
-    const [imageResult] = await conn.query(
-      "SELECT card_image FROM iit_course_creation_table WHERE course_creation_id = ?",
-      [courseId]
-    );
-    const oldImageUrl = imageResult[0]?.card_image;
+    await Promise.all([
+      conn.query("DELETE FROM iit_course_subjects WHERE course_creation_id = ?", [courseId]),
+      conn.query("DELETE FROM iit_course_type_of_tests WHERE course_creation_id = ?", [courseId]),
+      conn.query("DELETE FROM iit_orvl_course_type_for_course WHERE course_creation_id = ?", [courseId]),
+      await conn.query("DELETE FROM iit_course_creation_table WHERE course_creation_id = ?", [courseId])
 
-    // Step 2: Delete child data
-    // console.log("🧹 Deleting related subjects...");
-    await conn.query(
-      "DELETE FROM iit_course_subjects WHERE course_creation_id = ?",
-      [courseId]
-    );
+    ]);
 
-    // console.log("🧹 Deleting related test types...");
-    await conn.query(
-      "DELETE FROM iit_course_type_of_tests WHERE course_creation_id = ?",
-      [courseId]
-    );
-
-    // console.log("🧹 Deleting related ORVL test types...");
-    await conn.query(
-      "DELETE FROM iit_orvl_course_type_for_course WHERE course_creation_id = ?",
-      [courseId]
-    );
-
-    // Step 3: Delete the image from Azure
-    if (oldImageUrl) {
-      const imageName = oldImageUrl.split("/").pop().split("?")[0]; // Extract name from URL
-      // console.log(`🧽 Attempting to delete image from Azure: ${imageName}`);
-
-      try {
-        await deleteFromAzure(imageName);
-        // console.log("✅ Image deleted from Azure successfully.");
-      } catch (azureErr) {
-        console.warn("⚠️ Failed to delete image from Azure:", azureErr.message);
-      }
-    } else {
-      // console.log("ℹ️ No image found for course, skipping Azure deletion.");
-    }
-
-    // Step 4: Delete course record
-    // console.log("🗑️ Deleting main course entry...");
-    await conn.query(
-      "DELETE FROM iit_course_creation_table WHERE course_creation_id = ?",
-      [courseId]
-    );
 
     await conn.commit();
-    // console.log("✅ Course and all related data deleted successfully.");
 
-    res
-      .status(200)
-      .json({ success: true, message: "Course deleted successfully." });
+    res.status(200).json({
+      success: true,
+      message: "Course and related data deleted successfully.",
+    });
   } catch (error) {
-    console.error("❌ Error deleting course:", error.message);
     await conn.rollback();
-    res.status(500).json({ success: false, error: "Failed to delete course." });
+    console.error("Error during course deletion:", error);
+    res.status(500).json({
+      success: false,
+      error: "An error occurred while deleting the course. Please try again.",
+    });
   } finally {
     conn.release();
   }

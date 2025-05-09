@@ -116,7 +116,7 @@ router.get("/Purchasedcourses/:studentregisterationid", async (req, res) => {
       ].courses.push({
         course_creation_id: course.course_creation_id,
         course_name: course.course_name,
-        card_image: getImageUrl(course.card_image),
+        card_image: course.card_image,
       });
     });
 

@@ -27,14 +27,14 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
   const [discountAmount, setDiscountAmount] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [selectedTestTypes, setSelectedTestTypes] = useState([]);
-  const [selectedType, setSelectedType] = useState([]);
-  useEffect(() => {
-    if (courseData && courseData.test_type_ids) {
+  const [selectedType, setSelectedType] = useState(null);
+  // useEffect(() => {
+  //   if (courseData && courseData.test_type_ids) {
 
-      const ids = courseData.test_type_ids.split(',').map(id => id.trim());
-      setSelectedTestTypes(ids);
-    }
-  }, [courseData]);
+  //     const ids = courseData.test_type_ids.split(',').map(id => id.trim());
+  //     setSelectedTestTypes(ids);
+  //   }
+  // }, [courseData]);
   useEffect(() => {
     if (portalid === 3) {
 
@@ -80,10 +80,14 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
       setCost(courseData.cost || "");
       setDiscount(courseData.discount || "");
       setSelectedExamId(courseData.exam_id || null);
+      console.log(courseData.subject_ids)
+    
+    
       setSelectedSubjects(
         courseData.subject_ids?.split(",").map((id) => parseInt(id)) || []
       );
-      setSelectedImage(courseData.card_image?.split("-")[1] || "");
+      setSelectedImage(courseData.card_image?.split("/").pop() || "");
+
       setSelectedTypes([]); 
       if (courseData.test_type_ids) {
         const ids = courseData.test_type_ids.split(',').map(id => id.trim());
@@ -132,14 +136,15 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
     }
     return years;
   };
-  const getImageFile = async (imageName) => {
-    const imgPath = `/OtsCourseCardImages/${imageName}`;
-    return fetch(imgPath)
-      .then((response) => response.blob())
-      .then((blob) => new File([blob], imageName, { type: blob.type }));
-  };
+  // const getImageFile = async (imageName) => {
+  //   const imgPath = `/OtsCourseCardImages/${imageName}`;
+  //   return fetch(imgPath)
+  //     .then((response) => response.blob())
+  //     .then((blob) => new File([blob], imageName, { type: blob.type }));
+  // };
   const handleTypeSelectChange = (e) => {
     const selectedValue = e.target.value;
+    console.log(selectedValue)
     setSelectedType(selectedValue);
   };
   const handleCourseNameBlur = async (name) => {
@@ -175,16 +180,21 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
     }
   };
   
-  
+    useEffect(() => {
+    if (selectedType === "1" && portalid === 3) {
+      const allSubjectIds = subjects.map(subject => subject.subject_id);
+      setSelectedSubjects(allSubjectIds);
+    } 
+  }, [selectedType, subjects,portalid]);
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const courseExists = await checkCourseNameExists(courseName);
+    // const courseExists = await checkCourseNameExists(courseName);
 
-    if (courseExists) {
-      alert("❌ This course name already exists!");
-      return;
-    }
+    // if (courseExists) {
+    //   alert("❌ This course name already exists!");
+    //   return;
+    // }
     const formData = new FormData();
     formData.append("courseName", courseName);
     formData.append("selectedYear", selectedYear);
@@ -200,12 +210,12 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
     if (portalid === 1) {
       formData.append("selectedTestTypes", JSON.stringify(selectedTestTypes)); 
     } else if (portalid === 3) {
-      formData.append("selectedTestTypes", selectedType); 
+      formData.append("selectedCourseTypes", selectedType); 
     }
 
     if (selectedImage) {
-      const imageFile = await getImageFile(selectedImage);
-      formData.append("courseImageFile", imageFile);
+      // const imageFile = await getImageFile(selectedImage);
+      formData.append("courseImageFile",`/OtsCourseCardImages/${selectedImage}`);
     }
   
     if (isEditMode && courseData.course_creation_id) {
@@ -406,26 +416,7 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
                 </div>
               }
 
-              {portalid == 3 && (
-                <div className={styles.InputBoxForCourses2}>
-                  <div className={styles.SelectBoxForCourses}>
-                    <div className={styles.HeadingForSubjectsSelectCourse}>
-                      <label>Subjects:</label>
-                    </div>
-                    <select
-                      value={selectedSubjects[0] || ""}
-                      onChange={(e) => setSelectedSubjects([e.target.value])}
-                    >
-                      <option value="">Select a subject</option>
-                      {subjects.map((subject) => (
-                        <option key={subject.subject_id} value={subject.subject_id}>
-                          {subject.subject_name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              )}
+      
 
             </div>
           </div>
@@ -477,7 +468,26 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
                   </div>
                 </div>
               </div>
+              
             )}
+                    {portalid == 3 && selectedType && selectedExamId && selectedType!== "1" && (
+                   
+                   <div>
+                     <label>Subjects:</label>
+                     <select
+                       value={selectedSubjects[0] || ""}
+                       onChange={(e) => setSelectedSubjects([e.target.value])}
+                     >
+                       <option value="">Select a subject</option>
+                       {subjects.map((subject) => (
+                         <option key={subject.subject_id} value={subject.subject_id}>
+                           {subject.subject_name}
+                         </option>
+                       ))}
+                     </select>
+                   </div>
+               
+           )}
 
             <div className={styles.TypeofCourses}>
               <label>Select Course Image:</label>
@@ -493,7 +503,7 @@ const CourseForm = ({ showForm, portalid, setShowForm, editCourseData, setEditCo
                 ))}
               </select>
 
-              {!isEditMode && selectedImage && (
+              {selectedImage && (
                 <div style={{ marginTop: "10px" }}>
                   <strong>Preview:</strong>
                   <br />

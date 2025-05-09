@@ -177,7 +177,7 @@ WHERE
                 course_creation_id: course.course_creation_id,
                 course_name: course.course_name,
                 total_price: course.total_price,
-                card_image: getImageUrl(course.card_image),
+                card_image: course.card_image,
                 total_tests: course.total_tests,
             });
         });
