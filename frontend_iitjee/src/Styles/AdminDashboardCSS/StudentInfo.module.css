@@ -326,6 +326,13 @@ font-size: 13px;
   cursor: pointer;
   z-index: 10;
 }
+@media(max-height:700px){
+  .studentMainContentHomePage{
+    height: calc(100vh - 11vh);
+    overflow: hidden;
+  }
+  
+}
  @media(max-width:600px){
   .StudentInformationfromDB {
     width: 90%;
