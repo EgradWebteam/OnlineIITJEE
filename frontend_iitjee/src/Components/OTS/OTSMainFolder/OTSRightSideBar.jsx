@@ -4,6 +4,7 @@ import { FaChevronRight } from "react-icons/fa";
 import { useStudent } from "../../../ContextFolder/StudentContext.jsx";
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 import adminCapImg from '../../../assets/logoCap.jpeg';
+import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 export default function OTSRightSideBar({
   testData,
   activeSubject,
@@ -15,6 +16,7 @@ export default function OTSRightSideBar({
   autoSaveNATIfNeeded,
   showSidebar,
   setShowSidebar,
+  realStudentId, realTestId
 }) {
   const { studentData } = useStudent();
   if (!testData || !Array.isArray(testData.subjects)) return null;
@@ -25,9 +27,18 @@ export default function OTSRightSideBar({
   );
 
   // Get active section from that subject
+  // const section = subject?.sections?.find(
+  //   (sec) => sec.SectionName === activeSection
+  // );
   const section = subject?.sections?.find(
-    (sec) => sec.SectionName === activeSection
+    (sec) =>
+      sec.SectionName === activeSection ||
+      sec.sectionName === activeSection ||
+      sec.sectionId === activeSection ||
+      sec.section_id === activeSection
   );
+  
+  
 
   const userData = studentData?.userDetails;
   const studentProfile = userData?.uploaded_photo;
@@ -37,7 +48,53 @@ export default function OTSRightSideBar({
     //  Read adminInfo from localStorage
   const adminInfo = JSON.parse(localStorage.getItem("adminInfo"));
   const isAdmin = adminInfo?.role === "admin";
-
+ const saveUserResponse = async ({
+    realStudentId,
+    realTestId,
+    subject_id,
+    section_id,
+    question_id,
+    question_type_id,
+    optionIndexes1 = "",
+    optionIndexes2 = "",
+    optionIndexes1CharCodes = [],
+    optionIndexes2CharCodes = [],
+    calculatorInputValue = "",
+    answered = "1", // default to '1' for answered, pass '2' for review
+  }) => {
+    try {
+      const payload = {
+        realStudentId,
+        realTestId,
+        subject_id,
+        section_id,
+        questionId: question_id,
+        questionTypeId: question_type_id,
+        optionIndexes1,
+        optionIndexes2,
+        optionIndexes1CharCodes,
+        optionIndexes2CharCodes,
+        calculatorInputValue,
+        answered,
+      };
+ 
+      const res = await fetch(`${BASE_URL}/OTS/SaveResponse`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+ 
+      const data = await res.json();
+      // console.log("SaveResponse API result:", data);
+ 
+      return data;
+    } catch (error) {
+      console.error("Error in saveUserResponse:", error);
+      return { success: false, message: "Network error" };
+    }
+  };
    
   useEffect(() => {
     if (!testData || !Array.isArray(testData.subjects)) return;
@@ -63,6 +120,7 @@ export default function OTSRightSideBar({
       }));
     }
   }, [testData, activeSubject, activeSection, userAnswers]);
+  
 
   // Calculate counts for each category (Answered, Not Answered, Not Visited, Marked for Review, etc.)
   const answeredCount =
@@ -105,11 +163,12 @@ export default function OTSRightSideBar({
       const section = subject?.sections?.find((sec) => sec.SectionName === activeSection);
       const question = section?.questions?.[index];
       if (!question) return;
-    
+   
       const existing = userAnswers?.[question.question_id];
     
       // Only apply NotAnsweredBtnCls if this question hasn't been touched
       if (!existing) {
+      
         setUserAnswers((prev) => ({
           ...prev,
           [question.question_id]: {
@@ -120,11 +179,65 @@ export default function OTSRightSideBar({
             type: "", // no answer yet
           },
         }));
+ 
+
+  
+            await saveUserResponse({
+              realStudentId,
+              realTestId,
+              subject_id: subject.subjectId,
+              section_id: section.sectionId,
+              question_id: question.question_id,
+              question_type_id: question?.questionType?.quesionTypeId,
+              answered: "3",
+            });
+
+    
       }
+      
     
       setActiveQuestionIndex(index);
     };
     
+    useEffect(() => {
+      console.log("Active Question Index:", activeQuestionIndex);
+      const saveIfNewQuestion = async () => {
+     
+        const subject = testData?.subjects?.find((sub) => sub.SubjectName === activeSubject);
+        const section = subject?.sections?.find((sec) => sec.SectionName === activeSection);
+        const question = section?.questions?.[activeQuestionIndex];
+        if (!question) return;
+        console.log(subject ,section, question);
+   
+        const existing = userAnswers?.[question.question_id];
+        console.log("existing", existing);
+        if (existing) return; // already answered, skip
+    
+        const qTypeId = question?.questionType?.quesionTypeId;
+        setUserAnswers((prev) => ({
+          ...prev,
+          [question.question_id]: {
+            subjectId: subject.subjectId,
+            sectionId: section.sectionId,
+            questionId: question.question_id,
+            buttonClass: styles.NotAnsweredBtnCls,
+            type: "", // no answer yet
+          },
+        }));
+    console.log("qTypeId", qTypeId);
+        await saveUserResponse({
+          realStudentId,
+          realTestId,
+          subject_id: subject.subjectId,
+          section_id: section.sectionId,
+          question_id: question.question_id,
+          question_type_id: qTypeId,
+          answered: "3",
+        });
+      };
+    
+      saveIfNewQuestion();
+    }, [activeQuestionIndex,userAnswers]);
     
   // const [showSidebar, setShowSidebar] = useState(true);
   // Toggle Sidebar visibility when button is clicked
@@ -244,7 +357,7 @@ export default function OTSRightSideBar({
             className={styles.QuestionsBtnsConatiner}
             ref={questionsContainerRef}
           >
-            {section?.questions?.map((q, index) => {
+            {/* {section?.questions?.map((q, index) => {
               const savedAnswer = userAnswers?.[q.question_id];
 
               // Check if this saved answer belongs to the current section
@@ -274,7 +387,33 @@ export default function OTSRightSideBar({
                   {index + 1}
                 </button>
               );
-            })}
+            })} */}
+{section?.questions?.map((q, index) => {
+  const savedAnswer = userAnswers?.[q.question_id];
+
+  // Normalize section IDs for comparison
+  const currentSectionId = Number(section?.sectionId ?? section?.section_id ?? 0);
+  const savedSectionId = Number(savedAnswer?.sectionId ?? 0);
+
+  const isFromCurrentSection = savedSectionId === currentSectionId;
+
+  const answerClass = isFromCurrentSection && savedAnswer?.buttonClass
+    ? savedAnswer.buttonClass
+    : styles.NotVisitedBehaviourBtns;
+
+  return (
+    <button
+      key={q.question_id}
+      className={`${styles.OTSQuestionBtn} ${
+        index === activeQuestionIndex ? styles.activeQuestionBtn : ""
+      } ${answerClass}`}
+      onClick={() => handleQuestionClick(index)}
+    >
+      {index + 1}
+    </button>
+  );
+})}
+
           </div>
         </div>
         {/* <div className={styles.chevRonrightForMobileRes} onClick={scrollRight}><FaChevronCircleRight/></div> */}

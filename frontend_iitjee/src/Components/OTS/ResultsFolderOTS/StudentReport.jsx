@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../../Styles/OTSCSS/OTSMain.module.css";
-import axios from "axios";
-import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
+
 import {
   PieChart,
   Pie,
@@ -13,39 +12,10 @@ import {
 } from "recharts";
 import LoadingSpinner from "../../../ContextFolder/LoadingSpinner.jsx";
 
-const StudentReport = ({ testId, studentId }) => {
-  const [data, setData] = useState(null);
+const StudentReport = ({ testId, studentId ,data,subjectMarks}) => {
 
-  useEffect(() => {
-    // Replace with your actual API endpoint
-    fetch(`${BASE_URL}/MyResults/StudentRankSummary/${studentId}/${testId}`)
-      .then((res) => res.json())
-      .then((result) => setData(result))
-      .catch((err) => console.error("Error fetching data:", err));
-  }, []);
 
-  const [subjectMarks, setSubjectMarks] = useState([]);
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchSubjectMarks = async () => {
-      try {
-        const response = await axios.get(
-          `${BASE_URL}/MyResults/TestSubjectWiseStudentMarks/${studentId}/${testId}`
-        );
-        setSubjectMarks(response.data.subjects);
-      } catch (err) {
-        setError("Error fetching data. Please try again later.");
-        console.error("Error fetching data:", err);
-      }
-    };
-
-    fetchSubjectMarks();
-  }, [studentId, testId]);
-
-  if (error) {
-    return <div>{error}</div>;
-  }
   // Convert HH:MM:SS to seconds
   // const parseTimeToSeconds = (timeStr) => {
   //   const [hours, minutes, seconds] = timeStr.split(":").map(Number);

@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/683a7f9a-855e-4b0e-b0ed-6314512de78e/resourceGroups/iit-prod-ci-rg/providers/Microsoft.Web/sites/iit-server",
+    "appService.deploySubpath": "backend_iitjee"
+}

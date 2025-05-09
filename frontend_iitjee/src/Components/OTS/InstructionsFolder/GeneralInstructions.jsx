@@ -9,6 +9,7 @@ import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx';
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 import adminCapImg from '../../../assets/logoCap.jpeg';
+import DisableKeysAndMouseInteractions from '../../../ContextFolder/DisableKeysAndMouseInteractions.jsx';
 const GeneralInstructions = () => {
     const { testId, studentId } = useParams();
     const navigate = useNavigate();
@@ -17,7 +18,8 @@ const GeneralInstructions = () => {
     const [realStudentId, setRealStudentId] = useState('');
     const [isDecrypting, setIsDecrypting] = useState(true);
     const { studentData} = useStudent();
-  
+   // Disable all keyboard and mouse interactions globally
+   DisableKeysAndMouseInteractions(null);
     const userData = studentData?.userDetails;
 
     const studentName = userData?.candidate_name;
@@ -99,12 +101,13 @@ const GeneralInstructions = () => {
     //   }, [handleBeforeUnload]);
 
 
-
-    // main code for delete student api
     // useEffect(() => {
     //     const handleBeforeUnload = () => {
     //       if (realTestId && realStudentId) {
-    //         const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`;
+    //         const url = `${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`;
+
+
+
      
     //         const data = JSON.stringify({
     //           studentId: realStudentId,
@@ -123,6 +126,21 @@ const GeneralInstructions = () => {
     //     };
     //   }, [realStudentId, realTestId]);
 
+
+//       useEffect(() => {
+//         const handleBeforeUnload = () => {
+//           if (realTestId && realStudentId) {
+//             const url = `${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`;
+//             const data = new Blob(
+//               [JSON.stringify({ studentId: realStudentId, testCreationTableId: realTestId })],
+//               { type: "application/json" }
+//             );
+//             navigator.sendBeacon(url, data);
+//           }
+//         };
+      
+//         window.addEventListener("beforeunload", handleBeforeUnload);
+
     //   useEffect(() => {
     //     const handleBeforeUnload = () => {
     //       if (realTestId && realStudentId) {
@@ -134,6 +152,7 @@ const GeneralInstructions = () => {
     //         navigator.sendBeacon(url, data);
     //       }
     //     };
+
       
     //     window.addEventListener("beforeunload", handleBeforeUnload);
       

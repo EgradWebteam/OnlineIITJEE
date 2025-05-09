@@ -100,6 +100,8 @@ app.use("/OrvlTopics", OrvlTopics);
 const EncryptDecrypt = require("./src/EncryptDecryptAPIs/encryptDecryptController.js");
 app.use("/EncryptDecrypt", EncryptDecrypt);
 /**EncrptDecryptAPIs */
+const ResumeTest = require("./src/StudentDashboardAPIs/Resume.js");
+app.use("/ResumeTest", ResumeTest);
 
 /**Payment API's */
 const razorpay = require("./src/PaymentGateway/Razorpay.js");

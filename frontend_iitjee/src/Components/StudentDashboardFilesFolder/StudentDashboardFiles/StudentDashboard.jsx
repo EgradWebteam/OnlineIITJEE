@@ -4,8 +4,8 @@ import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.
 import StudentDashboardLeftSideBar from './StudentDashboardLeftSidebar.jsx';
 import { useLocation,useNavigate, useParams  } from 'react-router-dom';
 import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx'
-import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js'; 
-
+import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
+ 
 import { useAlert } from "../StudentDashboardFiles/AlertContext";
 const StudentDashboardBookmarks = lazy(() => import('./StudentDashboardBookmarks.jsx'));
 const StudentDashboardHome = lazy(() => import("./StudentDashboardHome.jsx"));
@@ -14,8 +14,8 @@ const StudentDashboard_BuyCourses = lazy(() => import("./StudentDashboard_BuyCou
 const StudentDashboard_MyResults = lazy(() => import("./StudentDashboard_MyResults.jsx"));
 const StudentDashboard_AccountSettings = lazy(() => import("./StudentDashboard_AccountSettings.jsx"));
 const CustomLogoutPopup = lazy(() => import('./CustomLogoutPop.jsx'));
-
-export default function StudentDashboard() { 
+ 
+export default function StudentDashboard() {
   const [activeSection, setActiveSection] = useState("dashboard");
    const [activeSubSection, setActiveSubSection] = useState("profile");
   const [isLoading, setIsLoading] = useState(true);
@@ -23,7 +23,6 @@ export default function StudentDashboard() {
   const studentName = studentData?.userDetails?.candidate_name;
   const studentId = sessionStorage.getItem('decryptedId');
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
-  const [isReload, setIsReload] = useState(false);
   const { alert } = useAlert();
   const navigate = useNavigate();
     useEffect(() => {
@@ -46,90 +45,106 @@ export default function StudentDashboard() {
     //       sessionStorage.removeItem('isReloading'); // Clean up the flag
     //       return;
     //     }
-    
+   
     //     // Otherwise, handle tab close or back navigation
     //     handleLogout();
     //   };
-    
+   
     //   // Set a flag in sessionStorage when the page is about to reload
     //   const handleBeforeReload = () => {
     //     sessionStorage.setItem('isReloading', 'true');
     //   };
-    
+   
     //   window.addEventListener('beforeunload', handleBeforeUnload);
     //   window.addEventListener('beforeunload', handleBeforeReload);
-    
+   
     //   return () => {
     //     window.removeEventListener('beforeunload', handleBeforeUnload);
     //     window.removeEventListener('beforeunload', handleBeforeReload);
     //   };
     // }, []);
-    
-    
+   
+   
     useEffect(() => {
       let timeoutId;
       const resetInactivityTimer = () => {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
-          handleLogout(); 
-        }, 30 * 60 * 1000); 
+          handleLogout();
+        }, 30 * 60 * 1000);
       };
       const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
-    
+   
       events.forEach(event => {
         window.addEventListener(event, resetInactivityTimer);
       });
       resetInactivityTimer();
-    
+   
       return () => {
         events.forEach(event => {
           window.removeEventListener(event, resetInactivityTimer);
         });
-        clearTimeout(timeoutId); 
+        clearTimeout(timeoutId);
       };
     }, []);
-    
     useEffect(() => {
-      const navEntries = performance.getEntriesByType("navigation");
-      const wasReload = navEntries.length && navEntries[0].type === "reload";
-      setIsReload(wasReload)
-      // If reloaded, store a flag in sessionStorage
-      
-      const handlePopState = () => {
-        setShowLogoutPopup(true); // Always show popup on back
+      // Push initial state to browser history
+      window.history.pushState({ page: "dashboard" }, "", window.location.href);
+   
+      // Optional: Save to localStorage (in case you want to restore this later)
+      localStorage.setItem("pageState", JSON.stringify({ page: "dashboard" }));
+   
+      // Handle the back button press
+      const handlePopState = (event) => {
+        const state = event.state;
+        if (state?.page === "dashboard") {
+          setShowLogoutPopup(true);
+          // console.log("🔙 Back button detected - showing logout confirmation");
+   
+          // Re-push to history to prevent going further back without confirmation
+          window.history.pushState({ page: "dashboard" }, "", window.location.href);
+        }
       };
-    
-      // Push an initial state if it's first visit (not refresh)
-      if (!wasReload) {
-        window.history.pushState(null, "", window.location.pathname);
-      }
-    
-    
+   
       // Attach the event listener
       window.addEventListener("popstate", handlePopState);
-    
+   
       // Cleanup on unmount
       return () => {
         window.removeEventListener("popstate", handlePopState);
       };
-    }, [isReload]);
+    }, []);
+ 
+     //  Disable right-click globally
+  // useEffect(() => {
+  //   const handleRightClick = (e) => {
+  //     e.preventDefault();
+  //   };
+ 
+  //   document.addEventListener("contextmenu", handleRightClick);
+ 
+  //   return () => {
+  //     document.removeEventListener("contextmenu", handleRightClick);
+  //   };
+  // }, []);
+ 
     // useEffect(() => {
     //   const onBackButton = (event) => {
     //     event.preventDefault();
     //     setShowLogoutPopup(true);
     //     window.history.pushState(null, "", window.location.pathname);
     //   };
-  
+ 
     //   window.history.pushState(null, "", window.location.pathname);
     //   window.addEventListener("popstate", onBackButton);
-    
+   
     //   return () => {
     //     window.removeEventListener("popstate", onBackButton);
     //   };
     // }, []);
-    
-    
-  
+   
+   
+ 
     useEffect(() => {
       const sectionFromRoute = location.state?.activeSection;
       if (sectionFromRoute && !sessionStorage.getItem("sectionFromRouteUsed")) {
@@ -140,21 +155,21 @@ export default function StudentDashboard() {
         const savedSection = localStorage.getItem("activeSection") || "dashboard";
         setActiveSection(savedSection);
       }
-    
+   
       setIsLoading(false);
     }, [location.state]);
-
-      
+ 
+     
     const handleLogout = async () => {
-
+ 
       const sessionId = localStorage.getItem("sessionId");
-    
+   
       if (!sessionId) {
          await alert("No session found. Please log in again.", "error");
-         window.location.replace("/LoginPage");
+        navigate("/LoginPage");
         return;
       }
-    
+   
       try {
         const response = await fetch(`${BASE_URL}/student/studentLogout`, {
           method: "POST",
@@ -163,11 +178,11 @@ export default function StudentDashboard() {
           },
           body: JSON.stringify({ sessionId }),
         });
-    
+   
         const data = await response.json();
         if (response.ok) {
           localStorage.clear();  
-          window.location.replace("/LoginPage");
+          navigate("/LoginPage");
         } else {
           await alert("No session found. Please log in again.", "error");
         }
@@ -177,15 +192,15 @@ export default function StudentDashboard() {
     };
     const handleConfirmForBrowserBackButton=()=>{
        setShowLogoutPopup(false);
-      handleLogout(); 
+      handleLogout();
     }
-    
+   
     const renderStudentDashboardContent = () => {
       const localSessionId = localStorage.getItem('sessionId');
   const sessionSessionId = sessionStorage.getItem('sessionId');
-
+ 
   if (!localSessionId || !sessionSessionId || localSessionId !== sessionSessionId) {
-
+ 
     navigate('/LoginPage');
     return null;
   }
@@ -208,7 +223,7 @@ export default function StudentDashboard() {
           setActiveSubSection={setActiveSubSection}
           />;
         default:
-          return <StudentDashboardHome 
+          return <StudentDashboardHome
           handleSectionChange={handleSectionChange}
           />;
       }
@@ -216,14 +231,14 @@ export default function StudentDashboard() {
   if (isLoading) {
     return <div><LoadingSpinner/></div>;
   }
-  
+ 
   return (
     <div className={styles.StudentDashboardInterFace}>
       <StudentDashboardHeader  userData ={studentData?.userDetails} setActiveSection={setActiveSection} setActiveSubSection={setActiveSubSection}/>
       <div className={styles.StudentDashboardContentHolder}>
         <div className={styles.studentDashboardLeftNavHolder}>
           <StudentDashboardLeftSideBar
-          activeSection={activeSection} 
+          activeSection={activeSection}
           handleSectionChange={handleSectionChange}
         />
         </div>
@@ -238,15 +253,19 @@ export default function StudentDashboard() {
      
       {showLogoutPopup && (
   <CustomLogoutPopup
-    onConfirm={handleConfirmForBrowserBackButton}
+    onConfirm={() => {
+      //console.log("✅ User confirmed logout from popup");
+     handleConfirmForBrowserBackButton();
+    }}
     onCancel={() => {
       //console.log("❌ User canceled logout from popup");
       setShowLogoutPopup(false);
     }}
   />
-  
 )}
-
+ 
     </div>
   );
 }
+ 
+ 
