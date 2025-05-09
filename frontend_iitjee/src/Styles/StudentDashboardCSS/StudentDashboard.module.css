@@ -881,7 +881,8 @@ height: 100%;
   font-size: 20px;
 }
 .startTestBtn,
-.viewReportBtn {
+.viewReportBtn,
+.resumeTestBtn {
   color: white;
   font-weight: bold;
   padding: 0.5rem 1rem;
@@ -894,6 +895,9 @@ height: 100%;
 }
 .viewReportBtn {
   background-color: green;
+}
+.resumeTestBtn{
+  background-color: purple;
 }
 .durationHolderdiv {
   display: flex;

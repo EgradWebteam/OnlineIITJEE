@@ -25,46 +25,65 @@ const ExamInstrctions = React.lazy(() => import('./Components/OTS/InstructionsFo
 const AdminProfiler = React.lazy(() => import('./Components/AdminDasboardPagesFolder/AdminDashboardFiles/AdminProfiler.jsx'));
 const OrvlDashboard = React.lazy(() => import("./Components/AdminDasboardPagesFolder/OrvlAdminDashboard/OrvlAdminDashboard.jsx"))
 const StudentReportMain = React.lazy(() => import('./Components/OTS/ResultsFolderOTS/StudentReportMain.jsx'));
+
+import { TimerProvider } from './ContextFolder/TimerContext.jsx';
+import { QuestionStatusProvider } from './ContextFolder/CountsContext.jsx';
+
 import LoadingSpinner from './ContextFolder/LoadingSpinner.jsx';
+
 function App() {
   return (
     <Suspense fallback={<div><LoadingSpinner/></div>}>
       <BrowserRouter>
+
         <AlertProvider>
-          <Routes>
-            <Route path="/" element={<LandingPageIITJEE />} />
-            <Route path="/OTSHomePage" element={<OTSandORVLHomePage />} />
-            <Route path="/ORVLHomePage" element={<OTSandORVLHomePage />} />
-            <Route path="/CourseRegistrationGuide" element={<RegistrationGuideHomePage />} />
-            <Route path='/LoginPage' element={<StudentLogineGradTutor />} />
-            <Route path="/StudentRegistrationPage" element={<StudentRegistrationeGradTutor />} />
-            <Route path="/AdminLoginPage" element={<AdminLogin />} />
-            <Route
-              path="/StudentDashboard/:userId"
-              element={
-                <ProtectedRoute>
-                  <StudentDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route path='/FooterTermsAndConditions' element={<FooterTermsAndConditions />} />
-            <Route path='/ContactUs' element={<ContactUs />} />
-            <Route path='/AdminDashboard' element={<MainLayout />} />
-            <Route path='/OTSRootFile/:testId/:studentId' element={<OTSRootFile />} />
-            <Route path='/OTSTerminationPage' element={<OTSTerminationPage />} />
-            <Route path="/StudentInfo" element={<StudentInfo />} />
-            <Route path="/CourseCreation" element={<CourseCreationTab />} />
-            <Route path='/GeneralInstructions/:testId/:studentId' element={<GeneralInstructions />} />
-            <Route path='/Error' element={<PageNotFound />} />
-            <Route path='/ExamInstructions/:testId/:studentId' element={<ExamInstrctions />} />
-            <Route path="/AdminProfiler" element={<AdminProfiler />} />
-            <Route path="/OrvlDashboard" element={<OrvlDashboard />} />
-            <Route path='/GeneralInstructions/:testId' element={<GeneralInstructions />} />
-            <Route path='/ExamInstructions/:testId' element={<ExamInstrctions />} />
-            <Route path='/OTSRootFile/:testId' element={<OTSRootFile />} />
-            <Route path='/StudentReport/:testId' element={<StudentReportMain />} />
-          </Routes>
+            <Routes>
+          <Route path="/" element={<LandingPageIITJEE />} />
+          <Route path="/OTSHomePage" element={<OTSandORVLHomePage />} />
+          <Route path="/ORVLHomePage" element={<OTSandORVLHomePage />} />
+          <Route path="/CourseRegistrationGuide" element={<RegistrationGuideHomePage />} />
+          <Route path='/LoginPage' element={<StudentLogineGradTutor />} />
+          <Route path="/StudentRegistrationPage" element={<StudentRegistrationeGradTutor />} />
+          <Route path="/AdminLoginPage" element={<AdminLogin />} />
+          <Route
+            path="/StudentDashboard/:userId"
+            element={
+              <ProtectedRoute>
+                <StudentDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route path='/FooterTermsAndConditions' element={<FooterTermsAndConditions />} />
+          <Route path='/ContactUs' element={<ContactUs />} />
+          <Route path='/AdminDashboard' element={<MainLayout />} />
+          <Route path='/OTSRootFile/:testId/:studentId' element={
+            <QuestionStatusProvider>
+            <TimerProvider>
+            <OTSRootFile />
+            </TimerProvider>
+            </QuestionStatusProvider>
+            } />
+          <Route path='/OTSTerminationPage' element={<OTSTerminationPage />} />
+          <Route path="/StudentInfo" element={<StudentInfo />} />
+          <Route path="/CourseCreation" element={<CourseCreationTab />} />
+          <Route path='/GeneralInstructions/:testId/:studentId' element={<GeneralInstructions />} />
+          <Route path='/Error' element={<PageNotFound />} />
+          <Route path='/ExamInstructions/:testId/:studentId' element={<ExamInstrctions />} />
+          <Route path="/AdminProfiler" element={<AdminProfiler />} />
+          <Route path="/OrvlDashboard" element={<OrvlDashboard />} />
+          <Route path='/GeneralInstructions/:testId' element={<GeneralInstructions />} />
+          <Route path='/ExamInstructions/:testId' element={<ExamInstrctions />} />
+          <Route path='/OTSRootFile/:testId' element={
+         <QuestionStatusProvider>
+         <TimerProvider>
+         <OTSRootFile />
+         </TimerProvider>
+         </QuestionStatusProvider>
+            } />
+          <Route path='/StudentReport/:testId' element={<StudentReportMain />} />
+        </Routes>
         </AlertProvider>
+
       </BrowserRouter>
     </Suspense>
   )

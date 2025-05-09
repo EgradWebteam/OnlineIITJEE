@@ -291,6 +291,27 @@ export default function QuestionNavigationButtons({
   // );
  
    //without optimised code 
+   const isAnswerActuallyChanged = (prev = {}, current = {}) => {
+    if (prev.buttonClass !== current.buttonClass
+        ) return true;
+  console.log("prev",prev,"current",current)
+    switch (current.type) {
+      case "MCQ":
+        console.log("prev.optionId",prev.optionId,"current.optionId",current.optionId)
+        return String(prev.optionId) !== String(current.optionId) ;
+
+  
+      case "MSQ":
+        return JSON.stringify(prev.selectedOptions?.sort()) !== JSON.stringify(current.selectedOptions?.sort());
+  
+      case "NAT":
+        return String(prev.natAnswer?.trim()) !== String(current.natAnswer?.trim());
+  
+      default:
+        return false;
+    }
+  };
+  
   const handleSaveAndNext = async () => {
     const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
     const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
@@ -301,7 +322,7 @@ export default function QuestionNavigationButtons({
     const subjectId = subject.subjectId;
     const sectionId = section.sectionId;
     const qTypeId = question?.questionType?.quesionTypeId;
- 
+console.log(qTypeId,"type of ",typeof qTypeId)
     const existingAnswer = userAnswers?.[qid];
     let buttonClass = existingAnswer?.buttonClass || styles.NotAnsweredBtnCls;
  
@@ -310,10 +331,11 @@ export default function QuestionNavigationButtons({
     let optionIndexesStr = "";
     let optionCharCodes = [];
     let calcVal = "";
- 
+console.log(selectedOption?.option_index,[1, 2].includes(qTypeId))
     if ([1, 2].includes(qTypeId) && selectedOption?.option_index) {
+     
       optionIndexesStr = selectedOption.option_index;
- 
+      console.log("dfdfdf",optionIndexesStr,question.options.option_index,selectedOption.option_index)
       const matchedOption = question.options.find(
         opt => opt.option_index === selectedOption.option_index
       );
@@ -328,7 +350,7 @@ export default function QuestionNavigationButtons({
       };
     } else if ([3, 4].includes(qTypeId) && Array.isArray(selectedOptionsArray) && selectedOptionsArray.length > 0) {
       optionIndexesStr = selectedOptionsArray.join(",");
-   
+      console.log("ffff",optionIndexesStr)
       optionCharCodes = selectedOptionsArray.map(optIndex => {
         const match = question.options.find(qOpt => qOpt.option_index === optIndex);
         return match?.option_id;
@@ -365,26 +387,99 @@ export default function QuestionNavigationButtons({
       };
     }
  
-    // Save to local state
-    setUserAnswers(prev => {
-      const updated = { ...prev, [qid]: savedData };
+    // // Save to local state
+    // setUserAnswers(prev => {
+    //   const updated = { ...prev, [qid]: savedData };
  
-      const totalQuestions = section?.questions?.length || 0;
-      if (activeQuestionIndex < totalQuestions - 1) {
-        const nextQuestion = section?.questions?.[activeQuestionIndex + 1];
-        if (nextQuestion && !updated[nextQuestion.question_id]) {
-          updated[nextQuestion.question_id] = {
-            subjectId,
-            sectionId,
-            questionId: nextQuestion.question_id,
-            buttonClass: styles.NotAnsweredBtnCls,
-            type: ""
-          };
-        }
-      }
-      return updated;
-    });
+    //   const totalQuestions = section?.questions?.length || 0;
+    //   if (activeQuestionIndex < totalQuestions - 1) {
+    //     const nextQuestion = section?.questions?.[activeQuestionIndex + 1];
+    //     if (nextQuestion && !updated[nextQuestion.question_id]) {
+    //       updated[nextQuestion.question_id] = {
+    //         subjectId,
+    //         sectionId,
+    //         questionId: nextQuestion.question_id,
+    //         buttonClass: styles.NotAnsweredBtnCls,
+    //         type: ""
+    //       };
+    //     }
+    //   }
+    //   return updated;
+    // });
+    const nextQuestion = section?.questions?.[activeQuestionIndex + 1];
+const nextQid = nextQuestion?.question_id;
+const totalQuestions = section?.questions?.length || 0;
 
+// if (
+//   nextQuestion &&
+//   activeQuestionIndex < totalQuestions - 1 &&
+//   !userAnswers?.[nextQid] // Ensure the next question doesn't already have an answer
+// ) {
+//   // 1. Update local state
+//   setUserAnswers(prev => ({
+//     ...prev,
+//     [qid]: savedData,
+//     [nextQid]: {
+//       subjectId,
+//       sectionId,
+//       questionId: nextQid,
+//       buttonClass: styles.NotAnsweredBtnCls,
+//       type: ""
+//     }
+//   }));
+
+//   // 2. Send to backend
+//   if (realStudentId && realTestId) {
+//     await saveUserResponse({
+//       realStudentId,
+//       realTestId,
+//       subject_id: subjectId,
+//       section_id: sectionId,
+//       question_id: nextQid,
+//       question_type_id: nextQuestion?.questionType?.quesionTypeId || null,
+//       optionIndexes1: "",
+//       optionIndexes1CharCodes: [],
+//       calculatorInputValue: "",
+//       answered: "3" // Not Answered
+//     });
+//   }
+// } 
+
+setUserAnswers(prev => {
+  const updated = { ...prev, [qid]: savedData };
+
+  // Add next question as 'Not Answered' only if it doesn't exist
+  if (
+    nextQuestion &&
+    activeQuestionIndex < totalQuestions - 1 &&
+    !prev[nextQid]
+  ) {
+    updated[nextQid] = {
+      subjectId,
+      sectionId,
+      questionId: nextQid,
+      buttonClass: styles.NotAnsweredBtnCls,
+      type: ""
+    };
+    if (realStudentId && realTestId) {
+      saveUserResponse({
+        realStudentId,
+        realTestId,
+        subject_id: subjectId,
+        section_id: sectionId,
+        question_id: nextQid,
+        question_type_id: nextQuestion?.questionType?.quesionTypeId || null,
+        optionIndexes1: "",
+        optionIndexes1CharCodes: [],
+        calculatorInputValue: "",
+        answered: "3" // Not Answered
+      });
+    }
+  
+  }
+
+  return updated;
+});
     // Check if there's any answer to save
     const shouldSave =
     ([1, 2].includes(qTypeId) &&
@@ -405,8 +500,15 @@ if (!realStudentId || !realTestId) {
   // Return after navigation
   return;
 }
+
+const isAnswerChanged = isAnswerActuallyChanged(existingAnswer, savedData);
+console.log("Is answer changed:", isAnswerChanged);
+const isStatusChanged =
+existingAnswer?.buttonClass !== savedData.buttonClass ||
+existingAnswer?.type !== savedData.type;
+console.log(isStatusChanged )
     // Send to backend
-    if (shouldSave) {
+    if ((shouldSave && isAnswerChanged) || ((shouldSave ) && !isAnswerChanged) ) {
       await saveUserResponse({
         realStudentId,
         realTestId,
@@ -417,7 +519,7 @@ if (!realStudentId || !realTestId) {
         optionIndexes1: optionIndexesStr,
         optionIndexes1CharCodes: optionCharCodes,
         calculatorInputValue: calcVal,
-        answered: "1" // answered
+        answered: shouldSave ? "1" : "3"
       });
     }
     // Move to next question
@@ -539,26 +641,29 @@ const handleMarkedForReview = async () => {
     const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
     const section = subject?.sections?.find(sec => sec.SectionName === activeSection);
     const question = section?.questions?.[activeQuestionIndex];
+
     if (!question) return;
  
     const qid = question.question_id;
     const subjectId = subject.subjectId;
     const sectionId = section.sectionId;
     const qTypeId = question?.questionType?.quesionTypeId;
-
+    const existingAnswer = userAnswers?.[qid];
     let buttonClass = styles.MarkedForReview;
     let savedData = { subjectId, sectionId, questionId: qid, type: "", buttonClass };
- 
+    console.log(savedData)
+    console.log( question ,existingAnswer)
     let optionIndexesStr = "";
     let optionCharCodes = [];
     let calcVal = "";
- 
+ console.log(selectedOption?.option_index,[1, 2].includes(qTypeId))
     if ([1, 2].includes(qTypeId) && selectedOption?.option_index) {
       optionIndexesStr = selectedOption.option_index;
  
       const matchedOption = question.options.find(
         opt => opt.option_index === selectedOption.option_index
       );
+      console.log("matchedOption",matchedOption)
       optionCharCodes = matchedOption ? [matchedOption.option_id] : [];
  
       buttonClass = styles.AnsMarkedForReview;
@@ -593,29 +698,111 @@ const handleMarkedForReview = async () => {
         type: "NAT"
       };
     }
+    if (
+      !([1, 2].includes(qTypeId) && selectedOption?.option_index) &&
+      !([3, 4].includes(qTypeId) && Array.isArray(selectedOptionsArray) && selectedOptionsArray.length > 0) &&
+      !([5, 6].includes(qTypeId) && natValue?.trim() !== "")
+    ) {
+      savedData = {
+        ...savedData,
+        buttonClass: styles.MarkedForReview,
+        type: ""
+      };
+    }
+    // // Save to local state
+    // setUserAnswers(prev => {
+    //   const updated = { ...prev, [qid]: savedData };
  
-    // Save to local state
-    setUserAnswers(prev => {
-      const updated = { ...prev, [qid]: savedData };
+    //   const totalQuestions = section?.questions?.length || 0;
+    //   if (activeQuestionIndex < totalQuestions - 1) {
+    //     const nextQuestion = section?.questions?.[activeQuestionIndex + 1];
+    //     if (nextQuestion && !updated[nextQuestion.question_id]) {
+    //       updated[nextQuestion.question_id] = {
+    //         subjectId,
+    //         sectionId,
+    //         questionId: nextQuestion.question_id,
+    //         buttonClass: styles.NotAnsweredBtnCls,
+    //         type: ""
+    //       };
+    //     }
+    //   }
+    //   return updated;
+    // });
  
-      const totalQuestions = section?.questions?.length || 0;
-      if (activeQuestionIndex < totalQuestions - 1) {
-        const nextQuestion = section?.questions?.[activeQuestionIndex + 1];
-        if (nextQuestion && !updated[nextQuestion.question_id]) {
-          updated[nextQuestion.question_id] = {
-            subjectId,
-            sectionId,
-            questionId: nextQuestion.question_id,
-            buttonClass: styles.NotAnsweredBtnCls,
-            type: ""
-          };
-        }
-      }
-      return updated;
-    });
- 
+    const nextQuestion = section?.questions?.[activeQuestionIndex + 1];
+const nextQid = nextQuestion?.question_id;
+const totalQuestions = section?.questions?.length || 0;
+console.log(userAnswers?.[nextQid] )
+// if (
+//   nextQuestion &&
+//   activeQuestionIndex < totalQuestions - 1 &&
+//   !userAnswers?.[nextQid] // Ensure the next question doesn't already have an answer
+// ) {
+//   // 1. Update local state
+//   setUserAnswers(prev => ({
+//     ...prev,
+//     [qid]: savedData,
+//     [nextQid]: {
+//       subjectId,
+//       sectionId,
+//       questionId: nextQid,
+//       buttonClass: styles.NotAnsweredBtnCls,
+//       type: ""
+//     }
+//   }));
 
- 
+//   // 2. Send to backend
+//   if (realStudentId && realTestId) {
+//     await saveUserResponse({
+//       realStudentId,
+//       realTestId,
+//       subject_id: subjectId,
+//       section_id: sectionId,
+//       question_id: nextQid,
+//       question_type_id: nextQuestion?.questionType?.quesionTypeId || null,
+//       optionIndexes1: "",
+//       optionIndexes1CharCodes: [],
+//       calculatorInputValue: "",
+//       answered: "3" // Not Answered
+//     });
+//   }
+// }
+ // Always update current question answer
+setUserAnswers(prev => {
+  const updated = { ...prev, [qid]: savedData };
+
+  // Add next question as 'Not Answered' only if it doesn't exist
+  if (
+    nextQuestion &&
+    activeQuestionIndex < totalQuestions - 1 &&
+    !prev[nextQid]
+  ) {
+    updated[nextQid] = {
+      subjectId,
+      sectionId,
+      questionId: nextQid,
+      buttonClass: styles.NotAnsweredBtnCls,
+      type: ""
+    };
+    if (realStudentId && realTestId) {
+      saveUserResponse({
+        realStudentId,
+        realTestId,
+        subject_id: subjectId,
+        section_id: sectionId,
+        question_id: nextQid,
+        question_type_id: nextQuestion?.questionType?.quesionTypeId || null,
+        optionIndexes1: "",
+        optionIndexes1CharCodes: [],
+        calculatorInputValue: "",
+        answered: "3" // Not Answered
+      });
+    }
+  }
+
+  return updated;
+});
+
         // Check if there's any answer to save
         const shouldSave =
         ([1, 2].includes(qTypeId) &&
@@ -636,8 +823,16 @@ if (!realStudentId || !realTestId) {
   //Return after navigation
   return;
 }
+const isAnswerChanged = isAnswerActuallyChanged(existingAnswer, savedData);
+console.log("Is answer changed:", isAnswerChanged);
+const isStatusChanged =
+existingAnswer?.buttonClass !== savedData.buttonClass ||
+existingAnswer?.type !== savedData.type;
+console.log(isStatusChanged )
+    // Send to backend
+    if ((shouldSave && isAnswerChanged) || (!shouldSave && !existingAnswer)  || isStatusChanged ) {
     // // Save to backend
-      if (shouldSave) {
+    
         await saveUserResponse({
           realStudentId,
           realTestId,
@@ -648,18 +843,15 @@ if (!realStudentId || !realTestId) {
           optionIndexes1: optionIndexesStr,
           optionIndexes1CharCodes: optionCharCodes,
           calculatorInputValue: calcVal,
-          answered: "2", // marked for review
+          answered:shouldSave? "2": "4", //Ans and marked for review
         });
   
+      
       }
  
     // Move to next question
     navigateToNext(subject, section, activeQuestionIndex);
   };
- 
- 
- 
- 
  
   const handleClearResponse = async () => {
     const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);
@@ -700,7 +892,7 @@ if (!realStudentId || !realTestId) {
     try {
       // Call DELETE API without a body
       const response = await fetch(`${BASE_URL}/OTS/ClearResponse/${realStudentId}/${realTestId}/${qid}`, {
-        method: 'DELETE',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -709,7 +901,7 @@ if (!realStudentId || !realTestId) {
       const data = await response.json();
  
       if (!data.success) {
-        console.warn('Delete API response:', data.message);
+        console.warn('Clear Response API response:', data.message);
       } else {
         console.log('Response deleted from DB');
       }

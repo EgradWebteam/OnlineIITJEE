@@ -12,6 +12,7 @@ import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.pn
 import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx'
 import adminCapImg from '../../../assets/logoCap.jpeg';
 import TermsAndConditions from "../../GlobalFiles/TermsAndConditions.jsx";
+import DisableKeysAndMouseInteractions from "../../../ContextFolder/DisableKeysAndMouseInteractions.jsx";
 
 const ExamInstructions = () => {
   const { testId, studentId } = useParams();
@@ -23,6 +24,8 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [acceptedTerms, setAcceptedTerms] = useState(false); // 👈 Track checkbox
   const { studentData } = useStudent();
+   // Disable all keyboard and mouse interactions globally
+   DisableKeysAndMouseInteractions(null);
 
   const userData = studentData?.userDetails;
   const studentName = userData?.candidate_name;
@@ -65,12 +68,11 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
     //   };
     // }, [realTestId, realStudentId]);
 
-    
-    // main code for delete student api
     // useEffect(() => {
     //     const handleBeforeUnload = () => {
     //       if (realTestId && realStudentId) {
-    //         const url = `${BASE_URL}/OTSExamSummary/DeleteStudentDataWindowClose/${realStudentId}/${realTestId}`;
+    //         const url = `${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`;
+
      
     //         const data = JSON.stringify({
     //           studentId: realStudentId,
@@ -88,7 +90,7 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
     //       window.removeEventListener("beforeunload", handleBeforeUnload);
     //     };
     //   }, [realStudentId, realTestId]);
-      //main code for delete student api end
+
 
 
     // const handleBeforeUnload = useCallback(

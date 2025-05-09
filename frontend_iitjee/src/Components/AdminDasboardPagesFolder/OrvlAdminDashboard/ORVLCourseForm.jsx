@@ -288,22 +288,22 @@
 //             </select>
 //           </label>
 //         </div>
-//         {selectedType && selectedExamId && selectedType !== 1 && (
-//           <div>
-//             <label>Subjects:</label>
-//             <select
-//               value={selectedSubjects[0] || ""}
-//               onChange={(e) => setSelectedSubjects([e.target.value])}
-//             >
-//               <option value="">Select a subject</option>
-//               {subjects.map((subject) => (
-//                 <option key={subject.subject_id} value={subject.subject_id}>
-//                   {subject.subject_name}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-//         )}
+        // {selectedType && selectedExamId && selectedType !== 1 && (
+        //   <div>
+        //     <label>Subjects:</label>
+        //     <select
+        //       value={selectedSubjects[0] || ""}
+        //       onChange={(e) => setSelectedSubjects([e.target.value])}
+        //     >
+        //       <option value="">Select a subject</option>
+        //       {subjects.map((subject) => (
+        //         <option key={subject.subject_id} value={subject.subject_id}>
+        //           {subject.subject_name}
+        //         </option>
+        //       ))}
+        //     </select>
+        //   </div>
+        // )}
 
 //         <div>
 //           <label>Select Course Image:</label>
