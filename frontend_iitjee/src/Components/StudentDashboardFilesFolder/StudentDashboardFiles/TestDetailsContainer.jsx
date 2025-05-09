@@ -10,6 +10,8 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
   const [courseName, setCourseName] = useState('');
   const [selectedTestType, setSelectedTestType] = useState('Select Type Of Test');
   const [showPopup, setShowPopup] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
+
  
   const course_creation_id = course?.course_creation_id;
   const navigate = useNavigate();
@@ -58,7 +60,7 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
     if (course_creation_id && studentId) {
       fetchCourseTests();
     }
-  }, [course_creation_id, studentId]);
+  }, [course_creation_id, studentId, refreshTrigger]);
  
  
   const allTestTypes = ['Select Type Of Test', ...Object.keys(groupedTests)];
@@ -202,6 +204,28 @@ const handleStartTestClick = async (testCreationTableId) => {
       // Open the new window
       const newWinRef = window.open(url, "_blank", `width=${screenWidth},height=${screenHeight},fullscreen=yes`);
  
+      // force resize window to full screen only - start
+      if (newWinRef) {
+        const resizeMonitor = setInterval(() => {
+          try {
+            if (
+              newWinRef.outerWidth !== screenWidth ||
+              newWinRef.outerHeight !== screenHeight
+            ) {
+              newWinRef.resizeTo(screenWidth, screenHeight);
+              newWinRef.moveTo(0, 0);
+            }
+          } catch (err) {
+            console.warn("Resize attempt failed (possibly cross-origin):", err);
+          }
+      
+          if (newWinRef.closed) {
+            clearInterval(resizeMonitor);
+          }
+        }, 1000); // Check every second
+      }
+      // force resize window to full screen only - end
+      
       if (newWinRef) {
         window.addEventListener('beforeunload', () => {
           if (newWinRef && !newWinRef.closed) {
@@ -264,7 +288,10 @@ const handleStartTestClick = async (testCreationTableId) => {
                 console.error("Error deleting data on window close:", error);
               });
  
-              localStorage.removeItem(`OTS_FormattedTime`)
+              localStorage.removeItem(`OTS_FormattedTime`);
+
+                //Trigger re-fetch of test data
+                setRefreshTrigger(prev => !prev);
            
           }
         }, 1000);

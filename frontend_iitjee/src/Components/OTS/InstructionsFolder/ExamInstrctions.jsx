@@ -12,6 +12,7 @@ import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.pn
 import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx'
 import adminCapImg from '../../../assets/logoCap.jpeg';
 import TermsAndConditions from "../../GlobalFiles/TermsAndConditions.jsx";
+import DisableKeysAndMouseInteractions from "../../../ContextFolder/DisableKeysAndMouseInteractions.jsx";
 
 const ExamInstructions = () => {
   const { testId, studentId } = useParams();
@@ -23,6 +24,8 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [acceptedTerms, setAcceptedTerms] = useState(false); // 👈 Track checkbox
   const { studentData } = useStudent();
+   // Disable all keyboard and mouse interactions globally
+   DisableKeysAndMouseInteractions(null);
 
   const userData = studentData?.userDetails;
   const studentName = userData?.candidate_name;

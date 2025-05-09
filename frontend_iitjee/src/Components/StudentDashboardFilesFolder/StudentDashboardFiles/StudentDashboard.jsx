@@ -114,6 +114,20 @@ export default function StudentDashboard() {
         window.removeEventListener("popstate", handlePopState);
       };
     }, []);
+
+     //  Disable right-click globally
+  // useEffect(() => {
+  //   const handleRightClick = (e) => {
+  //     e.preventDefault();
+  //   };
+
+  //   document.addEventListener("contextmenu", handleRightClick);
+
+  //   return () => {
+  //     document.removeEventListener("contextmenu", handleRightClick);
+  //   };
+  // }, []);
+
     // useEffect(() => {
     //   const onBackButton = (event) => {
     //     event.preventDefault();

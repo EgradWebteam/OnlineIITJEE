@@ -10,6 +10,7 @@ import { BASE_URL } from "../../ConfigFile/ApiConfigURL.js";
 import { TimerProvider } from "../../ContextFolder/TimerContext.jsx";
 import { useTimer } from "../../ContextFolder/TimerContext.jsx";
 import { useQuestionStatus } from "../../ContextFolder/CountsContext.jsx";
+import DisableKeysAndMouseInteractions from "../../ContextFolder/DisableKeysAndMouseInteractions.jsx";
 export default function OTSRootFile() {
   const { testId, studentId } = useParams();
   const navigate = useNavigate();
@@ -23,6 +24,8 @@ export default function OTSRootFile() {
   const pressedKeys = useRef(new Set());
   const terminationCalledRef = useRef(false);
   const summaryData = useRef({});
+   // Disable all keyboard and mouse interactions globally
+   DisableKeysAndMouseInteractions(null);
 
 
 console.log("summaryData",summaryData.current)
@@ -374,6 +377,8 @@ console.log("summaryData",summaryData.current)
   //     return newCount;
   //   });
   // };
+
+  
   
 
   const handleBlur = async () => {
@@ -381,6 +386,10 @@ console.log("summaryData",summaryData.current)
     setViolationCount((prevCount) => {
       const newCount = prevCount + 1;
       console.log("Blur event triggered. Violation count:", newCount);
+
+       //Show warning when blur happens
+       setWarningMessage(true);
+       setTimeout(() => setWarningMessage(false), 10000); // hide after 10s
   
       // Handle side-effects outside
       if (newCount >= 4) {

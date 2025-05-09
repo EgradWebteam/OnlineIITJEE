@@ -10,6 +10,7 @@ import OtsTimer from "./OTSTimer.jsx";
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
 import axios from "axios";
 import ExamSummaryCollector from "./ExamSummaryCollector.jsx";
+import LoadingSpinner from "../../../ContextFolder/LoadingSpinner.jsx";
 // import { useTimer } from "../../../ContextFolder/TimerContext.jsx";
 
 export default function OTSMain({ testData, realStudentId, realTestId,warningMessage, summaryData}) {
@@ -249,7 +250,7 @@ useEffect(() => {
 }, [realStudentId, realTestId,]);
 
 if (isLoading) {
-  return <div style={{ padding: '20px', textAlign: 'center' }}>Loading your test data...</div>;
+  return <div><LoadingSpinner/></div>;
 }
 
 // storing time in localstorage to store

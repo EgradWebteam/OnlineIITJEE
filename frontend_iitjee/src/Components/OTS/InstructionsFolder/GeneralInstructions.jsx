@@ -9,6 +9,7 @@ import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx';
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 import adminCapImg from '../../../assets/logoCap.jpeg';
+import DisableKeysAndMouseInteractions from '../../../ContextFolder/DisableKeysAndMouseInteractions.jsx';
 const GeneralInstructions = () => {
     const { testId, studentId } = useParams();
     const navigate = useNavigate();
@@ -17,7 +18,8 @@ const GeneralInstructions = () => {
     const [realStudentId, setRealStudentId] = useState('');
     const [isDecrypting, setIsDecrypting] = useState(true);
     const { studentData} = useStudent();
-  
+   // Disable all keyboard and mouse interactions globally
+   DisableKeysAndMouseInteractions(null);
     const userData = studentData?.userDetails;
 
     const studentName = userData?.candidate_name;
