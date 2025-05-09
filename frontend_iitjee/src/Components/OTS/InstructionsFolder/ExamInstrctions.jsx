@@ -12,7 +12,7 @@ import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.pn
 import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx'
 import adminCapImg from '../../../assets/logoCap.jpeg';
 import TermsAndConditions from "../../GlobalFiles/TermsAndConditions.jsx";
-import DisableKeysAndMouseInteractions from "../../../ContextFolder/DisableKeysAndMouseInteractions.jsx";
+// import DisableKeysAndMouseInteractions from "../../../ContextFolder/DisableKeysAndMouseInteractions.jsx";
 
 const ExamInstructions = () => {
   const { testId, studentId } = useParams();
@@ -25,7 +25,7 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false); // 👈 Track checkbox
   const { studentData } = useStudent();
    // Disable all keyboard and mouse interactions globally
-   DisableKeysAndMouseInteractions(null);
+  //  DisableKeysAndMouseInteractions(null);
 
   const userData = studentData?.userDetails;
   const studentName = userData?.candidate_name;
@@ -183,6 +183,39 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
       </div>
     );
   }
+  const bc = new BroadcastChannel('test_channel');
+ 
+    bc.onmessage = async (event) => {
+      if (event.data.action === 'resumeAndClose') {
+        const { timeLeft } = event.data;
+   
+        try {
+          const response = await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              studentId: realStudentId,
+              testCreationTableId: realTestId,
+              timeleft: timeLeft || ""
+            })
+          });
+   
+          if (!response.ok) {
+            console.error("Failed to update resume status.");
+          } else {
+            console.log("Resume test API called successfully from child.");
+          }
+   
+        } catch (err) {
+          console.error("API error:", err);
+        } finally {
+          localStorage.removeItem('OTS_FormattedTime');
+          window.close(); // Close child after sending the request
+        }
+      }
+    };
 
 
   const examName = instructionsData[0]?.exam_name || "Exam";
