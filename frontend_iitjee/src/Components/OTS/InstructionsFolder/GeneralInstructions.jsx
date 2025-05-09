@@ -9,6 +9,7 @@ import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx';
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 import adminCapImg from '../../../assets/logoCap.jpeg';
+import ParentTabClosing from '../ParentTabClosing.jsx'
 // import DisableKeysAndMouseInteractions from '../../../ContextFolder/DisableKeysAndMouseInteractions.jsx';
 const GeneralInstructions = () => {
     const { testId, studentId } = useParams();
@@ -211,39 +212,40 @@ const GeneralInstructions = () => {
     }
     
     //parent tab closing
-    const bc = new BroadcastChannel('test_channel');
+    // const bc = new BroadcastChannel('test_channel');
  
-    bc.onmessage = async (event) => {
-      if (event.data.action === 'resumeAndClose') {
-        const { timeLeft } = event.data;
+    // bc.onmessage = async (event) => {
+    //   if (event.data.action === 'resumeAndClose') {
+    //     const { timeLeft } = event.data;
    
-        try {
-          const response = await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              studentId: realStudentId,
-              testCreationTableId: realTestId,
-              timeleft: timeLeft || ""
-            })
-          });
+    //     try {
+    //       const response = await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`, {
+    //         method: 'PUT',
+    //         headers: {
+    //           'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({
+    //           studentId: realStudentId,
+    //           testCreationTableId: realTestId,
+    //           timeleft: timeLeft || ""
+    //         })
+    //       });
    
-          if (!response.ok) {
-            console.error("Failed to update resume status.");
-          } else {
-            console.log("Resume test API called successfully from child.");
-          }
+    //       if (!response.ok) {
+    //         console.error("Failed to update resume status.");
+    //       } else {
+    //         console.log("Resume test API called successfully from child.");
+    //       }
    
-        } catch (err) {
-          console.error("API error:", err);
-        } finally {
-          localStorage.removeItem('OTS_FormattedTime');
-          window.close(); // Close child after sending the request
-        }
-      }
-    };
+    //     } catch (err) {
+    //       console.error("API error:", err);
+    //     } finally {
+    //       localStorage.removeItem('OTS_FormattedTime');
+    //       window.close(); // Close child after sending the request
+    //     }
+    //     bc.close(); 
+    //   }
+    // };
       
     const handleNextClick = async () => {
         sessionStorage.setItem("navigationToken", "valid");
@@ -409,6 +411,8 @@ const GeneralInstructions = () => {
             <div className={styles.nextBtnDiv}>
                 <button onClick={handleNextClick}>Next <span className={styles.nextBtnArrow}>&rarr;</span></button>
             </div>
+            <ParentTabClosing realStudentId={realStudentId} realTestId={realTestId} />
+
         </div>
 
     );
