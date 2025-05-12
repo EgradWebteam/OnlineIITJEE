@@ -39,7 +39,7 @@
   justify-content: flex-end;
 }
 .StduentDashboardRightSideBarForBggg{
-  /* background-color: gainsboro; */
+   background-color: white; 
   margin: 0rem 1rem;
 }
 .examBtnForMarginInBuyCourses{
@@ -338,7 +338,7 @@ button.backslash {
 .MainDivStudentDasboard {
   background: #fff;
     box-shadow: #0000003d 0 3px 8px;
-    height: 8vh;
+    /* height: 8vh; */
     padding: 5px;
 }
 .studentLogo {
@@ -431,7 +431,7 @@ color: black;
   margin: 1px;
   /* height: 100vh;  */
   overflow: hidden;
-  box-shadow: 0px 0px 3px 3px rgb(223, 222, 222);
+  /* box-shadow: 0px 0px 3px 3px rgb(223, 222, 222); */
 }
 .studentDashboardLeftsidebar {
   width: 250px;
@@ -486,11 +486,14 @@ color: black;
   cursor: pointer;
 }
 .StudentDashboardRightSideContentHolder {
-  width: 100%;
+   background-color: #f5f3f3;
+   width: 100%;
+}
+.StudentDashboardcontentArea{
   margin: 1rem 1rem auto;
   overflow-y: auto;
   height: calc(100vh - 11vh);
-  /* background-color: #f5f3f3; */
+ 
 }
 .LectureHeader {
   display: flex;
@@ -563,6 +566,7 @@ color: black;
   align-items: center; 
   width: 100%; 
   height: 60vh; 
+  margin: 1rem;
 }
 .QuestionsAndImgScrollContainer {
 height: 80%;
@@ -612,7 +616,6 @@ height: 80%;
   font-size: 20px;
 }
 .status_pallete {
-  min-height: 65%;
   overflow-y: auto;
   display: flex;
   flex-wrap: wrap;
@@ -717,6 +720,9 @@ align-items: center;
   color: white;
   font-size: 15px;
   font-weight: bold;
+}
+.CircleForAllWrapers{
+
 }
 .HeadingForLegend {
   font-size: 20px;
@@ -990,6 +996,7 @@ height: 100%;
   justify-content: flex-start;
   gap: 1rem;
   margin: 10px;
+  background-color: white;
   }
   /* STUDENT DASHBOARD BOOKMARKS */
   .StudentdashboardBookMarksSubDiv{
@@ -1007,6 +1014,7 @@ height: 100%;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     padding: 1rem;
     margin: 1rem;
+    background-color: white;
   }
   /* .bookMarksHeightForScroll{
     height: 70vh;
@@ -1061,7 +1069,7 @@ height: 100%;
   .MainDivStudentDasboard{
    background: #fff;
     box-shadow: #0000003d 0 3px 8px;
-    height: 8vh;
+    /* height: 8vh; */
     padding: 5px;
 }
 .StudentDashboardContentHolder{
@@ -1384,7 +1392,7 @@ height: 100%;
     .MainDivStudentDasboard {
        background: #fff;
     box-shadow: #0000003d 0 3px 8px;
-      height: 10vh;
+      /* height: 10vh; */
       padding: 5px;
     }
     .studentLogo {
@@ -1399,7 +1407,7 @@ height: 100%;
     .MainDivStudentDasboard {
       background: #fff;
     box-shadow: #0000003d 0 3px 8px;
-      height: 10vh;
+      /* height: 10vh; */
       padding: 5px;
     }
     .studentLogo {
@@ -1414,7 +1422,7 @@ height: 100%;
     .MainDivStudentDasboard {
     background: #fff;
     box-shadow: #0000003d 0 3px 8px;
-      height: 10vh;
+      /* height: 10vh; */
       padding: 5px;
     }
     .studentLogo {

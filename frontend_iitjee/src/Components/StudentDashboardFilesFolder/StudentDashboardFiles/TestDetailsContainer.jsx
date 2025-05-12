@@ -329,7 +329,7 @@ const handleStartTestClick = async (testCreationTableId) => {
         <h2 className={styles.CourseNameForTest}>{courseName}</h2>
       </div>
       <div className={styles.goBackInTestContainerDiv}>
-        <button className={styles.goBackBtn} onClick={onBack}>Back</button>
+        <button className={styles.goBackBtn} onClick={onBack}>Go Back</button>
       </div>
  
  </div>
