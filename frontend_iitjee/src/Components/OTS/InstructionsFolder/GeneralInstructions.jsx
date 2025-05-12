@@ -9,8 +9,10 @@ import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx';
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 import adminCapImg from '../../../assets/logoCap.jpeg';
+
 import ParentTabClosing from '../ParentTabClosing.jsx'
-// import DisableKeysAndMouseInteractions from '../../../ContextFolder/DisableKeysAndMouseInteractions.jsx';
+
+ import DisableKeysAndMouseInteractions from '../../../ContextFolder/DisableKeysAndMouseInteractions.jsx';
 const GeneralInstructions = () => {
     const { testId, studentId } = useParams();
     const navigate = useNavigate();
@@ -20,7 +22,11 @@ const GeneralInstructions = () => {
     const [isDecrypting, setIsDecrypting] = useState(true);
     const { studentData} = useStudent();
    // Disable all keyboard and mouse interactions globally
-  //  DisableKeysAndMouseInteractions(null);
+
+//    DisableKeysAndMouseInteractions(null);
+
+ DisableKeysAndMouseInteractions(null);
+
     const userData = studentData?.userDetails;
 
     const studentName = userData?.candidate_name;
@@ -276,10 +282,12 @@ const GeneralInstructions = () => {
             </div>
             <div className={styles.instrcutionstudentProfileDiv}>
                 <div className={styles.instructionSubdiv}>
-                    <h1 className={styles.instrctionMianHeading}>Instrcuctions</h1>
-                    <h2 >
+                    <div className={styles.instrctionMianHeading}>
+                        <h2>Instructions</h2>
+                    </div>
+                    <div className={styles.instrctionMianSubHeading}>
                         {Intstruction_content[0].Intstruction_content_text_center}
-                    </h2>
+                    </div>
 
                     <div className={styles.instructionSection}>
                         <h3 className={styles.instructionHeading}>{Intstruction_content[0].Intstruction_content_text_subheading_1}</h3>

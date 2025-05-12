@@ -20,6 +20,20 @@
   text-align: center;
 
 }
+/* .testTypeRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap; 
+} */
+
+.testDetailsOfSubComainter{
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem;
+  
+}
+
 .containerclosepopup {
   display: flex;
   justify-content: flex-end;
@@ -322,10 +336,10 @@ button.backslash {
   background-color: white;
 }
 .MainDivStudentDasboard {
-  background: white;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  height: 10vh;
-  padding: 5px;
+  background: #fff;
+    box-shadow: #0000003d 0 3px 8px;
+    height: 8vh;
+    padding: 5px;
 }
 .studentLogo {
   width: 65px;
@@ -425,7 +439,7 @@ color: black;
   flex-direction: column;
   background: #fcfcfc;
   height: auto;
-  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.1);
   gap: 2rem;
   align-items: center;
   position: relative;
@@ -815,26 +829,27 @@ height: 100%;
 }
 
 .breadcrumbCurrent {
-  font-weight: 600;
-  color: #222;
+ cursor: pointer;
+    color: black;
+    font-weight: 700;
 }
 
 
-/* student dashboard test  container css */
+/* student dashboard test  container css
  .testDetailsConatinerMainDiv {
   padding: 1rem;
-} 
+}  */
 
 .goBackInTestContainerDiv {
   text-align: right;
-  /* margin: 1rem; */
+  margin-bottom: 1rem;
 }
 
 .goBackBtn {
   background-color: #15803d;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 10px 15px;
   font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
@@ -842,6 +857,7 @@ height: 100%;
 
 .courseNameHolderDiv {
   text-align: center;
+  width: 100%;
   /* margin-bottom: 1rem; */
 }
 
@@ -849,7 +865,6 @@ height: 100%;
   text-align: right;
   /* margin-bottom: 1rem; */
 }
-
 .typeOfTestsSelector select {
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
@@ -913,7 +928,16 @@ height: 100%;
   flex-direction: column;
   margin: 1rem;
 }
-
+.testTypeRow{
+  display: flex;
+  align-items: center;
+}
+.headingFortheTypeTest{
+  text-align: center;
+   margin: 1rem 0;
+    color: #0f172a;
+    width: 100%;
+}
   /* My results css */
   .resultsMainDiv{
     display: flex;
@@ -1035,8 +1059,8 @@ height: 100%;
 }
 @media (max-width:1280px) {
   .MainDivStudentDasboard{
-    background: white;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+   background: #fff;
+    box-shadow: #0000003d 0 3px 8px;
     height: 8vh;
     padding: 5px;
 }
@@ -1089,7 +1113,7 @@ height: 100%;
   font-size: 13px;
 }
 .breadcrumbContainer{
-  margin: 10px 0 0;
+  margin: 20px 0 0;
   font-size: 12px;
   color: #444;
   display: flex;
@@ -1159,6 +1183,7 @@ height: 100%;
         z-index: 1000;
         /* transition: transform 0.3s ease-in-out; */
         height: calc(100vh - 9vh);
+        top: 104px;
       }
       .headingForLectures{
         font-size: 13px;
@@ -1174,7 +1199,7 @@ height: 100%;
       .studentDashboardHamburgerMenu {
         display: block;
         position: absolute;
-        top: 65px;
+        top: 60px;
         left: -1.5rem;
         z-index: 1100;
       }
@@ -1192,7 +1217,11 @@ height: 100%;
         border-radius: 8px;
         width: 200px;
     }
-      
+      .courseNameHolderDiv{
+  text-align: center;
+  margin-bottom: 1rem;
+ 
+}
     }
   @media (max-width:600px) {
     .status_pallete{
@@ -1203,6 +1232,7 @@ height: 100%;
         right: 14px;
         top: 172px;
     }
+    
    .popup_body {
       margin: 3.5rem auto;
       height: 45vh;
@@ -1231,10 +1261,7 @@ height: 100%;
 .CourseNameForTest{
   font-size: 15px;
 }
-.courseNameHolderDiv{
-  text-align: center;
-  margin-bottom: 1rem;
-}
+
 .testContainerSub{
   display: flex;
   gap: 1rem;
@@ -1355,8 +1382,8 @@ height: 100%;
   }
   @media (max-height:800px) {
     .MainDivStudentDasboard {
-      background: white;
-      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+       background: #fff;
+    box-shadow: #0000003d 0 3px 8px;
       height: 10vh;
       padding: 5px;
     }
@@ -1370,8 +1397,8 @@ height: 100%;
   }
   @media (max-height:700px) {
     .MainDivStudentDasboard {
-      background: white;
-      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+      background: #fff;
+    box-shadow: #0000003d 0 3px 8px;
       height: 10vh;
       padding: 5px;
     }
@@ -1385,8 +1412,8 @@ height: 100%;
   }
   @media (max-height:600px) {
     .MainDivStudentDasboard {
-      background: white;
-      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background: #fff;
+    box-shadow: #0000003d 0 3px 8px;
       height: 10vh;
       padding: 5px;
     }

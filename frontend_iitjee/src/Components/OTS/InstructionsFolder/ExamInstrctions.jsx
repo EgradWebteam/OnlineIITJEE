@@ -252,7 +252,8 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
       </div>
       <div className={styles.instrcutionstudentProfileDiv}>
       <div className={styles.examinstructionSubdiv}>
-        <h2 className={styles.instrctionMianHeading}>{examName}</h2>
+        <div className={styles.examinstrctionMianHeading}>
+          <h2>{examName}</h2></div>
         <ul className={styles.instructionList}>
           {instructionPoints.map((point, idx) => (
             <li key={idx} className={styles.instructionPointItem}>

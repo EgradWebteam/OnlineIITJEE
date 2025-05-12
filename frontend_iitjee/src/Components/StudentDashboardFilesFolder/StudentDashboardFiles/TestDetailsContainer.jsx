@@ -415,15 +415,26 @@ window.addEventListener('beforeunload', () => {
  
   return (
     <div className={styles.testDetailsConatinerMainDiv}>
-      <div className={styles.goBackInTestContainerDiv}>
-        <button className={styles.goBackBtn} onClick={onBack}>Go Back</button>
-      </div>
- 
+      <div className={styles.testDetailsOfSubComainter}>
+      
       <div className={styles.courseNameHolderDiv}>
         <h2 className={styles.CourseNameForTest}>{courseName}</h2>
       </div>
+      <div className={styles.goBackInTestContainerDiv}>
+        <button className={styles.goBackBtn} onClick={onBack}>Back</button>
+      </div>
  
-      <div className={styles.typeOfTestsSelector}>
+ </div>
+ 
+ 
+      <div className={styles.testsContainer}>
+        {selectedTestType === 'Select Type Of Test' ? (
+          Object.entries(groupedTests).map(([type, tests]) => (
+            <div key={type} className={styles.testContainerDivForflex}>
+              <div className={styles.testTypeRow}>
+     <div className={styles.headingFortheTypeTest}>
+              <h3  >{type}</h3></div>
+               <div className={styles.typeOfTestsSelector}>
         <select
           value={selectedTestType}
           onChange={(e) => setSelectedTestType(e.target.value)}
@@ -433,12 +444,7 @@ window.addEventListener('beforeunload', () => {
           ))}
         </select>
       </div>
- 
-      <div className={styles.testsContainer}>
-        {selectedTestType === 'Select Type Of Test' ? (
-          Object.entries(groupedTests).map(([type, tests]) => (
-            <div key={type} className={styles.testContainerDivForflex}>
-              <h3 style={{ textAlign: 'center', margin: '1rem 0', color: '#0f172a' }}>{type}</h3>
+      </div>
               {tests.map(test => (
                 <div key={test.test_creation_table_id} className={styles.testCard}>
                   <div className={styles.testContainerSub}>
@@ -574,7 +580,7 @@ window.addEventListener('beforeunload', () => {
           </div>
         )}
       </div>
- 
+
       {showPopup && (
         <div className={styles.modalOverlayTest}>
           <div className={styles.modalContentTest}>

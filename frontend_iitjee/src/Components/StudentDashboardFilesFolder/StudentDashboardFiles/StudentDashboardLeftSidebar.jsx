@@ -29,7 +29,7 @@ const StudentDashboardLeftSideBar = ({ activeSection, handleSectionChange }) => 
       {/* Hamburger for Mobile */}
       <div className={styles.studentDashboardHamburgerMenu}>
         <button onClick={() => setShowSidebar(!showSidebar)}>
-          {showSidebar ? <FaTimes /> : <FaBars />}
+          {showSidebar ? <FaBars /> : <FaBars />}
         </button>
       </div>
 
