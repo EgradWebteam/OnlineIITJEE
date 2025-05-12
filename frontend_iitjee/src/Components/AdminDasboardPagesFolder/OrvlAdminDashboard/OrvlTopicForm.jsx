@@ -156,7 +156,7 @@ const OrvlTopicForm = ({ topic, onClose, onSuccess }) => {
               {loading ? "Submitting..." : topic ? "Update" : "Submit"}
             </button>
             <button type="button" className={`${styles.closeBtn} button`} onClick={onClose}>
-              Close
+            ❌
             </button>
           </div>
         </form>

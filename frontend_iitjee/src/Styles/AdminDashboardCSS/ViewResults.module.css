@@ -20,17 +20,14 @@
 }
 
 .cancelButton {
-  background-color: #ff5c5c;
-  color: white;
+  background-color: white;
   border: none;
   padding: 8px 14px;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.cancelButton:hover {
-  background-color: #ff3b3b;
-}
+
 
 .buttonGroup {
   margin: 20px 0;

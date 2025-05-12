@@ -1,6 +1,6 @@
 .appLayout {
   display: flex;
-  height: 100vh;
+  height: calc(100vh - 13vh);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -13,7 +13,7 @@
   border-right: 2px solid #837777;
   display: block !important;
   position: relative;
-  height: 100vh;
+  height: calc(100vh - 13vh);
 }
 
 nav ul li .active {
@@ -51,6 +51,7 @@ nav ul li .active {
   flex-direction: column;
   width: 70%;
   margin: 1rem auto;
+  overflow: auto;
 }
 .pageHeading {
   font-size: 28px;
@@ -509,11 +510,14 @@ margin: 1rem ;
   color: white;
 }
 /* Tablet scaling */
-@media (max-width: 1200px) {
+@media (max-width: 1240px) {
   .headerButtons button {
     font-size: 0.8rem;
     padding: 6px 8px;
     margin: 5px 0px;
+  }
+  .headerImg {
+    height: 58px;
   }
 }
 

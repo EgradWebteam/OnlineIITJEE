@@ -214,7 +214,7 @@ const TestCreationForm = ({
                 className={styles.closeFormBtn}
                 onClick={() => setShowAddTestForm(false)}
               >
-                <RxCross2 />
+               ❌
               </button>
             </div>
 
