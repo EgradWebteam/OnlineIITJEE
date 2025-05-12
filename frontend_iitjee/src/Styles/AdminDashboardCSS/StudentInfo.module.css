@@ -22,7 +22,7 @@ text-decoration: none;
   background-color: #174770;
 }
 .studentMainContentHomePage{
-  height: calc(100vh - 9vh);
+  height: calc(100vh - 12vh);
   overflow: hidden;
 }
 
