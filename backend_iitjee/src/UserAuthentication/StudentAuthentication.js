@@ -107,6 +107,27 @@ console.log( "result",result)
     res.status(500).json({ message: "Server error" });
   }
 });
+router.post("/checkEmailDoesNotExist", async (req, res) => {
+  const { emailId } = req.body;
+
+  try {
+    const sql = `SELECT * FROM iit_student_registration WHERE email_id = ?`;
+    const [result] = await db.query(sql, [emailId]);
+
+    console.log("result", result);
+
+    if (result.length === 0) {
+      // If no matching email is found in the database
+      return res.json({ message: "No account exists with this email. You can proceed with registration." });
+    } else {
+      // If the email exists in the database
+      return res.json({ message: "An account already exists with this email." });
+    }
+  } catch (error) {
+    console.error("Error checking email:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 router.post(
   "/studentRegistration",
@@ -352,22 +373,16 @@ const getImageUrl = (fileName) => {
         SELECT student_registration_id, candidate_name, password, email_id,
                last_login_time, is_logged_in, session_id, uploaded_photo, mobile_no
         FROM iit_student_registration
-        WHERE email_id = ?
+        WHERE email_id = ? 
       `;
       const [users] = await db.query(sql, [email]);
   
+      // 2. Check if user exists
       if (users.length === 0) {
-        return res.status(401).json({ message: "Invalid email or password" });
+        return res.status(404).json({ message: "No account found with this email." });  
       }
   
       const user = users[0];
-  
-      // 2. Block login if already logged in
-      if (user.is_logged_in) {
-        return res.status(403).json({
-          message: "You are already logged in. Please log out before logging in again.",
-        });
-      }
   
       // 3. Compare password
       const isMatch = await bcryptjs.compare(password, user.password);
@@ -417,6 +432,36 @@ const getImageUrl = (fileName) => {
     }
   });
   
+  
+  router.post("/verifySession", async (req, res) => {
+    const { studentId, sessionId } = req.body;
+  
+    if (!studentId || !sessionId) {
+      return res.status(400).json({ success: false, message: "Student ID and session ID are required" });
+    }
+  
+    try {
+      const [rows] = await db.query(
+        "SELECT session_id FROM iit_student_registration WHERE student_registration_id = ?",
+        [studentId]
+      );
+  
+      if (rows.length > 0) {
+        const dbSessionId = rows[0].session_id;
+  
+        if (dbSessionId === sessionId) {
+          return res.json({ success: true, message: "Session is valid" });
+        } else {
+          return res.status(401).json({ success: false, message: "Invalid session" });
+        }
+      } else {
+        return res.status(404).json({ success: false, message: "Student not found" });
+      }
+    } catch (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ success: false, message: "Internal server error" });
+    }
+  });
   
 router.post("/studentLogout", async (req, res) => {
   const { sessionId } = req.body; // Assume sessionId is passed in the request body

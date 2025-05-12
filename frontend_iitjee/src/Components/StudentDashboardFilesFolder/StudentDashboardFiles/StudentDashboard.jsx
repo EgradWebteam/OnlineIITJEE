@@ -5,7 +5,7 @@ import StudentDashboardLeftSideBar from './StudentDashboardLeftSidebar.jsx';
 import { useLocation,useNavigate, useParams  } from 'react-router-dom';
 import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx'
 import { BASE_URL } from '../../../ConfigFile/ApiConfigURL.js';
- 
+ import BackButtonHandler from './BackButtonHandler.jsx';
 import { useAlert } from "../StudentDashboardFiles/AlertContext";
 const StudentDashboardBookmarks = lazy(() => import('./StudentDashboardBookmarks.jsx'));
 const StudentDashboardHome = lazy(() => import("./StudentDashboardHome.jsx"));
@@ -16,6 +16,8 @@ const StudentDashboard_AccountSettings = lazy(() => import("./StudentDashboard_A
 const CustomLogoutPopup = lazy(() => import('./CustomLogoutPop.jsx'));
  
 export default function StudentDashboard() {
+  const [sessionValid, setSessionValid] = useState(null); 
+
   const [activeSection, setActiveSection] = useState("dashboard");
    const [activeSubSection, setActiveSubSection] = useState("profile");
   const [isLoading, setIsLoading] = useState(true);
@@ -36,6 +38,49 @@ export default function StudentDashboard() {
       setActiveSection(section);
       localStorage.setItem("activeSection", section);
     }, []);
+    useEffect(() => {
+      const verifySession = async () => {
+    
+        const localSessionId = localStorage.getItem("sessionId");
+        const sessionSessionId = sessionStorage.getItem("sessionId");
+        const studentId = localStorage.getItem("decryptedId");
+    
+        // If session is invalid, set sessionValid to false and return early
+        if (!localSessionId || !sessionSessionId || localSessionId !== sessionSessionId) {
+          setSessionValid(false);
+          return;
+        }
+    
+        try {
+          // Send POST request to verify session
+          const response = await fetch(`${BASE_URL}/student/verifySession`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ studentId, sessionId: localSessionId }),
+          });
+    
+          const data = await response.json();
+    
+          // If the session is invalid, set sessionValid to false and redirect to LoginPage
+          if (!data.success) {
+            setSessionValid(false);
+           
+            navigate("/LoginPage"); // Redirect to login page if session is invalid
+          } else {
+            setSessionValid(true)
+           
+             // Valid session
+          }
+        } catch (err) {
+          console.error("Session check failed", err);
+          setSessionValid(false);
+          navigate("/LoginPage"); // Redirect to login page if there's an error
+        }
+      };
+    
+      verifySession();
+    }, [activeSection]); 
+    
     const location = useLocation();
     // useEffect(() => {
     //   const handleBeforeUnload = (e) => {
@@ -190,17 +235,13 @@ export default function StudentDashboard() {
         //console.error("Logout error:", error);
       }
     };
-    const handleConfirmForBrowserBackButton=()=>{
-       setShowLogoutPopup(false);
-      handleLogout();
-    }
    
-    const renderStudentDashboardContent = () => {
-      const localSessionId = localStorage.getItem('sessionId');
+   
+  const renderStudentDashboardContent = () => {
+   const localSessionId = localStorage.getItem('sessionId');
   const sessionSessionId = sessionStorage.getItem('sessionId');
- 
   if (!localSessionId || !sessionSessionId || localSessionId !== sessionSessionId) {
- 
+  
     navigate('/LoginPage');
     return null;
   }
@@ -245,24 +286,13 @@ export default function StudentDashboard() {
         <div className={styles.StudentDashboardRightSideContentHolder}>
           <div className={styles.StudentDashboardcontentArea}>
             <Suspense fallback={<div> <LoadingSpinner /></div>}>
-              {renderStudentDashboardContent()}
+             
+{renderStudentDashboardContent()}
             </Suspense>
           </div>
         </div>
       </div>
-     
-      {showLogoutPopup && (
-  <CustomLogoutPopup
-    onConfirm={() => {
-      //console.log("✅ User confirmed logout from popup");
-     handleConfirmForBrowserBackButton();
-    }}
-    onCancel={() => {
-      //console.log("❌ User canceled logout from popup");
-      setShowLogoutPopup(false);
-    }}
-  />
-)}
+    <BackButtonHandler/>
  
     </div>
   );
