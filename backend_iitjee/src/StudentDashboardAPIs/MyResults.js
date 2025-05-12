@@ -5,28 +5,58 @@ const db = require("../config/database.js");
 router.get('/FetchResultTestdata/:studentId', async (req, res) => {
   const { studentId } = req.params;
 
-  const query = `
-    SELECT 
+  const query = 
+  // `
+  //   SELECT 
+  //   tc.test_creation_table_id,
+  //       cc.exam_id, 
+  //       e.exam_name,
+  //       tc.test_name,
+  //       tc.total_marks,
+  //       tc.duration,
+  //       tsd.test_attempt_status
+  //   FROM 
+  //       iit_test_status_details tsd
+  //   JOIN 
+  //       iit_test_creation_table tc 
+  //       ON tsd.test_creation_table_id = tc.test_creation_table_id
+  //   JOIN 
+  //       iit_course_creation_table cc 
+  //       ON tc.course_creation_id = cc.course_creation_id
+  //   JOIN 
+  //       iit_exams e 
+  //       ON cc.exam_id = e.exam_id
+  //   WHERE 
+  //       tsd.student_registration_id = ? AND tsd.test_attempt_status = 'completed';`
+  `SELECT 
     tc.test_creation_table_id,
-        cc.exam_id, 
-        e.exam_name,
-        tc.test_name,
-        tc.total_marks,
-        tc.duration,
-        tsd.test_attempt_status
-    FROM 
-        iit_test_status_details tsd
-    JOIN 
-        iit_test_creation_table tc 
-        ON tsd.test_creation_table_id = tc.test_creation_table_id
-    JOIN 
-        iit_course_creation_table cc 
-        ON tc.course_creation_id = cc.course_creation_id
-    JOIN 
-        iit_exams e 
-        ON cc.exam_id = e.exam_id
-    WHERE 
-        tsd.student_registration_id = ? AND tsd.test_attempt_status = 'completed';`
+    cc.exam_id, 
+    e.exam_name,
+    tc.test_name,
+    tc.total_marks,
+    tc.duration,
+    tsd.test_attempt_status
+FROM 
+    iit_test_status_details tsd
+JOIN 
+    iit_test_creation_table tc 
+    ON tsd.test_creation_table_id = tc.test_creation_table_id
+JOIN 
+    iit_course_creation_table cc 
+    ON tc.course_creation_id = cc.course_creation_id
+JOIN 
+    iit_exams e 
+    ON cc.exam_id = e.exam_id
+WHERE 
+    tsd.student_registration_id = ?
+    AND tsd.test_attempt_status = 'completed'
+    AND EXISTS (
+        SELECT 1
+        FROM iit_student_registration sr
+        WHERE sr.student_registration_id = tsd.student_registration_id
+        AND sr.student_activation = 1
+    );
+`
   ;
 
   try {
