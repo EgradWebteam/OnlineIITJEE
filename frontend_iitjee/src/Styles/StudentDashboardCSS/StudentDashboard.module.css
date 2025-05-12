@@ -20,20 +20,6 @@
   text-align: center;
 
 }
-/* .testTypeRow {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  flex-wrap: wrap; 
-} */
-
-.testDetailsOfSubComainter{
-  display: flex;
-  justify-content: space-between;
-  margin: 1rem;
-  
-}
-
 .containerclosepopup {
   display: flex;
   justify-content: flex-end;
@@ -490,6 +476,7 @@ color: black;
    width: 100%;
 }
 .StudentDashboardcontentArea{
+
   margin: 1rem 1rem auto;
   overflow-y: auto;
   height: calc(100vh - 11vh);
@@ -863,8 +850,6 @@ height: 100%;
 
 .courseNameHolderDiv {
   text-align: center;
-  width: 100%;
-  /* margin-bottom: 1rem; */
 }
 
 .typeOfTestsSelector {
@@ -1225,11 +1210,6 @@ height: 100%;
         border-radius: 8px;
         width: 200px;
     }
-      .courseNameHolderDiv{
-  text-align: center;
-  margin-bottom: 1rem;
- 
-}
     }
   @media (max-width:600px) {
     .status_pallete{
