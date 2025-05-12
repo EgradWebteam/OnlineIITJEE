@@ -11,6 +11,7 @@ import OTSHeader from "../OTSHeaderFolder/OTSHeader.jsx";
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx'
 import adminCapImg from '../../../assets/logoCap.jpeg';
+import ParentTabClosing from '../ParentTabClosing.jsx'
 import TermsAndConditions from "../../GlobalFiles/TermsAndConditions.jsx";
 // import DisableKeysAndMouseInteractions from "../../../ContextFolder/DisableKeysAndMouseInteractions.jsx";
 
@@ -183,6 +184,39 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
       </div>
     );
   }
+  // const bc = new BroadcastChannel('test_channel');
+ 
+  //   bc.onmessage = async (event) => {
+  //     if (event.data.action === 'resumeAndClose') {
+  //       const { timeLeft } = event.data;
+   
+  //       try {
+  //         const response = await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`, {
+  //           method: 'PUT',
+  //           headers: {
+  //             'Content-Type': 'application/json'
+  //           },
+  //           body: JSON.stringify({
+  //             studentId: realStudentId,
+  //             testCreationTableId: realTestId,
+  //             timeleft: timeLeft || ""
+  //           })
+  //         });
+   
+  //         if (!response.ok) {
+  //           console.error("Failed to update resume status.");
+  //         } else {
+  //           console.log("Resume test API called successfully from child.");
+  //         }
+   
+  //       } catch (err) {
+  //         console.error("API error:", err);
+  //       } finally {
+  //         localStorage.removeItem('OTS_FormattedTime');
+  //         window.close(); // Close child after sending the request
+  //       }
+  //     }
+  //   };
 
 
   const examName = instructionsData[0]?.exam_name || "Exam";
@@ -294,6 +328,7 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
             <TermsAndConditions setIsModalOpen={setOpenTermsAndConditions} />
           )}
       </div>
+      <ParentTabClosing realStudentId={realStudentId} realTestId={realTestId} />
     </div>
   );
 };
