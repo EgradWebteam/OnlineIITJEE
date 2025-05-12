@@ -57,7 +57,7 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
         console.log("No 'started' test found");
       } else if (!navigationToken) {
         const testCreationTableId = startedTest.test_creation_table_id;
-        const timeLeft = localStorage.getItem("OTS_FormattedTime");
+       
         
         const putRes = await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
           method: "PUT",
@@ -66,8 +66,8 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
           },
           body: JSON.stringify({
             studentId: studentId,
-            testCreationTableId: testCreationTableId,
-            timeleft: timeLeft,
+            testCreationTableId: testCreationTableId
+           
           }),
         });
 
