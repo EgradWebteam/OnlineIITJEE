@@ -12,7 +12,7 @@ import adminCapImg from '../../../assets/logoCap.jpeg';
 
 import ParentTabClosing from '../ParentTabClosing.jsx'
 
- import DisableKeysAndMouseInteractions from '../../../ContextFolder/DisableKeysAndMouseInteractions.jsx';
+//  import DisableKeysAndMouseInteractions from '../../../ContextFolder/DisableKeysAndMouseInteractions.jsx';
 const GeneralInstructions = () => {
     const { testId, studentId } = useParams();
     const navigate = useNavigate();
@@ -25,7 +25,7 @@ const GeneralInstructions = () => {
 
 //    DisableKeysAndMouseInteractions(null);
 
- DisableKeysAndMouseInteractions(null);
+//  DisableKeysAndMouseInteractions(null);
 
     const userData = studentData?.userDetails;
 
