@@ -407,7 +407,7 @@ color: black;
 .StudentDashboardContentHolder {
   display: flex;
   flex-direction: row;
-  height: calc(100vh - 10vh);
+  height: calc(100vh - 13vh);
 }
 .studentDashboardLeftNavHolder {
   display: flex;
