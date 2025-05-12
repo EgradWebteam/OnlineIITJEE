@@ -119,42 +119,91 @@ router.get("/BookMarkQuestionOptions/:studentId", async (req, res) => {
   try {
     const { studentId } = req.params;
     const [rows] = await db.query(
-      `
-   SELECT 
-  bq.question_id AS bookMark_Qid,
-   t.test_name AS TestName,
-        t.test_creation_table_id AS testId,
-        s.subject_id AS subjectId,
-        s.subject_name AS SubjectName,
-        sec.section_id,
-        sec.section_name AS SectionName,
-        q.question_id,
-        q.question_img_name AS questionImgName,
-        d.document_name,
-        o.option_id,
-        o.option_index,
-        o.option_img_name,
-        q.answer_text AS answer,
-        q.marks_text,
-        q.nmarks_text,
-        q.question_type_id AS questionTypeId,
-        q.qtype_text,
-        sol.solution_id,
-        sol.solution_img_name,
-        sol.video_solution_link
-FROM iit_bookmark_questions bq
-INNER JOIN iit_questions q ON q.question_id = bq.question_id
-INNER JOIN iit_ots_document d ON q.document_Id = d.document_Id
- INNER JOIN iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
-      INNER JOIN iit_subjects s ON d.subject_id = s.subject_id
-      LEFT JOIN iit_sections sec ON d.section_id = sec.section_id
-      LEFT JOIN iit_options o ON q.question_id = o.question_id
-      LEFT JOIN iit_question_type qts ON q.question_type_id = qts.question_type_id
-      LEFT JOIN iit_solutions sol ON q.question_id = sol.question_id  
-WHERE bq.student_registration_id = ?
+//       `
+//    SELECT 
+//   bq.question_id AS bookMark_Qid,
+//    t.test_name AS TestName,
+//         t.test_creation_table_id AS testId,
+//         s.subject_id AS subjectId,
+//         s.subject_name AS SubjectName,
+//         sec.section_id,
+//         sec.section_name AS SectionName,
+//         q.question_id,
+//         q.question_img_name AS questionImgName,
+//         d.document_name,
+//         o.option_id,
+//         o.option_index,
+//         o.option_img_name,
+//         q.answer_text AS answer,
+//         q.marks_text,
+//         q.nmarks_text,
+//         q.question_type_id AS questionTypeId,
+//         q.qtype_text,
+//         sol.solution_id,
+//         sol.solution_img_name,
+//         sol.video_solution_link
+// FROM iit_bookmark_questions bq
+// INNER JOIN iit_questions q ON q.question_id = bq.question_id
+// INNER JOIN iit_ots_document d ON q.document_Id = d.document_Id
+//  INNER JOIN iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
+//       INNER JOIN iit_subjects s ON d.subject_id = s.subject_id
+//       LEFT JOIN iit_sections sec ON d.section_id = sec.section_id
+//       LEFT JOIN iit_options o ON q.question_id = o.question_id
+//       LEFT JOIN iit_question_type qts ON q.question_type_id = qts.question_type_id
+//       LEFT JOIN iit_solutions sol ON q.question_id = sol.question_id  
+// WHERE bq.student_registration_id = ?
 
 
-        `,
+//         `,
+`SELECT 
+    bq.question_id AS bookMark_Qid,
+    t.test_name AS TestName,
+    t.test_creation_table_id AS testId,
+    s.subject_id AS subjectId,
+    s.subject_name AS SubjectName,
+    sec.section_id,
+    sec.section_name AS SectionName,
+    q.question_id,
+    q.question_img_name AS questionImgName,
+    d.document_name,
+    o.option_id,
+    o.option_index,
+    o.option_img_name,
+    q.answer_text AS answer,
+    q.marks_text,
+    q.nmarks_text,
+    q.question_type_id AS questionTypeId,
+    q.qtype_text,
+    sol.solution_id,
+    sol.solution_img_name,
+    sol.video_solution_link
+FROM 
+    iit_bookmark_questions bq
+INNER JOIN 
+    iit_questions q ON q.question_id = bq.question_id
+INNER JOIN 
+    iit_ots_document d ON q.document_Id = d.document_Id
+INNER JOIN 
+    iit_test_creation_table t ON d.test_creation_table_id = t.test_creation_table_id
+INNER JOIN 
+    iit_subjects s ON d.subject_id = s.subject_id
+LEFT JOIN 
+    iit_sections sec ON d.section_id = sec.section_id
+LEFT JOIN 
+    iit_options o ON q.question_id = o.question_id
+LEFT JOIN 
+    iit_question_type qts ON q.question_type_id = qts.question_type_id
+LEFT JOIN 
+    iit_solutions sol ON q.question_id = sol.question_id  
+WHERE 
+    bq.student_registration_id = ?
+    AND EXISTS (
+        SELECT 1
+        FROM iit_student_registration sr
+        WHERE sr.student_registration_id = bq.student_registration_id
+        AND sr.student_activation = 1
+    );
+` ,
       [studentId] // ✅ correct order
     );
 

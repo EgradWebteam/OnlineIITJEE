@@ -127,6 +127,7 @@ WHERE
         SELECT 1
         FROM iit_student_registration sr
         WHERE sr.student_registration_id = ?
+        AND sr.student_activation = 1
     )
     AND NOT EXISTS (
         SELECT 1

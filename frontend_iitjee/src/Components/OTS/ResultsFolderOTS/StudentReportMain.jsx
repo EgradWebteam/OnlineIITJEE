@@ -13,6 +13,7 @@ const StudentReportMain = () => {
     navigate(-1);
     // This will run when the component unmounts, and we can clear localStorage
     localStorage.removeItem("activeButton");
+      localStorage.removeItem("activeTab");
   };
   const { testId } = useParams();
   const location = useLocation();
@@ -101,6 +102,18 @@ const StudentReportMain = () => {
   if (error) {
     return <div>{error}</div>;
   }
+  useEffect(() => {
+  const savedTab = localStorage.getItem("activeTab");
+  if (savedTab) {
+    setActiveTab(savedTab);
+  }
+}, []);
+
+  const handleTabChange = (tab) => {
+  setActiveTab(tab);
+  localStorage.setItem("activeTab", tab);
+};
+
   return (
     <div className={styles.StudentReportMainDiv}>
       <div className={styles.StudentReportSubDiv}>
@@ -135,7 +148,7 @@ const StudentReportMain = () => {
                 ? styles.performanceBtnActive
                 : ""
             }`}
-            onClick={() => setActiveTab("Your Performance")}
+             onClick={() => handleTabChange("Your Performance")}
           >
             Your Performance
           </button>
@@ -143,7 +156,7 @@ const StudentReportMain = () => {
             className={`${styles.performanceButtonsInStudentReport} ${
               activeTab === "Solutions" ? styles.performanceBtnActive : ""
             }`}
-            onClick={() => setActiveTab("Solutions")}
+           onClick={() => handleTabChange("Solutions")}
           >
             Solutions
           </button>

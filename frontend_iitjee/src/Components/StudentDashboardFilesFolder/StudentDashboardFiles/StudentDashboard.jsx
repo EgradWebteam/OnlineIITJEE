@@ -25,17 +25,41 @@ export default function StudentDashboard() {
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const { alert } = useAlert();
   const navigate = useNavigate();
-    useEffect(() => {
-      const savedSection = localStorage.getItem("activeSection");
-      if (savedSection) {
-        setActiveSection(savedSection);
-      }
-    }, []);
+    // useEffect(() => {
+    //   const savedSection = localStorage.getItem("activeSection");
+    //   if (savedSection) {
+    //     setActiveSection(savedSection);
+    //   }
+    // }, []);
    
-    const handleSectionChange = useCallback((section) => {
-      setActiveSection(section);
-      localStorage.setItem("activeSection", section);
-    }, []);
+    // const handleSectionChange = useCallback((section) => {
+    //   setActiveSection(section);
+    //   localStorage.setItem("activeSection", section);
+    // }, []);
+  useEffect(() => {
+    const savedState = localStorage.getItem("studentDashboardState");
+    if (savedState) {
+      try {
+        const parsed = JSON.parse(savedState);
+        if (parsed.activeSection) {
+          setActiveSection(parsed.activeSection); //Use embedded activeSection
+        }
+      } catch (err) {
+        console.error("Failed to parse studentDashboardState:", err);
+      }
+    }
+  }, []);
+
+  const handleSectionChange = useCallback((section) => {
+    setActiveSection(section);
+
+    // Optional: Only persist minimal state when switching away from "myCourses"
+    localStorage.setItem(
+      "studentDashboardState",
+      JSON.stringify({ activeSection: section })
+    );
+  }, []);
+
     const location = useLocation();
     // useEffect(() => {
     //   const handleBeforeUnload = (e) => {
@@ -144,20 +168,45 @@ export default function StudentDashboard() {
     // }, []);
    
    
- 
-    useEffect(() => {
-      const sectionFromRoute = location.state?.activeSection;
-      if (sectionFromRoute && !sessionStorage.getItem("sectionFromRouteUsed")) {
-        setActiveSection(sectionFromRoute);
-        localStorage.setItem("activeSection", sectionFromRoute);
-        sessionStorage.setItem("sectionFromRouteUsed", "true");
-      } else {
-        const savedSection = localStorage.getItem("activeSection") || "dashboard";
-        setActiveSection(savedSection);
-      }
+ // for active section
+    // useEffect(() => {
+    //   const sectionFromRoute = location.state?.activeSection;
+    //   if (sectionFromRoute && !sessionStorage.getItem("sectionFromRouteUsed")) {
+    //     setActiveSection(sectionFromRoute);
+    //     localStorage.setItem("activeSection", sectionFromRoute);
+    //     sessionStorage.setItem("sectionFromRouteUsed", "true");
+    //   } else {
+    //     const savedSection = localStorage.getItem("activeSection") || "dashboard";
+    //     setActiveSection(savedSection);
+    //   }
    
-      setIsLoading(false);
-    }, [location.state]);
+    //   setIsLoading(false);
+    // }, [location.state]);
+  useEffect(() => {
+    const sectionFromRoute = location.state?.activeSection;
+    if (sectionFromRoute && !sessionStorage.getItem("sectionFromRouteUsed")) {
+      setActiveSection(sectionFromRoute);
+      localStorage.setItem("studentDashboardState", JSON.stringify({ activeSection: sectionFromRoute }));
+      sessionStorage.setItem("sectionFromRouteUsed", "true");
+    } else {
+      const savedState = localStorage.getItem("studentDashboardState");
+      if (savedState) {
+        try {
+          const parsedState = JSON.parse(savedState);
+          if (parsedState?.activeSection) {
+            setActiveSection(parsedState.activeSection);
+          }
+        } catch (err) {
+          console.error("Failed to parse studentDashboardState:", err);
+        }
+      } else {
+        setActiveSection("dashboard");
+      }
+    }
+
+    setIsLoading(false);
+  }, [location.state]);
+
  
      
     const handleLogout = async () => {
@@ -210,7 +259,7 @@ export default function StudentDashboard() {
           handleSectionChange={handleSectionChange}
           />;
         case "myCourses":
-          return <StudentDashboard_MyCourses userData ={studentData?.userDetails} studentId = {studentId}/>;
+          return <StudentDashboard_MyCourses userData ={studentData?.userDetails} studentId = {studentId} activeSection={activeSection}/>;
         case "buyCourses":
           return <StudentDashboard_BuyCourses setActiveSection = {setActiveSection} studentId = {studentId}/>;
         case "results":
