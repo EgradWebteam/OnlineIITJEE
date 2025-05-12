@@ -40,8 +40,58 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
         const res = await fetch(
           `${BASE_URL}/studentmycourses/coursetestdetails/${course_creation_id}/${studentId}`
         );
-        const data = await res.json();
- 
+        let data = await res.json();
+        console.log("Fetched test details:", data.test_details);
+        let startedTest = null;
+
+        data.test_details.forEach(group => {
+          group.tests.forEach(test => {
+            console.log("Checking test:", test.test_name, "Status:", test.test_attempt_status);
+            if (test.test_attempt_status === "started" && !startedTest) {
+              startedTest = test;
+            }
+          });
+        });
+        const navigationToken = sessionStorage.getItem('navigationToken');
+       if (!startedTest) {
+        console.log("No 'started' test found");
+      } else if (!navigationToken) {
+        const testCreationTableId = startedTest.test_creation_table_id;
+        const timeLeft = localStorage.getItem("OTS_FormattedTime");
+        
+        const putRes = await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            studentId: studentId,
+            testCreationTableId: testCreationTableId,
+            timeleft: timeLeft,
+          }),
+        });
+
+        if (putRes.status === 200) {
+          console.log("Resume update successful");
+          localStorage.removeItem("OTS_FormattedTime");
+          
+          // Re-fetch latest data after updating
+          // const updatedRes = await fetch(
+          //   `${BASE_URL}/studentmycourses/coursetestdetails/${course_creation_id}/${studentId}`
+          // );
+          // data = await updatedRes.json();
+          data.test_details.forEach(group => {
+            group.tests.forEach(test => {
+              if (test.test_creation_table_id === startedTest.test_creation_table_id) {
+                test.test_attempt_status = "resumed";
+              }
+            });
+          });
+        } else {
+          console.error("Failed to update resume test.");
+        }
+      }
+      
         // Updated structure: data.test_details is an array
         const grouped = {};
  
@@ -270,6 +320,9 @@ window.addEventListener('beforeunload', () => {
     timeLeft: timeLeft
   });
 
+  sessionStorage.removeItem('navigationToken');
+
+
 //  setTimeout(() => {
 //   // This will run if child does not handle the BroadcastChannel in time
 //   const timeLeft = localStorage.getItem('OTS_FormattedTime') || "";
@@ -321,6 +374,10 @@ window.addEventListener('beforeunload', () => {
               });
  
               localStorage.removeItem(`OTS_FormattedTime`);
+
+              sessionStorage.removeItem('navigationToken');
+
+
 
             // Trigger re-fetch of test data (refresh UI)
             setTimeout(() => {
