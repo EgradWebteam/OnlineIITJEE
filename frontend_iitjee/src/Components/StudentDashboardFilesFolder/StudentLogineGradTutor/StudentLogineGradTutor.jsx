@@ -102,7 +102,10 @@ export default function StudentLogineGradTutor() {
       } else {
         // Handle failed login attempts here (401 or other errors)
         setFailedAttempts((prev) => prev + 1);
-  
+        if (data.message === "No account found with this email.") {
+          await alert("No account found with this email. Please  Register and then Login  ");
+          return;
+        }
         if (data.message === "You are already logged in. Please log out before logging in again.") {
           await alert(data.message);
           return;
