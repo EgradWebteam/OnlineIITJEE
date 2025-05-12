@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../../../Styles/StudentDashboardCSS/CustomLogoutPopup.module.css";
  
-export default function CustomLogoutPopup({ onConfirm, onCancel }) {
+export default function CustomLogoutPopup({ onConfirm, onCancel, }) {
   return (
     <div className={styles.popupOverlay}>
       <div className={styles.popup}>

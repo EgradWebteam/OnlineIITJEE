@@ -319,7 +319,9 @@ window.addEventListener('beforeunload', () => {
     action: 'resumeAndClose',
     timeLeft: timeLeft
   });
+
   sessionStorage.removeItem('navigationToken');
+
 
 //  setTimeout(() => {
 //   // This will run if child does not handle the BroadcastChannel in time
@@ -372,7 +374,9 @@ window.addEventListener('beforeunload', () => {
               });
  
               localStorage.removeItem(`OTS_FormattedTime`);
+
               sessionStorage.removeItem('navigationToken');
+
 
 
             // Trigger re-fetch of test data (refresh UI)

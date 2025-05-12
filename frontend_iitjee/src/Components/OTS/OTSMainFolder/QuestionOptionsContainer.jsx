@@ -202,7 +202,11 @@ export default function QuestionOptionsContainer({
             <input
               ref={inputRef} // Attach the ref to the input
               type="text"
-              readOnly // Prevent manual typing
+              // readOnly // Prevent manual typing
+              onKeyDown={(e) => {
+                // Prevent manual typing
+                e.preventDefault();
+              }}
               className={styles.NATInput}
               value={natValue}
               onChange={(e) => {

@@ -22,7 +22,7 @@ text-decoration: none;
   background-color: #174770;
 }
 .studentMainContentHomePage{
-  height: calc(100vh - 9vh);
+  height: calc(100vh - 12vh);
   overflow: hidden;
 }
 
@@ -34,7 +34,7 @@ text-decoration: none;
 }
 .StundentInfoForContainer {
   width: 90%;
-  height: 700px;
+  height: 70vh;
   margin: 0 auto;
   box-shadow: 0px 0px 3px 3px rgb(219, 219, 219);
   border-radius: 10px;
@@ -325,6 +325,13 @@ font-size: 13px;
   color: #333;
   cursor: pointer;
   z-index: 10;
+}
+@media(max-height:700px){
+  .studentMainContentHomePage{
+    height: calc(100vh - 11vh);
+    overflow: hidden;
+  }
+  
 }
  @media(max-width:600px){
   .StudentInformationfromDB {

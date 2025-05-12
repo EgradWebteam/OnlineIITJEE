@@ -961,10 +961,11 @@ height: 100%;
   }
   .myResultsSubContainer{
     display: flex;
- 
-    gap: 2rem;
-    margin: 1rem;
-    
+    flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  margin: 10px;
   }
   /* STUDENT DASHBOARD BOOKMARKS */
   .StudentdashboardBookMarksSubDiv{
@@ -983,10 +984,10 @@ height: 100%;
     padding: 1rem;
     margin: 1rem;
   }
-  .bookMarksHeightForScroll{
+  /* .bookMarksHeightForScroll{
     height: 70vh;
     overflow-y: auto;
-  }
+  } */
   
   /* .BookMarksSubDivForScroll{
      height: 90vh; 
@@ -1032,7 +1033,7 @@ height: 100%;
 .testContainerIcon{
   font-size: 2rem;
 }
-@media (max-width:1240px) {
+@media (max-width:1280px) {
   .MainDivStudentDasboard{
     background: white;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -1054,6 +1055,7 @@ height: 100%;
 .QuestionsAndImgScrollContainer{
   overflow-x: auto;
 }
+
 }
   @media (max-width:1024px) {
     /* .testCard{
