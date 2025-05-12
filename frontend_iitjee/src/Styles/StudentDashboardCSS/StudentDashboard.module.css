@@ -322,10 +322,10 @@ button.backslash {
   background-color: white;
 }
 .MainDivStudentDasboard {
-  background: white;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  height: 10vh;
-  padding: 5px;
+  background: #fff;
+    box-shadow: #0000003d 0 3px 8px;
+    height: 8vh;
+    padding: 5px;
 }
 .studentLogo {
   width: 65px;
@@ -1035,8 +1035,8 @@ height: 100%;
 }
 @media (max-width:1280px) {
   .MainDivStudentDasboard{
-    background: white;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+   background: #fff;
+    box-shadow: #0000003d 0 3px 8px;
     height: 8vh;
     padding: 5px;
 }
@@ -1355,8 +1355,8 @@ height: 100%;
   }
   @media (max-height:800px) {
     .MainDivStudentDasboard {
-      background: white;
-      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+       background: #fff;
+    box-shadow: #0000003d 0 3px 8px;
       height: 10vh;
       padding: 5px;
     }
@@ -1370,8 +1370,8 @@ height: 100%;
   }
   @media (max-height:700px) {
     .MainDivStudentDasboard {
-      background: white;
-      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+      background: #fff;
+    box-shadow: #0000003d 0 3px 8px;
       height: 10vh;
       padding: 5px;
     }
@@ -1385,8 +1385,8 @@ height: 100%;
   }
   @media (max-height:600px) {
     .MainDivStudentDasboard {
-      background: white;
-      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background: #fff;
+    box-shadow: #0000003d 0 3px 8px;
       height: 10vh;
       padding: 5px;
     }
