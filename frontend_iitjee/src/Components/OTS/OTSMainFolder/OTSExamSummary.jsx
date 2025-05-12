@@ -203,8 +203,11 @@ const ExamSummaryComponent = ({
   
       if (window.opener) {
         window.opener.location.href = destinationURL
-        window.localStorage.setItem("activeSection", "results");
-  
+        // window.localStorage.setItem("activeSection", "results");
+  window.localStorage.setItem(
+      "studentDashboardState",
+      JSON.stringify({ activeSection: 'results' })
+    );
         setTimeout(() => {
           window.open("", "_self").close();
         }, 50);

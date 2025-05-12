@@ -8,7 +8,7 @@ import OrvlTopicCards from "./OrvlTopicCards.jsx";
 import OrvlCourseTopic from "./OrvlCourseTopic.jsx";
 import LoadingSpinner from "../../../ContextFolder/LoadingSpinner.jsx";
 
-export default function StudentDashboard_MyCourses({ studentId,userData }) {
+export default function StudentDashboard_MyCourses({ studentId,userData, activeSection }) {
   const [structuredCourses, setStructuredCourses] = useState([]);
   const [selectedPortal, setSelectedPortal] = useState(null);
   const [selectedExam, setSelectedExam] = useState(null);
@@ -49,6 +49,28 @@ export default function StudentDashboard_MyCourses({ studentId,userData }) {
     fetchPurchasedCourses();
   }, [studentId]);
 
+  useEffect(() => {
+  const savedState = localStorage.getItem("studentDashboardState");
+  if (savedState) {
+    try {
+      const parsed = JSON.parse(savedState);
+      if (parsed.activeSection === "myCourses") {
+        setSelectedTestCourse(parsed.selectedTestCourse || null);
+        setShowQuizContainer(parsed.showQuizContainer ?? true);
+        setShowTestContainer(parsed.showTestContainer ?? false);
+        setShowTopicContainer(parsed.showTopicContainer ?? false);
+        setTopicId(parsed.topicId || "");
+        setSelectedPortal(parsed.selectedPortal || null);
+        setSelectedExam(parsed.selectedExam || null);
+        setOpenCourseOrvl(parsed.openCourseOrvl ?? false); 
+      }
+    } catch (err) {
+      console.error("Failed to parse studentDashboardState on restore:", err);
+    }
+  }
+}, []);
+
+
   const portalData = useMemo(() => {
     return structuredCourses.find((p) => p.portal_name === selectedPortal);
   }, [structuredCourses, selectedPortal]);
@@ -71,22 +93,55 @@ export default function StudentDashboard_MyCourses({ studentId,userData }) {
     }));
   }, [portalData, selectedExam]);
 
-  const handleGoToTest = (course) => {
-    setSelectedTestCourse(course);
-    setShowQuizContainer(false);
-    if (course.portal_id === 3) {
-      setShowTopicContainer(true);
-    } else {
-      setShowTestContainer(true);
-    }
-  };
+const handleGoToTest = (course) => {
+  setSelectedTestCourse(course);
+  setShowQuizContainer(false);
+  if (course.portal_id === 3) {
+    setShowTopicContainer(true);
+  } else {
+    setShowTestContainer(true);
+  }
 
-  const handleBackToCourses = () => {
-    setSelectedTestCourse(null);
-    setShowQuizContainer(true);
-    setShowTestContainer(false);
-    setShowTopicContainer(false);
-  };
+  // Persist the current state to localStorage
+  localStorage.setItem(
+    "studentDashboardState",
+    JSON.stringify({
+      activeSection: "myCourses",
+      selectedTestCourse: course,
+      showQuizContainer: false,
+      showTestContainer: course.portal_id !== 3,
+      showTopicContainer: course.portal_id === 3,
+      setOpenCourseOrvl:false,
+      topicId: "",
+      selectedPortal,
+      selectedExam,
+    })
+  );
+};
+
+// Handle going back to the course list
+const handleBackToCourses = () => {
+  setSelectedTestCourse(null);
+  setShowQuizContainer(true);
+  setShowTestContainer(false);
+  setShowTopicContainer(false);
+
+  // Persist the reset state to localStorage
+  localStorage.setItem(
+    "studentDashboardState",
+    JSON.stringify({
+      activeSection: "myCourses",
+      selectedTestCourse: null,
+      showQuizContainer: true,
+      showTestContainer: false,
+      showTopicContainer: false,
+      setOpenCourseOrvl:false,
+      topicId: "",
+      selectedPortal,
+      selectedExam,
+    })
+  );
+};
 
   return (
     <>
@@ -251,10 +306,19 @@ export default function StudentDashboard_MyCourses({ studentId,userData }) {
           setShowTopicContainer={setShowTopicContainer}
           courseCreationId={selectedTestCourse.course_creation_id}
           topicid={topicId}
-          onBack={() => {
-            setOpenCourseOrvl(false);
-            setShowTopicContainer(true); // When going back, show topic container again
-          }}
+         onBack={() => {
+  setOpenCourseOrvl(false);
+  setShowTopicContainer(true);
+
+  const currentState = JSON.parse(localStorage.getItem("studentDashboardState") || "{}");
+
+  localStorage.setItem("studentDashboardState", JSON.stringify({
+    ...currentState,
+    openCourseOrvl: false,
+    showTopicContainer: true,
+  }));
+}}
+
         />
       )}
     </>
