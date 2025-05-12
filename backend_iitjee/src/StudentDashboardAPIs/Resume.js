@@ -142,6 +142,33 @@ WHERE
             if (connection) connection.release();
         }
     });
+   router.patch('/save-timer', async (req, res) => {
+      const { testId, studentId, timeLeft } = req.body;
+      if (!testId || !studentId || !timeLeft) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
     
+      let connection;
+      try {
+        connection = await db.getConnection();
+        const [result] = await connection.execute(
+          `UPDATE iit_test_status_details
+             SET time_left = ?
+           WHERE student_registration_id = ? 
+             AND test_creation_table_id = ?`,
+          [timeLeft, studentId, testId]
+        );
+    
+        if (result.affectedRows === 0) {
+          return res.status(404).json({ error: "No matching session found" });
+        }
+        res.status(200).json({ message: "Time updated successfully" });
+      } catch (err) {
+        console.error('DB error:', err);
+        res.status(500).json({ error: "Database update failed" });
+      } finally {
+        if (connection) connection.release();
+      }
+    });
 
 module.exports = router;
