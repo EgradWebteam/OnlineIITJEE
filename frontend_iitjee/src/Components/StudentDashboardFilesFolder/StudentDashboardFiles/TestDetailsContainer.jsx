@@ -40,8 +40,58 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
         const res = await fetch(
           `${BASE_URL}/studentmycourses/coursetestdetails/${course_creation_id}/${studentId}`
         );
-        const data = await res.json();
- 
+        let data = await res.json();
+        console.log("Fetched test details:", data.test_details);
+        let startedTest = null;
+
+        data.test_details.forEach(group => {
+          group.tests.forEach(test => {
+            console.log("Checking test:", test.test_name, "Status:", test.test_attempt_status);
+            if (test.test_attempt_status === "started" && !startedTest) {
+              startedTest = test;
+            }
+          });
+        });
+        const navigationToken = sessionStorage.getItem('navigationToken');
+       if (!startedTest) {
+        console.log("No 'started' test found");
+      } else if (!navigationToken) {
+        const testCreationTableId = startedTest.test_creation_table_id;
+        const timeLeft = localStorage.getItem("OTS_FormattedTime");
+        
+        const putRes = await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            studentId: studentId,
+            testCreationTableId: testCreationTableId,
+            timeleft: timeLeft,
+          }),
+        });
+
+        if (putRes.status === 200) {
+          console.log("Resume update successful");
+          localStorage.removeItem("OTS_FormattedTime");
+          
+          // Re-fetch latest data after updating
+          // const updatedRes = await fetch(
+          //   `${BASE_URL}/studentmycourses/coursetestdetails/${course_creation_id}/${studentId}`
+          // );
+          // data = await updatedRes.json();
+          data.test_details.forEach(group => {
+            group.tests.forEach(test => {
+              if (test.test_creation_table_id === startedTest.test_creation_table_id) {
+                test.test_attempt_status = "resumed";
+              }
+            });
+          });
+        } else {
+          console.error("Failed to update resume test.");
+        }
+      }
+      
         // Updated structure: data.test_details is an array
         const grouped = {};
  
@@ -60,7 +110,7 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
     if (course_creation_id && studentId) {
       fetchCourseTests();
     }
-  }, [course_creation_id, studentId, refreshTrigger]);
+  }, [course_creation_id, studentId,refreshTrigger]);
  
  
   const allTestTypes = ['Select Type Of Test', ...Object.keys(groupedTests)];
@@ -227,37 +277,72 @@ const handleStartTestClick = async (testCreationTableId) => {
       // force resize window to full screen only - end
       
       if (newWinRef) {
-        window.addEventListener('beforeunload', () => {
-          if (newWinRef && !newWinRef.closed) {
-            const key = `OTS_FormattedTime`;
-            const timeLeft = localStorage.getItem(key);
+        // window.addEventListener('beforeunload', () => {
+        //   if (newWinRef && !newWinRef.closed) {
+        //     const key = `OTS_FormattedTime`;
+        //     const timeLeft = localStorage.getItem(key);
        
-            console.log("Sending timeLeft to API:", timeLeft);
+        //     console.log("Sending timeLeft to API:", timeLeft);
        
-            // if (!timeLeft) {
-            //   console.warn("No timeLeft found in localStorage.");
-            //   return;
-            // }
+        //     // if (!timeLeft) {
+        //     //   console.warn("No timeLeft found in localStorage.");
+        //     //   return;
+        //     // }
            
-              fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  studentId: studentId,
-                  testCreationTableId: testCreationTableId,
-                  timeleft: timeLeft
-                }),
-              }).catch((error) => {
-                console.error("Error deleting data on window close:", error);
-              });
+        //       fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
+        //         method: "PUT",
+        //         headers: {
+        //           "Content-Type": "application/json",
+        //         },
+        //         body: JSON.stringify({
+        //           studentId: studentId,
+        //           testCreationTableId: testCreationTableId,
+        //           timeleft: timeLeft
+        //         }),
+        //       }).catch((error) => {
+        //         console.error("Error deleting data on window close:", error);
+        //       });
  
-              localStorage.removeItem(`OTS_FormattedTime`)
+        //       localStorage.removeItem(`OTS_FormattedTime`)
            
-            newWinRef.close();
-          }
-        });
+        //     newWinRef.close();
+        //   }
+        // });
+ 
+ const bc = new BroadcastChannel('test_channel');
+ 
+window.addEventListener('beforeunload', () => {
+  const timeLeft = localStorage.getItem('OTS_FormattedTime') || "";
+ 
+  // Tell the child to update the test and close
+  bc.postMessage({
+    action: 'resumeAndClose',
+    timeLeft: timeLeft
+  });
+
+  sessionStorage.removeItem('navigationToken');
+
+
+//  setTimeout(() => {
+//   // This will run if child does not handle the BroadcastChannel in time
+//   const timeLeft = localStorage.getItem('OTS_FormattedTime') || "";
+//   const payload = new Blob([JSON.stringify({
+//     studentId,
+//     testCreationTableId,
+//     timeleft: timeLeft
+//   })], { type: 'application/json' });
+
+//   navigator.sendBeacon(`${BASE_URL}/ResumeTest/updateResumeTestBeacon`, payload);
+
+//   localStorage.removeItem('OTS_FormattedTime');
+
+// }, 100);
+// newWinRef.close();
+
+});
+        
+        
+        
         const monitorWindow = setInterval(() => {
           if (newWinRef.closed) {
             console.log("Quiz window closed");
@@ -290,8 +375,15 @@ const handleStartTestClick = async (testCreationTableId) => {
  
               localStorage.removeItem(`OTS_FormattedTime`);
 
-                //Trigger re-fetch of test data
-                setRefreshTrigger(prev => !prev);
+              sessionStorage.removeItem('navigationToken');
+
+
+
+            // Trigger re-fetch of test data (refresh UI)
+            setTimeout(() => {
+              // This ensures the re-fetch is done after a small delay for all tasks to complete
+              setRefreshTrigger((prev) => !prev);
+            }, 200); // Delay to ensure completion
            
           }
         }, 1000);
@@ -323,15 +415,26 @@ const handleStartTestClick = async (testCreationTableId) => {
  
   return (
     <div className={styles.testDetailsConatinerMainDiv}>
+      <div className={styles.testDetailsOfSubComainter}>
+      
+      <div className={styles.courseNameHolderDiv}>
+        <h2 className={styles.CourseNameForTest}>{courseName}</h2>
+      </div>
       <div className={styles.goBackInTestContainerDiv}>
         <button className={styles.goBackBtn} onClick={onBack}>Go Back</button>
       </div>
  
-      <div className={styles.courseNameHolderDiv}>
-        <h2 className={styles.CourseNameForTest}>{courseName}</h2>
-      </div>
+ </div>
  
-      <div className={styles.typeOfTestsSelector}>
+ 
+      <div className={styles.testsContainer}>
+        {selectedTestType === 'Select Type Of Test' ? (
+          Object.entries(groupedTests).map(([type, tests]) => (
+            <div key={type} className={styles.testContainerDivForflex}>
+              <div className={styles.testTypeRow}>
+     <div className={styles.headingFortheTypeTest}>
+              <h3  >{type}</h3></div>
+               <div className={styles.typeOfTestsSelector}>
         <select
           value={selectedTestType}
           onChange={(e) => setSelectedTestType(e.target.value)}
@@ -341,12 +444,7 @@ const handleStartTestClick = async (testCreationTableId) => {
           ))}
         </select>
       </div>
- 
-      <div className={styles.testsContainer}>
-        {selectedTestType === 'Select Type Of Test' ? (
-          Object.entries(groupedTests).map(([type, tests]) => (
-            <div key={type} className={styles.testContainerDivForflex}>
-              <h3 style={{ textAlign: 'center', margin: '1rem 0', color: '#0f172a' }}>{type}</h3>
+      </div>
               {tests.map(test => (
                 <div key={test.test_creation_table_id} className={styles.testCard}>
                   <div className={styles.testContainerSub}>
@@ -482,7 +580,7 @@ const handleStartTestClick = async (testCreationTableId) => {
           </div>
         )}
       </div>
- 
+
       {showPopup && (
         <div className={styles.modalOverlayTest}>
           <div className={styles.modalContentTest}>

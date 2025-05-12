@@ -38,27 +38,41 @@ export default function QuestionNavigationButtons({
   const { timeSpent,timeLeft } = useTimer();  // Get timeSpent in seconds
  
  
-  useEffect(() => {
-    if (!testData || !testData.subjects) return;
+  // useEffect(() => {
+  //   if (!testData || !testData.subjects) return;
  
-    const updatedAnswers = { ...userAnswers };
-    testData.subjects.forEach(subject => {
-      subject.sections.forEach(section => {
-        const firstQ = section.questions[0];
-        if (firstQ && !updatedAnswers[firstQ.question_id]) {
-          updatedAnswers[firstQ.question_id] = {
-            subjectId: subject.subjectId,
-            sectionId: section.sectionId,
-            questionId: firstQ.question_id,
-            buttonClass: styles.NotAnsweredBtnCls,
-            type: "",
-          };
-        }
-      });
-    });
+  //   const updatedAnswers = { ...userAnswers };
+  //   testData.subjects.forEach(subject => {
+  //     subject.sections.forEach(section => {
+  //       const firstQ = section.questions[0];
+  //       if (firstQ && !updatedAnswers[firstQ.question_id]) {
+  //         updatedAnswers[firstQ.question_id] = {
+  //           subjectId: subject.subjectId,
+  //           sectionId: section.sectionId,
+  //           questionId: firstQ.question_id,
+  //           buttonClass: styles.NotAnsweredBtnCls,
+  //           type: "",
+  //         };
+      
+  //             await saveUserResponse({
+  //               realStudentId,
+  //               realTestId,
+  //               subject_id: subject.subjectId,
+  //               section_id: section.sectionId,
+  //               question_id: firstQ.question_id,
+  //               question_type_id: firstQ?.questionType?.quesionTypeId,
+  //               answered: "3",
+  //             });
+           
+  //         };
+      
+        
+  //       }
+  //     });
+  //   });
  
-    setUserAnswers(updatedAnswers);
-  }, [testData]);
+  //   setUserAnswers(updatedAnswers);
+  // }, [testData]);
  
   useEffect(() => {
     const subject = testData?.subjects?.find(sub => sub.SubjectName === activeSubject);

@@ -115,9 +115,27 @@ export default function OTSRightSideBar({
           sectionId: section.sectionId,
           questionId: firstQuestion.question_id,
           buttonClass: styles.NotAnsweredBtnCls,
-          type: "", // no answer yet
+          type: "", 
         },
       }));
+   
+      const saveResponse = async () => {
+        try {
+          await saveUserResponse({
+            realStudentId,
+            realTestId,
+            subject_id: subject.subjectId,
+            section_id: section.sectionId,
+            question_id: firstQuestion.question_id,
+            question_type_id: firstQuestion?.questionType?.quesionTypeId,
+            answered: "3",
+          });
+        } catch (err) {
+          console.error("Error saving first question response:", err);
+        }
+      };
+  
+      saveResponse();
     }
   }, [testData, activeSubject, activeSection, userAnswers]);
   

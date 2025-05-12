@@ -10,6 +10,9 @@ import { BASE_URL } from "../../ConfigFile/ApiConfigURL.js";
 import { TimerProvider } from "../../ContextFolder/TimerContext.jsx";
 import { useTimer } from "../../ContextFolder/TimerContext.jsx";
 import { useQuestionStatus } from "../../ContextFolder/CountsContext.jsx";
+
+import ParentTabClosing from "./ParentTabClosing.jsx"
+
 import DisableKeysAndMouseInteractions from "../../ContextFolder/DisableKeysAndMouseInteractions.jsx";
 export default function OTSRootFile() {
   const { testId, studentId } = useParams();
@@ -25,7 +28,7 @@ export default function OTSRootFile() {
   const terminationCalledRef = useRef(false);
   const summaryData = useRef({});
    // Disable all keyboard and mouse interactions globally
-   DisableKeysAndMouseInteractions(null);
+  DisableKeysAndMouseInteractions(null);
 
 
 console.log("summaryData",summaryData.current)
@@ -439,6 +442,40 @@ console.log("summaryData",summaryData.current)
   }, [isShiftPressed, isMetaPressed]);
   //TERMINATION PAGE  CODE END
 
+  // const bc = new BroadcastChannel('test_channel');
+ 
+  //   bc.onmessage = async (event) => {
+  //     if (event.data.action === 'resumeAndClose') {
+  //       const { timeLeft } = event.data;
+   
+  //       try {
+  //         const response = await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`, {
+  //           method: 'PUT',
+  //           headers: {
+  //             'Content-Type': 'application/json'
+  //           },
+  //           body: JSON.stringify({
+  //             studentId: realStudentId,
+  //             testCreationTableId: realTestId,
+  //             timeleft: timeLeft || ""
+  //           })
+  //         });
+   
+  //         if (!response.ok) {
+  //           console.error("Failed to update resume status.");
+  //         } else {
+  //           console.log("Resume test API called successfully from child.");
+  //         }
+   
+  //       } catch (err) {
+  //         console.error("API error:", err);
+  //       } finally {
+  //         localStorage.removeItem('OTS_FormattedTime');
+  //         window.close(); // Close child after sending the request
+  //       }
+  //     }
+  //   };
+
 
   return (
     <div className={styles.OTSRootMainContainer}>
@@ -480,6 +517,8 @@ console.log("summaryData",summaryData.current)
         </>
       )}
     </div>
+    <ParentTabClosing    realStudentId={realStudentId.current}
+        realTestId={realTestId.current} />
     </div>
   );
 }

@@ -119,7 +119,7 @@ const ViewResults = ({ onClose, testCreationTableId }) => {
     <div className={styles.viewResultsContainer}>
       <div className={styles.header}>
         <h2>View Results</h2>
-        <button className={styles.cancelButton} onClick={onClose}>Cancel</button>
+        <button className={styles.cancelButton} onClick={onClose}>❌</button>
       </div>
 
       <div className={styles.buttonGroup}>

@@ -38,9 +38,7 @@
 }
 
 @media (max-width: 600px) {
-  .Header_MainPage {
-    background-color: rgb(180, 177, 177);
-  }
+ 
   .Header_container{
     padding: .5rem;
   }

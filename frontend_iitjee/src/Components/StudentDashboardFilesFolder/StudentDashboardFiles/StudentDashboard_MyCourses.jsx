@@ -141,7 +141,12 @@ export default function StudentDashboard_MyCourses({ studentId,userData }) {
 )}
       {showQuizContainer && (
         <div className={styles.studentDashboardMyCoursesMainDiv}>
+         <div className={styles.breadcrumbContainer}>
+    <span className={styles.breadcrumbLink}>My Courses</span>
+    <span className={styles.breadcrumbSeparator}> &gt; </span>
+    </div>
           <div className={globalCSS.stuentDashboardGlobalHeading}>
+            
             <h3>My Courses</h3>
           </div>
 
@@ -209,6 +214,7 @@ export default function StudentDashboard_MyCourses({ studentId,userData }) {
             </div>
           )}
         </div>
+        
       )}
 
       {showTestContainer && selectedTestCourse && (
