@@ -10,7 +10,7 @@ import { BASE_URL } from "../../ConfigFile/ApiConfigURL.js";
 import { TimerProvider } from "../../ContextFolder/TimerContext.jsx";
 import { useTimer } from "../../ContextFolder/TimerContext.jsx";
 import { useQuestionStatus } from "../../ContextFolder/CountsContext.jsx";
-import DisableKeysAndMouseInteractions from "../../ContextFolder/DisableKeysAndMouseInteractions.jsx";
+// import DisableKeysAndMouseInteractions from "../../ContextFolder/DisableKeysAndMouseInteractions.jsx";
 export default function OTSRootFile() {
   const { testId, studentId } = useParams();
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ export default function OTSRootFile() {
   const terminationCalledRef = useRef(false);
   const summaryData = useRef({});
    // Disable all keyboard and mouse interactions globally
-   DisableKeysAndMouseInteractions(null);
+  //  DisableKeysAndMouseInteractions(null);
 
 
 console.log("summaryData",summaryData.current)
