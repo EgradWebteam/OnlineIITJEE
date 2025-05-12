@@ -10,6 +10,8 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
   const [courseName, setCourseName] = useState('');
   const [selectedTestType, setSelectedTestType] = useState('Select Type Of Test');
   const [showPopup, setShowPopup] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
+
  
   const course_creation_id = course?.course_creation_id;
   const navigate = useNavigate();
@@ -38,8 +40,58 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
         const res = await fetch(
           `${BASE_URL}/studentmycourses/coursetestdetails/${course_creation_id}/${studentId}`
         );
-        const data = await res.json();
- 
+        let data = await res.json();
+        console.log("Fetched test details:", data.test_details);
+        let startedTest = null;
+
+        data.test_details.forEach(group => {
+          group.tests.forEach(test => {
+            console.log("Checking test:", test.test_name, "Status:", test.test_attempt_status);
+            if (test.test_attempt_status === "started" && !startedTest) {
+              startedTest = test;
+            }
+          });
+        });
+        const navigationToken = sessionStorage.getItem('navigationToken');
+       if (!startedTest) {
+        console.log("No 'started' test found");
+      } else if (!navigationToken) {
+        const testCreationTableId = startedTest.test_creation_table_id;
+        const timeLeft = localStorage.getItem("OTS_FormattedTime");
+        
+        const putRes = await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            studentId: studentId,
+            testCreationTableId: testCreationTableId,
+            timeleft: timeLeft,
+          }),
+        });
+
+        if (putRes.status === 200) {
+          console.log("Resume update successful");
+          localStorage.removeItem("OTS_FormattedTime");
+          
+          // Re-fetch latest data after updating
+          // const updatedRes = await fetch(
+          //   `${BASE_URL}/studentmycourses/coursetestdetails/${course_creation_id}/${studentId}`
+          // );
+          // data = await updatedRes.json();
+          data.test_details.forEach(group => {
+            group.tests.forEach(test => {
+              if (test.test_creation_table_id === startedTest.test_creation_table_id) {
+                test.test_attempt_status = "resumed";
+              }
+            });
+          });
+        } else {
+          console.error("Failed to update resume test.");
+        }
+      }
+      
         // Updated structure: data.test_details is an array
         const grouped = {};
  
@@ -58,7 +110,7 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
     if (course_creation_id && studentId) {
       fetchCourseTests();
     }
-  }, [course_creation_id, studentId]);
+  }, [course_creation_id, studentId,refreshTrigger]);
  
  
   const allTestTypes = ['Select Type Of Test', ...Object.keys(groupedTests)];
@@ -202,38 +254,93 @@ const handleStartTestClick = async (testCreationTableId) => {
       // Open the new window
       const newWinRef = window.open(url, "_blank", `width=${screenWidth},height=${screenHeight},fullscreen=yes`);
  
+      // force resize window to full screen only - start
       if (newWinRef) {
-        window.addEventListener('beforeunload', () => {
-          if (newWinRef && !newWinRef.closed) {
-            const key = `OTS_FormattedTime`;
-            const timeLeft = localStorage.getItem(key);
-       
-            console.log("Sending timeLeft to API:", timeLeft);
-       
-            // if (!timeLeft) {
-            //   console.warn("No timeLeft found in localStorage.");
-            //   return;
-            // }
-           
-              fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  studentId: studentId,
-                  testCreationTableId: testCreationTableId,
-                  timeleft: timeLeft
-                }),
-              }).catch((error) => {
-                console.error("Error deleting data on window close:", error);
-              });
- 
-              localStorage.removeItem(`OTS_FormattedTime`)
-           
-            newWinRef.close();
+        const resizeMonitor = setInterval(() => {
+          try {
+            if (
+              newWinRef.outerWidth !== screenWidth ||
+              newWinRef.outerHeight !== screenHeight
+            ) {
+              newWinRef.resizeTo(screenWidth, screenHeight);
+              newWinRef.moveTo(0, 0);
+            }
+          } catch (err) {
+            console.warn("Resize attempt failed (possibly cross-origin):", err);
           }
-        });
+      
+          if (newWinRef.closed) {
+            clearInterval(resizeMonitor);
+          }
+        }, 1000); // Check every second
+      }
+      // force resize window to full screen only - end
+      
+      if (newWinRef) {
+        // window.addEventListener('beforeunload', () => {
+        //   if (newWinRef && !newWinRef.closed) {
+        //     const key = `OTS_FormattedTime`;
+        //     const timeLeft = localStorage.getItem(key);
+       
+        //     console.log("Sending timeLeft to API:", timeLeft);
+       
+        //     // if (!timeLeft) {
+        //     //   console.warn("No timeLeft found in localStorage.");
+        //     //   return;
+        //     // }
+           
+        //       fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
+        //         method: "PUT",
+        //         headers: {
+        //           "Content-Type": "application/json",
+        //         },
+        //         body: JSON.stringify({
+        //           studentId: studentId,
+        //           testCreationTableId: testCreationTableId,
+        //           timeleft: timeLeft
+        //         }),
+        //       }).catch((error) => {
+        //         console.error("Error deleting data on window close:", error);
+        //       });
+ 
+        //       localStorage.removeItem(`OTS_FormattedTime`)
+           
+        //     newWinRef.close();
+        //   }
+        // });
+ 
+ const bc = new BroadcastChannel('test_channel');
+ 
+window.addEventListener('beforeunload', () => {
+  const timeLeft = localStorage.getItem('OTS_FormattedTime') || "";
+ 
+  // Tell the child to update the test and close
+  bc.postMessage({
+    action: 'resumeAndClose',
+    timeLeft: timeLeft
+  });
+  sessionStorage.removeItem('navigationToken');
+
+//  setTimeout(() => {
+//   // This will run if child does not handle the BroadcastChannel in time
+//   const timeLeft = localStorage.getItem('OTS_FormattedTime') || "";
+//   const payload = new Blob([JSON.stringify({
+//     studentId,
+//     testCreationTableId,
+//     timeleft: timeLeft
+//   })], { type: 'application/json' });
+
+//   navigator.sendBeacon(`${BASE_URL}/ResumeTest/updateResumeTestBeacon`, payload);
+
+//   localStorage.removeItem('OTS_FormattedTime');
+
+// }, 100);
+// newWinRef.close();
+
+});
+        
+        
+        
         const monitorWindow = setInterval(() => {
           if (newWinRef.closed) {
             console.log("Quiz window closed");
@@ -264,7 +371,15 @@ const handleStartTestClick = async (testCreationTableId) => {
                 console.error("Error deleting data on window close:", error);
               });
  
-              localStorage.removeItem(`OTS_FormattedTime`)
+              localStorage.removeItem(`OTS_FormattedTime`);
+              sessionStorage.removeItem('navigationToken');
+
+
+            // Trigger re-fetch of test data (refresh UI)
+            setTimeout(() => {
+              // This ensures the re-fetch is done after a small delay for all tasks to complete
+              setRefreshTrigger((prev) => !prev);
+            }, 200); // Delay to ensure completion
            
           }
         }, 1000);

@@ -129,6 +129,7 @@ const ExamSummaryComponent = ({
           `${BASE_URL}/OTSExamSummary/FetchStudentMarks/${realTestId}/${realStudentId}`
         ),
       ]);
+      sessionStorage.removeItem('navigationToken');
 
       const examSummary =
         summaryRes.status === "fulfilled"
