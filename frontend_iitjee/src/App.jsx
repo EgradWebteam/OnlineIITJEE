@@ -28,14 +28,14 @@ const StudentReportMain = React.lazy(() => import('./Components/OTS/ResultsFolde
 
 import { TimerProvider } from './ContextFolder/TimerContext.jsx';
 import { QuestionStatusProvider } from './ContextFolder/CountsContext.jsx';
-
+import { SessionProvider } from './Components/StudentDashboardFilesFolder/hooks/SessionContext.jsx';
 import LoadingSpinner from './ContextFolder/LoadingSpinner.jsx';
 
 function App() {
   return (
     <Suspense fallback={<div><LoadingSpinner/></div>}>
       <BrowserRouter>
-
+<SessionProvider>
         <AlertProvider>
             <Routes>
           <Route path="/" element={<LandingPageIITJEE />} />
@@ -82,8 +82,9 @@ function App() {
             } />
           <Route path='/StudentReport/:testId' element={<StudentReportMain />} />
         </Routes>
+        
         </AlertProvider>
-
+        </SessionProvider>
       </BrowserRouter>
     </Suspense>
   )
