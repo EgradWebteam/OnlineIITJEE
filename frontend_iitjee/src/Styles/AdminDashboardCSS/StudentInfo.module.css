@@ -328,7 +328,7 @@ font-size: 13px;
 }
 @media(max-height:700px){
   .studentMainContentHomePage{
-    height: calc(100vh - 11vh);
+    height: calc(100vh - 13vh);
     overflow: hidden;
   }
   
