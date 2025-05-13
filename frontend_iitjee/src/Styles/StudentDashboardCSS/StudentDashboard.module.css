@@ -608,6 +608,7 @@ height: 80%;
   flex-wrap: wrap;
   gap: 8px;
   max-height: 65%;
+   max-height: 65%;
   padding: 0rem;
   justify-content: flex-start;
 }
@@ -1069,7 +1070,9 @@ height: 100%;
 }
 .studentDashboardHeaderLogoDiv {
   width: 220px;
-}
+} .status_pallete{
+  min-height: 60%;
+    }
 
 }
   @media (max-width:1024px) {
