@@ -169,12 +169,13 @@ console.log("summaryData",summaryData.current)
     setCourseCreationId(courseId); // update state if needed elsewhere
 
     // 3. Update Test Attempt Status (POST)
-    await axios.post(`${BASE_URL}/OTSExamSummary/UpdateTestAttemptStatus`, {
-      studentId: realStudentId.current,
-      courseCreationId: courseId,
-      test_creation_table_id: realTestId.current,
+    await axios.put(`${BASE_URL}/OTSExamSummary/updateTestStatus/${realStudentId.current}/${realTestId.current}`, {
+
       test_status: "completed",
       connection_status: "disconnected",
+      // studentId:realStudentId.current,
+      // testCreationTableId:realTestId.current,
+      courseCreationId:courseId
     });
       const [summaryRes, marksRes] = await Promise.allSettled([
         fetch(
@@ -518,7 +519,8 @@ console.log("summaryData",summaryData.current)
       )}
     </div>
     <ParentTabClosing    realStudentId={realStudentId.current}
-        realTestId={realTestId.current} />
+        realTestId={realTestId.current}
+       />
     </div>
   );
 }

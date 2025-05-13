@@ -464,7 +464,7 @@ const [showPopup, setShowPopup] = useState(false);
                     return student.student_activation === 0;
                   if (studentFilter === "inactive")
                     return student.student_activation === 1;
-                  return true; // "all"
+                  return true; 
                 })
                 .map((student, index) => (
                   <div className={styles.StudentInformationfromDB}>

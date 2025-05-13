@@ -59,16 +59,19 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
         const testCreationTableId = startedTest.test_creation_table_id;
        
         
-        const putRes = await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
+        const putRes = await fetch(`${BASE_URL}/OTSExamSummary/updateTestStatus/${studentId}/${testCreationTableId}`,  {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            studentId: studentId,
-            testCreationTableId: testCreationTableId
+            // studentId:studentId,
+            // testCreationTableId :testCreationTableId ,
+            test_status: "resumed",
+            connection_status: "disconnected",
+            courseCreationId :course_creation_id
            
-          }),
+          })
         });
 
         if (putRes.status === 200) {
@@ -317,7 +320,8 @@ window.addEventListener('beforeunload', () => {
   // Tell the child to update the test and close
   bc.postMessage({
     action: 'resumeAndClose',
-    timeLeft: timeLeft
+    timeLeft: timeLeft,
+    courseCreationId: course_creation_id,
   });
 
   sessionStorage.removeItem('navigationToken');
@@ -359,15 +363,17 @@ window.addEventListener('beforeunload', () => {
             //   return;
             // }
            
-              fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
+            fetch(`${BASE_URL}/OTSExamSummary/updateTestStatus/${studentId}/${testCreationTableId}`,  {
                 method: "PUT",
                 headers: {
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  studentId: studentId,
-                  testCreationTableId: testCreationTableId,
-                  timeleft: timeLeft
+             
+                      test_status: "resumed",
+            connection_status: "disconnected",
+                  timeleft: timeLeft,
+                  courseCreationId :course_creation_id
                 }),
               }).catch((error) => {
                 console.error("Error deleting data on window close:", error);

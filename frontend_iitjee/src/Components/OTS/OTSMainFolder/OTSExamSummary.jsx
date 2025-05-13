@@ -79,9 +79,9 @@ const ExamSummaryComponent = ({
 
 
       const postData = {
-        studentId: realStudentId,
+      //  studentId: realStudentId,
         courseCreationId: courseCreationId,
-        test_creation_table_id: realTestId,
+        // testCreationTableId: realTestId,
         test_status: "completed",
         connection_status: "disconnected",
       };
@@ -89,9 +89,9 @@ const ExamSummaryComponent = ({
       // console.log("Post data for updating status:", postData);
 
       const updateResponse = await fetch(
-        `${BASE_URL}/OTSExamSummary/UpdateTestAttemptStatus`,
+        `${BASE_URL}/OTSExamSummary/updateTestStatus/${realStudentId}/${realTestId}`,
         {
-          method: "POST",
+          method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(postData),
         }

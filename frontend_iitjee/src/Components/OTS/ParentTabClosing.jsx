@@ -6,18 +6,19 @@ const ResumeTestBroadcastHandler = ({ realStudentId, realTestId }) => {
 
     bc.onmessage = async (event) => {
       if (event.data.action === 'resumeAndClose') {
-        const { timeLeft } = event.data;
+        const { timeLeft, courseCreationId } = event.data;
 
         try {
-          const response = await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${realStudentId}/${realTestId}`, {
+          const response = await fetch(`${BASE_URL}/OTSExamSummary/updateTestStatus/${realStudentId}/${realTestId}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              studentId: realStudentId,
-              testCreationTableId: realTestId,
-              timeleft: timeLeft || ""
+              test_status: "resumed",
+              connection_status: "disconnected",
+              timeleft: timeLeft || "",
+              courseCreationId :courseCreationId 
             })
           });
 

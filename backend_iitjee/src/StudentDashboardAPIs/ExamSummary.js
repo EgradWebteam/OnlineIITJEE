@@ -154,47 +154,47 @@ router.get("/OTSTestData/:testCreationTableId", async (req, res) => {
 
 
 
-router.post("/UpdateTestAttemptStatus", async (req, res) => {
-  const {
-    studentId,
-    courseCreationId,
-    test_creation_table_id,
-    test_status,
-    connection_status,
-  } = req.body;
+// router.post("/UpdateTestAttemptStatus", async (req, res) => {
+//   const {
+//     studentId,
+//     courseCreationId,
+//     test_creation_table_id,
+//     test_status,
+//     connection_status,
+//   } = req.body;
 
-  const currentDateTime = new Date()
-    .toISOString()
-    .slice(0, 19)
-    .replace("T", " ");
+  // const currentDateTime = new Date()
+  //   .toISOString()
+  //   .slice(0, 19)
+  //   .replace("T", " ");
 
-  const sql = `
-    UPDATE iit_test_status_details
-    SET
-      test_attempt_status = ?,
-      test_connection_status = ?,
-      student_test_end_date_time = ?
-    WHERE
-      student_registration_id = ? AND
-      course_creation_id = ? AND
-      test_creation_table_id = ?
-  `;
+//   const sql = `
+//     UPDATE iit_test_status_details
+//     SET
+//       test_attempt_status = ?,
+//       test_connection_status = ?,
+//       student_test_end_date_time = ?
+//     WHERE
+//       student_registration_id = ? AND
+//       course_creation_id = ? AND
+//       test_creation_table_id = ?
+//   `;
 
-  try {
-    const [result] = await db.query(sql, [
-      test_status,
-      connection_status,
-      currentDateTime,
-      studentId,
-      courseCreationId,
-      test_creation_table_id,
-    ]);
+//   try {
+//     const [result] = await db.query(sql, [
+//       test_status,
+//       connection_status,
+//       currentDateTime,
+//       studentId,
+//       courseCreationId,
+//       test_creation_table_id,
+//     ]);
 
-    res.json({ message: "Updated successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Update failed", error: error.message });
-  }
-});
+//     res.json({ message: "Updated successfully" });
+//   } catch (error) {
+//     res.status(500).json({ message: "Update failed", error: error.message });
+//   }
+// });
 
 // router.post("/UpdateTestAttemptStatus", async (req, res) => {
 //   try {
@@ -253,7 +253,116 @@ router.post("/UpdateTestAttemptStatus", async (req, res) => {
 //     res.status(500).json({ message: "Internal server error", error: error.message });
 //   }
 // });
+// router.put("/updateTestStatus/:studentId/:testCreationTableId", async (req, res) => {
+//   const { studentId,  testCreationTableId } = req.params;
+//   const { test_status, connection_status, timeLeft ,courseCreationId} = req.body;
+// console.log(test_status, connection_status, timeLeft,studentId,  testCreationTableId,courseCreationId )
+//   const currentDateTime = new Date()
+//   .toISOString()
+//   .slice(0, 19)
+//   .replace("T", " ");
 
+//   let connection;
+//   try {
+//     connection = await db.getConnection();
+
+//     let query = `UPDATE iit_test_status_details
+//                  SET test_attempt_status = ?, 
+//                      test_connection_status = ?`;
+//     const params = [test_status, connection_status];
+
+//     // Handle status-specific fields
+//     if (test_status === "completed") {
+//       query += `, student_test_end_date_time = ?`;
+//       params.push(currentDateTime);
+//     }
+
+//     if (test_status === "resumed") {
+//       query += `, version = IFNULL(version, 0) + 1`;
+//       if (timeLeft !== null && timeLeft !== undefined && timeLeft!== "") {
+//         query += `, time_left = ?`;
+//         params.push(timeLeft);
+//       }
+//     }
+
+//     query += ` WHERE student_registration_id = ? 
+             
+//                AND test_creation_table_id = ?
+//                AND course_creation_id = ?
+//                AND test_attempt_status != 'completed'`;
+
+//     params.push(studentId, testCreationTableId,courseCreationId);
+
+//     const [result] = await connection.query(query, params);
+
+//     if (result.affectedRows === 0) {
+//       return res.status(404).json({ message: "No record found to update." });
+//     }
+
+//     res.status(200).json({ message: "Test status updated successfully." });
+
+//   } catch (error) {
+//     console.error("Error updating test status:", error);
+//     res.status(500).json({ message: "Internal server error", error: error.message });
+//   } finally {
+//     if (connection) connection.release();
+//   }
+// });
+router.put("/updateTestStatus/:studentId/:testCreationTableId", async (req, res) => {
+  const { studentId,  testCreationTableId } = req.params;
+  const { test_status,connection_status, timeleft,courseCreationId} = req.body;
+console.log(test_status, connection_status, timeleft,studentId,  testCreationTableId,courseCreationId )
+  const currentDateTime = new Date()
+  .toISOString()
+  .slice(0, 19)
+  .replace("T", " ");
+
+  let connection;
+  try {
+    connection = await db.getConnection();
+
+    let query = `UPDATE iit_test_status_details
+                 SET test_attempt_status = ?, 
+                     test_connection_status = ?`;
+    const params = [test_status, connection_status];
+
+    // Handle status-specific fields
+    if (test_status === "completed") {
+      query += `, student_test_end_date_time = ?`;
+      params.push(currentDateTime);
+    }
+
+    if (test_status === "resumed") {
+      query += `, version = IFNULL(version, 0) + 1`;
+      if (timeleft !== null && timeleft !== undefined && timeleft!== "") {
+        query += `, time_left = ?`;
+        params.push(timeleft);
+      }
+    }
+
+    query += ` WHERE student_registration_id = ? 
+             
+               AND test_creation_table_id = ?
+               AND course_creation_id = ?
+               AND test_attempt_status != 'completed'`;
+
+    params.push(studentId, testCreationTableId,courseCreationId);
+
+    const [result] = await connection.query(query, params);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "No record found to update." });
+    }
+
+    res.status(200).json({ message: "Test status updated successfully." });
+
+  } catch (error) {
+    console.error("Error updating test status:", error);
+    res.status(500).json({ message: "Internal server error", error: error.message });
+  } finally {
+    if (connection) connection.release();
+  }
+});
 router.get(
   "/FetchExamSummaryCounts/:testCreationTableId/:user_Id",
   async (req, res) => {
