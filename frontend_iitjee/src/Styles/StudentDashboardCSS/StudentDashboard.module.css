@@ -610,7 +610,7 @@ height: 80%;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  max-height: 65%;
+  min-height: 65%;
    max-height: 65%;
   padding: 0rem;
   justify-content: flex-start;
@@ -1090,9 +1090,7 @@ height: 100%;
 }
 .studentDashboardHeaderLogoDiv {
   width: 220px;
-} .status_pallete{
-  min-height: 60%;
-    }
+} 
 
 }
   @media (max-width:1024px) {
@@ -1418,6 +1416,17 @@ height: 100%;
       border-radius: 50%;
       border: 1px solid rgba(0, 0, 0, 0.1);
     }
+    .status_pallete{
+  min-height: 60%;
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+   max-height: 65%;
+  padding: 0rem;
+  justify-content: flex-start;
+    }
+
   }
   @media (max-height:600px) {
     .MainDivStudentDasboard {

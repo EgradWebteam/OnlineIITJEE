@@ -2172,6 +2172,10 @@ margin: 0px;
   width: 100%;
   min-height: 70vh;
 }
+.OTSQuestionOptionsContainerForScroll{
+  height: 50vh;
+  overflow-y: auto;
+}
 }
 @media (max-height:800px) {
   .OTSMainHeader{
