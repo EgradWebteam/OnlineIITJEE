@@ -1103,6 +1103,10 @@ border-radius: 10px;
   overflow-y: scroll;
   overflow-x: hidden;
   height: 75vh;
+ 
+}
+.solutionContainerMain{
+ position: relative;
 }
 .AIRholderDiv{
   display: flex;
