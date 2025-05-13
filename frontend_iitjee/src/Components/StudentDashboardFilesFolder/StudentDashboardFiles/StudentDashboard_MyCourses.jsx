@@ -199,6 +199,23 @@ const handleBackToCourses = () => {
          <div className={styles.breadcrumbContainer}>
     <span className={styles.breadcrumbLink}>My Courses</span>
     <span className={styles.breadcrumbSeparator}> &gt; </span>
+    <span
+      className={styles.breadcrumbLink}
+      onClick={() => {
+        const portal = structuredCourses.find(
+          (p) => p.portal_name === selectedPortal
+        );
+        const firstExam = portal ? Object.values(portal.exams)[0] : null;
+        setSelectedExam(firstExam?.exam_name || null);
+        setSelectedTestCourse(null);
+        setShowTestContainer(false);
+        setShowTopicContainer(false);
+        setOpenCourseOrvl(false);
+        setShowQuizContainer(true);
+      }}
+    >
+      {selectedPortal}
+    </span>
     </div>
           <div className={globalCSS.stuentDashboardGlobalHeading}>
             

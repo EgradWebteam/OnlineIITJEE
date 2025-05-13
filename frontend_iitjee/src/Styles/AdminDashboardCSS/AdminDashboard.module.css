@@ -510,14 +510,14 @@ margin: 1rem ;
   color: white;
 }
 /* Tablet scaling */
-@media (max-width: 1240px) {
+@media (max-width: 1280px) {
   .headerButtons button {
     font-size: 0.8rem;
     padding: 6px 8px;
     margin: 5px 0px;
   }
   .headerImg {
-    height: 58px;
+    height: 55px;
   }
 }
 
