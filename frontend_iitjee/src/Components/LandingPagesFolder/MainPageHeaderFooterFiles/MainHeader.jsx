@@ -1,40 +1,37 @@
-import React from "react";
-import Styles from "../../../Styles/LandingPageCSS/MainHeader.module.css";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { IoMdHome } from "react-icons/io";
 import { IoCall } from "react-icons/io5";
+import Styles from "../../../Styles/LandingPageCSS/MainHeader.module.css";
 import logoImg from "../../../assets/EGTLogoExamHeaderCompressed.png";
-import { Link } from "react-router-dom";
 
-export default function                 
+export default function MainHeader() {
 
-
-
-MainHeader() {
   const handleLoginClick = () => {
-    setIsForgotPassword(false); 
-    setIsResetPassword(false);  
+    setIsForgotPassword(false);
+    setIsResetPassword(false);
   };
+
   return (
     <div className={Styles.Header_MainPage}>
       <div className={Styles.Header_container}>
+
         <div className={Styles.Header_Logo}>
-          <img src={logoImg} alt="logoImg" />
+          <img src={logoImg} alt="EGT Logo" />
         </div>
+
         <div className={Styles.Header_logins_icons}>
-          <Link to="/LoginPage" onClick={handleLoginClick}>
-            <div className={Styles.Header_Login}>Login</div>
+          <Link to="/LoginPage" onClick={handleLoginClick} className={Styles.Header_Login}>
+            Login
           </Link>
-          <Link to="/">
-            {" "}
-            <div className={Styles.Header_icons}>
-              <IoMdHome />
-            </div>
+
+          <Link to="/" className={Styles.Header_icons}>
+            <IoMdHome />
           </Link>
-          <div className={Styles.Header_icons}>
-            <Link to="/ContactUs">
-              <IoCall />
-            </Link>
-          </div>
+
+          <Link to="/ContactUs" className={Styles.Header_icons}>
+            <IoCall />
+          </Link>
         </div>
       </div>
     </div>
