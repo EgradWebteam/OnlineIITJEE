@@ -426,15 +426,7 @@ window.addEventListener('beforeunload', () => {
  
  </div>
  
- 
-      <div className={styles.testsContainer}>
-        {selectedTestType === 'Select Type Of Test' ? (
-          Object.entries(groupedTests).map(([type, tests]) => (
-            <div key={type} className={styles.testContainerDivForflex}>
-              <div className={styles.testTypeRow}>
-     <div className={styles.headingFortheTypeTest}>
-              <h3  >{type}</h3></div>
-               <div className={styles.typeOfTestsSelector}>
+ <div className={styles.typeOfTestsSelector}>
         <select
           value={selectedTestType}
           onChange={(e) => setSelectedTestType(e.target.value)}
@@ -444,6 +436,14 @@ window.addEventListener('beforeunload', () => {
           ))}
         </select>
       </div>
+      <div className={styles.testsContainer}>
+        {selectedTestType === 'Select Type Of Test' ? (
+          Object.entries(groupedTests).map(([type, tests]) => (
+            <div key={type} className={styles.testContainerDivForflex}>
+              <div className={styles.testTypeRow}>
+     <div className={styles.headingFortheTypeTest}>
+              <h3  >{type}</h3></div>
+               
       </div>
               {tests.map(test => (
                 <div key={test.test_creation_table_id} className={styles.testCard}>

@@ -12,7 +12,6 @@
 }
 .OTSMainHeader{
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    height: 6vh;
 }
 .OTSlogoHolder img{
  width: 100%;
@@ -794,7 +793,7 @@ height: 100%;
 
 .instrcutionstudentProfileDiv{
   display: flex;
-  height: calc(100vh - 9vh);
+  height: calc(100vh - 26vh);
 }
 .instructionSubdiv{
   display: flex;
@@ -857,6 +856,7 @@ height: 100%;
   align-items: center;
   justify-content: center;
   border-top: 1px solid gainsboro;
+  height: 10vh;
 }
 .nextBtnDiv button{
    background-color:#09bffc;
@@ -1536,7 +1536,7 @@ display: none;
 }
 .OTSMainHeader{
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-  height: 9vh;
+  /* height: 9vh; */
 }
 .OTSNavbarMainContainer{
   display: flex;
@@ -1552,7 +1552,7 @@ display: none;
 .AllQuestionRenderBox{
   padding: 0px;
   overflow-y: scroll;
-  height: 20vh;
+  height: 28vh;
 }
 .QuestionNavigationButtonsMainContainer{
   display: flex;
@@ -2015,7 +2015,7 @@ padding: 3px;
   /* position: relative; Needed for absolute chevrons */
   /* right: 0rem; */
   /* width: 390px; */
-  height: 200px;
+height: 20vh;
 }
 .OTSQuestionOptionsContainerForScroll{
   height: 22vh;
@@ -2155,7 +2155,7 @@ margin: 0px;
 @media (max-height:800px) {
   .OTSMainHeader{
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    height: 9vh;
+   
 }
 .OTSNavbarMainContainer{
   display: flex;
@@ -2191,7 +2191,7 @@ margin: 0px;
 @media (max-height:700px) {
   .OTSMainHeader{
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    height: 6vh;
+    
 }
 .OTSNavbarMainContainer{
   display: flex;
@@ -2213,7 +2213,7 @@ margin: 0px;
 .AllQuestionRenderBox{
   padding: 10px;
   overflow-y: auto;
-  height: 200px;
+  height: 20vh;
 }
 .QuestionNavigationButtonsMainContainer{
   display: flex;
@@ -2230,7 +2230,7 @@ margin: 0px;
 @media (max-height:600px) {
   .OTSMainHeader{
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    height: 9vh;
+  
 }
 .OTSNavbarMainContainer{
   display: flex;
@@ -2249,7 +2249,7 @@ margin: 0px;
 .AllQuestionRenderBox{
   padding: 10px;
   overflow-y: auto;
-  height: 200px;
+  height: 20vh;
 }
 .QuestionNavigationButtonsMainContainer{
   display: flex;

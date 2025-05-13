@@ -407,7 +407,7 @@ color: black;
 .StudentDashboardContentHolder {
   display: flex;
   flex-direction: row;
-  height: calc(100vh - 10vh);
+  height: calc(100vh - 13vh);
 }
 .studentDashboardLeftNavHolder {
   display: flex;
@@ -835,7 +835,7 @@ height: 100%;
 
 .goBackInTestContainerDiv {
   text-align: right;
-  margin-bottom: 1rem;
+
 }
 
 .goBackBtn {
@@ -850,11 +850,12 @@ height: 100%;
 
 .courseNameHolderDiv {
   text-align: center;
+  margin-top: 1rem;
 }
 
 .typeOfTestsSelector {
   text-align: right;
-  /* margin-bottom: 1rem; */
+   margin-top: 10px; 
 }
 .typeOfTestsSelector select {
   padding: 0.4rem 0.8rem;
@@ -919,15 +920,9 @@ height: 100%;
   flex-direction: column;
   margin: 1rem;
 }
-.testTypeRow{
-  display: flex;
-  align-items: center;
-}
 .headingFortheTypeTest{
   text-align: center;
-   margin: 1rem 0;
     color: #0f172a;
-    width: 100%;
 }
   /* My results css */
   .resultsMainDiv{
