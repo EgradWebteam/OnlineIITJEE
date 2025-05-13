@@ -515,7 +515,7 @@ height: 100%;
   .AllQuestionRenderBox{
     padding: 10px;
     overflow-y: auto;
-    height: 46vh;
+    height: 47vh;
   }
   .QuestionsBtnsConatiner{
     margin-top: 5px;
@@ -793,7 +793,7 @@ height: 100%;
 
 .instrcutionstudentProfileDiv{
   display: flex;
-  height: calc(100vh - 25vh);
+  height: calc(100vh - 21vh);
 }
 .instructionSubdiv{
   display: flex;
@@ -1552,7 +1552,7 @@ display: none;
 .AllQuestionRenderBox{
   padding: 0px;
   overflow-y: scroll;
-  height: 26vh;
+  height: 28vh;
 }
 .QuestionNavigationButtonsMainContainer{
   display: flex;
@@ -1580,6 +1580,7 @@ display: none;
 .OTSlogoHolder{
   width: 200px;
 }
+
 }
 
 @media (max-width:1024px) {
@@ -1683,7 +1684,7 @@ display: none;
 .AllQuestionRenderBox{
   padding: 0px;
   overflow-y: scroll;
-  height: auto;
+  height: 26vh;
 }
 .OTSRightSideBarMainContainer{
   position: absolute;
@@ -2158,6 +2159,16 @@ margin: 0px;
   width: 200px;
 }
 }
+@media (max-height:700px) {
+  .examinstructionSubdiv{
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  overflow-y: auto;
+  width: 100%;
+  min-height: 70vh;
+}
+}
 @media (max-height:800px) {
   .OTSMainHeader{
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
@@ -2199,6 +2210,14 @@ margin: 0px;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
     
 }
+.examinstructionSubdiv{
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  overflow-y: auto;
+  width: 100%;
+  min-height: 70vh;
+}
 .OTSNavbarMainContainer{
   display: flex;
   align-items: center;
@@ -2207,6 +2226,10 @@ margin: 0px;
   padding: 6px;
   height: 5vh;
 }
+.OTSlogoHolder{
+  width: 200px;
+}
+
 .OTSInstrctionsDivHolder button{
   padding: 0;
 }
@@ -2221,6 +2244,10 @@ margin: 0px;
   overflow-y: auto;
   height: 26vh;
 }
+.instrcutionstudentProfileDiv{
+  display: flex;
+  height: calc(100vh - 27vh);
+}
 .QuestionNavigationButtonsMainContainer{
   display: flex;
   align-items: center;
@@ -2231,6 +2258,11 @@ margin: 0px;
   position: fixed;
   bottom: 0;
   border-left: none;
+}
+.studentPerformanceReportMain, .solutionContainerMain{
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 70vh;
 }
 }
 @media (max-height:600px) {
@@ -2267,5 +2299,10 @@ margin: 0px;
   position: fixed;
   bottom: 0;
   border-left: none;
+}
+.studentPerformanceReportMain, .solutionContainerMain{
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 68vh;
 }
 }

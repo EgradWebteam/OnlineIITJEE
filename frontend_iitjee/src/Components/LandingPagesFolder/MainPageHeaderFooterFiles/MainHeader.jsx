@@ -5,11 +5,7 @@ import { IoCall } from "react-icons/io5";
 import logoImg from "../../../assets/EGTLogoExamHeaderCompressed.png";
 import { Link } from "react-router-dom";
 
-export default function                 
-
-
-
-MainHeader() {
+const MainHeader=()=> {
   const handleLoginClick = () => {
     setIsForgotPassword(false); 
     setIsResetPassword(false);  
@@ -40,3 +36,4 @@ MainHeader() {
     </div>
   );
 }
+export default MainHeader;
