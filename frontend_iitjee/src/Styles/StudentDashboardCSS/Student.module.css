@@ -84,7 +84,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 4rem;
+    padding: 5.5rem;
     min-height: fit-content !important;
     align-items: center;
     display: flex;
@@ -278,6 +278,11 @@ input[type="password"]::-webkit-textfield-decoration-container {
   .forgotPasswordButton:hover {
     color: darkblue; 
     text-decoration: underline;
+  }
+  @media(max-width:1280){
+    .studentLoginPage {
+      padding: 4rem;
+    }
   }
   @media(max-width:1150px){
     .studentLoginHomePage{

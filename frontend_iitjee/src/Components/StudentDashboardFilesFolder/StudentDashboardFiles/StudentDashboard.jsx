@@ -34,48 +34,7 @@ export default function StudentDashboard() {
     //   }
     // }, []);
    
-useEffect(() => {
-      const verifySession = async () => {
-    
-        const localSessionId = localStorage.getItem("sessionId");
-        const sessionSessionId = sessionStorage.getItem("sessionId");
-        const studentId = localStorage.getItem("decryptedId");
-    
-        // If session is invalid, set sessionValid to false and return early
-        if (!localSessionId || !sessionSessionId || localSessionId !== sessionSessionId) {
-          setSessionValid(false);
-          return;
-        }
-    
-        try {
-          // Send POST request to verify session
-          const response = await fetch(`${BASE_URL}/student/verifySession`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ studentId, sessionId: localSessionId }),
-          });
-    
-          const data = await response.json();
-    
-          // If the session is invalid, set sessionValid to false and redirect to LoginPage
-          if (!data.success) {
-            setSessionValid(false);
-           
-            navigate("/LoginPage"); // Redirect to login page if session is invalid
-          } else {
-            setSessionValid(true)
-           
-             // Valid session
-          }
-        } catch (err) {
-          console.error("Session check failed", err);
-          setSessionValid(false);
-          navigate("/LoginPage"); // Redirect to login page if there's an error
-        }
-      };
-    
-      verifySession();
-    }, [activeSection]); 
+
     
     // const handleSectionChange = useCallback((section) => {
     //   setActiveSection(section);
@@ -106,33 +65,7 @@ useEffect(() => {
   }, []);
 
     const location = useLocation();
-    // useEffect(() => {
-    //   const handleBeforeUnload = (e) => {
-    //     // Check if it's a page reload
-    //     if (sessionStorage.getItem('isReloading') === 'true') {
-    //       // If it's a reload, we don't want to call the logout function
-    //       sessionStorage.removeItem('isReloading'); // Clean up the flag
-    //       return;
-    //     }
-   
-    //     // Otherwise, handle tab close or back navigation
-    //     handleLogout();
-    //   };
-   
-    //   // Set a flag in sessionStorage when the page is about to reload
-    //   const handleBeforeReload = () => {
-    //     sessionStorage.setItem('isReloading', 'true');
-    //   };
-   
-    //   window.addEventListener('beforeunload', handleBeforeUnload);
-    //   window.addEventListener('beforeunload', handleBeforeReload);
-   
-    //   return () => {
-    //     window.removeEventListener('beforeunload', handleBeforeUnload);
-    //     window.removeEventListener('beforeunload', handleBeforeReload);
-    //   };
-    // }, []);
-   
+
    
     useEffect(() => {
       let timeoutId;
@@ -156,77 +89,6 @@ useEffect(() => {
         clearTimeout(timeoutId);
       };
     }, []);
-    useEffect(() => {
-      // Push initial state to browser history
-      window.history.pushState({ page: "dashboard" }, "", window.location.href);
-   
-      // Optional: Save to localStorage (in case you want to restore this later)
-      localStorage.setItem("pageState", JSON.stringify({ page: "dashboard" }));
-   
-      // Handle the back button press
-      const handlePopState = (event) => {
-        const state = event.state;
-        if (state?.page === "dashboard") {
-          setShowLogoutPopup(true);
-          // console.log("🔙 Back button detected - showing logout confirmation");
-   
-          // Re-push to history to prevent going further back without confirmation
-          window.history.pushState({ page: "dashboard" }, "", window.location.href);
-        }
-      };
-   
-      // Attach the event listener
-      window.addEventListener("popstate", handlePopState);
-   
-      // Cleanup on unmount
-      return () => {
-        window.removeEventListener("popstate", handlePopState);
-      };
-    }, []);
- 
-     //  Disable right-click globally
-  // useEffect(() => {
-  //   const handleRightClick = (e) => {
-  //     e.preventDefault();
-  //   };
- 
-  //   document.addEventListener("contextmenu", handleRightClick);
- 
-  //   return () => {
-  //     document.removeEventListener("contextmenu", handleRightClick);
-  //   };
-  // }, []);
- 
-    // useEffect(() => {
-    //   const onBackButton = (event) => {
-    //     event.preventDefault();
-    //     setShowLogoutPopup(true);
-    //     window.history.pushState(null, "", window.location.pathname);
-    //   };
- 
-    //   window.history.pushState(null, "", window.location.pathname);
-    //   window.addEventListener("popstate", onBackButton);
-   
-    //   return () => {
-    //     window.removeEventListener("popstate", onBackButton);
-    //   };
-    // }, []);
-   
-   
- // for active section
-    // useEffect(() => {
-    //   const sectionFromRoute = location.state?.activeSection;
-    //   if (sectionFromRoute && !sessionStorage.getItem("sectionFromRouteUsed")) {
-    //     setActiveSection(sectionFromRoute);
-    //     localStorage.setItem("activeSection", sectionFromRoute);
-    //     sessionStorage.setItem("sectionFromRouteUsed", "true");
-    //   } else {
-    //     const savedSection = localStorage.getItem("activeSection") || "dashboard";
-    //     setActiveSection(savedSection);
-    //   }
-   
-    //   setIsLoading(false);
-    // }, [location.state]);
   useEffect(() => {
     const sectionFromRoute = location.state?.activeSection;
     if (sectionFromRoute && !sessionStorage.getItem("sectionFromRouteUsed")) {
@@ -287,13 +149,7 @@ useEffect(() => {
    
    
   const renderStudentDashboardContent = () => {
-   const localSessionId = localStorage.getItem('sessionId');
-  const sessionSessionId = sessionStorage.getItem('sessionId');
-  if (!localSessionId || !sessionSessionId || localSessionId !== sessionSessionId) {
-  
-    navigate('/LoginPage');
-    return null;
-  }
+
       switch (activeSection) {
         case "dashboard":
           return <StudentDashboardHome studentName ={studentName}

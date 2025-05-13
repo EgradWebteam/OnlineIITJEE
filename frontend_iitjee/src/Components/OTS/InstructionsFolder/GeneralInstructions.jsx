@@ -9,7 +9,6 @@ import LoadingSpinner from '../../../ContextFolder/LoadingSpinner.jsx';
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import defaultImage from "../../../assets/OTSTestInterfaceImages/StudentImage.png";
 import adminCapImg from '../../../assets/logoCap.jpeg';
-
 import ParentTabClosing from '../ParentTabClosing.jsx'
 
 //  import DisableKeysAndMouseInteractions from '../../../ContextFolder/DisableKeysAndMouseInteractions.jsx';

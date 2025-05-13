@@ -465,22 +465,19 @@ const getImageUrl = (fileName) => {
   });
   
 router.post("/studentLogout", async (req, res) => {
-  const { sessionId } = req.body; // Assume sessionId is passed in the request body
+  const { sessionId } = req.body; 
 
   if (!sessionId) {
     return res.status(401).json({ message: "Session ID is required" });
   }
 
   try {
-    // Update the database to set is_logged_in to false and clear the session ID
     const updateSql = `
       UPDATE iit_student_registration 
       SET is_logged_in = FALSE, session_id = NULL 
       WHERE session_id = ?`;
 
     const result = await db.query(updateSql, [sessionId]);
-
-    // Check if any rows were affected
     if (result.affectedRows === 0) {
       return res
         .status(401)
@@ -513,8 +510,7 @@ router.post("/changePassword", async (req, res) => {
 
     // 2. Hash the new password
     const hashedPassword = await bcryptjs.hash(newPassword.trim(), 10);
-
-    // 3. Update password in DB and clear the reset code (optional)
+    
     const updatePasswordSql = `
       UPDATE iit_student_registration 
       SET password = ?, reset_code = NULL 
