@@ -420,7 +420,7 @@ color: black;
   /* box-shadow: 0px 0px 3px 3px rgb(223, 222, 222); */
 }
 .studentDashboardLeftsidebar {
-  width: 250px;
+  width: 300px;
   display: flex;
   flex-direction: column;
   background: #fcfcfc;
@@ -444,6 +444,9 @@ color: black;
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+.LeftsidebarItem:hover{
+background-color: rgb(7, 174, 240);
 }
 .LeftsidebarItem span {
   margin-left: 1.5rem;
@@ -875,14 +878,31 @@ height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #dbeafe;
+  /* background-color: #dbeafe; */
   padding: 1rem;
   border: 3px solid black;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   flex-wrap: wrap;
 }
+.chapterWise {
+  background-color: #f7e3c6; /* light blue */
+}
+.subjectWise{
+    background-color: #dbeafe;
+}
+.fullTest {
+  background-color: whitesmoke;
+}
+.TopicWise {
+  background-color: #e8f5e9; /* light green */
+}
+.partTest {
+  background-color: #f5f5f5; /* neutral gray */
+}
+.TopicWise{
 
+}
 .testInfoBox h4 {
   font-weight: bold;
   margin-bottom: 0.5rem;

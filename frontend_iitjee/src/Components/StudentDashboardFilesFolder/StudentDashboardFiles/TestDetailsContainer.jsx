@@ -41,6 +41,7 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
           `${BASE_URL}/studentmycourses/coursetestdetails/${course_creation_id}/${studentId}`
         );
         let data = await res.json();
+        console.log("data:", data)
         console.log("Fetched test details:", data.test_details);
         let startedTest = null;
 
@@ -96,12 +97,23 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
       }
       
         // Updated structure: data.test_details is an array
-        const grouped = {};
+        // const grouped = {};
  
-        data.test_details.forEach(group => {
-          const testType = group.type_of_test_name;
-          grouped[testType] = group.tests;
-        });
+        // data.test_details.forEach(group => {
+        //   const testType = group.type_of_test_name;
+        //   grouped[testType] = group.tests;
+        // });
+
+        const grouped = {};
+
+data.test_details.forEach(group => {
+  const testType = group.type_of_test_name;
+  grouped[testType] = {
+    tests: group.tests,
+    typeId: group.course_type_of_test_id //  keep ID for styling
+  };
+});
+
  
         setGroupedTests(grouped);
         setCourseName(data.course_name);
@@ -418,6 +430,23 @@ window.addEventListener('beforeunload', () => {
      
     });
   };
+  const getBackgroundClass = (id) => {
+  switch (id) {
+    case 1:
+      return styles.chapterWise;
+    case 2:
+      return styles.TopicWise;
+    case 3:
+      return styles.subjectWise;
+    case 4:
+      return styles.partTest;
+    case 5:
+      return styles.fullTest;
+    default:
+      return styles.fullTest;
+  }
+};
+
  
   return (
     <div className={styles.testDetailsConatinerMainDiv}>
@@ -444,7 +473,7 @@ window.addEventListener('beforeunload', () => {
       </div>
       <div className={styles.testsContainer}>
         {selectedTestType === 'Select Type Of Test' ? (
-          Object.entries(groupedTests).map(([type, tests]) => (
+          Object.entries(groupedTests).map(([type, { tests, typeId }]) => (
             <div key={type} className={styles.testContainerDivForflex}>
               <div className={styles.testTypeRow}>
      <div className={styles.headingFortheTypeTest}>
@@ -452,7 +481,7 @@ window.addEventListener('beforeunload', () => {
                
       </div>
               {tests.map(test => (
-                <div key={test.test_creation_table_id} className={styles.testCard}>
+                <div key={test.test_creation_table_id} className={`${styles.testCard} ${getBackgroundClass(typeId)}`} >
                   <div className={styles.testContainerSub}>
                     <div className={styles.testContainerIcon}><FaBookReader /></div>
                     <div className={styles.testInfoBox}>
@@ -464,22 +493,6 @@ window.addEventListener('beforeunload', () => {
                       </div>
                     </div>
                   </div>
- 
-                  {/* {test.test_attempt_status?.toLowerCase().trim() === 'completed' ? (
-                    <button
-                      className={styles.viewReportBtn}
-                      onClick={() => handleViewReportClickMycourses(test.test_creation_table_id,test)}
-                    >
-                      View Report &gt;&gt;
-                    </button>
-                  ) : (
-                    <button
-                      className={styles.startTestBtn}
-                      onClick={() => handleStartTestClick(test.test_creation_table_id)}
-                    >
-                      Start Test &gt;&gt;
-                    </button>
-                  )} */}
                   {(() => {
                      const status = test.status?.toLowerCase().trim();
                      const attemptStatus = test.test_attempt_status?.toLowerCase().trim();

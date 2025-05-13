@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Styles from "../../../Styles/OTSCSS/OTSMain.module.css";
 import axios from "axios";
 import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
- 
+ import ScrollToTopButton from "../../StudentDashboardFilesFolder/StudentDashboardFiles/ScrollDownToUpButton.jsx";
 const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQuestions,setBookmarkedQuestions,selectedSubjectSection,setSelectedSubjectSection}) => {
  
  
@@ -13,7 +13,8 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
   const [videoPopup, setVideoPopup] = useState(null); // null or question_id
  
  
- 
+ const scrollContainerRef = useRef(null);
+
  
   const handleDropdownChange = (e) => {
     const [subjectIdx, sectionIdx] = e.target.value.split("-");
@@ -124,7 +125,7 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
   };
  
   return (
-    <div className={Styles.solutionContainerMain}>
+    <div className={Styles.solutionContainerMain} ref={scrollContainerRef}>
       <div className={Styles.subjectDropDownContainer}>
         <select
           className={Styles.subjectWiseDropDown}
@@ -420,6 +421,7 @@ const SolutionsTab = ({ testId, userData, studentId ,testPaperData,bookmarkedQue
           {studentContact}
         </span> */}
       </div>
+      <div ><ScrollToTopButton scrollContainerRef={scrollContainerRef}/></div>
     </div>
   );
 };
