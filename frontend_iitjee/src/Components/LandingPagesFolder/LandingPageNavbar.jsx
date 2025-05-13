@@ -78,7 +78,7 @@ export default function LandingPageNavbar() {
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => handleCourseClick("/PracticeQuestionBank")}>
+                  <button >
                     Online Practice Question Bank
                   </button>
                 </li>
