@@ -2246,11 +2246,11 @@ margin: 0px;
 .AllQuestionRenderBox{
   padding: 10px;
   overflow-y: auto;
-  height: 26vh;
+  height: 23vh;
 }
 .instrcutionstudentProfileDiv{
   display: flex;
-  height: calc(100vh - 27vh);
+  height: calc(100vh - 28vh);
 }
 .QuestionNavigationButtonsMainContainer{
   display: flex;

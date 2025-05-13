@@ -476,11 +476,10 @@ color: black;
    width: 100%;
 }
 .StudentDashboardcontentArea{
-
   margin: 1rem 1rem auto;
   overflow-y: auto;
-  height: calc(100vh - 11vh);
- 
+  /* height: calc(100vh - 11vh);
+  */
 }
 .LectureHeader {
   display: flex;
@@ -1406,7 +1405,12 @@ height: 100%;
   padding: 0rem;
   justify-content: flex-start;
     }
-
+.StudentDashboardcontentArea{
+  margin: 1rem 1rem auto;
+  overflow-y: auto;
+  height: calc(100vh - 14vh);
+ 
+}
   }
   @media (max-height:600px) {
     .MainDivStudentDasboard {
