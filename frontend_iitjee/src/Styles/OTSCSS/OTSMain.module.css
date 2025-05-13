@@ -515,7 +515,7 @@ height: 100%;
   .AllQuestionRenderBox{
     padding: 10px;
     overflow-y: auto;
-    height: 47vh;
+    height: 46vh;
   }
   .QuestionsBtnsConatiner{
     margin-top: 5px;
@@ -793,7 +793,7 @@ height: 100%;
 
 .instrcutionstudentProfileDiv{
   display: flex;
-  height: calc(100vh - 22vh);
+  height: calc(100vh - 25vh);
 }
 .instructionSubdiv{
   display: flex;
@@ -927,7 +927,7 @@ padding: 1rem 1.5rem;
   flex-direction: column;
   height: auto;
   overflow: auto;
-  min-height: 77vh;
+  min-height: 72vh;
   overflow-y: auto;
   width: 87%;
   margin: 1rem;
@@ -1552,7 +1552,7 @@ display: none;
 .AllQuestionRenderBox{
   padding: 0px;
   overflow-y: scroll;
-  height: 28vh;
+  height: 26vh;
 }
 .QuestionNavigationButtonsMainContainer{
   display: flex;
@@ -1576,6 +1576,9 @@ display: none;
   position: absolute;
     top: 26rem;
     left: -7%;
+}
+.OTSlogoHolder{
+  width: 200px;
 }
 }
 
@@ -2216,7 +2219,7 @@ margin: 0px;
 .AllQuestionRenderBox{
   padding: 10px;
   overflow-y: auto;
-  height: 20vh;
+  height: 26vh;
 }
 .QuestionNavigationButtonsMainContainer{
   display: flex;
