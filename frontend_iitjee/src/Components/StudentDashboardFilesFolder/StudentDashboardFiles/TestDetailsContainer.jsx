@@ -41,13 +41,13 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
           `${BASE_URL}/studentmycourses/coursetestdetails/${course_creation_id}/${studentId}`
         );
         let data = await res.json();
-        console.log("data:", data)
+        // console.log("data:", data)
         console.log("Fetched test details:", data.test_details);
         let startedTest = null;
 
         data.test_details.forEach(group => {
           group.tests.forEach(test => {
-            console.log("Checking test:", test.test_name, "Status:", test.test_attempt_status);
+            // console.log("Checking test:", test.test_name, "Status:", test.test_attempt_status);
             if (test.test_attempt_status === "started" && !startedTest) {
               startedTest = test;
             }
@@ -229,8 +229,8 @@ const handleStartTestClick = async (testCreationTableId) => {
     // calling test attempt status API
     const checkActiveTestResponse = await fetch(`${BASE_URL}/studentmycourses/CheckActiveTestOfStudent/${studentId}`);
     const checkActiveTestData = await checkActiveTestResponse.json();
- 
-    if (checkActiveTestData.activeTestExists) {
+   const navigationToken = sessionStorage.getItem('navigationToken');
+    if (checkActiveTestData.activeTestExists || navigationToken) {
       // alert("You already have an active test in progress. Please complete it before starting another one.");
       setShowPopup(true);
       return;
