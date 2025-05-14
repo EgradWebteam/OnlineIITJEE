@@ -114,7 +114,12 @@ export default function StudentDashboard() {
     setIsLoading(false);
   }, [location.state]);
 
- 
+ const closeTestWindowIfOpen = () => {
+  if (window.testWindowRef && !window.testWindowRef.closed) {
+    window.testWindowRef.close();
+    window.testWindowRef = null;
+  }
+};
      
     const handleLogout = async () => {
  
@@ -137,7 +142,8 @@ export default function StudentDashboard() {
    
         const data = await response.json();
         if (response.ok) {
-          localStorage.clear();  
+          localStorage.clear(); 
+           closeTestWindowIfOpen();  
           navigate("/LoginPage");
         } else {
           await alert("No session found. Please log in again.", "error");

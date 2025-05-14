@@ -19,7 +19,12 @@ const studentProfile = userData?.uploaded_photo;
   const handleMouseLeave = () => {
     setShowProfileMenu(false);
   };
-
+const closeTestWindowIfOpen = () => {
+  if (window.testWindowRef && !window.testWindowRef.closed) {
+    window.testWindowRef.close();
+    window.testWindowRef = null;
+  }
+};
   const handleLogout = async () => {
     const sessionId = sessionStorage.getItem("sessionId"); 
   
@@ -42,6 +47,7 @@ const studentProfile = userData?.uploaded_photo;
       if (response.ok) {
         sessionStorage.clear(); 
         localStorage.clear(); 
+         closeTestWindowIfOpen(); 
         navigate("/LoginPage");
       } else {
         await alert(data.message || "Logout failed. Please try again.");
