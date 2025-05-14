@@ -11,13 +11,19 @@ export const SessionProvider = ({ children }) => {
   const [isSessionValid, setIsSessionValid] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-
+const closeTestWindowIfOpen = () => {
+  if (window.testWindowRef && !window.testWindowRef.closed) {
+    window.testWindowRef.close();
+    window.testWindowRef = null;
+  }
+};
   const verifySession = async () => {
     const localSessionId = localStorage.getItem("sessionId");
     const sessionSessionId = sessionStorage.getItem("sessionId");
     const studentId = localStorage.getItem("decryptedId");
     if (!localSessionId || !sessionSessionId || localSessionId !== sessionSessionId) {
       setIsSessionValid(false);
+      closeTestWindowIfOpen();
       navigate("/LoginPage");
       return;
     }
@@ -35,6 +41,7 @@ export const SessionProvider = ({ children }) => {
     
       if (!data.success) {
         setIsSessionValid(false);
+          closeTestWindowIfOpen();
         navigate("/LoginPage");
       } else {
         setIsSessionValid(true); 
@@ -42,6 +49,7 @@ export const SessionProvider = ({ children }) => {
     } catch (err) {
       console.error("Session check failed", err);
       setIsSessionValid(false);
+        closeTestWindowIfOpen();
       navigate("/LoginPage"); 
     }
   };

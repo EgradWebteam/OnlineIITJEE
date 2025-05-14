@@ -114,7 +114,7 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
  
  
   const allTestTypes = ['Select Type Of Test', ...Object.keys(groupedTests)];
- 
+ window.testWindowRef = null;
   function getCurrentLocalMySQLTime() {
     const now = new Date();
     const offset = now.getTimezoneOffset() * 60000;
@@ -253,7 +253,7 @@ const handleStartTestClick = async (testCreationTableId) => {
  
       // Open the new window
       const newWinRef = window.open(url, "_blank", `width=${screenWidth},height=${screenHeight},fullscreen=yes`);
- 
+       window.testWindowRef = newWinRef;
       // force resize window to full screen only - start
       if (newWinRef) {
         const resizeMonitor = setInterval(() => {
@@ -376,7 +376,7 @@ window.addEventListener('beforeunload', () => {
               localStorage.removeItem(`OTS_FormattedTime`);
 
               sessionStorage.removeItem('navigationToken');
-
+              window.testWindowRef = null;
 
 
             // Trigger re-fetch of test data (refresh UI)
