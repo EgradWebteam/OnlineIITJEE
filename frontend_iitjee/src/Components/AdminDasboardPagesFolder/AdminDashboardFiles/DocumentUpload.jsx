@@ -46,8 +46,7 @@ const DocumentUpload = () => {
   }, []);
 
 
-  useEffect(() => {
-    const fetchDocuments = async () => {
+   const fetchDocuments = async () => {
       try {
         const response = await fetch(
           `${BASE_URL}/DocumentUpload/getUploadedDocuments`
@@ -60,7 +59,8 @@ const DocumentUpload = () => {
         console.error("Error fetching documents:", error);
       }
     };
-
+    
+  useEffect(() => {
     fetchDocuments();
   }, []); 
 
@@ -275,7 +275,18 @@ const DocumentUpload = () => {
 
       if (response.ok) {
         alert("Successfully uploaded Document");
+         // Clear form fields
+          setSelectedTest("");
+          setSelectedSubject("");
+          setSelectedSection("");
+          setFile(null);
+          setTestPaperContent("");
+          setValidationErrors([]);
+          setSubjects([]);
+          setSections([]);
         setIsDocumentVisible(false);
+        //  setShowForm(false);
+        fetchDocuments();
       } else {
         alert("Failed to upload the document. Please try again.");
       }

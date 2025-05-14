@@ -37,9 +37,7 @@ const itemsPerPage = 5;
   }, []);
 
   // Fetch instruction table data
-  useEffect(() => {
-    const fetchInstructionDetails = async () => {
-  
+  const fetchInstructionDetails = async () => {
       try {
         const res = await fetch(
           `${BASE_URL}/Instructions/GetInstructionDetails`
@@ -50,6 +48,8 @@ const itemsPerPage = 5;
         console.error("Error fetching instruction details:", err);
       }
     };
+
+  useEffect(() => {
     fetchInstructionDetails();
   }, []);
 
@@ -85,8 +85,12 @@ const itemsPerPage = 5;
       const result = await res.json();
       if (res.ok) {
         alert(result.message || "Instruction uploaded successfully!");
+        // window.location.reload(); // Refresh data after upload
+        fetchInstructionDetails();
+        setSelectedExam("");
+        setHeading("");
+        setFile(null);
         setShowForm(false);
-        window.location.reload(); // Refresh data after upload
       } else {
         alert(result.message || "Failed to upload instruction.");
       }

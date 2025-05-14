@@ -92,12 +92,12 @@ router.get("/Purchasedcourses/:studentregisterationid", async (req, res) => {
             LEFT JOIN iit_exams e ON cct.exam_id = e.exam_id
             LEFT JOIN iit_portal p ON cct.portal_id = p.portal_id
             LEFT JOIN iit_student_buy_courses student ON cct.course_creation_id = student.course_creation_id
-            WHERE student.student_registration_id = 2 
+            WHERE student.student_registration_id = ? 
                 AND cct.active_course = "active"
                 AND EXISTS (
                     SELECT 1
                     FROM iit_student_registration sr
-                    WHERE sr.student_registration_id = 2
+                    WHERE sr.student_registration_id = ?
                      AND sr.student_activation = 1
                 )`,
       [studentregisterationid, studentregisterationid]
