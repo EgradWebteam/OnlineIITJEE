@@ -52,10 +52,12 @@ const TestCreationForm = ({
         setSelectedCourse(editData.course_creation_id || "");
         if (editData.course_creation_id) {
           try {
+            if(selectedCourse){
             const response = await axios.get(
               `${BASE_URL}/TestCreation/CourseSubjects/${editData.course_creation_id}`
             );
             setSubjects(response.data.subjects || []);
+          }
           } catch (err) {
             console.error("Error fetching subjects:", err);
           }
@@ -113,7 +115,16 @@ const TestCreationForm = ({
   }, [isEditMode, editData]);
    
   
-  
+    const filteredTestTypes = selectedCourse
+    ? testCreationFormData?.courses
+        .find((course) => course.course_creation_id === parseInt(selectedCourse))?.testTypeIds || []
+    : [];
+
+  // Find test types that match the selected course testTypeIds
+  const availableTestTypes = testCreationFormData?.testTypes?.filter((type) =>
+    filteredTestTypes.includes(type.type_of_test_id)
+  );
+  // console.log(filteredTestTypes,availableTestTypes)
 
   const handleFormFieldChange = (e) => {
     const { name, value } = e.target;
@@ -128,10 +139,12 @@ const TestCreationForm = ({
     const selectedCourseId = e.target.value;
     setSelectedCourse(selectedCourseId);
     try {
+       if(selectedCourseId){
       const response = await axios.get(
         `${BASE_URL}/TestCreation/CourseSubjects/${selectedCourseId}`
       );
       setSubjects(response.data.subjects || []);
+    }
     } catch (err) {
       console.error("Error fetching subjects:", err);
       setSubjects([]);
@@ -254,6 +267,7 @@ const TestCreationForm = ({
 
               <div className={styles.formGroup}>
                 <label>Type of Test *</label>
+                {selectedCourse && (
                 <select
                   className={styles.testFeilds}
                   name="selectedTypeOfTest"
@@ -262,15 +276,12 @@ const TestCreationForm = ({
                   required
                 >
                   <option value="">Select a test type</option>
-                  {testCreationFormData?.testTypes?.map((type) => (
-                    <option
-                      key={type.type_of_test_id}
-                      value={type.type_of_test_id}
-                    >
-                      {type.type_of_test_name}
-                    </option>
-                  ))}
-                </select>
+              {availableTestTypes?.map((type) => (
+            <option key={type.type_of_test_id} value={type.type_of_test_id}>
+              {type.type_of_test_name}
+            </option>
+          ))}
+                </select>)}
               </div>
 
               <div className={styles.formGroup}>
