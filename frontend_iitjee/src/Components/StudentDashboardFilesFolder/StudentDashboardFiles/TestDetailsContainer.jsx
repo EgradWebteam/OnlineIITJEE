@@ -524,8 +524,8 @@ window.addEventListener('beforeunload', () => {
         ) : (
           <div className={styles.testContainerDivForflex}>
             <h3 style={{ textAlign: 'center', margin: '1rem 0', color: '#0f172a' }}>{selectedTestType}</h3>
-            {groupedTests[selectedTestType]?.map(test => (
-              <div key={test.test_creation_table_id} className={styles.testCard}>
+            {groupedTests[selectedTestType]?.tests.map(test => (
+              <div key={test.test_creation_table_id}  className={`${styles.testCard} ${getBackgroundClass(groupedTests[selectedTestType].typeId)}`}>
                 <div className={styles.testContainerSub}>
                   <div className={styles.testContainerIcon}><FaBookReader /></div>
                   <div className={styles.testInfoBox}>

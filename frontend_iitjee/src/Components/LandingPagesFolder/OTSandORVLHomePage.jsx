@@ -5,6 +5,7 @@ const LandingPageNavbar = lazy(() => import("./LandingPageNavbar.jsx"));
 const OTSandORVLBannerComponent =lazy(() => import("./OTSandORVLBannerComponent.jsx"));
 const MainHeader = lazy(() => import('../LandingPagesFolder/MainPageHeaderFooterFiles/MainHeader.jsx'));
 const MainFooter = lazy(() => import('../LandingPagesFolder/MainPageHeaderFooterFiles/MainFooter.jsx'));
+import LoadingSpinner from '../../ContextFolder/LoadingSpinner.jsx';
 const OTSandORVLHomePage = memo(() => {
     const location = useLocation();
 
@@ -14,7 +15,7 @@ const OTSandORVLHomePage = memo(() => {
   return (
     <div className={styles.otsAndOrvlHomePageMainDiv}>
       <div className={styles.otsAndOrvlHomePageSubDiv}>
-        <Suspense fallback={<p>Loading Courses...</p>}>
+        <Suspense fallback={<p><LoadingSpinner/></p>}>
           <MainHeader/>
           <LandingPageNavbar />
           <OTSandORVLBannerComponent /> {/* Banner will internally handle what to render */}
