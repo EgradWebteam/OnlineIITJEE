@@ -271,7 +271,49 @@ console.log("summaryData",summaryData.current)
 
 
 
-  //KEYBOARD KEYS DISABLE ALERT CODE START
+  // //KEYBOARD KEYS DISABLE ALERT CODE START
+  // useEffect(() => {
+  //   const handleKeyDown = (event) => {
+  //     // Add pressed key to the set
+  //     pressedKeys.current.add(event.key);
+
+  //     // Convert Set to string format
+  //     const keyActions = Array.from(pressedKeys.current).join(" + ");
+
+  //     if (
+  //       keyActions === "Shift + Control" ||
+  //       keyActions === "Control + Shift" ||
+  //       keyActions === "Shift" ||
+  //       keyActions === "Control" ||
+  //       keyActions === "Window" ||
+  //       keyActions === "Control + Shift + I" ||
+  //        keyActions === "Window + Shift + S" ||
+  //       keyActions === "Shift + Control + S" ||
+  //       keyActions === "Meta" ||
+  //       keyActions === "Shift + Meta" ||
+  //       keyActions === "Meta + Shift"
+  //     ) {
+  //       event.preventDefault(); // Prevents default browser action
+  //     }
+  //     if (keyActions !== null) {
+  //       setShowCustomPopup(true);
+  //     }
+  //   };
+
+  //   const handleKeyUp = (event) => {
+  //     pressedKeys.current.delete(event.key);
+  //   };
+
+  //   document.addEventListener("keydown", handleKeyDown);
+  //   document.addEventListener("keyup", handleKeyUp);
+
+  //   return () => {
+  //     document.removeEventListener("keydown", handleKeyDown);
+  //     document.removeEventListener("keyup", handleKeyUp);
+  //   };
+  // }, []);
+  // //KEYBOARD KEYS DISABLE ALERT CODE END
+  
   useEffect(() => {
     const handleKeyDown = (event) => {
       // Add pressed key to the set
@@ -279,13 +321,34 @@ console.log("summaryData",summaryData.current)
 
       // Convert Set to string format
       const keyActions = Array.from(pressedKeys.current).join(" + ");
-
+      if (
+        event.key === "F12" ||
+        (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "i") ||
+        (event.ctrlKey && event.key.toLowerCase() === "u") // View Source
+      ) {
+        event.preventDefault();
+        setShowCustomPopup(true);
+        return;
+      }
+          if (
+      event.key === "PrintScreen" || // PrtScn key
+      (event.metaKey && event.shiftKey && (event.key === "3" || event.key === "4" || event.key === "5")) || // macOS screenshot
+      (event.ctrlKey && event.key === "PrintScreen") ||
+      (event.shiftKey && event.metaKey && event.key.toLowerCase() === "s") || // Win + Shift + S on Windows
+      (event.metaKey && event.shiftKey && event.key.toLowerCase() === "s") // Cmd + Shift + S (some systems)
+    ) {
+      event.preventDefault();
+      setShowCustomPopup(true);
+      return;
+    }
+  
       if (
         keyActions === "Shift + Control" ||
         keyActions === "Control + Shift" ||
         keyActions === "Shift" ||
+        keyActions === "Window" ||
         keyActions === "Control" ||
-        keyActions === "Control" ||
+         keyActions === "Window + Shift " ||
         keyActions === "Shift + Control + S" ||
         keyActions === "Meta" ||
         keyActions === "Shift + Meta" ||
@@ -295,6 +358,7 @@ console.log("summaryData",summaryData.current)
       }
       if (keyActions !== null) {
         setShowCustomPopup(true);
+         event.preventDefault();
       }
     };
 
@@ -310,9 +374,6 @@ console.log("summaryData",summaryData.current)
       document.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
-  //KEYBOARD KEYS DISABLE ALERT CODE END
-  
-
   //TERMINATION PAGE CODE START
   const [isShiftPressed, setIsShiftPressed] = useState(false);
   const [isMetaPressed, setIsMetaPressed] = useState(false);
