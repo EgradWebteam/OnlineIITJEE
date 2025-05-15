@@ -68,9 +68,9 @@ function App() {
             </SessionProvider>
             } />
           <Route path='/OTSTerminationPage' element={
-            <SessionProvider>
+        
             <OTSTerminationPage />
-            </SessionProvider>} />
+            } />
           <Route path="/StudentInfo" element={<StudentInfo />} />
           <Route path="/CourseCreation" element={<CourseCreationTab />} />
           <Route path='/GeneralInstructions/:testId/:studentId' element={
@@ -91,14 +91,14 @@ function App() {
         
             } />
           <Route path='/GeneralInstructions/:testId' element={
-            <SessionProvider>
+    
             <GeneralInstructions />
-            </SessionProvider>
+      
             } />
           <Route path='/ExamInstructions/:testId' element={
-            <SessionProvider>
+      
             <ExamInstrctions />
-            </SessionProvider>
+       
             } />
           <Route path='/OTSRootFile/:testId' element={
         

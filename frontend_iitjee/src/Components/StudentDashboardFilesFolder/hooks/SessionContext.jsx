@@ -11,7 +11,12 @@ export const SessionProvider = ({ children }) => {
   const [isSessionValid, setIsSessionValid] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-
+const closeTestWindowIfOpen = () => {
+  if (window.testWindowRef && !window.testWindowRef.closed) {
+    window.testWindowRef.close();
+    window.testWindowRef = null;
+  }
+};
   const verifySession = async () => {
     const localSessionId = localStorage.getItem("sessionId");
     const sessionSessionId = sessionStorage.getItem("sessionId");
@@ -29,7 +34,6 @@ channel.close();
   } else {
     navigate("/LoginPage");
   }
-     
       return;
     }
 
@@ -60,8 +64,7 @@ channel.close();
       }
     } catch (err) {
       console.error("Session check failed", err);
-      setIsSessionValid(false);
-      
+      setIsSessionValid(false);     
    if (navigationToken) {
    alert("Logout")
      const channel = new BroadcastChannel('session_channel');
