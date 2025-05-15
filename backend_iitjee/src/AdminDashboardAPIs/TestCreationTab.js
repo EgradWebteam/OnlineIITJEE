@@ -5,22 +5,42 @@ const cors = require("cors");
 router.use(cors());
 
 router.get("/TestCreationFormData", async (req, res) => {
+  let connection;
   try {
-    const [courses] = await db.query(
-      "SELECT course_creation_id, course_name FROM iit_course_creation_table"
-    );
-    const [testTypes] = await db.query(
-      "SELECT type_of_test_id, type_of_test_name FROM iit_type_of_test"
-    );
-    const [instructions] = await db.query(
-      "SELECT instruction_id, instruction_heading FROM iit_instructions"
-    );
-    const [optionPatterns] = await db.query(
-      "SELECT options_pattern_id, options_pattern_name FROM iit_options_pattern"
-    );
+    connection = await db.getConnection();
+
+    // Run all queries in parallel
+    const [
+      [courses],
+      [testTypes],
+      [instructions],
+      [optionPatterns],
+      [courseTestTypes]
+    ] = await Promise.all([
+      connection.query("SELECT course_creation_id, course_name FROM iit_course_creation_table where portal_id = 1"),
+      connection.query("SELECT type_of_test_id, type_of_test_name FROM iit_type_of_test"),
+      connection.query("SELECT instruction_id, instruction_heading FROM iit_instructions"),
+      connection.query("SELECT options_pattern_id, options_pattern_name FROM iit_options_pattern"),
+      connection.query("SELECT course_creation_id, type_of_test_id FROM iit_course_type_of_tests"),
+    ]);
+
+    // Map test types to their courses
+    const courseMap = {};
+    for (const row of courseTestTypes) {
+      if (!courseMap[row.course_creation_id]) {
+        courseMap[row.course_creation_id] = [];
+      }
+      courseMap[row.course_creation_id].push(row.type_of_test_id);
+    }
+
+    // Enhance courses with their corresponding testTypeIds
+    const coursesWithTestTypes = courses.map(course => ({
+      ...course,
+      testTypeIds: courseMap[course.course_creation_id] || []
+    }));
 
     res.json({
-      courses,
+      courses: coursesWithTestTypes,
       testTypes,
       instructions,
       optionPatterns,
@@ -28,8 +48,11 @@ router.get("/TestCreationFormData", async (req, res) => {
   } catch (error) {
     console.error("Error fetching course details:", error);
     res.status(500).json({ message: "Internal server error" });
+  } finally {
+    if (connection) connection.release(); // ensure connection is released
   }
 });
+
 
 // API route to get subject names by course_creation_id
 

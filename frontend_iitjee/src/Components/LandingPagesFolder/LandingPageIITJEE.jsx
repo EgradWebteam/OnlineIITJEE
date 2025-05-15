@@ -5,6 +5,7 @@ import portalImage from "../../assets/HomePageBanner.png"
 const MainPageCourseCards = lazy(() => import("./MainPageCourseCards.jsx"));
 import MainHeader from './MainPageHeaderFooterFiles/MainHeader.jsx';
 import MainFooter from './MainPageHeaderFooterFiles/MainFooter.jsx';
+import LoadingSpinner from '../../ContextFolder/LoadingSpinner.jsx';
 export default function LandingPageIITJEE() {
   return (
     <div className={styles.homePageMainContainer}>
@@ -18,7 +19,7 @@ export default function LandingPageIITJEE() {
           <h3>Explore Online Courses</h3>
         </div>
         <div>
-          <Suspense fallback={<p>Loading Courses...</p>}>
+          <Suspense fallback={<p><LoadingSpinner/></p>}>
             <MainPageCourseCards />
           </Suspense>
         </div>

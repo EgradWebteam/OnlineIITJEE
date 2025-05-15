@@ -152,8 +152,12 @@ export default function StudentDashboard() {
         //console.error("Logout error:", error);
       }
     };
-   
-   
+   const channel = new BroadcastChannel('session_channel');
+channel.onmessage = (event) => {
+  if (event.data.type === 'LOGOUT') {
+   handleLogout();
+  }
+};
   const renderStudentDashboardContent = () => {
 
       switch (activeSection) {

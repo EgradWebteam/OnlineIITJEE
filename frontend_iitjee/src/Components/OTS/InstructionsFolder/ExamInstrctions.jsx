@@ -328,7 +328,7 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
             <TermsAndConditions setIsModalOpen={setOpenTermsAndConditions} />
           )}
       </div>
-      <ParentTabClosing realStudentId={realStudentId} realTestId={realTestId} />
+      <ParentTabClosing realStudentId={realStudentId} realTestId={realTestId}  />
     </div>
   );
 };

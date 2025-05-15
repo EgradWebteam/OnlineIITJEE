@@ -41,12 +41,13 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
           `${BASE_URL}/studentmycourses/coursetestdetails/${course_creation_id}/${studentId}`
         );
         let data = await res.json();
+        // console.log("data:", data)
         console.log("Fetched test details:", data.test_details);
         let startedTest = null;
 
         data.test_details.forEach(group => {
           group.tests.forEach(test => {
-            console.log("Checking test:", test.test_name, "Status:", test.test_attempt_status);
+            // console.log("Checking test:", test.test_name, "Status:", test.test_attempt_status);
             if (test.test_attempt_status === "started" && !startedTest) {
               startedTest = test;
             }
@@ -59,16 +60,19 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
         const testCreationTableId = startedTest.test_creation_table_id;
        
         
-        const putRes = await fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
+        const putRes = await fetch(`${BASE_URL}/OTSExamSummary/updateTestStatus/${studentId}/${testCreationTableId}`,  {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            studentId: studentId,
-            testCreationTableId: testCreationTableId
+            // studentId:studentId,
+            // testCreationTableId :testCreationTableId ,
+            test_status: "resumed",
+            connection_status: "disconnected",
+            courseCreationId :course_creation_id
            
-          }),
+          })
         });
 
         if (putRes.status === 200) {
@@ -93,12 +97,23 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
       }
       
         // Updated structure: data.test_details is an array
-        const grouped = {};
+        // const grouped = {};
  
-        data.test_details.forEach(group => {
-          const testType = group.type_of_test_name;
-          grouped[testType] = group.tests;
-        });
+        // data.test_details.forEach(group => {
+        //   const testType = group.type_of_test_name;
+        //   grouped[testType] = group.tests;
+        // });
+
+        const grouped = {};
+
+data.test_details.forEach(group => {
+  const testType = group.type_of_test_name;
+  grouped[testType] = {
+    tests: group.tests,
+    typeId: group.course_type_of_test_id //  keep ID for styling
+  };
+});
+
  
         setGroupedTests(grouped);
         setCourseName(data.course_name);
@@ -214,8 +229,8 @@ const handleStartTestClick = async (testCreationTableId) => {
     // calling test attempt status API
     const checkActiveTestResponse = await fetch(`${BASE_URL}/studentmycourses/CheckActiveTestOfStudent/${studentId}`);
     const checkActiveTestData = await checkActiveTestResponse.json();
- 
-    if (checkActiveTestData.activeTestExists) {
+   const navigationToken = sessionStorage.getItem('navigationToken');
+    if (checkActiveTestData.activeTestExists || navigationToken) {
       // alert("You already have an active test in progress. Please complete it before starting another one.");
       setShowPopup(true);
       return;
@@ -317,7 +332,8 @@ window.addEventListener('beforeunload', () => {
   // Tell the child to update the test and close
   bc.postMessage({
     action: 'resumeAndClose',
-    timeLeft: timeLeft
+    timeLeft: timeLeft,
+    courseCreationId: course_creation_id,
   });
 
   sessionStorage.removeItem('navigationToken');
@@ -359,15 +375,17 @@ window.addEventListener('beforeunload', () => {
             //   return;
             // }
            
-              fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
+            fetch(`${BASE_URL}/OTSExamSummary/updateTestStatus/${studentId}/${testCreationTableId}`,  {
                 method: "PUT",
                 headers: {
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  studentId: studentId,
-                  testCreationTableId: testCreationTableId,
-                  timeleft: timeLeft
+             
+                      test_status: "resumed",
+            connection_status: "disconnected",
+                  timeleft: timeLeft,
+                  courseCreationId :course_creation_id
                 }),
               }).catch((error) => {
                 console.error("Error deleting data on window close:", error);
@@ -412,6 +430,23 @@ window.addEventListener('beforeunload', () => {
      
     });
   };
+  const getBackgroundClass = (id) => {
+  switch (id) {
+    case 1:
+      return styles.chapterWise;
+    case 2:
+      return styles.TopicWise;
+    case 3:
+      return styles.subjectWise;
+    case 4:
+      return styles.partTest;
+    case 5:
+      return styles.fullTest;
+    default:
+      return styles.fullTest;
+  }
+};
+
  
   return (
     <div className={styles.testDetailsConatinerMainDiv}>
@@ -438,7 +473,7 @@ window.addEventListener('beforeunload', () => {
       </div>
       <div className={styles.testsContainer}>
         {selectedTestType === 'Select Type Of Test' ? (
-          Object.entries(groupedTests).map(([type, tests]) => (
+          Object.entries(groupedTests).map(([type, { tests, typeId }]) => (
             <div key={type} className={styles.testContainerDivForflex}>
               <div className={styles.testTypeRow}>
      <div className={styles.headingFortheTypeTest}>
@@ -446,7 +481,7 @@ window.addEventListener('beforeunload', () => {
                
       </div>
               {tests.map(test => (
-                <div key={test.test_creation_table_id} className={styles.testCard}>
+                <div key={test.test_creation_table_id} className={`${styles.testCard} ${getBackgroundClass(typeId)}`} >
                   <div className={styles.testContainerSub}>
                     <div className={styles.testContainerIcon}><FaBookReader /></div>
                     <div className={styles.testInfoBox}>
@@ -458,22 +493,6 @@ window.addEventListener('beforeunload', () => {
                       </div>
                     </div>
                   </div>
- 
-                  {/* {test.test_attempt_status?.toLowerCase().trim() === 'completed' ? (
-                    <button
-                      className={styles.viewReportBtn}
-                      onClick={() => handleViewReportClickMycourses(test.test_creation_table_id,test)}
-                    >
-                      View Report &gt;&gt;
-                    </button>
-                  ) : (
-                    <button
-                      className={styles.startTestBtn}
-                      onClick={() => handleStartTestClick(test.test_creation_table_id)}
-                    >
-                      Start Test &gt;&gt;
-                    </button>
-                  )} */}
                   {(() => {
                      const status = test.status?.toLowerCase().trim();
                      const attemptStatus = test.test_attempt_status?.toLowerCase().trim();
@@ -517,8 +536,8 @@ window.addEventListener('beforeunload', () => {
         ) : (
           <div className={styles.testContainerDivForflex}>
             <h3 style={{ textAlign: 'center', margin: '1rem 0', color: '#0f172a' }}>{selectedTestType}</h3>
-            {groupedTests[selectedTestType]?.map(test => (
-              <div key={test.test_creation_table_id} className={styles.testCard}>
+            {groupedTests[selectedTestType]?.tests.map(test => (
+              <div key={test.test_creation_table_id}  className={`${styles.testCard} ${getBackgroundClass(groupedTests[selectedTestType].typeId)}`}>
                 <div className={styles.testContainerSub}>
                   <div className={styles.testContainerIcon}><FaBookReader /></div>
                   <div className={styles.testInfoBox}>
