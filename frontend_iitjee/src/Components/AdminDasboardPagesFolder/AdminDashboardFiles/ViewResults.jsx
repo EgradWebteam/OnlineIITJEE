@@ -49,7 +49,7 @@ const ViewResults = ({ onClose, testCreationTableId }) => {
           setTopperData(topper);
         }
         if (data.length > 0) {
-          const { test_name, total_marks, course_name,testtotalmarks
+          const { test_name, total_marks, course_name, testtotalmarks
           } = data[0];
           setTestInfo({
             test_name,
@@ -130,20 +130,19 @@ const ViewResults = ({ onClose, testCreationTableId }) => {
       </div>
 
       {loading ? (
-        <div className={styles.loader}><LoadingSpinner/></div>
+        <div className={styles.loader}><LoadingSpinner /></div>
       ) : error ? (
         <div className={styles.error}>{error}</div>
       ) : (
         <>
-          {viewType === "score-overview" && (
-            <div className={styles.scoreOverview}>
-              <div className={styles.cardContainer}>
-                <div className={styles.card}>
-                  <h3>Test Details</h3>
+          <h3>Test Details</h3>
                   <p><strong>Test Name:</strong> {testInfo.test_name}</p>
                   <p><strong>Total Marks:</strong> {testInfo.testtotalmarks}</p>
                   <p><strong>Course Name:</strong> {testInfo.course_name}</p>
-                </div>
+          {viewType === "score-overview" && (
+            <div className={styles.scoreOverview}>
+              <div className={styles.cardContainer}>
+            
                 {topperData.student_registration_id && (
                   <div className={styles.card}>
                     <h3>Topper Details</h3>
@@ -174,10 +173,13 @@ const ViewResults = ({ onClose, testCreationTableId }) => {
                     currentQuestionwiseData.map((data, index) => (
                       <tr key={index}>
                         <td>{data.question_id}</td>
-                        <td>{data.total_participants}</td>
-                        <td>{data.correct_answers}</td>
-                        <td>{data.incorrect_answers}</td>
-                        <td>{data.unattempted_answers}</td>
+                        <td>{data.total_participants_attempted
+                        }</td>
+                        <td>{data.correct_attempts
+                        }</td>
+                        <td>{data.incorrect_attempts}</td>
+                        <td>{data.unattempted_answers
+                        }</td>
                       </tr>
                     ))
                   ) : (
@@ -210,13 +212,14 @@ const ViewResults = ({ onClose, testCreationTableId }) => {
           )}
 
           {viewType === "participations" && (
+
             <div className={styles.participantsResults}>
               <h3>Participants Details</h3>
               <table className={styles.resultsTable}>
                 <thead>
                   <tr>
-                    <th>Student ID</th>
-                    <th>Total Attempts</th>
+                    <th>Student Name</th>
+                    {/* <th>Total Attempts</th> */}
                     <th>Marks Obtained</th>
                     <th>Max Marks</th>
                     <th>Percentage (%)</th>
@@ -226,9 +229,12 @@ const ViewResults = ({ onClose, testCreationTableId }) => {
                 <tbody>
                   {currentParticipantsData.length > 0 ? (
                     currentParticipantsData.map((participant, index) => (
+
                       <tr key={index}>
-                        <td>{participant.student_registration_id}</td>
-                        <td>{participant.total_attempts}</td>
+                        <td>{participant.
+                          candidate_name
+                        }</td>
+                        {/* <td>{participant.total_attempts}</td> */}
                         <td>{participant.total_marks_obtained}</td>
                         <td>{participant.max_marks}</td>
                         <td>{participant.percentage}</td>
