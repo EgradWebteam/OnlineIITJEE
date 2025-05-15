@@ -324,6 +324,7 @@ router.post(
         Marks_text = 1,
         nmarks_text = 0,
         sortId = 0;
+        video_solution_link=""
 
       const qtypeMappings = {
         MCQ4: 1,
@@ -428,6 +429,13 @@ router.post(
             });
           }
         }
+        if (section.includes("[vsoln]")) {
+  video_solution_link = section.replace("[vsoln]", "").trim();
+  if (currentQuestionIndex >= 0 && solutionBatch[currentQuestionIndex]) {
+    solutionBatch[currentQuestionIndex].video_solution_link = video_solution_link;
+  }
+}
+
       }
 
       const insertedQuestionIds = await storeRecordsInBulk(
