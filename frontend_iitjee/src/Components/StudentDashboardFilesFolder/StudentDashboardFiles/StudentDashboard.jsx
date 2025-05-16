@@ -1,4 +1,4 @@
-import React, { lazy, useEffect, useState,Suspense, useCallback  } from 'react'
+import React, { lazy, useEffect, useState,Suspense, useCallback ,useRef } from 'react'
 import StudentDashboardHeader from './StudentDashboardHeader.jsx';
 import styles from "../../../Styles/StudentDashboardCSS/StudentDashboard.module.css";
 import StudentDashboardLeftSideBar from './StudentDashboardLeftSidebar.jsx';
@@ -113,6 +113,40 @@ export default function StudentDashboard() {
 
     setIsLoading(false);
   }, [location.state]);
+useEffect(() => {
+  const isTabRestored = performance.getEntriesByType("navigation")[0]?.type === "back_forward";
+
+  if (isTabRestored) {
+    // Set a flag so we can handle this once during interactions
+    sessionStorage.setItem('tabRestored', 'true');
+  }
+}, []);
+
+// Handle logout on user interaction only if tab was restored
+const logoutHandledRef = useRef(false);
+
+useEffect(() => {
+  const handleInteraction = async () => {
+    const isTabRestored = sessionStorage.getItem('tabRestored') === 'true';
+
+    if (isTabRestored && !logoutHandledRef.current) {
+      logoutHandledRef.current = true;
+      sessionStorage.removeItem('tabRestored');
+      sessionStorage.removeItem('navigationToken');
+
+      await handleLogout();
+      window.location.reload();
+    }
+  };
+
+  const events = ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'];
+  events.forEach(event => window.addEventListener(event, handleInteraction));
+
+  return () => {
+    events.forEach(event => window.removeEventListener(event, handleInteraction));
+  };
+}, []);
+
 
  const closeTestWindowIfOpen = () => {
   if (window.testWindowRef && !window.testWindowRef.closed) {

@@ -117,14 +117,26 @@ data.test_details.forEach(group => {
  
         setGroupedTests(grouped);
         setCourseName(data.course_name);
+        
       } catch (err) {
         console.error("Failed to fetch test details", err);
       }
     };
- 
+   const handleVisibilityChange = () => {
+    if (document.visibilityState === "visible") {
+      if (course_creation_id && studentId) {
+        fetchCourseTests();
+      }
+    }
+  };
     if (course_creation_id && studentId) {
       fetchCourseTests();
     }
+     document.addEventListener("visibilitychange", handleVisibilityChange);
+
+  return () => {
+    document.removeEventListener("visibilitychange", handleVisibilityChange);
+  };
   }, [course_creation_id, studentId,refreshTrigger]);
  
  
@@ -224,7 +236,198 @@ data.test_details.forEach(group => {
  
   // let newWinRef = null;
  
-const handleStartTestClick = async (testCreationTableId) => {
+// const handleStartTestClick = async (testCreationTableId) => {
+//   try {
+//     // calling test attempt status API
+//     // const checkActiveTestResponse = await fetch(`${BASE_URL}/studentmycourses/CheckActiveTestOfStudent/${studentId}`);
+//     // const checkActiveTestData = await checkActiveTestResponse.json();
+//    const navigationToken = sessionStorage.getItem('navigationToken');
+//     if (navigationToken) {
+//       // alert("You already have an active test in progress. Please complete it before starting another one.");
+//       setShowPopup(true);
+//       return;
+//     }
+ 
+//     const [encryptedTestId, encryptedStudentId] = await encryptBatch([testCreationTableId, studentId]);
+ 
+//     const testStatusData = {
+//       studentregistrationId: studentId,
+//       courseCreationId: course_creation_id,
+//       testCreationTableId: testCreationTableId,
+//       studentTestStartTime: formattedTime,
+//       testAttemptStatus: 'started',
+//       testConnectionStatus: 'active',
+//       testConnectionTime: formattedTime
+//     };
+ 
+//     const response = await fetch(`${BASE_URL}/studentmycourses/InsertOrUpdateTestAttemptStatus`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(testStatusData),
+//     });
+ 
+//     const result = await response.json();
+ 
+//     if (response.ok) {
+//       sessionStorage.setItem('navigationToken', 'valid');
+ 
+//       const screenWidth = window.screen.availWidth;
+//       const screenHeight = window.screen.availHeight;
+//       const url = `/GeneralInstructions/${encodeURIComponent(encryptedTestId)}/${encodeURIComponent(encryptedStudentId)}`;
+//       const features = `width=${screenWidth},height=${screenHeight},top=0,left=0`;
+ 
+//       // Open the new window
+//       const newWinRef = window.open(url, "_blank", `width=${screenWidth},height=${screenHeight},fullscreen=yes`);
+//        window.testWindowRef = newWinRef;
+//       // force resize window to full screen only - start
+//       if (newWinRef) {
+//         const resizeMonitor = setInterval(() => {
+//           try {
+//             if (
+//               newWinRef.outerWidth !== screenWidth ||
+//               newWinRef.outerHeight !== screenHeight
+//             ) {
+//               newWinRef.resizeTo(screenWidth, screenHeight);
+//               newWinRef.moveTo(0, 0);
+//             }
+//           } catch (err) {
+//             console.warn("Resize attempt failed (possibly cross-origin):", err);
+//           }
+      
+//           if (newWinRef.closed) {
+//             clearInterval(resizeMonitor);
+//           }
+//         }, 1000); // Check every second
+//       }
+//       // force resize window to full screen only - end
+      
+//       if (newWinRef) {
+//         // window.addEventListener('beforeunload', () => {
+//         //   if (newWinRef && !newWinRef.closed) {
+//         //     const key = `OTS_FormattedTime`;
+//         //     const timeLeft = localStorage.getItem(key);
+       
+//         //     console.log("Sending timeLeft to API:", timeLeft);
+       
+//         //     // if (!timeLeft) {
+//         //     //   console.warn("No timeLeft found in localStorage.");
+//         //     //   return;
+//         //     // }
+           
+//         //       fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
+//         //         method: "PUT",
+//         //         headers: {
+//         //           "Content-Type": "application/json",
+//         //         },
+//         //         body: JSON.stringify({
+//         //           studentId: studentId,
+//         //           testCreationTableId: testCreationTableId,
+//         //           timeleft: timeLeft
+//         //         }),
+//         //       }).catch((error) => {
+//         //         console.error("Error deleting data on window close:", error);
+//         //       });
+ 
+//         //       localStorage.removeItem(`OTS_FormattedTime`)
+           
+//         //     newWinRef.close();
+//         //   }
+//         // });
+ 
+//  const bc = new BroadcastChannel('test_channel');
+ 
+// window.addEventListener('beforeunload', () => {
+//   const timeLeft = localStorage.getItem('OTS_FormattedTime') || "";
+ 
+//   // Tell the child to update the test and close
+//   bc.postMessage({
+//     action: 'resumeAndClose',
+//     timeLeft: timeLeft,
+//     courseCreationId: course_creation_id,
+//   });
+
+//   sessionStorage.removeItem('navigationToken');
+
+
+// //  setTimeout(() => {
+// //   // This will run if child does not handle the BroadcastChannel in time
+// //   const timeLeft = localStorage.getItem('OTS_FormattedTime') || "";
+// //   const payload = new Blob([JSON.stringify({
+// //     studentId,
+// //     testCreationTableId,
+// //     timeleft: timeLeft
+// //   })], { type: 'application/json' });
+
+// //   navigator.sendBeacon(`${BASE_URL}/ResumeTest/updateResumeTestBeacon`, payload);
+
+// //   localStorage.removeItem('OTS_FormattedTime');
+
+// // }, 100);
+// // newWinRef.close();
+
+// });
+        
+        
+        
+//         const monitorWindow = setInterval(() => {
+//           if (newWinRef.closed) {
+//             console.log("Quiz window closed");
+//             clearInterval(monitorWindow);
+ 
+ 
+//             const key = `OTS_FormattedTime`;
+//             const timeLeft = localStorage.getItem(key);
+       
+//             console.log("Sending timeLeft to API:", timeLeft);
+       
+//             // if (!timeLeft) {
+//             //   console.warn("No timeLeft found in localStorage.");
+//             //   return;
+//             // }
+           
+//             fetch(`${BASE_URL}/OTSExamSummary/updateTestStatus/${studentId}/${testCreationTableId}`,  {
+//                 method: "PUT",
+//                 headers: {
+//                   "Content-Type": "application/json",
+//                 },
+//                 body: JSON.stringify({
+             
+//                       test_status: "resumed",
+//             connection_status: "disconnected",
+//                   timeleft: timeLeft,
+//                   courseCreationId :course_creation_id
+//                 }),
+//               }).catch((error) => {
+//                 console.error("Error deleting data on window close:", error);
+//               });
+ 
+//               localStorage.removeItem(`OTS_FormattedTime`);
+
+//               sessionStorage.removeItem('navigationToken');
+//               window.testWindowRef = null;
+
+
+//             // Trigger re-fetch of test data (refresh UI)
+//             setTimeout(() => {
+//               // This ensures the re-fetch is done after a small delay for all tasks to complete
+//               setRefreshTrigger((prev) => !prev);
+//             }, 200); // Delay to ensure completion
+           
+//           }
+//         }, 1000);
+//       } else {
+//         console.error("Failed to open the quiz window.");
+//       }
+//     } else {
+//       console.error('Failed to insert/update test status:', result.error);
+//     }
+//   } catch (error) {
+//     console.error('Error during test status insertion/update:', error);
+//   }
+// };
+ const handleStartTestClick = async (testCreationTableId) => {
   try {
     // calling test attempt status API
     // const checkActiveTestResponse = await fetch(`${BASE_URL}/studentmycourses/CheckActiveTestOfStudent/${studentId}`);
@@ -264,65 +467,45 @@ const handleStartTestClick = async (testCreationTableId) => {
       const screenWidth = window.screen.availWidth;
       const screenHeight = window.screen.availHeight;
       const url = `/GeneralInstructions/${encodeURIComponent(encryptedTestId)}/${encodeURIComponent(encryptedStudentId)}`;
-      const features = `width=${screenWidth},height=${screenHeight},top=0,left=0`;
- 
-      // Open the new window
-      const newWinRef = window.open(url, "_blank", `width=${screenWidth},height=${screenHeight},fullscreen=yes`);
-       window.testWindowRef = newWinRef;
-      // force resize window to full screen only - start
+      
+      // Features for opening the window
+      const features = `width=${screenWidth},height=${screenHeight},top=0,left=0,fullscreen=yes`;
+
+      // Open the new test window
+      const newWinRef = window.open(url, "_blank", features);
+      window.testWindowRef = newWinRef;
+
+      // Force resize window to full screen only
       if (newWinRef) {
         const resizeMonitor = setInterval(() => {
           try {
-            if (
-              newWinRef.outerWidth !== screenWidth ||
-              newWinRef.outerHeight !== screenHeight
-            ) {
+            if (newWinRef.outerWidth !== screenWidth || newWinRef.outerHeight !== screenHeight) {
               newWinRef.resizeTo(screenWidth, screenHeight);
               newWinRef.moveTo(0, 0);
             }
           } catch (err) {
             console.warn("Resize attempt failed (possibly cross-origin):", err);
           }
-      
+
           if (newWinRef.closed) {
             clearInterval(resizeMonitor);
+            // Once the window is closed, remove the navigation token to prevent window reopening on restoration
+            sessionStorage.removeItem('navigationToken');
+            window.testWindowRef = null;
+            // Trigger re-fetch of test data to refresh UI
+            setTimeout(() => {
+              setRefreshTrigger((prev) => !prev);
+            }, 200);  // Small delay to ensure completion
           }
-        }, 1000); // Check every second
+        }, 1000);  // Check every second
       }
-      // force resize window to full screen only - end
-      
+
+      // Ensure the session token is removed when the page is closed
+      window.addEventListener('beforeunload', () => {
+        sessionStorage.removeItem('navigationToken');
+      });
       if (newWinRef) {
-        // window.addEventListener('beforeunload', () => {
-        //   if (newWinRef && !newWinRef.closed) {
-        //     const key = `OTS_FormattedTime`;
-        //     const timeLeft = localStorage.getItem(key);
-       
-        //     console.log("Sending timeLeft to API:", timeLeft);
-       
-        //     // if (!timeLeft) {
-        //     //   console.warn("No timeLeft found in localStorage.");
-        //     //   return;
-        //     // }
-           
-        //       fetch(`${BASE_URL}/ResumeTest/updateResumeTest/${studentId}/${testCreationTableId}`, {
-        //         method: "PUT",
-        //         headers: {
-        //           "Content-Type": "application/json",
-        //         },
-        //         body: JSON.stringify({
-        //           studentId: studentId,
-        //           testCreationTableId: testCreationTableId,
-        //           timeleft: timeLeft
-        //         }),
-        //       }).catch((error) => {
-        //         console.error("Error deleting data on window close:", error);
-        //       });
- 
-        //       localStorage.removeItem(`OTS_FormattedTime`)
-           
-        //     newWinRef.close();
-        //   }
-        // });
+    
  
  const bc = new BroadcastChannel('test_channel');
  
@@ -337,23 +520,6 @@ window.addEventListener('beforeunload', () => {
   });
 
   sessionStorage.removeItem('navigationToken');
-
-
-//  setTimeout(() => {
-//   // This will run if child does not handle the BroadcastChannel in time
-//   const timeLeft = localStorage.getItem('OTS_FormattedTime') || "";
-//   const payload = new Blob([JSON.stringify({
-//     studentId,
-//     testCreationTableId,
-//     timeleft: timeLeft
-//   })], { type: 'application/json' });
-
-//   navigator.sendBeacon(`${BASE_URL}/ResumeTest/updateResumeTestBeacon`, payload);
-
-//   localStorage.removeItem('OTS_FormattedTime');
-
-// }, 100);
-// newWinRef.close();
 
 });
         
@@ -370,10 +536,6 @@ window.addEventListener('beforeunload', () => {
        
             console.log("Sending timeLeft to API:", timeLeft);
        
-            // if (!timeLeft) {
-            //   console.warn("No timeLeft found in localStorage.");
-            //   return;
-            // }
            
             fetch(`${BASE_URL}/OTSExamSummary/updateTestStatus/${studentId}/${testCreationTableId}`,  {
                 method: "PUT",
@@ -415,7 +577,7 @@ window.addEventListener('beforeunload', () => {
     console.error('Error during test status insertion/update:', error);
   }
 };
- 
+
  
   const handleViewReportClickMycourses = (testId,test) => {
     // console.log("test",test)
@@ -509,7 +671,7 @@ window.addEventListener('beforeunload', () => {
                           View Report &gt;&gt;
                         </button>
                       );
-                    } else if (attemptStatus === 'resumed') {
+                    } else if (attemptStatus === 'resumed' ||attemptStatus === 'started') {
                       return (
                         <button
                           className={styles.resumeTestBtn}
