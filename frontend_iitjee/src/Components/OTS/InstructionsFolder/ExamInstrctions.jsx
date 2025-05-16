@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useCallback } from "react";
+import React, { useEffect, useState,useCallback,useRef} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   decryptBatch as decryptDataBatch,
@@ -35,7 +35,40 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
   //  Read adminInfo from localStorage
   const adminInfo = JSON.parse(localStorage.getItem("adminInfo"));
   const isAdmin = adminInfo?.role === "admin";
+  const logoutHandledRef = useRef(false);
 
+  useEffect(() => {
+    const isTabRestored = performance.getEntriesByType("navigation")[0]?.type === "back_forward";
+
+    // If restored via back/forward navigation
+    if (isTabRestored) {
+      sessionStorage.setItem('tabRestored', 'true');
+    }
+
+
+  }, []);
+
+  useEffect(() => {
+    const handleInteraction = async () => {
+      const isTabRestored = sessionStorage.getItem('tabRestored') === 'true';
+
+      if (isTabRestored && !logoutHandledRef.current) {
+        logoutHandledRef.current = true;
+        sessionStorage.removeItem('tabRestored');
+        sessionStorage.removeItem('navigationToken');
+
+       
+        navigate('/Error')
+      }
+    };
+
+    const events = ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'];
+    events.forEach(event => window.addEventListener(event, handleInteraction));
+
+    return () => {
+      events.forEach(event => window.removeEventListener(event, handleInteraction));
+    };
+  }, []);
     //WINDOW CLOSE DATA DELETE CODE START
     // useEffect(() => {
     //   const handleUnload = () => {

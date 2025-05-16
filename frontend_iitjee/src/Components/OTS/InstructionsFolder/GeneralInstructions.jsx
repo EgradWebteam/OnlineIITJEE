@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useCallback } from 'react';
+import React, { useEffect, useState,useCallback ,useRef} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { decryptBatch as decryptDataBatch, encryptBatch } from '../../../utils/cryptoUtils.jsx'; // Batch API decryption
 import { Intstruction_content } from './InstructionsData.js';
@@ -23,7 +23,40 @@ const GeneralInstructions = () => {
    // Disable all keyboard and mouse interactions globally
 
 //    DisableKeysAndMouseInteractions(null);
+  const logoutHandledRef = useRef(false);
 
+  useEffect(() => {
+    const isTabRestored = performance.getEntriesByType("navigation")[0]?.type === "back_forward";
+
+    // If restored via back/forward navigation
+    if (isTabRestored) {
+      sessionStorage.setItem('tabRestored', 'true');
+    }
+
+
+  }, []);
+
+  useEffect(() => {
+    const handleInteraction = async () => {
+      const isTabRestored = sessionStorage.getItem('tabRestored') === 'true';
+
+      if (isTabRestored && !logoutHandledRef.current) {
+        logoutHandledRef.current = true;
+        sessionStorage.removeItem('tabRestored');
+        sessionStorage.removeItem('navigationToken');
+
+       
+       navigate("/Error");
+      }
+    };
+
+    const events = ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'];
+    events.forEach(event => window.addEventListener(event, handleInteraction));
+
+    return () => {
+      events.forEach(event => window.removeEventListener(event, handleInteraction));
+    };
+  }, []);
 //  DisableKeysAndMouseInteractions(null);
 
     const userData = studentData?.userDetails;
