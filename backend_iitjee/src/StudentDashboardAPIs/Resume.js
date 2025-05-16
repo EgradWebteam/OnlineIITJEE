@@ -120,7 +120,7 @@ LEFT JOIN
 WHERE 
     iur.student_registration_id = ?
     AND iur.test_creation_table_id = ?
-    AND tsd.version > 0;
+
 
  `,
                 [studentId, testCreationTableId]

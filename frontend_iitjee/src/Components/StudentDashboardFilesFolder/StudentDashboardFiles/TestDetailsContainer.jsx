@@ -43,58 +43,58 @@ export default function TestDetailsContainer({ course, onBack, studentId,userDat
         let data = await res.json();
         // console.log("data:", data)
         console.log("Fetched test details:", data.test_details);
-        let startedTest = null;
+      //   let startedTest = null;
 
-        data.test_details.forEach(group => {
-          group.tests.forEach(test => {
-            // console.log("Checking test:", test.test_name, "Status:", test.test_attempt_status);
-            if (test.test_attempt_status === "started" && !startedTest) {
-              startedTest = test;
-            }
-          });
-        });
-        const navigationToken = sessionStorage.getItem('navigationToken');
-       if (!startedTest) {
-        console.log("No 'started' test found");
-      } else if (!navigationToken) {
-        const testCreationTableId = startedTest.test_creation_table_id;
+      //   data.test_details.forEach(group => {
+      //     group.tests.forEach(test => {
+      //       // console.log("Checking test:", test.test_name, "Status:", test.test_attempt_status);
+      //       if (test.test_attempt_status === "started" && !startedTest) {
+      //         startedTest = test;
+      //       }
+      //     });
+      //   });
+      //   const navigationToken = sessionStorage.getItem('navigationToken');
+      //  if (!startedTest) {
+      //   console.log("No 'started' test found");
+      // } else if (!navigationToken) {
+      //   const testCreationTableId = startedTest.test_creation_table_id;
        
         
-        const putRes = await fetch(`${BASE_URL}/OTSExamSummary/updateTestStatus/${studentId}/${testCreationTableId}`,  {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            // studentId:studentId,
-            // testCreationTableId :testCreationTableId ,
-            test_status: "resumed",
-            connection_status: "disconnected",
-            courseCreationId :course_creation_id
+      //   const putRes = await fetch(`${BASE_URL}/OTSExamSummary/updateTestStatus/${studentId}/${testCreationTableId}`,  {
+      //     method: "PUT",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       // studentId:studentId,
+      //       // testCreationTableId :testCreationTableId ,
+      //       test_status: "resumed",
+      //       connection_status: "disconnected",
+      //       courseCreationId :course_creation_id
            
-          })
-        });
+      //     })
+      //   });
 
-        if (putRes.status === 200) {
-          console.log("Resume update successful");
-          localStorage.removeItem("OTS_FormattedTime");
+      //   if (putRes.status === 200) {
+      //     console.log("Resume update successful");
+      //     localStorage.removeItem("OTS_FormattedTime");
           
-          // Re-fetch latest data after updating
-          // const updatedRes = await fetch(
-          //   `${BASE_URL}/studentmycourses/coursetestdetails/${course_creation_id}/${studentId}`
-          // );
-          // data = await updatedRes.json();
-          data.test_details.forEach(group => {
-            group.tests.forEach(test => {
-              if (test.test_creation_table_id === startedTest.test_creation_table_id) {
-                test.test_attempt_status = "resumed";
-              }
-            });
-          });
-        } else {
-          console.error("Failed to update resume test.");
-        }
-      }
+      //     // Re-fetch latest data after updating
+      //     // const updatedRes = await fetch(
+      //     //   `${BASE_URL}/studentmycourses/coursetestdetails/${course_creation_id}/${studentId}`
+      //     // );
+      //     // data = await updatedRes.json();
+      //     data.test_details.forEach(group => {
+      //       group.tests.forEach(test => {
+      //         if (test.test_creation_table_id === startedTest.test_creation_table_id) {
+      //           test.test_attempt_status = "resumed";
+      //         }
+      //       });
+      //     });
+      //   } else {
+      //     console.error("Failed to update resume test.");
+      //   }
+      // }
       
         // Updated structure: data.test_details is an array
         // const grouped = {};
@@ -227,10 +227,10 @@ data.test_details.forEach(group => {
 const handleStartTestClick = async (testCreationTableId) => {
   try {
     // calling test attempt status API
-    const checkActiveTestResponse = await fetch(`${BASE_URL}/studentmycourses/CheckActiveTestOfStudent/${studentId}`);
-    const checkActiveTestData = await checkActiveTestResponse.json();
+    // const checkActiveTestResponse = await fetch(`${BASE_URL}/studentmycourses/CheckActiveTestOfStudent/${studentId}`);
+    // const checkActiveTestData = await checkActiveTestResponse.json();
    const navigationToken = sessionStorage.getItem('navigationToken');
-    if (checkActiveTestData.activeTestExists || navigationToken) {
+    if (navigationToken) {
       // alert("You already have an active test in progress. Please complete it before starting another one.");
       setShowPopup(true);
       return;
