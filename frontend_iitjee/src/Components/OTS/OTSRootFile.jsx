@@ -29,6 +29,42 @@ export default function OTSRootFile() {
   const summaryData = useRef({});
    // Disable all keyboard and mouse interactions globally
   // DisableKeysAndMouseInteractions(null);
+  const logoutHandledRef = useRef(false);
+
+  useEffect(() => {
+    const isTabRestored = performance.getEntriesByType("navigation")[0]?.type === "back_forward";
+
+    // If restored via back/forward navigation
+    if (isTabRestored) {
+      sessionStorage.setItem('tabRestored', 'true');
+    }
+
+
+  }, []);
+
+  useEffect(() => {
+    const handleInteraction = async () => {
+      const isTabRestored = sessionStorage.getItem('tabRestored') === 'true';
+
+      if (isTabRestored && !logoutHandledRef.current) {
+        logoutHandledRef.current = true;
+        sessionStorage.removeItem('tabRestored');
+        sessionStorage.removeItem('navigationToken');
+
+       
+        navigate('/Error')
+      }
+    };
+
+    const events = ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'];
+    events.forEach(event => window.addEventListener(event, handleInteraction));
+
+    return () => {
+      events.forEach(event => window.removeEventListener(event, handleInteraction));
+    };
+  }, []);
+
+  
 
 
 console.log("summaryData",summaryData.current)
