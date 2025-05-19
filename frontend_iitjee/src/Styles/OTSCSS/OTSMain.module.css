@@ -1226,7 +1226,11 @@ border-radius: 10px;
   padding: 12px;
   text-align: center;
   border: 1px solid #ddd;
+  cursor: pointer;
 }
+/* .tableTd:hover{
+  background-color: #ebebeb;
+} */
 .tableTrTotalMarks{
   background-color: #198754 !important;
   font-weight: bold;
