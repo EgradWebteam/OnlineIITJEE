@@ -10,7 +10,7 @@ import { BASE_URL } from "../../ConfigFile/ApiConfigURL.js";
 import { TimerProvider } from "../../ContextFolder/TimerContext.jsx";
 import { useTimer } from "../../ContextFolder/TimerContext.jsx";
 import { useQuestionStatus } from "../../ContextFolder/CountsContext.jsx";
-
+import LoadingSpinner from '../../ContextFolder/LoadingSpinner.jsx';
 import ParentTabClosing from "./ParentTabClosing.jsx"
 
 // import DisableKeysAndMouseInteractions from "../../ContextFolder/DisableKeysAndMouseInteractions.jsx";
@@ -30,14 +30,14 @@ export default function OTSRootFile() {
    // Disable all keyboard and mouse interactions globally
   // DisableKeysAndMouseInteractions(null);
   const logoutHandledRef = useRef(false);
-
+  const [checkCompleted, setCheckCompleted] = useState(false);
   useEffect(() => {
     const isTabRestored = performance.getEntriesByType("navigation")[0]?.type === "back_forward";
 
     // If restored via back/forward navigation
     if (isTabRestored) {
       sessionStorage.setItem('tabRestored', 'true');
-    }
+    } 
 
 
   }, []);
@@ -53,6 +53,9 @@ export default function OTSRootFile() {
 
        
         navigate('/Error')
+        
+      } else {
+        setCheckCompleted(true); // allow rendering if no redirect
       }
     };
 
@@ -67,7 +70,7 @@ export default function OTSRootFile() {
   
 
 
-console.log("summaryData",summaryData.current)
+// console.log("summaryData",summaryData.current)
   useEffect(() => {
     const token = sessionStorage.getItem("navigationToken");
     if (!token) {
@@ -574,7 +577,7 @@ console.log("summaryData",summaryData.current)
   //     }
   //   };
 
-
+ if (!checkCompleted) return <LoadingSpinner/>;
   return (
     <div className={styles.OTSRootMainContainer}>
       <div className={styles.OTSPC}>

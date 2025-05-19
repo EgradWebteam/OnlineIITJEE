@@ -21,7 +21,7 @@ const GeneralInstructions = () => {
     const [isDecrypting, setIsDecrypting] = useState(true);
     const { studentData} = useStudent();
    // Disable all keyboard and mouse interactions globally
-
+  const [checkCompleted, setCheckCompleted] = useState(false);
 //    DisableKeysAndMouseInteractions(null);
   const logoutHandledRef = useRef(false);
 
@@ -31,13 +31,12 @@ const GeneralInstructions = () => {
     // If restored via back/forward navigation
     if (isTabRestored) {
       sessionStorage.setItem('tabRestored', 'true');
-    }
-
+    } 
 
   }, []);
 
   useEffect(() => {
-    const handleInteraction = async () => {
+    const handleInteraction = () => {
       const isTabRestored = sessionStorage.getItem('tabRestored') === 'true';
 
       if (isTabRestored && !logoutHandledRef.current) {
@@ -45,18 +44,27 @@ const GeneralInstructions = () => {
         sessionStorage.removeItem('tabRestored');
         sessionStorage.removeItem('navigationToken');
 
-       
-       navigate("/Error");
-      }
+        // Navigate to error page
+        navigate('/Error');
+      } else {
+        setCheckCompleted(true);
+    }
     };
 
     const events = ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'];
     events.forEach(event => window.addEventListener(event, handleInteraction));
 
+    // Optional: call once immediately
+    handleInteraction();
+
     return () => {
       events.forEach(event => window.removeEventListener(event, handleInteraction));
     };
-  }, []);
+  }, [navigate]);
+
+
+  
+
 //  DisableKeysAndMouseInteractions(null);
 
     const userData = studentData?.userDetails;
@@ -242,7 +250,7 @@ const GeneralInstructions = () => {
       }, [testId, studentId, navigate]);
 
 
-    if (isDecrypting) {
+    if (isDecrypting || !checkCompleted) {
         return (
             <div>
                 <h2> <LoadingSpinner /></h2>
