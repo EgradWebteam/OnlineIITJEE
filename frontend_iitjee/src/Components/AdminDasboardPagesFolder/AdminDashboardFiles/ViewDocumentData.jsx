@@ -4,7 +4,7 @@ import { BASE_URL } from "../../../ConfigFile/ApiConfigURL.js";
 import styles from "../../../Styles/AdminDashboardCSS/TestCreation.module.css";
 
 const ViewDocumentData = ({ data, onClose }) => {
-  console.log("ViewDocumentData data", data);
+
   if (!data) return null;
 
   const testId = data.test_creation_table_id;

@@ -21,8 +21,9 @@ const DocumentUpload = () => {
   const [validationErrors, setValidationErrors] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [documentList, setDocumentList] = useState([]); // State to store documents
+  const [documentList, setDocumentList] = useState([]); 
   const [currentPage, setCurrentPage] = useState(1);
+    const [showInstructionPoints, setShowInstructionPoints] = useState(false); 
    const [searchTerm, setSearchTerm] = useState("");
   const itemsPerPage = 5;
   
@@ -442,6 +443,7 @@ const DocumentUpload = () => {
           onEdit={false}
           onDelete={handleDeleteDocument}
           onOpen={handleOpen}
+          setShowInstructionPoints={setShowInstructionPoints}
           isOpen={true}
           type="document"
        
