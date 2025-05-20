@@ -20,12 +20,21 @@ const studentProfile = userData?.uploaded_photo;
     setShowProfileMenu(false);
   };
 const closeTestWindowIfOpen = () => {
+  // Check if the window reference exists and if it's open
   if (window.testWindowRef && !window.testWindowRef.closed) {
-    window.testWindowRef.close();
-    window.testWindowRef = null;
+    try {
+      console.log("Closing the test window...");
+      window.testWindowRef.close();
+      window.testWindowRef = null;
+    } catch (e) {
+      console.error("Failed to close test window:", e);
+    }
+  } else {
+    console.warn("Test window is either not opened or already closed.");
   }
 };
   const handleLogout = async () => {
+   closeTestWindowIfOpen(); 
     const sessionId = sessionStorage.getItem("sessionId"); 
   
     if (!sessionId) {
@@ -47,7 +56,14 @@ const closeTestWindowIfOpen = () => {
       if (response.ok) {
         sessionStorage.clear(); 
         localStorage.clear(); 
-         closeTestWindowIfOpen(); 
+      const win = window.open('', 'TestWindow'); 
+
+if (win) {
+  win.close();
+  console.log("TestWindow closed.");
+} else {
+  console.log("No window with that name is currently open.");
+}
         navigate("/LoginPage");
       } else {
         await alert(data.message || "Logout failed. Please try again.");

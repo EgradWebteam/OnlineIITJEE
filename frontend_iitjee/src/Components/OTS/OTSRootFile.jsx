@@ -30,7 +30,7 @@ export default function OTSRootFile() {
    // Disable all keyboard and mouse interactions globally
   // DisableKeysAndMouseInteractions(null);
   const logoutHandledRef = useRef(false);
-  const [checkCompleted, setCheckCompleted] = useState(false);
+  // const [checkCompleted, setCheckCompleted] = useState(false);
   useEffect(() => {
     const isTabRestored = performance.getEntriesByType("navigation")[0]?.type === "back_forward";
 
@@ -54,9 +54,10 @@ export default function OTSRootFile() {
        
         navigate('/Error')
         
-      } else {
-        setCheckCompleted(true); // allow rendering if no redirect
-      }
+      } 
+      // else {
+      //   setCheckCompleted(true); // allow rendering if no redirect
+      // }
     };
 
     const events = ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'];
@@ -496,10 +497,10 @@ export default function OTSRootFile() {
        setTimeout(() => setWarningMessage(false), 10000); // hide after 10s
   
       // Handle side-effects outside
-      if (newCount >= 4) {
-        // We can't await here, so do it in next step
-        handleTermination(); // Separate async function
-      }
+      // if (newCount >= 4) {
+      //   // We can't await here, so do it in next step
+      //   handleTermination(); // Separate async function
+      // }
   
       return newCount;
     });
@@ -577,7 +578,7 @@ export default function OTSRootFile() {
   //     }
   //   };
 
- if (!checkCompleted) return <LoadingSpinner/>;
+//  if (!checkCompleted) return <LoadingSpinner/>;
   return (
     <div className={styles.OTSRootMainContainer}>
       <div className={styles.OTSPC}>

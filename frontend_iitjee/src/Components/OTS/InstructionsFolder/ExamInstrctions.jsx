@@ -36,7 +36,7 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
   const adminInfo = JSON.parse(localStorage.getItem("adminInfo"));
   const isAdmin = adminInfo?.role === "admin";
   const logoutHandledRef = useRef(false);
-  const [checkCompleted, setCheckCompleted] = useState(false);
+  // const [checkCompleted, setCheckCompleted] = useState(false);
   useEffect(() => {
     const isTabRestored = performance.getEntriesByType("navigation")[0]?.type === "back_forward";
 
@@ -58,9 +58,10 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
 
        
         navigate('/Error')
-      } else {
-        setCheckCompleted(true); 
-      }
+      } 
+      // else {
+      //   setCheckCompleted(true); 
+      // }
     };
 
     const events = ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'];
@@ -211,7 +212,7 @@ const [openTermsAndConditions, setOpenTermsAndConditions] = useState(false);
     decryptAndFetch();
   }, [testId, studentId, navigate]);
 
-  if (isLoading || !checkCompleted) {
+  if (isLoading) {
     return (
       <div className={styles.loadingText}>
         <LoadingSpinner />

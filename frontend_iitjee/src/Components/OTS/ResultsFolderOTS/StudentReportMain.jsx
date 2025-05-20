@@ -50,7 +50,59 @@ const StudentReportMain = () => {
     }
   }, [activeTab, studentId, testId]);
 
-
+    // useEffect(() => {
+    //   let timeoutId;
+    //   const resetInactivityTimer = () => {
+    //     clearTimeout(timeoutId);
+    //     timeoutId = setTimeout(() => {
+    //       handleLogout();
+    //     }, 30* 60 * 1000);
+    //     console.log(timeoutId)
+    //   };
+    //   const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
+   
+    //   events.forEach(event => {
+    //     window.addEventListener(event, resetInactivityTimer);
+    //   });
+    //   resetInactivityTimer();
+   
+    //   return () => {
+    //     events.forEach(event => {
+    //       window.removeEventListener(event, resetInactivityTimer);
+    //     });
+    //     clearTimeout(timeoutId);
+    //   };
+    // }, []);
+    // const handleLogout = async () => {
+     
+    //       const sessionId = localStorage.getItem("sessionId");
+       
+    //       if (!sessionId) {
+            
+    //         navigate("/LoginPage");
+    //         return;
+    //       }
+       
+    //       try {
+    //         const response = await fetch(`${BASE_URL}/student/studentLogout`, {
+    //           method: "POST",
+    //           headers: {
+    //             "Content-Type": "application/json",
+    //           },
+    //           body: JSON.stringify({ sessionId }),
+    //         });
+       
+    //         const data = await response.json();
+    //         if (response.ok) {
+    //           localStorage.clear();  
+    //           sessionStorage.clear();
+          
+    //           navigate("/LoginPage");
+    //         } 
+    //       } catch (error) {
+    //         //console.error("Logout error:", error);
+    //       }
+    //     };
   useEffect(() => {
     const fetchTestPaper = async () => {
       try {

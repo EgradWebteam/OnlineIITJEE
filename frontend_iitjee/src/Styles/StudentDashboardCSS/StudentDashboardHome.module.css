@@ -10,6 +10,11 @@
 .studentHiMsg{
     font-size: 20px;
 }
+
+.DashboardHomePageContainer{
+    padding: 1rem;
+    background: #fff;
+}
 .gretingContainer{
     padding: 10px;
     display: flex;

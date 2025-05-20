@@ -46,6 +46,14 @@ export default function StudentLogineGradTutor() {
           // Clear session data from localStorage and sessionStorage after logout
           localStorage.removeItem("sessionId");
           sessionStorage.removeItem("sessionId");
+          const win = window.open('', 'TestWindow'); // Open a reference to the window with the same name
+
+if (win) {
+  win.close();
+  console.log("TestWindow closed.");
+} else {
+  console.log("No window with that name is currently open.");
+}
         } else {
           console.error("Logout failed:", data.message || "Unknown error");
         }

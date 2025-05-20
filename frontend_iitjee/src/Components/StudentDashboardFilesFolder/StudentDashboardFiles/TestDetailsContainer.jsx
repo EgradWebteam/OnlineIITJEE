@@ -472,7 +472,7 @@ data.test_details.forEach(group => {
       const features = `width=${screenWidth},height=${screenHeight},top=0,left=0,fullscreen=yes`;
 
       // Open the new test window
-      const newWinRef = window.open(url, "_blank", features);
+      const newWinRef = window.open(url, "TestWindow", features);
       window.testWindowRef = newWinRef;
 
       // Force resize window to full screen only

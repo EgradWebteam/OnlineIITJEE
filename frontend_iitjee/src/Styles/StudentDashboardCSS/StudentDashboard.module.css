@@ -27,6 +27,7 @@
 .StduentDashboardRightSideBarForBggg{
    background-color: white; 
   margin: 0rem 1rem;
+  min-height: calc(100vh - 400px);
 }
 .examBtnForMarginInBuyCourses{
   margin: 0rem 1rem;
@@ -405,9 +406,9 @@ color: black;
 }
 /*StudentDashboard css leftsidebar*/
 .StudentDashboardContentHolder {
-  display: flex;
-  flex-direction: row;
-  height: calc(100vh - 13vh);
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - 80px);
 }
 .studentDashboardLeftNavHolder {
   display: flex;
@@ -948,6 +949,7 @@ height: 100%;
     padding: 1.2rem;
     /* width: 250px; */
     width: 300px;
+    height: 160px;
     background-color: #444444;
     color: white;
     /* border-radius: 6px; */
@@ -965,6 +967,7 @@ height: 100%;
   .testNameInResults{
       font-size:18px;
       font-weight: 600;
+       min-height: 55px;
       text-align: center;
   }
   .resultsViewReportBtn{
@@ -992,11 +995,12 @@ height: 100%;
   .myResultsSubContainer{
     display: flex;
     flex-wrap: wrap;
-  align-items: center;
+  align-items: self-start;
   justify-content: flex-start;
   gap: 1rem;
   margin: 10px;
   background-color: white;
+   min-height: calc(100vh - 350px);
   }
   /* STUDENT DASHBOARD BOOKMARKS */
   .StudentdashboardBookMarksSubDiv{
@@ -1072,11 +1076,7 @@ height: 100%;
     /* height: 8vh; */
     padding: 5px;
 }
-.StudentDashboardContentHolder{
-  display: flex;
-  flex-direction: row;
-  height: calc(100vh - 11vh);
-}
+
 .StudentDashboardRightSideContentHolder{
   width: 100%;
 }
@@ -1087,9 +1087,9 @@ height: 100%;
 .QuestionsAndImgScrollContainer{
   overflow-x: auto;
 }
-.studentDashboardHeaderLogoDiv {
+/* .studentDashboardHeaderLogoDiv {
   width: 220px;
-} 
+}  */
 
 }
   @media (max-width:1024px) {
@@ -1179,6 +1179,10 @@ height: 100%;
       padding: 10px;
     
     }
+    .StudentDashboardContentHolder {
+   
+    height: calc(100vh - 67.39px);
+}
     .navigation_buttons button{
       font-size: 15px;
       padding: 5px;
@@ -1194,7 +1198,7 @@ height: 100%;
         background-color: rgba(94, 93, 93,);
         z-index: 1000;
         /* transition: transform 0.3s ease-in-out; */
-        height: calc(100vh - 9vh);
+        height: calc(100vh - 68px);
         /* top: 104px; */
       }
       .headingForLectures{
@@ -1239,7 +1243,10 @@ height: 100%;
         right: 14px;
         top: 172px;
     }
-    
+    .StduentDashboardRightSideBarForBggg {
+      min-height: auto;
+      
+    }
    .popup_body {
       margin: 3.5rem auto;
       height: 45vh;

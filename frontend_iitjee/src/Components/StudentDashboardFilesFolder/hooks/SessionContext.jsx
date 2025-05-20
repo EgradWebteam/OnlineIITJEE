@@ -11,12 +11,12 @@ export const SessionProvider = ({ children }) => {
   const [isSessionValid, setIsSessionValid] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-const closeTestWindowIfOpen = () => {
-  if (window.testWindowRef && !window.testWindowRef.closed) {
-    window.testWindowRef.close();
-    window.testWindowRef = null;
-  }
-};
+// const closeTestWindowIfOpen = () => {
+//   if (window.testWindowRef && !window.testWindowRef.closed) {
+//     window.testWindowRef.close();
+//     window.testWindowRef = null;
+//   }
+// };
   const verifySession = async () => {
     const localSessionId = localStorage.getItem("sessionId");
     const sessionSessionId = sessionStorage.getItem("sessionId");
@@ -25,12 +25,17 @@ const closeTestWindowIfOpen = () => {
       setIsSessionValid(false);
  const navigationToken = sessionStorage.getItem('navigationToken');
 if (navigationToken) {
-   alert("Logout")
+  //  alert("Logout")
  
-    const channel = new BroadcastChannel('session_channel');
-channel.postMessage({ type: 'LOGOUT' });
-channel.close();
-   window.close();
+//const channel = new BroadcastChannel('session_channel');
+// channel.postMessage({ type: 'LOGOUT' });
+// channel.close();
+  const win = window.open('', 'TestWindow');
+  if (win && !win.closed) {
+    win.close(); // ✅ Works only if originally opened by script
+  } else {
+    console.warn("TestWindow not found or already closed.");
+  }
   } else {
     navigate("/LoginPage");
   }
@@ -52,10 +57,15 @@ channel.close();
         setIsSessionValid(false);
         
       if (navigationToken) {
-    const channel = new BroadcastChannel('session_channel');
-channel.postMessage({ type: 'LOGOUT' });
-channel.close();
-   window.close();
+//     const channel = new BroadcastChannel('session_channel');
+// channel.postMessage({ type: 'LOGOUT' });
+// channel.close();
+   const win = window.open('', 'TestWindow');
+  if (win && !win.closed) {
+    win.close(); // ✅ Works only if originally opened by script
+  } else {
+    console.warn("TestWindow not found or already closed.");
+  }
   } else {
     navigate("/LoginPage");
   }
@@ -66,11 +76,16 @@ channel.close();
       console.error("Session check failed", err);
       setIsSessionValid(false);     
    if (navigationToken) {
-   alert("Logout")
-     const channel = new BroadcastChannel('session_channel');
-channel.postMessage({ type: 'LOGOUT' });
-channel.close();
-   window.close();
+  //  alert("Logout")
+//      const channel = new BroadcastChannel('session_channel');
+// channel.postMessage({ type: 'LOGOUT' });
+// channel.close();
+    const win = window.open('', 'TestWindow');
+  if (win && !win.closed) {
+    win.close(); // ✅ Works only if originally opened by script
+  } else {
+    console.warn("TestWindow not found or already closed.");
+  }
   } else {
     navigate("/LoginPage");
   }

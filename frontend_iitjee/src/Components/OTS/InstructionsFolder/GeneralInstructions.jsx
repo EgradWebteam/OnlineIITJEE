@@ -21,7 +21,7 @@ const GeneralInstructions = () => {
     const [isDecrypting, setIsDecrypting] = useState(true);
     const { studentData} = useStudent();
    // Disable all keyboard and mouse interactions globally
-  const [checkCompleted, setCheckCompleted] = useState(false);
+//   const [checkCompleted, setCheckCompleted] = useState(false);
 //    DisableKeysAndMouseInteractions(null);
   const logoutHandledRef = useRef(false);
 
@@ -46,9 +46,10 @@ const GeneralInstructions = () => {
 
         // Navigate to error page
         navigate('/Error');
-      } else {
-        setCheckCompleted(true);
-    }
+      } 
+    //   else {
+    //     setCheckCompleted(true);
+    // }
     };
 
     const events = ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'];
@@ -250,7 +251,7 @@ const GeneralInstructions = () => {
       }, [testId, studentId, navigate]);
 
 
-    if (isDecrypting || !checkCompleted) {
+    if (isDecrypting ) {
         return (
             <div>
                 <h2> <LoadingSpinner /></h2>

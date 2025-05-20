@@ -27,6 +27,9 @@ export default function StudentDashboard() {
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const { alert } = useAlert();
   const navigate = useNavigate();
+  const [navigationToken, setNavigationToken] = useState(
+    sessionStorage.getItem('navigationToken')
+  );
     // useEffect(() => {
     //   const savedSection = localStorage.getItem("activeSection");
     //   if (savedSection) {
@@ -66,29 +69,44 @@ export default function StudentDashboard() {
 
     const location = useLocation();
 
-   
-    useEffect(() => {
-      let timeoutId;
-      const resetInactivityTimer = () => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          handleLogout();
-        }, 30 * 60 * 1000);
-      };
-      const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
-   
-      events.forEach(event => {
-        window.addEventListener(event, resetInactivityTimer);
-      });
-      resetInactivityTimer();
-   
-      return () => {
-        events.forEach(event => {
-          window.removeEventListener(event, resetInactivityTimer);
-        });
-        clearTimeout(timeoutId);
-      };
-    }, []);
+useEffect(() => {
+  let timeoutId;
+
+  const resetInactivityTimer = () => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      // Double-check token at the time of timeout
+      if (!sessionStorage.getItem('navigationToken')) {
+        handleLogout();
+      }
+    }, 30 * 60 * 1000); // 30 minutes
+  };
+
+  const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
+
+  // Always clean up first
+  events.forEach(event =>
+    window.removeEventListener(event, resetInactivityTimer)
+  );
+  clearTimeout(timeoutId);
+
+
+  if (!navigationToken) {
+    events.forEach(event =>
+      window.addEventListener(event, resetInactivityTimer)
+    );
+    resetInactivityTimer();
+  }
+
+  return () => {
+    events.forEach(event =>
+      window.removeEventListener(event, resetInactivityTimer)
+    );
+    clearTimeout(timeoutId);
+  };
+}, [navigationToken]); 
+
+
   useEffect(() => {
     const sectionFromRoute = location.state?.activeSection;
     if (sectionFromRoute && !sessionStorage.getItem("sectionFromRouteUsed")) {
@@ -148,17 +166,26 @@ useEffect(() => {
 }, []);
 
 
- const closeTestWindowIfOpen = () => {
-  if (window.testWindowRef && !window.testWindowRef.closed) {
-    window.testWindowRef.close();
-    window.testWindowRef = null;
-  }
-};
+// const closeTestWindowIfOpen = () => {
+//   // Check if the window reference exists and if it's open
+//   if (window.testWindowRef && !window.testWindowRef.closed) {
+//     try {
+//       console.log("Closing the test window...");
+//       window.testWindowRef.close();
+//       window.testWindowRef = null;
+//     } catch (e) {
+//       console.error("Failed to close test window:", e);
+//     }
+//   } else {
+//     console.warn("Test window is either not opened or already closed.");
+//   }
+// };
+
      
     const handleLogout = async () => {
  
       const sessionId = localStorage.getItem("sessionId");
-   
+ 
       if (!sessionId) {
          await alert("No session found. Please log in again.", "error");
         navigate("/LoginPage");
@@ -177,8 +204,17 @@ useEffect(() => {
         const data = await response.json();
         if (response.ok) {
           localStorage.clear(); 
-           closeTestWindowIfOpen();  
+           sessionStorage.clear();
+          const win = window.open('', 'TestWindow');
+
+if (win) {
+  win.close();
+  console.log("TestWindow closed.");
+} else {
+  console.log("No window with that name is currently open.");
+} 
           navigate("/LoginPage");
+          
         } else {
           await alert("No session found. Please log in again.", "error");
         }
@@ -186,12 +222,27 @@ useEffect(() => {
         //console.error("Logout error:", error);
       }
     };
-   const channel = new BroadcastChannel('session_channel');
-channel.onmessage = (event) => {
-  if (event.data.type === 'LOGOUT') {
-   handleLogout();
-  }
-};
+useEffect(() => {
+  const channel = new BroadcastChannel('session_channel');
+const sessionid = sessionStorage.getItem("sessionId");
+  const handleMessage = (event) => {
+    if (event.data.type === 'LOGOUT' ) {
+      console.log(event.data.sessionSessionId , sessionid)
+      if(event.data.sessionSessionId === sessionid){
+    
+      
+      handleLogout(); // <-- This should only be called once
+      }
+    }
+  };
+
+  channel.onmessage = handleMessage;
+
+  // Cleanup on unmount
+  return () => {
+    channel.close();
+  };
+}, []);
   const renderStudentDashboardContent = () => {
 
       switch (activeSection) {
